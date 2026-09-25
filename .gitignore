@@ -1,0 +1,109 @@
+# Dependencies
+node_modules/
+temp-node-modules/
+temp-node-modules-no-electron/
+
+# Build outputs
+dist/
+dist-electron/
+release/
+build/
+
+# Temp files
+.vs/
+*.tmp
+*.temp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.venv.bak
+env/
+venv/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+nul
+NUL
+CON
+PRN
+AUX
+COM1
+COM2
+COM3
+COM4
+LPT1
+LPT2
+LPT3
+
+# Data files (large)
+*.db
+*.sqlite
+*.sqlite3
+*.pack
+*.wav
+*.ogg
+*.mp3
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.flv
+*.webm
+*.wmv
+*.bin
+*.onnx
+*.gguf
+*.safetensors
+
+# Kilo
+.kilo/worktrees/
+.kilo/agent-manager.json
+
+# AURA temp files
+*_test.txt
+*_tests.txt
+suite_*.txt
+tsc_*.txt
+*_baseline.txt
+*_output.txt
+*_out.txt
+*.jsonl
+
+# Artifacts
+artifacts/
+artifacts-final/
+artifacts-v5/
+release-final/
+release-v5/
+training_data/
+training_checkpoints/
+agent_runs/
+aura_memory_db/
+story_memory/
+.federated_state/
+
+# Backup files
+*.bak
+*.bak2
+.py.bak
+
+# Weird encoding files (Windows path issues)
+C:\\*
+"C\\*"

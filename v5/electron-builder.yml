@@ -1,0 +1,44 @@
+appId: com.aria.os.v5
+productName: ARIA OS v5.0
+copyright: ARIA OS
+
+directories:
+  output: release
+  buildResources: assets
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - assets/**/*
+  - package.json
+
+# Backend FastAPI v4 empaquetado (2MB) -> resources/backend
+extraResources:
+  - from: ../ARIA_APP/backend
+    to: backend
+    filter:
+      - '**/*'
+      - '!**/__pycache__/**'
+      - '!**/*.pyc'
+      - '!**/logs/**'
+      - '!**/*.db'
+      - '!**/*.log'
+
+win:
+  target:
+    - nsis
+    - portable
+  icon: assets/icon.ico
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  installerIcon: assets/icon.ico
+  uninstallerIcon: assets/icon.ico
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: ARIA OS v5.0
+
+asar: true
+compression: maximum
