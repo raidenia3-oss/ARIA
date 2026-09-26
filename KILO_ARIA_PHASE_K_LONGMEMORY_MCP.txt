@@ -1,0 +1,52 @@
+# KILO_ARIA_PHASE_K_LONGMEMORY_MCP — UPDATED (Sessions + Pi Patterns)
+
+## Updates from Video Research
+- **Pi Agent patterns**: Skill-based session management, episodic memory context
+- **Session management**: Each conversation gets a session_id, stored in LongMemory
+- **Episodic context**: Retrieve relevant past conversations before each chat
+
+## Current Implementation Status
+✅ LongMemory server running on port 7331
+✅ HTTP wrapper in `backend/api/longmemory_wrapper.py`
+✅ Integrated into `/api/chat` (episodic context retrieval + auto-store)
+✅ Integrated into `/api/chat/stream` (same patterns)
+✅ Fixed recall response parsing (`data.items` not `data.results`)
+
+## Session Management Patterns (from Pi Agent)
+```python
+# Each chat session gets episodic context
+session_id = req.session_id or str(int(time.time() * 1000))
+
+# Retrieve relevant memories before generating response
+mem_result = await retrieve_memory(query=text, top_k=3, mode="associative")
+if mem_result.results:
+    context = "\n\nContexto episódico:\n" + "\n".join(
+        f"- {item['node']['content']['summary']}"
+        for item in mem_result.results
+    )
+    system_prompt += context
+
+# Store conversation after response
+await store_memory(query=text, response=response_text)
+```
+
+## Pi Agent Skills Integration
+```python
+# Map skills to LongMemory facets
+SKILL_FACETS = {
+    "code-review": "episodic",
+    "docs": "semantic",
+    "test": "procedural",
+}
+
+# Store with facet hint
+await store_memory(query, response, facet_hint=SKILL_FACETS[skill])
+```
+
+## Next Steps
+1. Test session persistence across restarts
+2. Add memory importance scoring
+3. Integrate with auto-improvement loop (Phase H.5)
+
+---
+**Status: COMPLETE** — All endpoints working, chat integration verified

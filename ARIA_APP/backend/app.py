@@ -94,7 +94,9 @@ from backend.api.compat import router as openai_router
 from backend.api.core_routes import router as core_router
 from backend.api.ai_infrastructure import router as ai_infrastructure_router
 from backend.api.vector_memory import router as vector_memory_router
-from backend.api.longmemory_mcp import router as longmemory_mcp_router
+from backend.api.longmemory_wrapper import router as longmemory_router
+from backend.api.longmemory_wrapper import StoreRequest, RetrieveRequest
+from backend.api.candle_llm import router as candle_router
 from backend.api.computer_use import router as computer_use_router
 from backend.api.github_webhooks import router as github_webhook_router
 from backend.automation import automation_engine, enable_autostart, scheduler_router
@@ -115,6 +117,7 @@ from backend.social_research.collector import SocialCollector
 from backend.social_research.memory_bridge import MemoryBridge, SavedContent
 from backend.social_research.transcriber import WhisperTranscriber
 from backend.swarm.swarm_routes import router as swarm_router
+from backend.api.swarm_router import router as agent_swarm_router
 from backend.video_analyzer.pipeline import VideoAnalysisPipeline
 from backend.vision.screen import ScreenIntelligence
 from github_admin.router import router as github_admin_router
@@ -309,13 +312,14 @@ app.add_middleware(
 app.include_router(core_router)
 app.include_router(ai_infrastructure_router)
 app.include_router(vector_memory_router)
-app.include_router(longmemory_mcp_router)
+app.include_router(longmemory_router)
+app.include_router(candle_router)
 app.include_router(computer_use_router)
 app.include_router(github_webhook_router)
 app.include_router(openai_router)
 app.include_router(scheduler_router)
-from fastapi import APIRouter
 
+from fastapi import APIRouter
 daemon_sync_router = APIRouter()
 
 
@@ -354,6 +358,7 @@ app.include_router(knowledge_router)
 app.include_router(evolution_router)
 app.include_router(planner_router)
 app.include_router(swarm_router)
+app.include_router(agent_swarm_router)
 app.include_router(zk_router)
 app.include_router(github_admin_router)
 enable_autostart()
@@ -518,16 +523,72 @@ async def chat(req: ChatRequest):
         "ARIA_SYSTEM_PROMPT",
         "Eres ARIA, un asistente personal avanzado estilo Jarvis/Ultron. Responde en español, conciso, útil y con personalidad propia.",
     )
+
+    # --- LongMemory episodic context ---
+    episodic_context = ""
+    try:
+        from backend.api.longmemory_wrapper import retrieve_memory as _lm_retrieve
+        mem_req = RetrieveRequest(query=text, top_k=3, mode="associative")
+        mem_result = await _lm_retrieve(mem_req)
+        if mem_result.status == "success" and mem_result.results:
+            lines = []
+            for item in mem_result.results:
+                node = item.get("node", {}) if isinstance(item, dict) else {}
+                content = node.get("content", {}) if isinstance(node, dict) else {}
+                summary = content.get("summary", "") if isinstance(content, dict) else ""
+                if summary:
+                    lines.append(f"- {summary}")
+            if lines:
+                episodic_context = (
+                    "\n\nContexto episódico de conversaciones previas:\n"
+                    + "\n".join(lines)
+                )
+    except Exception:
+        pass  # LongMemory no disponible — continuar sin contexto
+
+    if episodic_context:
+        system_prompt = system_prompt + episodic_context
+
+    # --- Provider priority: Candle → Ollama → ReAct loop ---
+    # Candle.rs (v5.2+) is fastest (~5-8s), Ollama is default (~15s)
+    from backend.api.candle_llm import is_candle_available, CandleInferenceRequest as _CandleReq
+
+    if is_candle_available():
+        try:
+            started = time.time()
+            from backend.api.candle_llm import candle_inference as _candle_inf
+            candle_req = _CandleReq(prompt=text, system_prompt=system_prompt)
+            candle_result = await _candle_inf(candle_req)
+            response_text = candle_result.response
+            working_memory.set(session_id, "last_response", response_text)
+            working_memory.set(session_id, "last_provider", "candle")
+            await _store_chat_memory(text, response_text)
+            return JSONResponse(
+                {
+                    "response": response_text,
+                    "timestamp": time.time(),
+                    "mode": req.mode,
+                    "session_id": session_id,
+                    "provider": "candle",
+                    "latency": candle_result.latency_ms / 1000,
+                    "tokens": candle_result.tokens,
+                }
+            )
+        except Exception:
+            pass  # fallback to Ollama
+
     if AI_ENABLED and ai_manager.get_best_provider() == "ollama":
         # Ruta rápida y directa a Ollama local (sin pasar por el ReAct loop)
         try:
             started = time.time()
             result = ai_manager.chat(text, system_prompt=system_prompt, provider="ollama")
-            working_memory.set(session_id, "last_response", result.get("message", ""))
+            response_text = result.get("message", "")
+            working_memory.set(session_id, "last_response", response_text)
             working_memory.set(session_id, "last_provider", "ollama")
+            await _store_chat_memory(text, response_text)
             return JSONResponse(
                 {
-                    "response": result.get("message", ""),
+                    "response": response_text,
                     "timestamp": time.time(),
                     "mode": req.mode,
                     "session_id": session_id,
@@ -539,11 +600,13 @@ async def chat(req: ChatRequest):
         except Exception:
             pass  # cae al ReAct loop como respaldo
     result = react_loop.run(text, system_prompt=system_prompt)
-    working_memory.set(session_id, "last_response", result.get("response", ""))
+    response_text = result.get("response", "")
+    working_memory.set(session_id, "last_response", response_text)
     working_memory.set(session_id, "last_provider", result.get("provider", "local"))
+    await _store_chat_memory(text, response_text)
     return JSONResponse(
         {
-            "response": result.get("response", ""),
+            "response": response_text,
             "timestamp": time.time(),
             "mode": req.mode,
             "session_id": session_id,
@@ -554,6 +617,16 @@ async def chat(req: ChatRequest):
             "validation_errors": result.get("validation_errors"),
         }
     )
+
+
+async def _store_chat_memory(query: str, response: str):
+    """Store conversation in LongMemory (best-effort, non-blocking)."""
+    try:
+        from backend.api.longmemory_wrapper import store_memory as _lm_store
+        store_req = StoreRequest(query=query, response=response)
+        await _lm_store(store_req)
+    except Exception:
+        pass
 
 
 class ChatStreamRequest(BaseModel):
@@ -581,6 +654,27 @@ async def chat_stream(req: ChatStreamRequest):
     )
     history = req.history or []
 
+    # --- LongMemory episodic context ---
+    try:
+        from backend.api.longmemory_wrapper import retrieve_memory as _lm_retrieve
+        mem_req = RetrieveRequest(query=text, top_k=3, mode="associative")
+        mem_result = await _lm_retrieve(mem_req)
+        if mem_result.status == "success" and mem_result.results:
+            lines = []
+            for item in mem_result.results:
+                node = item.get("node", {}) if isinstance(item, dict) else {}
+                content = node.get("content", {}) if isinstance(node, dict) else {}
+                summary = content.get("summary", "") if isinstance(content, dict) else ""
+                if summary:
+                    lines.append(f"- {summary}")
+            if lines:
+                system_prompt = system_prompt + (
+                    "\n\nContexto episódico de conversaciones previas:\n"
+                    + "\n".join(lines)
+                )
+    except Exception:
+        pass
+
     def gen():
         full = []
         try:
@@ -593,6 +687,17 @@ async def chat_stream(req: ChatStreamRequest):
             yield f"data: {json.dumps({'error': str(exc)}, ensure_ascii=False)}\n\n"
         working_memory.set(session_id, "last_response", "".join(full))
         working_memory.set(session_id, "last_provider", "ollama")
+        # Store conversation in LongMemory (best-effort, sync HTTP call)
+        try:
+            from backend.api.longmemory_wrapper import _lm_request
+            _lm_request("POST", "/v1/ingest", {
+                "user_id": "aria",
+                "text": f"User: {text}\nAssistant: {''.join(full)}",
+                "metadata": {},
+                "facet_hint": "episodic",
+            })
+        except Exception:
+            pass
         yield "data: [DONE]\n\n"
 
     return StreamingResponse(gen(), media_type="text/event-stream")

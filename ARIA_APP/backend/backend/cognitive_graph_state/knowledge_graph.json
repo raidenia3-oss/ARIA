@@ -1,0 +1,328 @@
+{
+  "nodes": [
+    {
+      "node_id": "n_04f8996da7",
+      "label": "User",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1440637,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_b221d9dbb0",
+      "label": "Hola",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1440637,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_44ceae1acc",
+      "label": "Estoy",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1440637,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_6d7c0eb420",
+      "label": "AURA",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1440637,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_e676b5103a",
+      "label": "soy",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1440637,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_04a92cab51",
+      "label": "modo",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1440637,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_25bf8e1a23",
+      "label": "local",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1440637,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_b3aa33b34e",
+      "label": "este",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1440637,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_70f4f3d5e8",
+      "label": "momento",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1450636,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_c57b7501cd",
+      "label": "que",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1450636,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_8a806cc0f0",
+      "label": "ayudo",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1790458312.1450636,
+      "updated_at": 1790458325.6794598,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-407b6d03",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e_9caffe07b2",
+      "src": "n_04f8996da7",
+      "dst": "n_b221d9dbb0",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1440637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6a0c9eab4f",
+      "src": "n_b221d9dbb0",
+      "dst": "n_44ceae1acc",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1440637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_97cc4fa7f7",
+      "src": "n_44ceae1acc",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1440637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0efb840825",
+      "src": "n_6d7c0eb420",
+      "dst": "n_e676b5103a",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1440637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9db0bd2e00",
+      "src": "n_e676b5103a",
+      "dst": "n_04a92cab51",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1440637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_48c7f73c20",
+      "src": "n_04a92cab51",
+      "dst": "n_25bf8e1a23",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1440637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7300742c05",
+      "src": "n_25bf8e1a23",
+      "dst": "n_b3aa33b34e",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1450636,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_19fdd2cf9f",
+      "src": "n_b3aa33b34e",
+      "dst": "n_70f4f3d5e8",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1450636,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_f7fe4d49fe",
+      "src": "n_70f4f3d5e8",
+      "dst": "n_c57b7501cd",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1450636,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9d5ac23ff0",
+      "src": "n_c57b7501cd",
+      "dst": "n_8a806cc0f0",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: Hola\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1790458312.1450636,
+      "offline_only": true
+    }
+  ],
+  "summaries": [],
+  "offline_only": true
+}

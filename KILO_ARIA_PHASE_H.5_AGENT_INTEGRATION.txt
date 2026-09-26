@@ -1,0 +1,95 @@
+# KILO_ARIA_PHASE_H.5_AGENT_INTEGRATION — Pi Agent + Auto-Improvement (10 min)
+
+## Objective
+Integrate Pi Agent harness patterns (skills, custom prompts, sessions) with the existing auto-improvement loop.
+
+## Background
+Pi Agent (https://github.com/piagent/piagent) provides:
+- Skill registry with natural-language triggers
+- MCP server abstraction (already have LongMemory)
+- Session persistence with episodic memory
+- Custom prompt templates per skill
+
+## Current State
+- Auto-improvement loop exists in `backend/self_improvement.py`
+- Swarm agents exist (CodeAnalyzer, DocsWriter, Tester) in `backend/agents/`
+- LongMemory provides episodic storage
+- Skills registry exists in `backend/skills/`
+
+## Integration Plan
+
+### 1. Skill-Triggered Agent Dispatch
+```python
+# In self_improvement.py, after auto-commit:
+# Map skill names to swarm agents
+SKILL_AGENT_MAP = {
+    "code-review": "CodeAnalyzer",
+    "docs": "DocsWriter",
+    "test": "Tester",
+}
+
+# Dispatch tasks based on changed files
+changed_skills = detect_changed_skills(commits)
+tasks = []
+for skill in changed_skills:
+    agent = SKILL_AGENT_MAP.get(skill)
+    if agent:
+        tasks.append({"agent": agent, "skill": skill, "commit": commit_hash})
+
+# Execute in parallel via swarm
+results = await swarm.execute_parallel(tasks)
+```
+
+### 2. Session Management with Episodic Memory
+```python
+# Each auto-improvement cycle creates a session
+session_id = f"auto-improve-{datetime.now().isoformat()}"
+
+# Store session context in LongMemory
+await store_memory(
+    query=f"Auto-improvement cycle {session_id}",
+    response=json.dumps({
+        "commits": len(commits),
+        "agents_used": [a.name for a in swarm.agents],
+        "results": results
+    }),
+    metadata={"type": "session", "session_id": session_id}
+)
+
+# On next cycle, retrieve previous session context
+memories = await retrieve_memory(query="auto-improvement", top_k=3)
+```
+
+### 3. Custom Prompt Templates per Skill
+```python
+# In backend/skills/, add prompt templates
+SKILL_PROMPTS = {
+    "code-review": "Review the following PR for code quality, security, and best practices...",
+    "docs": "Generate comprehensive documentation for the following changes...",
+    "test": "Write and execute tests for the following features...",
+}
+
+# Inject into swarm agent execution
+agent.execute({**task, "system_prompt": SKILL_PROMPTS[skill]})
+```
+
+## Files to Modify
+1. `backend/self_improvement.py` — add swarm dispatch + session tracking
+2. `backend/agents/base.py` — add skill context support
+3. `backend/api/swarm_router.py` — add skill-based task routing
+
+## Test
+```bash
+# Trigger auto-improvement cycle
+curl -X POST http://127.0.0.1:8000/api/self-improvement/start
+
+# Verify swarm agents were dispatched
+curl http://127.0.0.1:8000/api/agents/history?limit=5
+
+# Verify session stored in LongMemory
+curl http://127.0.0.1:8000/api/memory/longmemory/retrieve \
+  -d '{"query": "auto-improvement", "top_k": 3}'
+```
+
+---
+**Status: READY** — Execute after Phase K (LongMemory must be working for session storage)

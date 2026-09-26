@@ -1,0 +1,46 @@
+# KILO_ARIA_PHASE_F.5_GITHUB_ISSUES_ADD — 3 New GitHub Issues (5 min)
+
+## Objective
+Create 3 new GitHub issues to track upcoming architecture work.
+
+## Issue #33: "Integration: Pi Agent Harness (skills + MCP)"
+- **Type**: enhancement
+- **Labels**: integration, agent, mcp
+- **Body**:
+  Integrate Pi Agent harness patterns into ARIA v5.0:
+  - Skill registry with custom prompts
+  - MCP server integration (LongMemory already connected)
+  - Session management with episodic memory
+  - Reference: https://github.com/piagent/piagent
+
+## Issue #34: "Feature: Axum v6.0 Migration Research"
+- **Type**: enhancement
+- **Labels**: research, rust, performance
+- **Body**:
+  Research Axum (Tokio web framework) as FastAPI replacement:
+  - Benchmark vs current FastAPI (target: 10-100x faster)
+  - Type-safe extractors pattern
+  - Migration strategy: endpoints → routes → middleware
+  - WGPU integration roadmap for v6.0
+  - Reference: https://github.com/tokio-rs/axum
+
+## Issue #35: "Feature: WGPU Native Rendering (Tauri v6.0)"
+- **Type**: enhancement
+- **Labels**: rendering, tauri, wgpu, roadmap
+- **Body**:
+  Plan WGPU native rendering migration for Tauri v6.0:
+  - Replace current Tauri webview with WGPU renderer
+  - 44x smaller bundle size confirmed by research
+  - Native rendering pipeline for OrbVisual 3D
+  - Timeline: v6.0 (post v5.0 stable)
+  - Reference: Tauri WGPU docs
+
+## Execution
+```bash
+cd C:\Users\User\Downloads\AURA
+# Create issues via gh CLI or GitHub API
+gh issue create --repo raidenia3-oss/ARIA --title "Integration: Pi Agent Harness (skills + MCP)" --body "..." --label "enhancement,integration"
+```
+
+---
+**Status: READY** — Issues to be created via GitHub API

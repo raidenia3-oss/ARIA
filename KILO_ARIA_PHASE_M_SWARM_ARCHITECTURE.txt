@@ -1,0 +1,76 @@
+# KILO_ARIA_PHASE_M_SWARM_ARCHITECTURE — UPDATED (Arc<Mutex> + Pi Patterns)
+
+## Updates from Video Research
+- **Rust memory patterns**: Arc<Mutex<Agent>> for thread-safe agent sharing
+- **Pi Agent harness**: Skill registry + custom prompts + session management
+- **Multi-agent safety**: Ownership/borrowing patterns for concurrent agent execution
+
+## Current Implementation Status
+✅ Agent base class in `backend/agents/base.py`
+✅ 3 specialized agents: CodeAnalyzer, DocsWriter, Tester
+✅ Swarm router in `backend/api/swarm_router.py` (7 endpoints)
+✅ Parallel execution via `asyncio.gather`
+✅ Registered in app.py, all endpoints verified working
+
+## Arc<Mutex> Pattern (from Rust memory video)
+```python
+# Python equivalent: asyncio-safe agent sharing
+# Instead of Arc<Mutex<Agent>>, use:
+# 1. asyncio.Lock per agent for state mutations
+# 2. Immutable task data (no shared mutable state)
+# 3. AgentSwarm as single source of truth
+
+import asyncio
+
+class AgentSwarm:
+    def __init__(self):
+        self.agents: list[Agent] = []
+        self._locks: dict[str, asyncio.Lock] = {}
+    
+    async def execute_parallel(self, tasks):
+        # Each agent gets its own lock for state safety
+        coros = []
+        for task in tasks:
+            agent = self._select_agent(task)
+            lock = self._locks.setdefault(agent.name, asyncio.Lock())
+            coros.append(self._execute_locked(agent, task, lock))
+        return await asyncio.gather(*coros)
+    
+    async def _execute_locked(self, agent, task, lock):
+        async with lock:
+            return await agent.work(task)
+```
+
+## Pi Agent Harness Patterns
+```python
+# Skill registry integration
+class SkillRegistry:
+    def __init__(self):
+        self.skills: dict[str, Skill] = {}
+        self.agent_map: dict[str, str] = {}  # skill -> agent name
+    
+    def register(self, skill_name, agent_name):
+        self.skills[skill_name] = Skill(name=skill_name)
+        self.agent_map[skill_name] = agent_name
+    
+    async def dispatch(self, skill_name, task):
+        agent_name = self.agent_map.get(skill_name)
+        if agent_name:
+            agent = self.swarm.get_agent(agent_name)
+            return await agent.work({**task, "skill": skill_name})
+```
+
+## Files
+- `backend/agents/base.py` — Agent ABC + AgentSwarm
+- `backend/agents/code_analyzer.py` — CodeAnalyzerAgent
+- `backend/agents/docs_writer.py` — DocsWriterAgent
+- `backend/agents/tester.py` — TesterAgent
+- `backend/api/swarm_router.py` — 7 REST endpoints
+
+## Next Steps
+1. Add `asyncio.Lock` per agent for state mutation safety
+2. Integrate skill registry with auto-improvement loop (Phase H.5)
+3. Add agent health monitoring (error rate, latency tracking)
+
+---
+**Status: COMPLETE** — All endpoints working, parallel execution verified

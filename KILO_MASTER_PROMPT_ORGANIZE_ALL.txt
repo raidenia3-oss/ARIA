@@ -1,0 +1,49 @@
+# KILO_MASTER_PROMPT_ORGANIZE_ALL — AURA v5.0 Pre-Execution Checklist
+
+## Status: VERIFIED ✅
+
+### Backend Health
+- Routes loaded: 100+ (all systems operational)
+- Health endpoint: `{"status": "ok", "mode": "ARIA-app-v2"}`
+- Chat endpoint: OK (Ollama provider, working)
+- LongMemory: available (port 7331, SQLite store)
+- Candle: not-available (stub ready, fallback to Ollama)
+- Swarm: 3 agents registered (CodeAnalyzer, DocsWriter, Tester)
+
+### GitHub Integration
+- Webhook config: active (5 event types: push, pull_request, issues, release, workflow_run)
+- Webhook test: OK
+- Webhook events: 0 (no events received yet)
+- Webhook stats: operational
+
+### Phases A-H Status
+- All complete and functional. No rework needed.
+
+### Architecture Decisions Confirmed by Videos
+- Tauri GUI confirmed correct (44x smaller than Electron)
+- Axum (Rust) identified as future FastAPI replacement (10-100x faster)
+- Arc<Mutex> patterns for multi-agent safety
+- Pi Agent harness patterns for skill/session management
+- Mojo/Rust/Go/Zig/TS landscape mapped for v5.2-v6.0 roadmap
+
+### New Prompt Files Created
+1. `KILO_ARIA_PHASE_F.5_GITHUB_ISSUES_ADD.txt` — 3 new GitHub issues
+2. `KILO_ARIA_PHASE_H.5_AGENT_INTEGRATION.txt` — Pi Agent + auto-improve integration
+3. `KILO_ARIA_PHASE_L.2_AXUM_MIGRATION_RESEARCH.txt` — Axum research (replaces Candle.rs)
+4. `KILO_MASTER_PROMPT_ORGANIZE_ALL.txt` — this file
+
+### Updated Prompt Files
+1. `KILO_ARIA_PHASE_K_LONGMEMORY_MCP.txt` — added session management + Pi patterns
+2. `KILO_ARIA_PHASE_M_SWARM_ARCHITECTURE.txt` — added Arc<Mutex> + Pi harness patterns
+
+### Execution Order (Optimized)
+```
+MASTER (this) → Phase I (token) → Phase J (ports) → Phase K (LongMemory, updated)
+→ Phase H.5 (Agent integration, new) → Phase M (Swarm, updated)
+→ Phase F.5 (GitHub issues, new) → Phase L.2 (Axum research, new)
+```
+
+### Total Estimated Time: 65 minutes
+
+---
+**Decision: PROCEED with optimized Phases I-M**

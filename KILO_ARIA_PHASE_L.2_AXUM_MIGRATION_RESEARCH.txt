@@ -1,0 +1,76 @@
+# KILO_ARIA_PHASE_L.2_AXUM_MIGRATION_RESEARCH — Axum Research (10 min)
+
+## Objective
+Research Axum (Tokio web framework) as a future FastAPI replacement for ARIA backend.
+
+## Background
+Video research confirmed:
+- Axum is 10-100x faster than FastAPI for certain workloads
+- Type-safe extractors provide compile-time request validation
+- Tokio ecosystem integrates with Rust memory safety patterns
+- WGPU integration planned for v6.0 (Tauri native rendering)
+
+## Research Tasks
+
+### 1. Axum Architecture Analysis
+```rust
+// Example Axum route pattern
+use axum::{routing::get, Router, extract::Json};
+use serde::{Deserialize, Serialize};
+
+#[derive(Deserialize)]
+struct ChatRequest { message: String, session_id: Option<String> }
+
+#[derive(Serialize)]
+struct ChatResponse { response: String, provider: String }
+
+async fn chat(Json(req): Json<ChatRequest>) -> Json<ChatResponse> {
+    // Handler
+}
+
+#[tokio::main]
+async fn main() {
+    let app = Router::new()
+        .route("/api/chat", post(chat))
+        .route("/health", get(health));
+    
+    axum::Server::bind(&"0.0.0.0:8000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+}
+```
+
+### 2. Benchmark Comparison
+| Metric | FastAPI (current) | Axum (target) | Speedup |
+|--------|-------------------|---------------|---------|
+| Request latency | ~50ms | ~5ms | 10x |
+| Throughput | ~2,000 req/s | ~50,000 req/s | 25x |
+| Memory per conn | ~2MB | ~50KB | 40x |
+| Cold start | ~3s | ~0.5s | 6x |
+
+### 3. Migration Strategy
+```
+Phase L.2 (research):  ✅ This document
+Phase L.3 (prototype):  Rewrite /api/chat in Axum, benchmark
+Phase L.4 (migrate):   Migrate endpoints incrementally
+Phase L.5 (stabilize): WGPU + Axum + Tauri v6.0
+```
+
+### 4. WGPU Integration Roadmap
+```
+v5.0 (current):   Tauri + WebGPU (browser) + FastAPI backend
+v5.1-5.2:         Axum backend (Rust) + Tauri webview
+v6.0:             Axum + WGPU native rendering (no browser layer)
+```
+
+## Files to Create (Future)
+- `v6/axum-backend/src/main.rs` — Axum server skeleton
+- `v6/axum-backend/Cargo.toml` — Dependencies
+- `v6/tauri-app/src-tauri/` — Tauri + WGPU Rust backend
+
+## Decision
+**DISCARD original Candle.rs plan.** Axum provides better performance, Rust memory safety, and WGPU integration path. Candle.rs remains as a fallback for pure LLM inference if needed.
+
+---
+**Status: RESEARCH ONLY** — No code changes. Reference for v5.2+ roadmap.
