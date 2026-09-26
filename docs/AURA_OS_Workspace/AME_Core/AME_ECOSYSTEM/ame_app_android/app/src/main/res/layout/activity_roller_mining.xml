@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AURA Rollercoin Mining Center — Cyberpunk Dashboard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0a0e17"
+    android:padding="12dp">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="◆ ROLLERCOIN MINING CENTER ◆"
+        android:textColor="#00FF41"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:paddingBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tvMiningStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="● IDLE"
+        android:textColor="#FFD700"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:paddingBottom="8dp"/>
+
+    <!-- Stats Cards -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#111827"
+        android:padding="10dp"
+        android:layout_marginBottom="6dp">
+
+        <TextView
+            android:id="@+id/tvPowerBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="POWER ░░░░░░░░░░░░░░░░░░░░  0"
+            android:textColor="#00FF41"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/tvGamesBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GAMES ░░░░░░░░░░░░░░░░░░░░  0"
+            android:textColor="#3B82F6"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/tvWonBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="WON   ░░░░░░░░░░░░░░░░░░░░  0"
+            android:textColor="#FFD700"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/tvLastGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Último: --"
+            android:textColor="#484F58"
+            android:textSize="10sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="1dp"/>
+
+        <TextView
+            android:id="@+id/tvLastReward"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Última recompensa: --"
+            android:textColor="#FFD700"
+            android:textSize="10sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="1dp"/>
+
+        <TextView
+            android:id="@+id/tvCooldown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cooldown: NONE"
+            android:textColor="#FF6B6B"
+            android:textSize="10sp"
+            android:fontFamily="monospace"/>
+    </LinearLayout>
+
+    <!-- Mining Log -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#111827"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="┌─ MINING LOG ───────────────────────┐"
+            android:textColor="#A855F7"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="4dp"/>
+
+        <ScrollView
+            android:id="@+id/scrollMiningLog"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <TextView
+                android:id="@+id/tvMiningLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#00FF41"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:textIsSelectable="true"/>
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="6dp">
+
+        <Button
+            android:id="@+id/btnStartMining"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="▶ START MINING"
+            android:textColor="#00FF41"
+            android:backgroundTint="#111827"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="3dp"/>
+
+        <Button
+            android:id="@+id/btnStopMining"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="■ STOP"
+            android:textColor="#FF6B6B"
+            android:backgroundTint="#111827"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:enabled="false"
+            android:layout_marginStart="3dp"/>
+
+        <Button
+            android:id="@+id/btnRefreshMining"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="⟳ REFRESH"
+            android:textColor="#3B82F6"
+            android:backgroundTint="#111827"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:layout_marginStart="3dp"/>
+    </LinearLayout>
+
+</LinearLayout>

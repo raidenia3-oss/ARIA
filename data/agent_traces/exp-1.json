@@ -1,0 +1,12 @@
+{
+  "trace_id": "exp-1",
+  "task_id": "t",
+  "objective": "resolver error de sintaxis",
+  "outcome": "corrected",
+  "steps": [],
+  "error": "SyntaxError",
+  "correction": "Revisar los paréntesis",
+  "duration_ms": 0.0,
+  "created_at": 1789412227.3643696,
+  "metadata": {}
+}

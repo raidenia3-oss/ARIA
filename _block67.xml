@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="0.967" timestamp="2026-09-11T19:46:43.191589-05:00" hostname="DESKTOP-7BR2AA6"><testcase classname="" name="tests.test_block67" time="0.000"><error message="collection failure">ImportError while importing test module 'C:\Users\User\Downloads\AURA\tests\test_block67.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+..\..\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_block67.py:6: in &lt;module&gt;
+    from backend.automation.scheduler import (
+backend\automation\__init__.py:16: in &lt;module&gt;
+    from backend.automation.scheduler import (
+E   ImportError: cannot import name 'ResourceConflictResolver' from 'backend.automation.scheduler' (C:\Users\User\Downloads\AURA\backend\automation\scheduler.py)</error></testcase></testsuite></testsuites>

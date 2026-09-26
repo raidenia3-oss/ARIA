@@ -1,0 +1,36 @@
+{
+  "name": "AME Assistant - Asistente Personal",
+  "short_name": "AME",
+  "description": "Tu asistente personal inteligente sin necesidad de PC. Accede desde cualquier dispositivo.",
+  "start_url": "/ame",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#080408",
+  "background_color": "#080408",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%23080408' width='192' height='192'/%3E%3Ctext x='50%25' y='55%25' font-size='120' fill='%23DC143C' text-anchor='middle' dominant-baseline='middle'%3E🤖%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect fill='%23080408' width='512' height='512'/%3E%3Ctext x='50%25' y='55%25' font-size='320' fill='%23DC143C' text-anchor='middle' dominant-baseline='middle'%3E🤖%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'%3E%3Crect fill='%23080408' width='540' height='720'/%3E%3Ctext x='50%25' y='50%25' font-size='100' fill='%23DC143C' text-anchor='middle' dominant-baseline='middle'%3E🤖%3C/text%3E%3C/svg%3E",
+      "sizes": "540x720",
+      "form_factor": "narrow",
+      "type": "image/svg+xml"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

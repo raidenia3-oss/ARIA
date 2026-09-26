@@ -1,0 +1,17 @@
+{
+  "trace_id": "trace-manual-1789180149464",
+  "task_id": "manual-1789180149464",
+  "objective": "tarea de prueba",
+  "outcome": "success",
+  "steps": [
+    {
+      "tool": "shell",
+      "action": "echo"
+    }
+  ],
+  "error": "",
+  "correction": "",
+  "duration_ms": 0.0,
+  "created_at": 1789180149.4642153,
+  "metadata": {}
+}

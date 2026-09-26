@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Nodos Tácticos de Conocimiento - AURA</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #0a0f1e;
+            color: white;
+        }
+
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            z-index: 100;
+            max-width: 800px;
+        }
+
+        .terminal {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            width: 300px;
+            height: 500px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            padding: 15px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            color: #00d4ff;
+        }
+
+        .terminal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff3366;
+            font-weight: bold;
+        }
+
+        .terminal-header::before {
+            content: "🔧";
+            margin-right: 10px;
+        }
+
+        .terminal-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Estilos para los paneles de conocimiento */
+        .knowledge-panel-container {
+            position: fixed;
+            z-index: 2000;
+            width: 400px;
+            height: 500px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .knowledge-panel-content {
+            padding: 15px;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .knowledge-panel-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .knowledge-panel-header h2 {
+            color: #ff3366;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .knowledge-panel-header .path {
+            color: #ccc;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #00d4ff;
+        }
+
+        .dates {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .knowledge-panel-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 51, 102, 0.2);
+            border: 1px solid rgba(255, 51, 102, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff3366;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .knowledge-panel-close:hover {
+            background: rgba(255, 51, 102, 0.3);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2>Prueba de Nodos Tácticos de Conocimiento</h2>
+        <p>Demostración de la integración de Obsidian con el motor de física 3D</p>
+        <p>🖱️ Haz clic en los nodos para ver su contenido</p>
+    </div>
+    <div id="instructions">
+        <p>📌 Instrucciones:</p>
+        <ul>
+            <li>Los nodos 3D representan notas de conocimiento</li>
+            <li>Haz clic en un nodo para ver su contenido en un panel flotante</li>
+            <li>Arrastra los nodos para moverlos con efecto de resorte</li>
+            <li>Los nodos tienen diferentes colores según su categoría</li>
+            <li>El tamaño del nodo refleja la relevancia de la nota</li>
+        </ul>
+    </div>
+
+    <!-- Terminal de ejemplo -->
+    <div class="terminal">
+        <div class="terminal-header">
+            PRUEBA DE NODOS TÁCTICOS
+        </div>
+        <div style="margin-bottom: 20px; color: #ccc;">
+            <div>📡 Sistema de nodos tácticos iniciado</div>
+            <div>🔍 Cargando base de conocimiento...</div>
+            <div style="margin-top: 10px; font-size: 12px;">
+                <div style="color: #00d4ff;">📡 Nodos disponibles:</div>
+                <div style="color: #ff3366;">- Shadow-Core (rosa)</div>
+                <div style="color: #00d4ff;">- Physics UI (azul)</div>
+                <div style="color: #00ff88;">- Obsidian Integration (verde)</div>
+            </div>
+        </div>
+        <div class="terminal-footer">
+            🔄 Actualizando cada 2 segundos
+        </div>
+    </div>
+
+    <!-- Librerías necesarias -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.min.js"></script>
+
+    <!-- Módulos de AURA -->
+    <script src="/ui_engine/physics_ui.js"></script>
+    <script>
+        // Configuración para la prueba
+        const testConfig = {
+            knowledgeBasePath: '/knowledge_base.json',
+            physicsConfig: {
+                gravity: 0.3,
+                damping: 0.2,
+                massMultiplier: 0.3
+            },
+            nodePositions: [
+                { x: -20, y: 15, z: 0, category: 'shadow-core' },
+                { x: -10, y: 15, z: 0, category: 'shadow-core' },
+                { x: 0, y: 5, z: 0, category: 'physics' },
+                { x: 10, y: 5, z: 0, category: 'physics' },
+                { x: 20, y: 5, z: 0, category: 'physics' },
+                { x: -15, y: -10, z: 0, category: 'obsidian' },
+                { x: -5, y: -10, z: 0, category: 'obsidian' },
+                { x: 5, y: -10, z: 0, category: 'obsidian' }
+            ],
+            testData: {
+                "last_indexed": "2026-05-28T14:00:00",
+                "notes": {
+                    "AURA/Shadow-Core/001-shadow-core-spec.md": {
+                        "path": "AURA/Shadow-Core/001-shadow-core-spec.md",
+                        "title": "Shadow-Core Specification",
+                        "tags": ["shadow-core", "spec", "architecture"],
+                        "created": "2026-05-20T10:00:00",
+                        "modified": "2026-05-27T18:30:00",
+                        "content": "## Shadow-Core Specification\n\nThe Shadow-Core is a microservice designed for advanced OSINT operations. It operates in isolation from the main AURA system to prevent cascading failures.\n\n### Key Features\n- **Isolated Execution**: Runs on port 5001\n- **Threat Detection**: Integrated with Security Shield\n- **Data Exfiltration**: Supports DNS and ICMP channels\n- **Stealth Mode**: SYN Stealth and ARP scanning capabilities\n\n### Components\n1. **Net Recon Ghost**: Network reconnaissance module\n2. **Data Exfiltration Layer**: Secure data exfiltration\n3. **Security Shield Integration**: Real-time threat monitoring\n\n### Threat Levels\n- CLEAN: No threats detected\n- WARNING: Potential threats\n- ALERT: Immediate action required\n- CRITICAL: System isolation required\n\n### API Endpoints\n- `/api/net_recon`: Network reconnaissance\n- `/api/data_exfil`: Data exfiltration\n- `/api/execute_advanced`: Advanced command execution\n\n### Example Usage\n```python\n# Example of executing a stealth scan\nresult = run_recon('192.168.1.0/24', ['80', '443', '22'])\n```",
+                        "chunks": [
+                            "The Shadow-Core is a microservice designed for advanced OSINT operations. It operates in isolation from the main AURA system to prevent cascading failures.",
+                            "### Key Features\n- **Isolated Execution**: Runs on port 5001\n- **Threat Detection**: Integrated with Security Shield\n- **Data Exfiltration**: Supports DNS and ICMP channels\n- **Stealth Mode**: SYN Stealth and ARP scanning capabilities",
+                            "### Components\n1. **Net Recon Ghost**: Network reconnaissance module\n2. **Data Exfiltration Layer**: Secure data exfiltration\n3. **Security Shield Integration**: Real-time threat monitoring",
+                            "### Threat Levels\n- CLEAN: No threats detected\n- WARNING: Potential threats\n- ALERT: Immediate action required\n- CRITICAL: System isolation required",
+                            "### API Endpoints\n- `/api/net_recon`: Network reconnaissance\n- `/api/data_exfil`: Data exfiltration\n- `/api/execute_advanced`: Advanced command execution",
+                            "### Example Usage\n```python\n# Example of executing a stealth scan\nresult = run_recon('192.168.1.0/24', ['80', '443', '22'])\n```"
+                        ],
+                        "hash": "a1b2c3d4e5f678901234567890abcdef12"
+                    },
+                    "AURA/physics_ui_integration.md": {
+                        "path": "AURA/physics_ui_integration.md",
+                        "title": "Physics UI Integration",
+                        "tags": ["3d", "physics", "dashboard", "antigravity"],
+                        "created": "2026-05-25T12:00:00",
+                        "modified": "2026-05-27T20:15:00",
+                        "content": "## Physics UI Integration\n\nThis document describes the integration of the PHYS-UI-ENGINE with the AURA dashboard to create a 3D Antigravity environment.\n\n### Objectives\n- Transform the dashboard into a 3D physical space\n- Implement realistic physics with Three.js and Cannon-es\n- Create interactive elements with drag-and-drop physics\n- Add visual effects inspired by the Antigravity style\n\n### Implementation\n\n#### 1. Physics Engine\n- **Three.js**: For 3D rendering\n- **Cannon-es**: For physics simulation\n- **Custom Physics Config**:\n  - Gravity: 0.3 (reduced for Antigravity effect)\n  - Damping: 0.2 (low for more inertia)\n  - Spring Constant: 0.15 (for drag effects)\n\n#### 2. Dashboard Elements\n- **Terminals**: Converted to 3D objects with physics\n- **Panels**: Flotantes con efectos de profundidad\n- **Interactivity**: Arrastre con efecto de resorte\n\n#### 3. Visual Effects\n- **Lighting**: Ambient and directional lights\n- **Materials**: Glass-like materials with transparency\n- **Shadows**: Soft shadows for depth\n\n### Example Code\n```javascript\n// Creating a physics object\nconst physicsObject = PhysicsUI.createObject({\n  mass: 1.5,\n  width: 8,\n  height: 8,\n  depth: 8,\n  color: 0xff3366,\n  position: { x: 0, y: 40, z: 0 }\n});\n\n// Creating an HTML object with physics\nconst terminalObject = PhysicsUI.createHtmlObject(\n  document.querySelector('.evolution-terminal'), {\n    width: 30,\n    height: 50,\n    depth: 2,\n    color: 0x00d4ff,\n    position: { x: -30, y: 20, z: 0 }\n  }\n);\n```",
+                        "chunks": [
+                            "This document describes the integration of the PHYS-UI-ENGINE with the AURA dashboard to create a 3D Antigravity environment.",
+                            "### Objectives\n- Transform the dashboard into a 3D physical space\n- Implement realistic physics with Three.js and Cannon-es\n- Create interactive elements with drag-and-drop physics\n- Add visual effects inspired by the Antigravity style",
+                            "### Implementation\n\n#### 1. Physics Engine\n- **Three.js**: For 3D rendering\n- **Cannon-es**: For physics simulation\n- **Custom Physics Config**:\n  - Gravity: 0.3 (reduced for Antigravity effect)\n  - Damping: 0.2 (low for more inertia)\n  - Spring Constant: 0.15 (for drag effects)",
+                            "#### 2. Dashboard Elements\n- **Terminals**: Converted to 3D objects with physics\n- **Panels**: Flotantes con efectos de profundidad\n- **Interactivity**: Arrastre con efecto de resorte",
+                            "#### 3. Visual Effects\n- **Lighting**: Ambient and directional lights\n- **Materials**: Glass-like materials with transparency\n- **Shadows**: Soft shadows for depth",
+                            "### Example Code\n```javascript\n// Creating a physics object\nconst physicsObject = PhysicsUI.createObject({\n  mass: 1.5,\n  width: 8,\n  height: 8,\n  depth: 8,\n  color: 0xff3366,\n  position: { x: 0, y: 40, z: 0 }\n});\n```"
+                        ],
+                        "hash": "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7"
+                    },
+                    "AURA/obsidian_integration.md": {
+                        "path": "AURA/obsidian_integration.md",
+                        "title": "Obsidian Integration",
+                        "tags": ["obsidian", "knowledge", "memory", "search"],
+                        "created": "2026-05-26T15:30:00",
+                        "modified": "2026-05-27T19:45:00",
+                        "content": "## Obsidian Integration\n\nThis document describes how to integrate AURA with Obsidian vaults for long-term knowledge management.\n\n### Objectives\n- Index Obsidian notes for search\n- Create a knowledge graph\n- Implement tactical nodes in 3D space\n- Enable interactive exploration of knowledge\n\n### Implementation\n\n#### 1. Indexing System\n- **ObsidianIndexer**: Python class for indexing\n- **Metadata Extraction**: Frontmatter processing\n- **Text Chunking**: For efficient search\n- **JSON Storage**: knowledge_base.json\n\n#### 2. Search Functionality\n- **Endpoint**: /api/obsidian/search\n- **Parameters**: query, limit\n- **Response**: Relevant note fragments\n\n#### 3. 3D Visualization\n- **Tactical Nodes**: Represent notes as 3D objects\n- **Size Proportional**: Based on note relevance\n- **Interactive**: Click to expand and view content\n\n### Example Usage\n\n```python\n# Initialize the indexer\nindexer = ObsidianIndexer(\"C:/Users/User/ObsidianVault\")\n\n# Index the vault\nstats = indexer.index_vault()\n\n# Search for notes\nresults = indexer.search_notes(\"shadow core osint\", limit=5)\n```\n\n### API Endpoint\n\n```json\nPOST /api/obsidian/search\n{\n  \"query\": \"shadow core osint\",\n  \"limit\": 5\n}\n```\n\nResponse:\n```json\n{\n  \"results\": [\n    {\n      \"title\": \"Shadow-Core Specification\",\n      \"path\": \"AURA/Shadow-Core/001-shadow-core-spec.md\",\n      \"score\": 0.95,\n      \"fragment\": \"The Shadow-Core is a microservice designed for advanced OSINT operations...\",\n      \"tags\": [\"shadow-core\", \"spec\", \"architecture\"]\n    }\n  ]\n}\n```",
+                        "chunks": [
+                            "This document describes how to integrate AURA with Obsidian vaults for long-term knowledge management.",
+                            "### Objectives\n- Index Obsidian notes for search\n- Create a knowledge graph\n- Implement tactical nodes in 3D space\n- Enable interactive exploration of knowledge",
+                            "### Implementation\n\n#### 1. Indexing System\n- **ObsidianIndexer**: Python class for indexing\n- **Metadata Extraction**: Frontmatter processing\n- **Text Chunking**: For efficient search\n- **JSON Storage**: knowledge_base.json",
+                            "#### 2. Search Functionality\n- **Endpoint**: /api/obsidian/search\n- **Parameters**: query, limit\n- **Response**: Relevant note fragments",
+                            "#### 3. 3D Visualization\n- **Tactical Nodes**: Represent notes as 3D objects\n- **Size Proportional**: Based on note relevance\n- **Interactive**: Click to expand and view content",
+                            "### Example Usage\n\n```python\n# Initialize the indexer\nindexer = ObsidianIndexer(\"C:/Users/User/ObsidianVault\")\n\n# Index the vault\nstats = indexer.index_vault()\n\n# Search for notes\nresults = indexer.search_notes(\"shadow core osint\", limit=5)\n```"
+                        ],
+                        "hash": "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f"
+                    }
+                },
+                "categories": {
+                    "shadow-core": {
+                        "title": "Shadow-Core",
+                        "description": "Advanced OSINT operations and system isolation",
+                        "color": 0xff3366,
+                        "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"]
+                    },
+                    "physics": {
+                        "title": "Physics UI",
+                        "description": "3D physics integration and Antigravity effects",
+                        "color": 0x00d4ff,
+                        "nodes": ["AURA/physics_ui_integration.md"]
+                    },
+                    "obsidian": {
+                        "title": "Obsidian Integration",
+                        "description": "Knowledge management and search functionality",
+                        "color": 0x00ff88,
+                        "nodes": ["AURA/obsidian_integration.md"]
+                    }
+                }
+            }
+        };
+
+        // Función para simular la carga de la base de conocimiento
+        function simulateKnowledgeBase() {
+            // Simular la estructura de categories
+            const categories = {
+                'shadow-core': {
+                    title: "Shadow-Core",
+                    description: "Advanced OSINT operations and system isolation",
+                    color: 0xff3366,
+                    nodes: ["AURA/Shadow-Core/001-shadow-core-spec.md"]
+                },
+                'physics': {
+                    title: "Physics UI",
+                    description: "3D physics integration and Antigravity effects",
+                    color: 0x00d4ff,
+                    nodes: ["AURA/physics_ui_integration.md"]
+                },
+                'obsidian': {
+                    title: "Obsidian Integration",
+                    description: "Knowledge management and search functionality",
+                    color: 0x00ff88,
+                    nodes: ["AURA/obsidian_integration.md"]
+                }
+            };
+
+            // Crear nodos para cada categoría
+            testConfig.nodePositions.forEach((position, index) => {
+                const category = categories[position.category];
+                const notePath = category.nodes[index % category.nodes.length];
+                const note = testConfig.testData.notes[notePath];
+
+                // Determinar el tamaño del nodo basado en la relevancia
+                const chunkCount = note.chunks ? note.chunks.length : 1;
+                const size = 4 + (chunkCount * 0.5) + (category.nodes.length * 0.3);
+                const finalSize = Math.min(Math.max(size, 3), 8);
+
+                // Crear el nodo físico
+                const node = window.PhysicsUI.createObject({
+                    mass: 0.8 + (finalSize * 0.1),
+                    width: finalSize,
+                    height: finalSize,
+                    depth: finalSize * 0.6,
+                    color: category.color,
+                    position: position,
+                    userData: {
+                        type: 'knowledge',
+                        category: position.category,
+                        title: note.title,
+                        path: note.path,
+                        content: note.content,
+                        chunks: note.chunks,
+                        tags: note.tags,
+                        created: note.created,
+                        modified: note.modified,
+                        originalSize: finalSize
+                    },
+                    isDraggable: true
+                });
+
+                // Añadir efecto de brillo
+                addGlowEffect(node.mesh, category.color);
+
+                // Hacer el nodo interactivo
+                makeNodeInteractive(node, note);
+
+                console.log(`✅ Nodo creado: ${note.title} (${position.category})`);
+            });
+
+            console.log("🎉 Todos los nodos tácticos creados con éxito");
+        }
+
+        // Función para añadir efecto de brillo a un nodo (simulada)
+        function addGlowEffect(mesh, color) {
+            // En una implementación real, esto crearía un efecto de brillo
+            // Para esta prueba, solo lo registramos
+            mesh.userData.glowEffect = true;
+            mesh.userData.glowColor = color;
+        }
+
+        // Función para hacer un nodo interactivo
+        function makeNodeInteractive(node, note) {
+            // Añadir evento de clic
+            node.mesh.userData.onClick = function() {
+                showKnowledgePanel(note);
+            };
+
+            // Añadir evento de doble clic para expandir/contraer
+            node.mesh.userData.onDoubleClick = function() {
+                if (node.userData.expanded) {
+                    collapseKnowledgeNode(node);
+                } else {
+                    expandKnowledgeNode(node);
+                }
+            };
+
+            console.log(`🎯 Nodo interactivo configurado: ${note.title}`);
+        }
+
+        // Función para mostrar el panel de conocimiento
+        function showKnowledgePanel(note) {
+            // Cerrar cualquier panel activo
+            const existingPanel = document.querySelector('.knowledge-panel-container');
+            if (existingPanel) {
+                existingPanel.style.display = 'none';
+            }
+
+            // Crear el contenedor del panel
+            const panelContainer = document.createElement('div');
+            panelContainer.className = 'knowledge-panel-container';
+            panelContainer.style.position = 'fixed';
+            panelContainer.style.zIndex = '2000';
+            panelContainer.style.width = '400px';
+            panelContainer.style.height = '500px';
+            panelContainer.style.left = '50%';
+            panelContainer.style.top = '50%';
+            panelContainer.style.transform = 'translate(-50%, -50%)';
+            panelContainer.style.background = 'rgba(10, 15, 26, 0.9)';
+            panelContainer.style.border = '1px solid rgba(0, 212, 255, 0.3)';
+            panelContainer.style.borderRadius = '10px';
+            panelContainer.style.boxShadow = '0 0 30px rgba(0, 212, 255, 0.3)';
+            panelContainer.style.backdropFilter = 'blur(10px)';
+            panelContainer.style.overflow = 'hidden';
+            panelContainer.style.display = 'none';
+            panelContainer.style.transition = 'all 0.3s ease';
+
+            // Crear el contenido del panel
+            const panelContent = document.createElement('div');
+            panelContent.className = 'knowledge-panel-content';
+            panelContent.style.padding = '15px';
+            panelContent.style.color = '#00d4ff';
+            panelContent.style.fontFamily = "'Courier New', monospace";
+            panelContent.style.fontSize = '12px';
+            panelContent.style.lineHeight = '1.4';
+            panelContent.style.height = '100%';
+            panelContent.style.overflowY = 'auto';
+
+            // Crear el encabezado del panel
+            const panelHeader = document.createElement('div');
+            panelHeader.className = 'knowledge-panel-header';
+
+            // Título del panel
+            const panelTitle = document.createElement('h2');
+            panelTitle.textContent = note.title;
+            panelTitle.style.color = '#ff3366';
+            panelTitle.style.margin = '0 0 5px 0';
+            panelTitle.style.fontSize = '16px';
+
+            // Ruta de la nota
+            const panelPath = document.createElement('div');
+            panelPath.textContent = note.path;
+            panelPath.className = 'path';
+            panelPath.style.color = '#ccc';
+            panelPath.style.fontSize = '11px';
+            panelPath.style.marginBottom = '10px';
+
+            // Tags
+            const tagsContainer = document.createElement('div');
+            tagsContainer.className = 'tags';
+
+            note.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.textContent = `#${tag}`;
+                tagElement.className = 'tag';
+                tagsContainer.appendChild(tagElement);
+            });
+
+            // Fechas
+            const datesContainer = document.createElement('div');
+            datesContainer.className = 'dates';
+
+            const createdDate = document.createElement('div');
+            createdDate.textContent = `Creado: ${note.created}`;
+            createdDate.style.marginRight = '15px';
+
+            const modifiedDate = document.createElement('div');
+            modifiedDate.textContent = `Modificado: ${note.modified}`;
+
+            datesContainer.appendChild(createdDate);
+            datesContainer.appendChild(modifiedDate);
+
+            // Añadir elementos al encabezado
+            panelHeader.appendChild(panelTitle);
+            panelHeader.appendChild(panelPath);
+            panelHeader.appendChild(tagsContainer);
+            panelHeader.appendChild(datesContainer);
+
+            // Contenido principal
+            const contentTitle = document.createElement('h3');
+            contentTitle.textContent = 'Contenido';
+            contentTitle.style.color = '#00d4ff';
+            contentTitle.style.margin = '15px 0 10px 0';
+            contentTitle.style.fontSize = '14px';
+
+            // Procesar el contenido para mostrarlo con formato
+            const contentDiv = document.createElement('div');
+            contentDiv.style.whiteSpace = 'pre-wrap';
+            contentDiv.style.lineHeight = '1.5';
+
+            // Dividir el contenido en párrafos
+            const paragraphs = note.content.split('\n\n').filter(p => p.trim().length > 0);
+
+            paragraphs.forEach(paragraph => {
+                const pElement = document.createElement('p');
+                pElement.textContent = paragraph;
+                pElement.style.margin = '5px 0';
+                pElement.style.color = '#ccc';
+
+                // Resaltar encabezados
+                if (paragraph.startsWith('## ')) {
+                    pElement.style.fontWeight = 'bold';
+                    pElement.style.color = '#00d4ff';
+                    pElement.style.marginTop = '15px';
+                } else if (paragraph.startsWith('### ')) {
+                    pElement.style.fontWeight = 'bold';
+                    pElement.style.color = '#00ff88';
+                    pElement.style.marginTop = '10px';
+                }
+
+                contentDiv.appendChild(pElement);
+            });
+
+            // Botón para cerrar el panel
+            const closeButton = document.createElement('div');
+            closeButton.className = 'knowledge-panel-close';
+            closeButton.innerHTML = '✕';
+
+            closeButton.addEventListener('click', () => {
+                panelContainer.style.opacity = '0';
+                panelContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
+
+                setTimeout(() => {
+                    document.body.removeChild(panelContainer);
+                }, 300);
+            });
+
+            // Añadir elementos al panel
+            panelContent.appendChild(panelHeader);
+            panelContent.appendChild(contentTitle);
+            panelContent.appendChild(contentDiv);
+
+            // Añadir el botón de cerrar al contenedor
+            panelContainer.appendChild(closeButton);
+            panelContainer.appendChild(panelContent);
+
+            // Añadir el panel al cuerpo
+            document.body.appendChild(panelContainer);
+
+            // Mostrar el panel con animación
+            setTimeout(() => {
+                panelContainer.style.display = 'block';
+            }, 10);
+
+            console.log(`📄 Panel de conocimiento mostrado: ${note.title}`);
+        }
+
+        // Función para expandir un nodo (simulada)
+        function expandKnowledgeNode(node) {
+            if (node.userData.expanded) return;
+
+            console.log(`🔍 Expandiendo nodo: ${node.userData.title}`);
+            node.userData.expanded = true;
+
+            // En una implementación real, esto animaría la expansión
+            // Para esta prueba, solo mostramos un mensaje
+        }
+
+        // Función para contraer un nodo (simulada)
+        function collapseKnowledgeNode(node) {
+            if (!node.userData.expanded) return;
+
+            console.log(`🔗 Contraendo nodo: ${node.userData.title}`);
+            node.userData.expanded = false;
+        }
+
+        // Función para inicializar la prueba
+        function initTest() {
+            console.log("🚀 Iniciando prueba de nodos tácticos de conocimiento...");
+
+            // Inicializar el motor de física
+            if (!window.PhysicsUI.init()) {
+                console.error("❌ Error inicializando PhysicsUI");
+                return;
+            }
+
+            // Crear un cubo de prueba
+            window.PhysicsUI.createObject({
+                mass: 1.2,
+                width: 6,
+                height: 6,
+                depth: 6,
+                color: 0x00ff88,
+                position: { x: 0, y: 30, z: 0 },
+                userData: {
+                    type: 'demo_cube',
+                    description: 'Cubo de demostración'
+                }
+            });
+
+            // Simular la carga de la base de conocimiento
+            simulateKnowledgeBase();
+
+            console.log("🎉 Prueba de nodos tácticos inicializada con éxito");
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar si Three.js y Cannon-es están disponibles
+            if (window.THREE && window.CANNON) {
+                initTest();
+            } else {
+                console.warn("Esperando carga de Three.js y Cannon-es...");
+                const checkInterval = setInterval(() => {
+                    if (window.THREE && window.CANNON) {
+                        clearInterval(checkInterval);
+                        initTest();
+                    }
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>

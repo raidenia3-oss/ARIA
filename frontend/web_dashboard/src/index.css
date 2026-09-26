@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+:root {
+  --aura-bg: #05070a;
+  --aura-surface: #0a0f14;
+  --aura-panel: #0d1117;
+  --aura-border: rgba(56, 189, 248, 0.25);
+  --aura-primary: #38bdf8;
+  --aura-secondary: #6366f1;
+  --aura-accent: #22d3ee;
+  --aura-danger: #ef4444;
+  --aura-success: #22c55e;
+  --aura-warning: #facc15;
+  --aura-muted: #94a3b8;
+}
+
+body {
+  margin: 0;
+  background: var(--aura-bg);
+  color: #e2e8f0;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Scrollbar táctica */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 3px; }

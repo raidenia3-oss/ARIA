@@ -1,0 +1,13 @@
+[Unit]
+Description=AURA Gesture Control
+After=display-manager.service
+
+[Service]
+Type=simple
+User=aura
+ExecStart=python3 /opt/aura/gesture/gesture_control.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

@@ -1,0 +1,125 @@
+name: Release Build & Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-distro:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build AURA OS image
+        run: |
+          cd aura-os/distro-builder
+          chmod +x build-distro-hardened.sh
+          ./build-distro-hardened.sh
+
+      - name: Create release artifacts
+        run: |
+          cd aura-os/distro-builder/output
+          sha256sum aura-os-2.1.img > aura-os-2.1.img.sha256
+          sha256sum rootfs.tar.gz > rootfs.tar.gz.sha256
+
+          cat > MANIFEST.txt << EOF
+          AURA OS v2.1.0
+          ===============
+
+          Build Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          Build System: GitHub Actions
+
+          Components:
+          - Alpine Linux 3.18
+          - Hyprland (Wayland WM)
+          - AURA Backend (FastAPI)
+          - Go Tools (6 binaries)
+          - Ruby Tools (5 modules)
+
+          Files:
+          EOF
+
+          ls -lh >> MANIFEST.txt
+
+      - name: Upload artifacts to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            aura-os/distro-builder/output/aura-os-2.1.img
+            aura-os/distro-builder/output/aura-os-2.1.img.sha256
+            aura-os/distro-builder/output/rootfs.tar.gz
+            aura-os/distro-builder/output/rootfs.tar.gz.sha256
+            aura-os/distro-builder/output/MANIFEST.txt
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          dockerfile: aura-os/distro-builder/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/aura-os:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/aura-os:${{ github.ref_name }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/aura-os:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/aura-os:buildcache,mode=max
+
+      - name: Push to GitHub Container Registry
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          dockerfile: aura-os/distro-builder/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+
+  publish-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build documentation
+        run: |
+          pip install mkdocs mkdocs-material
+          mkdocs build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site

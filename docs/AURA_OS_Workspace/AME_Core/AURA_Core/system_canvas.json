@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-06-20T23:33:28.681638",
+  "canvas": {
+    "width": 1200,
+    "height": 800,
+    "center": {
+      "x": 600,
+      "y": 400
+    }
+  },
+  "nodes": [],
+  "edges": [],
+  "overlays": {
+    "total_nodes": 0,
+    "status_summary": {},
+    "bot_hashrate": "N/A",
+    "bot_uptime": "N/A",
+    "market_topics": []
+  }
+}

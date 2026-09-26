@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "generated_at": "2026-06-27T01:25:32.496489+00:00",
+    "source_count": 5,
+    "campaign": "ia_trending"
+  },
+  "trends": [
+    {
+      "id": "trend-1782523532-0",
+      "original_title": "Google keeps losing top ai researchers, the moat was never the weights",
+      "title": "🔥 Alucinante: Google keeps losing top ai researchers, the moat was never the weights",
+      "source_url": "https://www.reddit.com/r/artificial/comments/1ugbwol/google_keeps_losing_top_ai_researchers_the_moat/",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=alucinante-google-keeps-losing",
+      "category": "noticia",
+      "generated_at": "2026-06-27T01:25:32.495488+00:00"
+    },
+    {
+      "id": "trend-1782523532-1",
+      "original_title": "do you think ai will add more jobs than it will cut over the long run?",
+      "title": "🔥 Gratis: Do you think ai will add more jobs than it will cut over the long run?",
+      "source_url": "https://www.reddit.com/r/artificial/comments/1ugki2w/do_you_think_ai_will_add_more_jobs_than_it_will/",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=gratis-do-you-think-ai-will-ad",
+      "category": "noticia",
+      "generated_at": "2026-06-27T01:25:32.495488+00:00"
+    },
+    {
+      "id": "trend-1782523532-2",
+      "original_title": "Anthropic just published data showing 35% of their users expect AI to do MOST of their work within 12 months. We’re not having an honest conversation about what this actually means.",
+      "title": "Épico: Anthropic just published data showing 35% of their users expect AI to do MOST of their work within 12 months. We’re not having an honest conversation about what this actually means.",
+      "source_url": "https://www.reddit.com/r/artificial/comments/1ugaq5b/anthropic_just_published_data_showing_35_of_their/",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=pico-anthropic-just-published",
+      "category": "tutorial",
+      "generated_at": "2026-06-27T01:25:32.495488+00:00"
+    },
+    {
+      "id": "trend-1782523532-3",
+      "original_title": "The underrated part of open weight models isn't running them local, it's being allowed to build on top off them",
+      "title": "🚀 The underrated part of open weight models isn't running them local, it's being allowed to build on top off them [El futuro de la IA]",
+      "source_url": "https://www.reddit.com/r/artificial/comments/1ug6v99/the_underrated_part_of_open_weight_models_isnt/",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=the-underrated-part-of-open-we",
+      "category": "modelo",
+      "generated_at": "2026-06-27T01:25:32.496489+00:00"
+    },
+    {
+      "id": "trend-1782523532-4",
+      "original_title": "i analyzed 500+ companies job postings to see what new roles are emerging due to ai",
+      "title": "🚀 I analyzed 500+ companies job postings to see what new roles are emerging due to ai [El futuro de la IA]",
+      "source_url": "https://www.reddit.com/r/artificial/comments/1ugkq6h/i_analyzed_500_companies_job_postings_to_see_what/",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=i-analyzed-500-companies-job-p",
+      "category": "noticia",
+      "generated_at": "2026-06-27T01:25:32.496489+00:00"
+    }
+  ]
+}

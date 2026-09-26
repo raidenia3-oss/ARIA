@@ -1,0 +1,205 @@
+[INFO] AI: ['ollama', 'local']
+[INFO] AI: ['ollama', 'local']
+[INFO] Skills loaded: 25
+[INFO] Skills loaded: 25
+[INFO] Tool registered: control_pc
+[INFO] Tool registered: control_pc
+[INFO] Tool registered: explorer
+[INFO] Tool registered: explorer
+[INFO] Tool registered: code_run
+[INFO] Tool registered: code_run
+[INFO] Tool registered: browser
+[INFO] Tool registered: browser
+[INFO] ToolRegistry loaded
+[INFO] ToolRegistry loaded
+[INFO] SmartLLMFallback initialized
+[INFO] SmartLLMFallback initialized
+[INFO] PersonalityEngine initialized
+[INFO] PersonalityEngine initialized
+[INFO] LogicEngine initialized
+[INFO] LogicEngine initialized
+[INFO] Logic bridge (frozen mode) started
+[INFO] Logic bridge (frozen mode) started
+Unknown property text-shadow
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property text-shadow
+Unknown property text-shadow
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property box-shadow
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property box-shadow
+Unknown property transform
+Unknown property transform
+Unknown property box-shadow
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property text-shadow
+Unknown property text-shadow
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property box-shadow
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property box-shadow
+Unknown property transform
+Unknown property transform
+Unknown property box-shadow
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property transition
+Unknown property box-shadow
+Unknown property transition
+Unknown property box-shadow
+Unknown property transform
+Unknown property transition
+Unknown property box-shadow
+Unknown property box-shadow
+Unknown property transform
+Unknown property transform
+Unknown property box-shadow
+Traceback (most recent call last):
+  File "desktop_ui.py", line 499, in paintEvent
+TypeError: arguments did not match any overloaded call:
+  drawLine(self, l: QLineF): argument 1 has unexpected type 'float'
+  drawLine(self, line: QLine): argument 1 has unexpected type 'float'
+  drawLine(self, x1: int, y1: int, x2: int, y2: int): argument 1 has unexpected type 'float'
+  drawLine(self, p1: QPoint, p2: QPoint): argument 1 has unexpected type 'float'
+  drawLine(self, p1: Union[QPointF, QPoint], p2: Union[QPointF, QPoint]): argument 1 has unexpected type 'float'

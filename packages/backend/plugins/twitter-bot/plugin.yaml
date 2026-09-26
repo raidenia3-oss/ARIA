@@ -1,0 +1,32 @@
+name: "twitter-bot"
+version: "1.0.0"
+author: "AURA"
+description: "Genera tweets con trend analysis y engagement prediction"
+
+commands:
+  - name: "generate_tweet"
+    params: ["topic", "hashtags", "tone"]
+    async: true
+  - name: "analyze_trends"
+    params: ["topic"]
+    async: true
+  - name: "schedule_post"
+    params: ["tweet", "datetime"]
+    async: true
+  - name: "predict_engagement"
+    params: ["tweet"]
+    async: false
+
+dependencies:
+  - "openai>=1.0.0"
+  - "twilio>=8.0.0"
+
+capabilities:
+  - "tweet_generation"
+  - "trend_analysis"
+  - "engagement_prediction"
+  - "scheduled_posting"
+
+settings:
+  quality_target: 0.91
+  speed_target: 1800

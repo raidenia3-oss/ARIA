@@ -1,0 +1,27 @@
+{
+    "version": "1.0",
+    "tasks": [
+        {
+            "name": "example_task",
+            "urls": ["https://ejemplo.com"],
+            "dom_targets": [
+                { "selector": "#boton-enviar", "action": "click", "delay_ms": 1200 },
+                {
+                    "selector": "input[name='q']",
+                    "action": "type",
+                    "text": "Hola mundo",
+                    "delay_ms": 300
+                }
+            ],
+            "proxy": {
+                "enabled": false,
+                "list": ["http://proxy1:8080", "http://proxy2:8080"]
+            },
+            "stealth": {
+                "random_delay_range_ms": [800, 2500],
+                "mouse_bezier": true,
+                "rotate_user_agent": true
+            }
+        }
+    ]
+}

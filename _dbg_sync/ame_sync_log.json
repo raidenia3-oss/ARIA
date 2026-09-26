@@ -1,0 +1,10 @@
+[
+  {
+    "eventId": "n1",
+    "type": "note",
+    "status": "applied",
+    "detail": "note buffered",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:29:11-0500"
+  }
+]

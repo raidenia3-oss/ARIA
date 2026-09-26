@@ -1,0 +1,27 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el supervisor de conexión SSH AURA-Termux",
+    "ssh_host": "localhost",
+    "ssh_port": 8022,
+    "ssh_user": "user",
+    "ping_interval": 30,
+    "ping_timeout": 10,
+    "reconnect_delay": 5,
+    "offline_threshold_minutes": 5,
+    "offline_check_interval": 60,
+    "error_retry_delay": 60,
+    "dashboard_url": "http://localhost:3000",
+    "dashboard_api_key": "",
+    "restart_command": [
+        "bash",
+        "-c",
+        "source ~/.profile; ssh -R 8022:localhost:22 -N user@mobile-device"
+    ],
+    "log_file": "connection_supervisor.log",
+    "alert_timeout": 10,
+    "max_reconnect_attempts": 3,
+    "reconnect_interval": 300,
+    "mobile_device_name": "mobile-device",
+    "ssh_key_path": "~/.ssh/id_rsa",
+    "ssh_options": "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+}

@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-07-07T03:01:06.813Z",
+  "baseUrl": "https://aura-web-chi-seven.vercel.app",
+  "passed": 2,
+  "failed": 6,
+  "total": 8,
+  "details": [
+    {
+      "status": "❌",
+      "message": "GET /ame - Status 404",
+      "error": ""
+    },
+    {
+      "status": "❌",
+      "message": "GET /ame/1 - Status 404",
+      "error": ""
+    },
+    {
+      "status": "❌",
+      "message": "Service Worker - Status 404",
+      "error": ""
+    },
+    {
+      "status": "❌",
+      "message": "Manifest - Status 404",
+      "error": ""
+    },
+    {
+      "status": "❌",
+      "message": "POST /api/ame-core - Status 404",
+      "error": ""
+    },
+    {
+      "status": "✅",
+      "message": "⚠️ HF Space offline (using local fallback)"
+    },
+    {
+      "status": "✅",
+      "message": "Viewport meta"
+    },
+    {
+      "status": "❌",
+      "message": "Mobile viewport not optimized",
+      "error": ""
+    }
+  ]
+}

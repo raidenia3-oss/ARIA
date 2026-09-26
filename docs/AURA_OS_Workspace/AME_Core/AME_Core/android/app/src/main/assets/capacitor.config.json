@@ -1,0 +1,22 @@
+{
+	"appId": "com.aura.mobile",
+	"appName": "AURA Mobile",
+	"webDir": "www",
+	"server": {
+		"androidScheme": "https",
+		"url": "https://tu-tunel-cloudflare.com",
+		"cleartext": true
+	},
+	"plugins": {
+		"CapacitorNativeBiometric": {
+			"android": {
+				"useBiometric": true,
+				"title": "Autenticación Biométrica",
+				"subtitle": "Accede a AURA con tu huella o rostro",
+				"description": "AURA requiere autenticación biométrica para acceder",
+				"confirmationRequired": false,
+				"maxAttempts": 3
+			}
+		}
+	}
+}

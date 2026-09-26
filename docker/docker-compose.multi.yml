@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  discord-bot:
+    build:
+      context: ../services/discord-bot
+      dockerfile: Dockerfile
+    environment:
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID:-}
+      DISCORD_GUILD_ID: ${DISCORD_GUILD_ID:-}
+      DISCORD_NOTIFY_CHANNEL: ${DISCORD_NOTIFY_CHANNEL:-ops}
+      AURA_BACKEND_URL: ${AURA_BACKEND_URL:-http://localhost:8000}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  gesture-control:
+    build:
+      context: ../interfaces/gesture-control
+      dockerfile: Dockerfile
+    environment:
+      AURA_BACKEND_URL: ${AURA_BACKEND_URL:-http://localhost:8000}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  voice-commands:
+    build:
+      context: ../interfaces/voice-commands
+      dockerfile: Dockerfile
+    environment:
+      AURA_BACKEND_URL: ${AURA_BACKEND_URL:-http://localhost:8000}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+volumes:
+  redis-data:

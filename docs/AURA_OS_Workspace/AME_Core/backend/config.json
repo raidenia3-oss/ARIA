@@ -1,0 +1,5 @@
+{
+    "max_vram_mb": 4096,
+    "max_ram_mb": 8192,
+    "modelos": ["modelo1.gguf", "modelo2.gguf", "modelo3.gguf"]
+}

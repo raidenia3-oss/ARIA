@@ -651,6 +651,44 @@ def search_skills(q: str = "", top_k: int = 5):
     return JSONResponse({"query": q, "results": skill_registry.search(q, top_k=top_k)})
 
 
+@app.post("/api/self-improvement/start")
+async def start_self_improvement():
+    """Start autonomous self-improvement cycle"""
+    try:
+        result = skill_registry.run('self-improvement', {
+            'action': 'cycle',
+            'repo': 'raidenia3-oss/ARIA',
+            'auto_commit': True,
+            'auto_pr': True,
+            'auto_release': False
+        })
+        return JSONResponse({
+            "status": "success",
+            "message": "Self-improvement cycle started",
+            "result": result
+        })
+    except Exception as e:
+        return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
+
+
+@app.get("/api/self-improvement/status")
+async def self_improvement_status():
+    """Get self-improvement engine status"""
+    try:
+        from backend.skills.custom.self_improvement import get_self_improvement
+
+        engine = get_self_improvement()
+        return JSONResponse({
+            "status": "running" if engine._initialized else "stopped",
+            "initialized": engine._initialized,
+            "github_configured": bool(engine.github_token),
+            "repo": engine.repo_name,
+            "repo_path": engine.repo_path,
+        })
+    except Exception as e:
+        return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
+
+
 @app.get("/api/tts/voices")
 def tts_voices():
     return JSONResponse({"voices": ["es-ES-ElviraNeural", "es-AR-ElenaNeural", "en-US-AriaNeural"]})

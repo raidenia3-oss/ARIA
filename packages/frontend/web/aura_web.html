@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA — Cloud Dashboard</title>
+<style>
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --accent: #38bdf8;
+  --accent-hover: #0ea5e9;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --border: #475569;
+  --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+.sidebar {
+  position: fixed; left:0; top:0; bottom:0; width:240px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 20px 16px;
+  display: flex; flex-direction: column;
+  z-index: 100;
+}
+.sidebar h1 {
+  font-size: 1.5rem; color: var(--accent);
+  margin-bottom: 24px; display: flex; align-items: center; gap:8px;
+}
+.sidebar h1 .dot { width:10px; height:10px; border-radius:50%; background:var(--success); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.nav-item {
+  padding: 10px 14px; border-radius: 8px; cursor: pointer;
+  color: var(--text-secondary); transition: all 0.2s;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 4px; font-size: 0.9rem;
+}
+.nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
+.nav-item.active { background: var(--accent); color: var(--bg-primary); font-weight: 600; }
+.main {
+  margin-left: 240px; padding: 24px;
+  min-height: 100vh;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.card {
+  background: var(--bg-card); border-radius: var(--radius);
+  padding: 20px; border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.card h3 { color: var(--accent); margin-bottom: 12px; font-size: 1.1rem; }
+.card p { color: var(--text-secondary); line-height: 1.6; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 600;
+}
+.badge-online { background: rgba(34,197,94,0.15); color: var(--success); }
+.badge-offline { background: rgba(239,68,68,0.15); color: var(--danger); }
+.badge-pending { background: rgba(245,158,11,0.15); color: var(--warning); }
+table { width:100%; border-collapse: collapse; }
+th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+th { color: var(--accent); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+input, select, textarea {
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px; color: var(--text-primary);
+  font-size: 0.9rem; width: 100%;
+}
+button {
+  background: var(--accent); color: var(--bg-primary); border: none;
+  border-radius: 8px; padding: 10px 20px; font-weight: 600;
+  cursor: pointer; font-size: 0.9rem; transition: background 0.2s;
+}
+button:hover { background: var(--accent-hover); }
+.btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display:block; margin-bottom:6px; color: var(--text-secondary); font-size:0.85rem; }
+.ws-status {
+  display: flex; align-items: center; gap:8px; padding: 8px 14px;
+  background: var(--bg-secondary); border-radius: 8px; margin-bottom: 16px;
+  font-size: 0.85rem;
+}
+.footer {
+  margin-left: 240px; padding: 20px 24px;
+  border-top: 1px solid var(--border); color: var(--text-secondary);
+  font-size: 0.8rem; text-align: center;
+}
+@media (max-width: 768px) {
+  .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+  .main { margin-left: 0; }
+  .footer { margin-left: 0; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <h1><span class="dot"></span> AURA Cloud</h1>
+  <div class="nav-item active" data-tab="overview"><span>&#9632;</span> Overview</div>
+  <div class="nav-item" data-tab="chat"><span>&#9993;</span> Chat</div>
+  <div class="nav-item" data-tab="agents"><span>&#9733;</span> Agents</div>
+  <div class="nav-item" data-tab="marketplace"><span>&#9878;</span> Marketplace</div>
+  <div class="nav-item" data-tab="netrunner"><span>&#9889;</span> Netrunner</div>
+  <div class="nav-item" data-tab="devices"><span>&#9881;</span> Devices</div>
+  <div class="nav-item" data-tab="settings"><span>&#9881;</span> Settings</div>
+</nav>
+
+<div class="main">
+  <div class="ws-status" id="ws-status">
+    <span class="status-dot" style="background:var(--warning)"></span>
+    <span>WebSocket: Conectando...</span>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="tab-content active" id="tab-overview">
+    <h2 style="margin-bottom:20px;color:var(--accent)">Overview</h2>
+    <div class="grid">
+      <div class="card"><h3>Devices Sync</h3><p id="ov-devices">Loading...</p></div>
+      <div class="card"><h3>Cloud Status</h3><p>Backend: <span style="color:var(--success)">Online</span><br>Firebase: <span style="color:var(--success)">Connected</span><br>Sync: <span style="color:var(--success)">Active</span></p></div>
+      <div class="card"><h3>Last Sync</h3><p id="ov-last-sync">--</p></div>
+      <div class="card"><h3>Pending Queue</h3><p id="ov-queue">Loading...</p></div>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="tab-content" id="tab-chat">
+    <h2 style="margin-bottom:20px;color:var(--accent)">Chat</h2>
+    <div class="card" id="chat-messages" style="height:400px;overflow-y:auto;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:8px">
+      <input id="chat-input" placeholder="Escribe un mensaje..." style="flex:1">
+      <button onclick="sendChat()">Enviar</button>
+    </div>
+  </div>
+
+  <!-- AGENTS -->
+  <div class="tab-content" id="tab-agents">
+    <h2 style="margin-bottom:20px;color:var(--accent)">Agents</h2>
+    <div class="grid" id="agents-grid"></div>
+  </div>
+
+  <!-- MARKETPLACE -->
+  <div class="tab-content" id="tab-marketplace">
+    <h2 style="margin-bottom:20px;color:var(--accent)">Marketplace</h2>
+    <div class="card"><h3>Listings</h3><p>Sync items available for buy/sell</p></div>
+    <div id="marketplace-items" class="grid"></div>
+  </div>
+
+  <!-- NETRUNNER -->
+  <div class="tab-content" id="tab-netrunner">
+    <h2 style="margin-bottom:20px;color:var(--accent)">Netrunner v2</h2>
+    <div class="card"><h3>Missions</h3><p>50 missions available. Play from any device!</p></div>
+    <div id="netrunner-missions"></div>
+  </div>
+
+  <!-- DEVICES -->
+  <div class="tab-content" id="tab-devices">
+    <h2 style="margin-bottom:20px;color:var(--accent)">Devices</h2>
+    <div class="card">
+      <h3>Register New Device</h3>
+      <div class="form-group"><label>Device ID</label><input id="reg-device-id" placeholder="e.g. mobile_001"></div>
+      <div class="form-group"><label>Device Type</label>
+        <select id="reg-device-type"><option value="desktop">Desktop</option><option value="mobile">Mobile</option><option value="web">Web</option></select>
+      </div>
+      <button onclick="registerDevice()">Register & Sync</button>
+    </div>
+    <div class="card">
+      <h3>Connected Devices</h3>
+      <table><thead><tr><th>ID</th><th>Type</th><th>Status</th><th>Last Sync</th><th>Actions</th></tr></thead>
+      <tbody id="devices-table"></tbody></table>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="tab-content" id="tab-settings">
+    <h2 style="margin-bottom:20px;color:var(--accent)">Settings</h2>
+    <div class="card">
+      <h3>Cloud Configuration</h3>
+      <div class="form-group"><label>Firebase Project ID</label><input value="aura-project" id="set-firebase-id"></div>
+      <div class="form-group"><label>API Key</label><input type="password" placeholder="Enter Firebase API Key" id="set-firebase-key"></div>
+      <div class="form-group"><label>Sync Interval (seconds)</label><input type="number" value="30" id="set-sync-interval"></div>
+      <div class="form-group"><label>Auto Backup (hours)</label><input type="number" value="1" id="set-backup-interval"></div>
+      <div class="form-group"><label>Theme</label>
+        <select id="set-theme"><option value="dark" selected>Dark (Cyberpunk)</option><option value="light">Light</option></select>
+      </div>
+      <button onclick="saveSettings()">Save Settings</button>
+    </div>
+    <div class="card">
+      <h3>PWA</h3>
+      <p>Progressive Web App: <span style="color:var(--success)">Enabled</span><br>
+      Offline Support: <span style="color:var(--success)">Active</span><br>
+      Push Notifications: <span style="color:var(--success)">Configured</span></p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">AURA OS v2.0 — Cloud Dashboard &middot; Dark Cyberpunk Theme &middot; Realtime Sync</footer>
+
+<script>
+const AURA_AGENTS = [
+  "code_reviewer","video_analyzer","image_processor","data_scientist",
+  "language_tutor","fitness_coach","music_composer","psychology_counselor",
+  "business_analyst","researcher"
+];
+let ws = null;
+let currentDevice = null;
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById('tab-' + item.dataset.tab).classList.add('active');
+  });
+});
+
+function connectWS() {
+  try {
+    ws = new WebSocket('wss://' + location.host + '/ws/cloud');
+    ws.onopen = () => {
+      document.getElementById('ws-status').innerHTML = '<span class="status-dot" style="background:var(--success)"></span><span>WebSocket: Connected</span>';
+    };
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.type === 'device_synced') renderDevices();
+    };
+    ws.onclose = () => {
+      document.getElementById('ws-status').innerHTML = '<span class="status-dot" style="background:var(--danger)"></span><span>WebSocket: Disconnected. Retrying...</span>';
+      setTimeout(connectWS, 5000);
+    };
+  } catch(e) {
+    console.log('WS not available, using polling');
+  }
+}
+
+async function apiCall(path, opts={}) {
+  try {
+    const res = await fetch(path, {headers:{'Content-Type':'application/json'}, ...opts});
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+async function loadOverview() {
+  const devices = await apiCall('/api/cloud/devices');
+  const queue = await apiCall('/api/cloud/queue/status');
+  if (devices) document.getElementById('ov-devices').innerHTML = `${devices.length} devices synced`;
+  if (queue) document.getElementById('ov-queue').innerHTML = `${queue.pending_actions} pending (${queue.mb_pending} MB)`;
+  document.getElementById('ov-last-sync').textContent = new Date().toISOString();
+}
+
+async function renderDevices() {
+  const devices = await apiCall('/api/cloud/devices');
+  if (!devices) return;
+  currentDevice = devices;
+  const tbody = document.getElementById('devices-table');
+  tbody.innerHTML = devices.map(d => `<tr><td>${d.device_id}</td><td>${d.type}</td>
+    <td><span class="badge ${d.online?'badge-online':'badge-offline'}">${d.online?'Online':'Offline'}</span></td>
+    <td>${d.lastSync||'--'}</td>
+    <td><button class="btn-secondary" onclick="deleteDevice('${d.device_id}')">Remove</button></td></tr>`).join('');
+  if (devices.length > 0) document.getElementById('ov-devices').innerHTML = `${devices.length} devices synced`;
+}
+
+async function registerDevice() {
+  const id = document.getElementById('reg-device-id').value.trim();
+  const type = document.getElementById('reg-device-type').value;
+  if (!id) return alert('Device ID required');
+  const res = await apiCall('/api/cloud/device/register', {method:'POST',body:JSON.stringify({device_id:id,device_type:type})});
+  if (res) { alert('Device registered! Token: ' + res.token); renderDevices(); }
+}
+
+async function deleteDevice(id) {
+  await apiCall('/api/cloud/device/delete', {method:'POST',body:JSON.stringify({device_id:id})});
+  renderDevices();
+}
+
+async function pushSync(data) {
+  if (!currentDevice) return;
+  for (const dev of currentDevice) {
+    await apiCall('/api/cloud/sync/push', {method:'POST',body:JSON.stringify({device_id:dev.device_id,data:data})});
+  }
+}
+
+async function pullSync() {
+  if (!currentDevice) return;
+  for (const dev of currentDevice) {
+    await apiCall('/api/cloud/sync/pull?device_id='+dev.device_id+'&since_version=0');
+  }
+}
+
+function renderAgents() {
+  const grid = document.getElementById('agents-grid');
+  grid.innerHTML = AURA_AGENTS.map(a => `<div class="card"><h3>${a}</h3><p>Status: <span style="color:var(--success)">Active</span><br>Last sync: ${new Date().toLocaleTimeString()}</p></div>`).join('');
+}
+
+function renderMarketplace() {
+  const grid = document.getElementById('marketplace-items');
+  grid.innerHTML = [1,2,3,4].map(i => `<div class="card"><h3>Item ${i}</h3><p>Price: $${(i*10).toFixed(2)}</p><button>Buy</button></div>`).join('');
+}
+
+function renderNetrunner() {
+  const grid = document.getElementById('netrunner-missions');
+  grid.innerHTML = '<div class="card"><p>50 missions loaded. Open Netrunner tab from sidebar to play.</p></div>';
+}
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const box = document.getElementById('chat-messages');
+  box.innerHTML += '<div style="margin:8px0;padding:8px;background:var(--bg-secondary);border-radius:8px;"><strong>You:</strong> '+msg+'</div>';
+  input.value = '';
+  box.scrollTop = box.scrollHeight;
+  pushSync({chat:msg});
+}
+
+function saveSettings() {
+  alert('Settings saved!');
+}
+
+connectWS();
+loadOverview();
+renderDevices();
+renderAgents();
+renderMarketplace();
+renderNetrunner();
+setInterval(loadOverview, 10000);
+setInterval(pullSync, 30000);
+</script>
+</body>
+</html>

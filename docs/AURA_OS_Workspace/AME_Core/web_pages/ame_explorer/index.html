@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>AME Explorer</title>
+        <style>
+            :root {
+                --bg: #0b0f14;
+                --panel: #0f141c;
+                --muted: #6b7f99;
+                --text: #e6ecf3;
+                --accent: #7aa0ff;
+                --ok: #7ee787;
+                --warn: #e3b341;
+                --err: #ff7b72;
+                --border: #1b2530;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            }
+            header {
+                padding: 14px 18px;
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+            header h1 {
+                font-size: 16px;
+                margin: 0;
+                letter-spacing: 1px;
+            }
+            .badge {
+                font-size: 11px;
+                background: #0f2a3f;
+                color: var(--accent);
+                padding: 4px 8px;
+                border-radius: 999px;
+                border: 1px solid #14364d;
+            }
+            .layout {
+                display: grid;
+                grid-template-columns: 320px 1fr;
+                gap: 14px;
+                padding: 14px;
+            }
+            .panel {
+                background: var(--panel);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 10px;
+            }
+            .panel h2 {
+                font-size: 12px;
+                text-transform: uppercase;
+                color: var(--muted);
+                margin: 0 0 8px;
+            }
+            .logs {
+                height: calc(100vh - 110px);
+                overflow: auto;
+            }
+            .log {
+                font-size: 12px;
+                padding: 6px 8px;
+                border-radius: 6px;
+                margin-bottom: 6px;
+                border: 1px solid transparent;
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+            .log.info {
+                border-color: #1f3040;
+                background: #0c1620;
+                color: var(--text);
+            }
+            .log.ok {
+                border-color: #1a3a1f;
+                background: #0d1a12;
+                color: var(--ok);
+            }
+            .log.warn {
+                border-color: #3a321a;
+                background: #1a140d;
+                color: var(--warn);
+            }
+            .log.err {
+                border-color: #3a1f1f;
+                background: #1a0d0d;
+                color: var(--err);
+            }
+            .meta {
+                color: var(--muted);
+                font-size: 11px;
+                margin-right: 8px;
+            }
+            .env-list {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .env-item {
+                background: #0b1118;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 8px;
+            }
+            .env-item label {
+                display: block;
+                font-size: 11px;
+                color: var(--muted);
+                margin-bottom: 4px;
+            }
+            .env-item input {
+                width: 100%;
+                background: #0a0f15;
+                color: var(--text);
+                border: 1px solid #233142;
+                padding: 6px;
+                border-radius: 6px;
+                font-family: inherit;
+            }
+            .actions {
+                margin-top: 8px;
+                display: flex;
+                gap: 8px;
+            }
+            button {
+                background: #12283a;
+                color: var(--text);
+                border: 1px solid #1e3a52;
+                padding: 6px 10px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+            button:hover {
+                background: #163049;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>AME Explorer</h1>
+            <span class="badge" id="status">Desconocido</span>
+            <span class="badge">Railway: <span id="railway">--</span></span>
+            <span class="badge">Vercel: <span id="vercel">--</span></span>
+            <span class="badge">HF: <span id="hf">--</span></span>
+        </header>
+        <div class="layout">
+            <aside class="panel">
+                <h2>Variables de entorno</h2>
+                <div class="env-list">
+                    <div class="env-item">
+                        <label>VERCEL_URL</label>
+                        <input id="env_vercel" placeholder="https://..." />
+                    </div>
+                    <div class="env-item">
+                        <label>RAILWAY_URL</label>
+                        <input id="env_railway" placeholder="https://..." />
+                    </div>
+                    <div class="env-item">
+                        <label>HF_SPACE_URL</label>
+                        <input id="env_hf" placeholder="https://..." />
+                    </div>
+                    <div class="env-item">
+                        <label>N8N_URL</label>
+                        <input id="env_n8n" placeholder="https://..." />
+                    </div>
+                </div>
+                <div class="actions">
+                    <button id="save_env">Guardar</button>
+                    <button id="reload">Recargar</button>
+                </div>
+            </aside>
+            <section class="panel logs" id="logs">
+                <h2>Actividad</h2>
+                <div id="log_list"></div>
+            </section>
+        </div>
+
+        <script>
+            const API = (location.origin || "http://localhost:8000") + "/api/bridge";
+            const els = {
+                status: document.getElementById("status"),
+                railway: document.getElementById("railway"),
+                vercel: document.getElementById("vercel"),
+                hf: document.getElementById("hf"),
+                log_list: document.getElementById("log_list"),
+                save_env: document.getElementById("save_env"),
+                reload: document.getElementById("reload"),
+                env_vercel: document.getElementById("env_vercel"),
+                env_railway: document.getElementById("env_railway"),
+                env_hf: document.getElementById("env_hf"),
+                env_n8n: document.getElementById("env_n8n"),
+            };
+
+            function esc(str) {
+                return String(str ?? "")
+                    .replace(/&/g, "&")
+                    .replace(/</g, "<")
+                    .replace(/>/g, ">");
+            }
+
+            function addLog(log) {
+                const div = document.createElement("div");
+                const cls =
+                    log.level === "error"
+                        ? "err"
+                        : log.level === "warn"
+                          ? "warn"
+                          : log.level === "ok"
+                            ? "ok"
+                            : "info";
+                div.className = "log " + cls;
+                div.innerHTML = `<span class="meta">${esc(log.ts || "")}</span>${esc(log.msg || log.action || JSON.stringify(log))}`;
+                els.log_list.prepend(div);
+                if (els.log_list.children.length > 300) els.log_list.lastChild.remove();
+            }
+
+            async function loadStatus() {
+                try {
+                    const r = await fetch(API + "/status");
+                    const data = await r.json();
+                    els.status.textContent = data.ok ? "Operativo" : "Falla";
+                    els.status.style.color = data.ok ? "var(--ok)" : "var(--err)";
+                    els.railway.textContent = data.env.RAILWAY_URL
+                        ? "Configurado"
+                        : "No configurado";
+                    els.vercel.textContent = data.env.VERCEL_URL ? "Configurado" : "No configurado";
+                    els.hf.textContent = data.env.HF_SPACE_URL ? "Configurado" : "No configurado";
+                    if (data.recent_logs && data.recent_logs.length) {
+                        data.recent_logs.forEach(addLog);
+                    }
+                } catch (e) {
+                    addLog({
+                        ts: new Date().toISOString(),
+                        level: "error",
+                        msg: "No se pudo contactar /api/bridge/status",
+                    });
+                }
+            }
+
+            els.save_env.addEventListener("click", async () => {
+                const body = {
+                    action: "env_update",
+                    source: "ame_explorer",
+                    payload: {
+                        VERCEL_URL: els.env_vercel.value,
+                        RAILWAY_URL: els.env_railway.value,
+                        HF_SPACE_URL: els.env_hf.value,
+                        N8N_URL: els.env_n8n.value,
+                    },
+                };
+                try {
+                    const r = await fetch(API + "/update", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body),
+                    });
+                    const data = await r.json();
+                    addLog({
+                        ts: new Date().toISOString(),
+                        level: "ok",
+                        msg: "Entorno actualizado",
+                    });
+                } catch (e) {
+                    addLog({
+                        ts: new Date().toISOString(),
+                        level: "error",
+                        msg: "Fallo al guardar entorno",
+                    });
+                }
+            });
+
+            els.reload.addEventListener("click", () => loadStatus());
+
+            loadStatus();
+            setInterval(loadStatus, 5000);
+        </script>
+    </body>
+</html>

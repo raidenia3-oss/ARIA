@@ -1,0 +1,13 @@
+{
+  "collection_id": "mycoll",
+  "name": "mycoll",
+  "description": "",
+  "metadata": {},
+  "dim": 512,
+  "strategy": "recursive",
+  "status": "empty",
+  "documents": {},
+  "fragments": [],
+  "created_at": 1789246931.879661,
+  "updated_at": 1789246931.879661
+}

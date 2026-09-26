@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+        />
+        <meta name="theme-color" content="#000000" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <title>AURA // Mobile HUD</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@300;400;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg-primary: #000000;
+                --bg-secondary: #0d1117;
+                --bg-panel: rgba(13, 17, 23, 0.9);
+                --cyan: #00f0ff;
+                --cyan-dim: rgba(0, 240, 255, 0.15);
+                --magenta: #ff00e6;
+                --magenta-dim: rgba(255, 0, 230, 0.12);
+                --red: #ff003c;
+                --red-dim: rgba(255, 0, 60, 0.12);
+                --green: #00ff88;
+                --green-dim: rgba(0, 255, 136, 0.1);
+                --text-primary: #e6f1ff;
+                --text-dim: rgba(230, 241, 255, 0.5);
+                --text-cyan: #00f0ff;
+                --border-cyan: rgba(0, 240, 255, 0.25);
+                --font-display: "Share Tech Mono", monospace;
+                --font-mono: "JetBrains Mono", monospace;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: var(--bg-primary);
+                color: var(--text-primary);
+                font-family: var(--font-mono);
+                height: 100vh;
+                width: 100vw;
+                overflow: hidden;
+                position: relative;
+                touch-action: manipulation;
+            }
+
+            /* ─── FONDO HEXAGONAL ─── */
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image:
+                    radial-gradient(circle at 25% 25%, rgba(0, 240, 255, 0.03) 0%, transparent 50%),
+                    radial-gradient(circle at 75% 75%, rgba(255, 0, 230, 0.03) 0%, transparent 50%),
+                    repeating-linear-gradient(
+                        0deg,
+                        transparent,
+                        transparent 2px,
+                        rgba(0, 240, 255, 0.015) 2px,
+                        rgba(0, 240, 255, 0.015) 3px
+                    ),
+                    repeating-linear-gradient(
+                        90deg,
+                        transparent,
+                        transparent 2px,
+                        rgba(0, 240, 255, 0.015) 2px,
+                        rgba(0, 240, 255, 0.015) 3px
+                    );
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            /* ─── SCANLINES ─── */
+            .scanlines {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.08) 2px,
+                    rgba(0, 0, 0, 0.08) 4px
+                );
+                pointer-events: none;
+                z-index: 9999;
+                animation: scanline-move 8s linear infinite;
+            }
+
+            @keyframes scanline-move {
+                0% {
+                    transform: translateY(0);
+                }
+                100% {
+                    transform: translateY(100vh);
+                }
+            }
+
+            /* ─── SCAN BAR ─── */
+            .scanbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(
+                    90deg,
+                    transparent 0%,
+                    rgba(0, 240, 255, 0.4) 30%,
+                    rgba(0, 240, 255, 0.8) 50%,
+                    rgba(0, 240, 255, 0.4) 70%,
+                    transparent 100%
+                );
+                box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+                z-index: 9998;
+                animation: scanbar 4s ease-in-out infinite;
+                opacity: 0.6;
+            }
+
+            @keyframes scanbar {
+                0% {
+                    top: 0;
+                    opacity: 0.3;
+                }
+                50% {
+                    opacity: 0.8;
+                }
+                100% {
+                    top: 100%;
+                    opacity: 0.3;
+                }
+            }
+
+            /* ─── DASHBOARD LAYOUT ─── */
+            .dashboard {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                width: 100vw;
+                padding: 12px;
+                background: var(--bg-secondary);
+            }
+
+            /* ─── TOP BAR ─── */
+            .top-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 12px;
+                background: var(--bg-panel);
+                border: 1px solid var(--border-cyan);
+                border-radius: 0;
+                position: relative;
+                clip-path: polygon(20px 0, 100% 0, 100% 100%, 0 100%, 0 20px);
+                margin-bottom: 12px;
+            }
+
+            .top-bar::before {
+                content: "";
+                position: absolute;
+                top: -1px;
+                left: 19px;
+                width: 3px;
+                height: 3px;
+                background: var(--cyan);
+                box-shadow: 0 0 10px var(--cyan);
+            }
+
+            .system-title {
+                font-family: var(--font-display);
+                font-size: 14px;
+                letter-spacing: 6px;
+                color: var(--text-cyan);
+                text-transform: uppercase;
+                text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            }
+
+            .system-title .blink {
+                animation: blink 1.2s step-end infinite;
+            }
+
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
+
+            .top-stats {
+                display: flex;
+                gap: 15px;
+                font-size: 10px;
+                letter-spacing: 1px;
+            }
+
+            .top-stat {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .top-stat .label {
+                color: var(--text-dim);
+                text-transform: uppercase;
+            }
+
+            .top-stat .value {
+                color: var(--cyan);
+                font-weight: 700;
+            }
+
+            /* ─── CENTER CORE ─── */
+            .center-core {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+                margin-bottom: 12px;
+            }
+
+            /* ─── NÚCLEO / CORAZÓN DE IA ─── */
+            .orb-container {
+                position: relative;
+                width: 220px;
+                height: 220px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .orb-ring {
+                position: absolute;
+                border-radius: 50%;
+                border: 1px solid transparent;
+            }
+
+            .orb-ring.r1 {
+                width: 220px;
+                height: 220px;
+                border-color: rgba(0, 240, 255, 0.12);
+                animation: spin-slow 20s linear infinite;
+            }
+
+            .orb-ring.r2 {
+                width: 180px;
+                height: 180px;
+                border-top: 2px solid rgba(0, 240, 255, 0.3);
+                border-bottom: 2px solid rgba(255, 0, 230, 0.3);
+                animation: spin-med 15s linear infinite reverse;
+                box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+            }
+
+            .orb-ring.r3 {
+                width: 140px;
+                height: 140px;
+                border-left: 1px solid rgba(0, 240, 255, 0.2);
+                border-right: 1px solid rgba(255, 0, 230, 0.2);
+                animation: spin-fast 10s linear infinite;
+            }
+
+            .orb-ring.r4 {
+                width: 100px;
+                height: 100px;
+                border: 1px dashed rgba(0, 240, 255, 0.15);
+                animation: spin-slow 25s linear infinite reverse;
+            }
+
+            .orb-ring.r5 {
+                width: 60px;
+                height: 60px;
+                border-top: 3px solid rgba(0, 240, 255, 0.4);
+                border-bottom: 3px solid rgba(255, 0, 230, 0.4);
+                animation: spin-fast 8s linear infinite;
+                box-shadow:
+                    0 0 60px rgba(0, 240, 255, 0.15),
+                    0 0 120px rgba(255, 0, 230, 0.08);
+            }
+
+            .orb-core {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: radial-gradient(circle at 35% 35%, #00f0ff, #0055ff, #0d1117);
+                box-shadow:
+                    0 0 40px rgba(0, 240, 255, 0.4),
+                    0 0 80px rgba(0, 240, 255, 0.2),
+                    0 0 150px rgba(0, 240, 255, 0.1);
+                animation: pulse-core 3s ease-in-out infinite;
+                z-index: 10;
+            }
+
+            @keyframes pulse-core {
+                0%,
+                100% {
+                    transform: scale(1);
+                    box-shadow:
+                        0 0 40px rgba(0, 240, 255, 0.4),
+                        0 0 80px rgba(0, 240, 255, 0.2);
+                }
+                50% {
+                    transform: scale(1.08);
+                    box-shadow:
+                        0 0 60px rgba(0, 240, 255, 0.6),
+                        0 0 120px rgba(0, 240, 255, 0.3);
+                }
+            }
+
+            @keyframes spin-slow {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            @keyframes spin-med {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            @keyframes spin-fast {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* ─── STATUS TEXT BELOW ORB ─── */
+            .orb-status {
+                text-align: center;
+                margin-top: 12px;
+                z-index: 5;
+                width: 100%;
+            }
+
+            .orb-status .ai-name {
+                font-family: var(--font-display);
+                font-size: 18px;
+                letter-spacing: 6px;
+                color: var(--text-cyan);
+                text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+                text-transform: uppercase;
+            }
+
+            .orb-status .ai-sub {
+                font-size: 9px;
+                letter-spacing: 3px;
+                color: var(--text-dim);
+                margin-top: 6px;
+                text-transform: uppercase;
+            }
+
+            .orb-status .ai-sub .status-dot {
+                display: inline-block;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--green);
+                box-shadow: 0 0 8px var(--green);
+                margin-right: 5px;
+                animation: blink 1.5s step-end infinite;
+            }
+
+            /* ─── BOTTOM BAR ─── */
+            .bottom-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 12px;
+                background: var(--bg-panel);
+                border: 1px solid var(--border-cyan);
+                position: relative;
+                clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+                gap: 15px;
+            }
+
+            .bottom-bar::before {
+                content: "";
+                position: absolute;
+                top: 19px;
+                right: -1px;
+                width: 3px;
+                height: 3px;
+                background: var(--cyan);
+                box-shadow: 0 0 10px var(--cyan);
+            }
+
+            .bottom-metrics {
+                display: flex;
+                gap: 20px;
+                font-size: 9px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .bottom-metrics .bm-item {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .bottom-metrics .bm-label {
+                color: var(--text-dim);
+            }
+            .bottom-metrics .bm-value {
+                color: var(--cyan);
+                font-weight: 700;
+                font-family: var(--font-display);
+            }
+
+            .bottom-progress {
+                flex: 1;
+                max-width: 180px;
+            }
+
+            .bottom-progress .bp-header {
+                display: flex;
+                justify-content: space-between;
+                font-size: 8px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--text-dim);
+                margin-bottom: 4px;
+            }
+
+            .bottom-progress .bp-bar {
+                width: 100%;
+                height: 3px;
+                background: rgba(0, 240, 255, 0.08);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .bottom-progress .bp-fill {
+                height: 100%;
+                background: linear-gradient(90deg, var(--magenta), var(--cyan));
+                animation: progress-pulse 3s ease-in-out infinite;
+            }
+
+            /* ─── TELEMETRY PANELS ─── */
+            .telemetry-panel {
+                background: var(--bg-panel);
+                border: 1px solid var(--border-cyan);
+                padding: 12px;
+                position: relative;
+                margin-bottom: 12px;
+                clip-path: polygon(
+                    12px 0,
+                    100% 0,
+                    100% calc(100% - 12px),
+                    calc(100% - 12px) 100%,
+                    0 100%,
+                    0 12px
+                );
+            }
+
+            .telemetry-panel::before {
+                content: "";
+                position: absolute;
+                top: -1px;
+                left: 11px;
+                width: 3px;
+                height: 3px;
+                background: var(--cyan);
+                box-shadow: 0 0 8px var(--cyan);
+            }
+
+            .telemetry-panel::after {
+                content: "";
+                position: absolute;
+                bottom: 11px;
+                right: -1px;
+                width: 3px;
+                height: 3px;
+                background: var(--cyan);
+                box-shadow: 0 0 8px var(--cyan);
+            }
+
+            .telemetry-title {
+                font-family: var(--font-display);
+                font-size: 10px;
+                letter-spacing: 3px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                margin-bottom: 8px;
+                padding-bottom: 6px;
+                border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+            }
+
+            .telemetry-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 0;
+                font-size: 10px;
+                border-bottom: 1px solid rgba(0, 240, 255, 0.05);
+            }
+
+            .telemetry-item .t-label {
+                color: var(--text-dim);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .telemetry-item .t-value {
+                color: var(--cyan);
+                font-weight: 700;
+                font-family: var(--font-display);
+            }
+
+            /* ─── PROGRESS BARS ─── */
+            .progress-group {
+                margin: 6px 0;
+            }
+
+            .progress-header {
+                display: flex;
+                justify-content: space-between;
+                font-size: 9px;
+                margin-bottom: 3px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .progress-header .p-label {
+                color: var(--text-dim);
+            }
+            .progress-header .p-value {
+                color: var(--cyan);
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 4px;
+                background: rgba(0, 240, 255, 0.08);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .progress-bar .fill {
+                height: 100%;
+                background: linear-gradient(90deg, var(--cyan), var(--magenta));
+                transition: width 1s ease;
+                box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+                animation: progress-pulse 2s ease-in-out infinite;
+            }
+
+            .progress-bar .fill.green {
+                background: linear-gradient(90deg, var(--green), var(--cyan));
+                box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            }
+
+            .progress-bar .fill.red {
+                background: linear-gradient(90deg, var(--red), #ff6b00);
+                box-shadow: 0 0 10px rgba(255, 0, 60, 0.3);
+            }
+
+            @keyframes progress-pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.7;
+                }
+            }
+
+            /* ─── BUTTONS ─── */
+            .action-button {
+                background: rgba(0, 240, 255, 0.1);
+                border: 1px solid rgba(0, 240, 255, 0.3);
+                color: var(--cyan);
+                font-family: var(--font-display);
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                padding: 8px 12px;
+                margin: 4px;
+                border-radius: 4px;
+                transition: all 0.2s;
+                width: 100%;
+                box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+            }
+
+            .action-button:hover {
+                background: rgba(0, 240, 255, 0.15);
+                box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            }
+
+            .action-button:active {
+                transform: scale(0.98);
+                box-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+            }
+
+            /* ─── MISC ─── */
+            .glow-cyan {
+                text-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+            }
+            .glow-magenta {
+                text-shadow: 0 0 8px rgba(255, 0, 230, 0.3);
+            }
+            .mt-8 {
+                margin-top: 8px;
+            }
+            .flex-1 {
+                flex: 1;
+            }
+
+            /* ─── RESPONSIVE ─── */
+            @media (max-width: 400px) {
+                .orb-container {
+                    width: 180px;
+                    height: 180px;
+                }
+                .orb-ring.r1 {
+                    width: 180px;
+                    height: 180px;
+                }
+                .orb-ring.r2 {
+                    width: 150px;
+                    height: 150px;
+                }
+                .orb-ring.r3 {
+                    width: 120px;
+                    height: 120px;
+                }
+                .orb-ring.r4 {
+                    width: 90px;
+                    height: 90px;
+                }
+                .orb-ring.r5 {
+                    width: 50px;
+                    height: 50px;
+                }
+                .orb-core {
+                    width: 30px;
+                    height: 30px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Scanlines overlay -->
+        <div class="scanlines"></div>
+        <div class="scanbar"></div>
+
+        <!-- ═══ DASHBOARD ═══ -->
+        <div class="dashboard">
+            <!-- ═══ TOP BAR ═══ -->
+            <header class="top-bar">
+                <div class="system-title">
+                    <span class="blink">⟁</span> AURA // HUD <span class="blink">⟁</span>
+                </div>
+                <div class="top-stats">
+                    <div class="top-stat">
+                        <span class="label">Status</span>
+                        <span class="value" id="sysStatus">ACTIVE</span>
+                    </div>
+                    <div class="top-stat">
+                        <span class="label">Uptime</span>
+                        <span class="value" id="uptimeDisplay">00:00:00</span>
+                    </div>
+                    <div class="top-stat">
+                        <span class="label">Agents</span>
+                        <span class="value" id="agentCount">4</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ═══ CENTER CORE ─── -->
+            <main class="center-core">
+                <div class="orb-container">
+                    <div class="orb-ring r1"></div>
+                    <div class="orb-ring r2"></div>
+                    <div class="orb-ring r3"></div>
+                    <div class="orb-ring r4"></div>
+                    <div class="orb-ring r5"></div>
+                    <div class="orb-core"></div>
+                </div>
+
+                <div class="orb-status">
+                    <div class="ai-name">AURA</div>
+                    <div class="ai-sub">
+                        <span class="status-dot"></span>
+                        Artificial Unified Reactive Architecture
+                    </div>
+                </div>
+            </main>
+
+            <!-- ═══ TELEMETRY PANELS ─── -->
+            <div class="telemetry-panel">
+                <div class="telemetry-title">⏣ System Telemetry</div>
+                <div class="telemetry-item">
+                    <span class="t-label">CPU Load</span>
+                    <span class="t-value" id="cpuValue">0%</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="t-label">RAM Usage</span>
+                    <span class="t-value" id="ramValue">0%</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="t-label">Network I/O</span>
+                    <span class="t-value" id="netValue">0 Mbps</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="t-label">Disk I/O</span>
+                    <span class="t-value" id="diskValue">0%</span>
+                </div>
+                <div class="telemetry-item">
+                    <span class="t-label">Temp</span>
+                    <span class="t-value" id="tempValue">42°C</span>
+                </div>
+            </div>
+
+            <div class="telemetry-panel">
+                <div class="telemetry-title">⏣ System Load</div>
+                <div class="progress-group">
+                    <div class="progress-header">
+                        <span class="p-label">CPU Core 0</span>
+                        <span class="p-value" id="cpu0Val">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="fill" id="cpu0Bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-group">
+                    <div class="progress-header">
+                        <span class="p-label">Memory</span>
+                        <span class="p-value" id="memVal">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="fill green" id="memBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="progress-group">
+                    <div class="progress-header">
+                        <span class="p-label">Network</span>
+                        <span class="p-value" id="netLoadVal">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="fill red" id="netBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ ACTION BUTTONS ─── -->
+            <div class="telemetry-panel">
+                <div class="telemetry-title">⏣ Quick Actions</div>
+                <button class="action-button" id="btnOSINT">OSINT Recon</button>
+                <button class="action-button" id="btnTarget">Target Analysis</button>
+                <button class="action-button" id="btnNetwork">Network Scan</button>
+                <button class="action-button" id="btnChat">Chat</button>
+                <button class="action-button" id="btnConsole">Tactical Console</button>
+            </div>
+
+            <!-- ═══ BOTTOM BAR ─── -->
+            <footer class="bottom-bar">
+                <div class="bottom-metrics">
+                    <div class="bm-item">
+                        <span class="bm-label">Requests</span>
+                        <span class="bm-value" id="reqCount">1,247</span>
+                    </div>
+                    <div class="bm-item">
+                        <span class="bm-label">Tokens</span>
+                        <span class="bm-value" id="tokenCount">892K</span>
+                    </div>
+                    <div class="bm-item">
+                        <span class="bm-label">Latency</span>
+                        <span class="bm-value" id="latencyVal">24ms</span>
+                    </div>
+                    <div class="bm-item">
+                        <span class="bm-label">Errors</span>
+                        <span class="bm-value" id="errorCount" style="color: var(--red)">0</span>
+                    </div>
+                </div>
+                <div class="bottom-progress">
+                    <div class="bp-header">
+                        <span>MISSION PROGRESS</span>
+                        <span id="missionPct">73%</span>
+                    </div>
+                    <div class="bp-bar">
+                        <div class="bp-fill" id="missionBar" style="width: 73%"></div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- ═══ JAVASCRIPT — ANIMACIONES Y SIMULACIÓN DE TELEMETRÍA ═══ -->
+        <script>
+            (function () {
+                "use strict";
+
+                // ─── Util ───
+                const $ = (id) => document.getElementById(id);
+                const rand = (min, max) => Math.random() * (max - min) + min;
+                const randInt = (min, max) => Math.floor(rand(min, max));
+
+                // ─── Uptime ───
+                let startTime = Date.now();
+                function updateUptime() {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const h = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+                    const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
+                    const s = String(elapsed % 60).padStart(2, "0");
+                    $("uptimeDisplay").textContent = `${h}:${m}:${s}`;
+                }
+                setInterval(updateUptime, 1000);
+
+                // ─── Telemetry simulation ───
+                function updateTelemetry() {
+                    const cpu = randInt(12, 78);
+                    const ram = randInt(35, 82);
+                    const cpu0 = randInt(5, 65);
+                    const net = randInt(10, 55);
+                    const disk = randInt(20, 45);
+                    const temp = randInt(38, 61);
+
+                    $("cpuValue").textContent = cpu + "%";
+                    $("ramValue").textContent = ram + "%";
+                    $("netValue").textContent = rand(0.5, 12).toFixed(1) + " Mbps";
+                    $("diskValue").textContent = disk + "%";
+                    $("tempValue").textContent = temp + "°C";
+
+                    $("cpu0Val").textContent = cpu0 + "%";
+                    $("cpu0Bar").style.width = cpu0 + "%";
+                    $("memVal").textContent = ram + "%";
+                    $("memBar").style.width = ram + "%";
+                    $("netLoadVal").textContent = net + "%";
+                    $("netBar").style.width = net + "%";
+                }
+                setInterval(updateTelemetry, 2000);
+                updateTelemetry();
+
+                // ─── Misión progress ───
+                function updateMission() {
+                    const pct = randInt(65, 89);
+                    $("missionPct").textContent = pct + "%";
+                    $("missionBar").style.width = pct + "%";
+                }
+                setInterval(updateMission, 5000);
+
+                // ─── Metrics count simulation ───
+                let reqCount = 1247;
+                let tokenCount = 892;
+                setInterval(() => {
+                    reqCount += randInt(1, 5);
+                    tokenCount += randInt(50, 300);
+                    $("reqCount").textContent = reqCount.toLocaleString();
+                    $("tokenCount").textContent = (tokenCount / 1000).toFixed(1) + "K";
+                    $("latencyVal").textContent = randInt(12, 45) + "ms";
+                }, 3000);
+
+                // ─── Button actions ───
+                document.querySelectorAll(".action-button").forEach((button) => {
+                    button.addEventListener("click", function () {
+                        const action = this.id.replace("btn", "").toLowerCase();
+                        this.style.boxShadow = "0 0 15px rgba(0, 240, 255, 0.4)";
+                        setTimeout(() => {
+                            this.style.boxShadow = "0 0 10px rgba(0, 240, 255, 0.1)";
+                        }, 200);
+
+                        // Simulate navigation
+                        const event = new CustomEvent("auraAction", {
+                            detail: { action: action },
+                        });
+                        document.dispatchEvent(event);
+                    });
+                });
+
+                // ─── Event listener for navigation ───
+                document.addEventListener("auraAction", function (e) {
+                    const action = e.detail.action;
+                    console.log(`Action triggered: ${action}`);
+                    // In a real app, this would navigate to the appropriate screen
+                });
+            })();
+        </script>
+    </body>
+</html>

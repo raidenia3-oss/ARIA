@@ -1,0 +1,1420 @@
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+.................F...................................................... [ 30%]
+...FFFFFFFFFF.......................................FFFFFFFFFFFFFFFFFFFF [ 40%]
+FFFF.......FFFssssssssssssssss...................s.FFF.FF............... [ 50%]
+...........................FFFFFFFFFFFFFFF.............................. [ 60%]
+..F....................................................................s [ 70%]
+........................................................................ [ 80%]
+............................FFFFFFFFFFFFFFFFFFFFF....................... [ 90%]
+...................................................................      [100%]
+================================== FAILURES ===================================
+E   AssertionError: assert '2.1.0' == '2.0.0'
+      
+      - 2.0.0
+      ?   ^
+      + 2.1.0
+      ?   ^
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/mobile/discovery \"HTTP/1.1 200 OK\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/mobile/discovery "HTTP/1.1 200 OK"
+C:\Users\User\Downloads\AURA\tests\test_bloque20.py:37: AssertionError: assert '2.1.0' == '2.0.0'
+E   AssertionError: version.json no encontrado
+    assert False
+     +  where False = exists()
+     +    where exists = WindowsPath('C:/Users/User/Downloads/AURA/version.json').exists
+c:\Users\User\Downloads\AURA\tests\test_core.py:20: AssertionError: version.json no encontrado
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\User\\Downloads\\AURA\\version.json'
+c:\Users\User\Downloads\AURA\tests\test_core.py:26: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\User\\Downloads\\AURA\\version.json'
+E   ModuleNotFoundError: No module named 'AURA_Core.aura_core'
+
+During handling of the above exception, another exception occurred:
+E   Failed: Error importando módulos de AURA Core: No module named 'AURA_Core.aura_core'
+c:\Users\User\Downloads\AURA\tests\test_core.py:47: Failed: Error importando módulos de AURA Core: No module named 'AURA_Core.aura_core'
+E   ImportError: cannot import name 'health_check' from 'scripts' (unknown location)
+
+During handling of the above exception, another exception occurred:
+E   Failed: Error importando scripts: cannot import name 'health_check' from 'scripts' (unknown location)
+c:\Users\User\Downloads\AURA\tests\test_core.py:55: Failed: Error importando scripts: cannot import name 'health_check' from 'scripts' (unknown location)
+E   ModuleNotFoundError: No module named 'AURA_Core.nodes'
+
+During handling of the above exception, another exception occurred:
+E   Failed: Error importando nodos: No module named 'AURA_Core.nodes'
+c:\Users\User\Downloads\AURA\tests\test_core.py:63: Failed: Error importando nodos: No module named 'AURA_Core.nodes'
+E   AssertionError: Secciones de cambios no encontradas en CHANGELOG.md
+    assert ('Añadido' in '# AURA OS Changelog\n\nAll notable changes to AURA OS are documented in this file.\n\n## [2.1.0] - 2024-09-02\n\n### ...lo â€” Implementation & Automation\n\n---\n\n**[Latest Release](https://github.com/your-repo/aura/releases/latest)**\n' or 'Cambiado' in '# AURA OS Changelog\n\nAll notable changes to AURA OS are documented in this file.\n\n## [2.1.0] - 2024-09-02\n\n### ...lo â€” Implementation & Automation\n\n---\n\n**[Latest Release](https://github.com/your-repo/aura/releases/latest)**\n' or 'Arreglado' in '# AURA OS Changelog\n\nAll notable changes to AURA OS are documented in this file.\n\n## [2.1.0] - 2024-09-02\n\n### ...lo â€” Implementation & Automation\n\n---\n\n**[Latest Release](https://github.com/your-repo/aura/releases/latest)**\n')
+c:\Users\User\Downloads\AURA\tests\test_core.py:75: AssertionError: Secciones de cambios no encontradas en CHANGELOG.md
+E   AssertionError: Encabezado incorrecto en .gitignore
+    assert '# AURA/AME' in '__pycache__/\n*.pyc\n*.pyo\n.venv/\nvenv*/\nenv/\n.env\n.env.*\n!.env.example\n!.env.ai.example\nnode_modules/\n.next...ne-tuned-ame/\nmodels/\ntraining/data/\nlogs/\nbackups/\ndocker/.env\ndocker-compose.override.yml\ndeployments/\nnul\n'
+c:\Users\User\Downloads\AURA\tests\test_core.py:87: AssertionError: Encabezado incorrecto en .gitignore
+E   AssertionError: Workflow test.yml no encontrado
+    assert False
+     +  where False = exists()
+     +    where exists = WindowsPath('C:/Users/User/Downloads/AURA/.github/workflows/test.yml').exists
+c:\Users\User\Downloads\AURA\tests\test_core.py:97: AssertionError: Workflow test.yml no encontrado
+E   ModuleNotFoundError: No module named 'scripts.health_check'
+
+During handling of the above exception, another exception occurred:
+E   Failed: Error importando health_check: No module named 'scripts.health_check'
+c:\Users\User\Downloads\AURA\tests\test_core.py:110: Failed: Error importando health_check: No module named 'scripts.health_check'
+E   ModuleNotFoundError: No module named 'scripts.version_manager'
+
+During handling of the above exception, another exception occurred:
+E   Failed: Error en version_manager: No module named 'scripts.version_manager'
+c:\Users\User\Downloads\AURA\tests\test_core.py:127: Failed: Error en version_manager: No module named 'scripts.version_manager'
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "urllib3.connectionpool", "message": "Starting new HTTP connection (1): localhost:8000"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    urllib3.connectionpool:connectionpool.py:241 Starting new HTTP connection (1): localhost:8000
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "urllib3.connectionpool", "message": "Starting new HTTP connection (1): localhost:8000"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    urllib3.connectionpool:connectionpool.py:241 Starting new HTTP connection (1): localhost:8000
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=5.0 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "urllib3.connectionpool", "message": "Starting new HTTP connection (1): localhost:8000"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    urllib3.connectionpool:connectionpool.py:241 Starting new HTTP connection (1): localhost:8000
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "urllib3.connectionpool", "message": "Starting new HTTP connection (1): localhost:8000"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    urllib3.connectionpool:connectionpool.py:241 Starting new HTTP connection (1): localhost:8000
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   httpcore.ConnectError: All connection attempts failed
+
+The above exception was the direct cause of the following exception:
+E   httpx.ConnectError: All connection attempts failed
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+----------------------------- Captured log setup ------------------------------
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None"}
+{"timestamp": null, "level": null, "name": "urllib3.connectionpool", "message": "Starting new HTTP connection (1): localhost:8000"}
+{"timestamp": null, "level": null, "name": "httpcore.connection", "message": "connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))"}
+------------------------------ Captured log call ------------------------------
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.started host='localhost' port=8000 local_address=None timeout=30 socket_options=None
+DEBUG    urllib3.connectionpool:connectionpool.py:241 Starting new HTTP connection (1): localhost:8000
+DEBUG    httpcore.connection:_trace.py:87 connect_tcp.failed exception=ConnectError(OSError('All connection attempts failed'))
+C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py:118: httpx.ConnectError: All connection attempts failed
+E   AssertionError: scheduler status falló: {'error': '<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>'}
+    assert False
+---------------------------- Captured stdout call -----------------------------
+
+TEST 8: Agent Scheduler Endpoints (BLOQUE 34)
+[FAIL] Scheduler status
+C:\Users\User\Downloads\AURA\tests\test_e2e_backend.py:122: AssertionError: scheduler status falló: {'error': '<urlopen error [WinError 10061] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión>'}
+E   AssertionError: assert False
+     +  where False = hasattr(<module 'main_launcher' from 'C:\\Users\\User\\Downloads\\AURA\\main_launcher.py'>, 'is_port_in_use')
+C:\Users\User\Downloads\AURA\tests\test_e2e_integration.py:108: AssertionError: assert False
+E   AttributeError: module 'main_launcher' has no attribute 'is_port_in_use'
+C:\Users\User\Downloads\AURA\tests\test_e2e_integration.py:118: AttributeError: module 'main_launcher' has no attribute 'is_port_in_use'
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=test_export char_id=char1 name=Char 1"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=test_export title=Chapter 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/test_export/export/epub \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=test_export char_id=char1 name=Char 1
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=test_export title=Chapter 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/test_export/export/epub "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_export_compiler.py:391: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=test_export char_id=char1 name=Char 1"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=test_export title=Chapter 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/test_export/export/markdown \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=test_export char_id=char1 name=Char 1
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=test_export title=Chapter 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/test_export/export/markdown "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_export_compiler.py:402: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=test_export char_id=char1 name=Char 1"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=test_export title=Chapter 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/test_export/export/epub \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=test_export char_id=char1 name=Char 1
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=test_export title=Chapter 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/test_export/export/epub "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_export_compiler.py:417: assert 404 == 200
+E   assert 404 == 400
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=test_export char_id=char1 name=Char 1"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=test_export title=Chapter 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/test_export/export/invalid \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=test_export char_id=char1 name=Char 1
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=test_export title=Chapter 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/test_export/export/invalid "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_export_compiler.py:434: assert 404 == 400
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=test_export char_id=char1 name=Char 1"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=test_export title=Chapter 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/test_export/export/epub/async \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=test_export char_id=char1 name=Char 1
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=test_export title=Chapter 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/test_export/export/epub/async "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_export_compiler.py:442: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_graph/relationships \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_graph/relationships "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:483: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/relationships \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/relationships "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:497: assert 404 == 200
+E   assert 404 == 422
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/relationships \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/relationships "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:511: assert 404 == 422
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/relationships \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: PUT http://testserver/api/story/rest_graph/relationships/hero/villain \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/relationships "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: PUT http://testserver/api/story/rest_graph/relationships/hero/villain "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:524: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/relationships \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: DELETE http://testserver/api/story/rest_graph/relationships/hero/villain \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/relationships "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: DELETE http://testserver/api/story/rest_graph/relationships/hero/villain "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:537: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/relationships \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_graph/relationships/summary/hero \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/relationships "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_graph/relationships/summary/hero "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:549: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/relationships \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/relationships/check-conflict \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/relationships "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/relationships/check-conflict "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:566: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_graph/relationships/graph \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_graph/relationships/graph "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:576: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:596: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_graph/factions \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_graph/factions "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:609: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_graph/factions/order \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_graph/factions/order "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:622: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: PUT http://testserver/api/story/rest_graph/factions/order \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: PUT http://testserver/api/story/rest_graph/factions/order "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:638: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: DELETE http://testserver/api/story/rest_graph/factions/order \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: DELETE http://testserver/api/story/rest_graph/factions/order "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:651: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions/guild/members/hero \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions/guild/members/hero "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:663: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_graph char_id=villain name=Malakar"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_graph/factions/guild/members/hero \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: DELETE http://testserver/api/story/rest_graph/factions/guild/members/hero \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_graph char_id=villain name=Malakar
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_graph/factions/guild/members/hero "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: DELETE http://testserver/api/story/rest_graph/factions/guild/members/hero "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_graph_manager.py:677: assert 404 == 200
+E   assert 49 == (60 - 10)
+     +  where 49 = seconds_until_lock()
+     +    where seconds_until_lock = <backend.security.crypto.EncryptedStore object at 0x000002066BC07E10>.seconds_until_lock
+C:\Users\User\Downloads\AURA\tests\test_local_crypto.py:166: assert 49 == (60 - 10)
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_timeline/timeline \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_timeline/timeline "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:452: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/stats \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/stats "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:463: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/chronology?max_events=10 \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/chronology?max_events=10 "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:472: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:487: assert 404 == 200
+E   assert 404 == 422
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:501: assert 404 == 422
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/events?character_id=hero \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/events?character_id=hero "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:512: assert 404 == 200
+E   KeyError: 'event'
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:523: KeyError: 'event'
+E   KeyError: 'event'
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:537: KeyError: 'event'
+E   KeyError: 'event'
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:555: KeyError: 'event'
+E   KeyError: 'event'
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:568: KeyError: 'event'
+E   KeyError: 'event'
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:588: KeyError: 'event'
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/links \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/links "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:602: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:615: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/threads \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/threads "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:628: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/threads/test_thread \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/story/rest_timeline/timeline/threads/test_thread "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:641: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: PUT http://testserver/api/story/rest_timeline/timeline/threads/update_me \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: PUT http://testserver/api/story/rest_timeline/timeline/threads/update_me "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:657: assert 404 == 200
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: DELETE http://testserver/api/story/rest_timeline/timeline/threads/delete_me \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: DELETE http://testserver/api/story/rest_timeline/timeline/threads/delete_me "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:670: assert 404 == 200
+E   KeyError: 'event'
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/threads "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:683: KeyError: 'event'
+E   assert 404 == 200
+     +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/validate \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/validate "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:705: assert 404 == 200
+E   KeyError: 'event'
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:717: KeyError: 'event'
+E   KeyError: 'event'
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for character_update: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.CharacterBible", "message": "Character created: work=rest_timeline char_id=hero name=Aldric"}
+{"timestamp": null, "level": null, "name": "AURA.StoryStorage", "message": "WS broadcast deferred for canon_event: no running event loop"}
+{"timestamp": null, "level": null, "name": "AURA.StoryMemory.ChapterPlanner", "message": "Chapter created: work=rest_timeline title=Cap 1 order=1"}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+{"timestamp": null, "level": null, "name": "asyncio", "message": "Using proactor: IocpProactor"}
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for character_update: no running event loop
+INFO     AURA.StoryMemory.CharacterBible:character_bible.py:97 Character created: work=rest_timeline char_id=hero name=Aldric
+DEBUG    AURA.StoryStorage:story_storage.py:268 WS broadcast deferred for canon_event: no running event loop
+INFO     AURA.StoryMemory.ChapterPlanner:chapter_planner.py:42 Chapter created: work=rest_timeline title=Cap 1 order=1
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/story/rest_timeline/timeline/events "HTTP/1.1 404 Not Found"
+C:\Users\User\Downloads\AURA\tests\test_timeline_manager.py:735: KeyError: 'event'
+=========================== short test summary info ===========================
+FAILED tests/test_bloque20.py::TestDiscovery::test_discovery_returns_aura_info
+FAILED tests/test_core.py::test_version_json_exists - AssertionError: version...
+FAILED tests/test_core.py::test_version_json_valid - FileNotFoundError: [Errn...
+FAILED tests/test_core.py::test_imports_aura_core - Failed: Error importando ...
+FAILED tests/test_core.py::test_imports_scripts - Failed: Error importando sc...
+FAILED tests/test_core.py::test_imports_nodes - Failed: Error importando nodo...
+FAILED tests/test_core.py::test_changelog_exists - AssertionError: Secciones ...
+FAILED tests/test_core.py::test_gitignore_exists - AssertionError: Encabezado...
+FAILED tests/test_core.py::test_github_workflows - AssertionError: Workflow t...
+FAILED tests/test_core.py::test_health_check_importable - Failed: Error impor...
+FAILED tests/test_core.py::test_version_manager_functions - Failed: Error en ...
+FAILED tests/test_e2e.py::TestChatFlow::test_simple_chat_flow - httpx.Connect...
+FAILED tests/test_e2e.py::TestChatFlow::test_omniroute_fallback - httpx.Conne...
+FAILED tests/test_e2e.py::TestChatFlow::test_chat_stream - httpx.ConnectError...
+FAILED tests/test_e2e.py::TestMultiUserScenarios::test_concurrent_chats - htt...
+FAILED tests/test_e2e.py::TestMultiUserScenarios::test_rate_limiting - httpx....
+FAILED tests/test_e2e.py::TestProviderManagement::test_list_providers - httpx...
+FAILED tests/test_e2e.py::TestProviderManagement::test_get_best_provider - ht...
+FAILED tests/test_e2e.py::TestProviderManagement::test_provider_stats - httpx...
+FAILED tests/test_e2e.py::TestProviderManagement::test_provider_recommendations
+FAILED tests/test_e2e.py::TestDataPersistence::test_chat_history_saved - http...
+FAILED tests/test_e2e.py::TestDataPersistence::test_memory_save_and_search - ...
+FAILED tests/test_e2e.py::TestSecurityAndAuth::test_unauthorized_access_blocked
+FAILED tests/test_e2e.py::TestSecurityAndAuth::test_invalid_token_rejected - ...
+FAILED tests/test_e2e.py::TestSecurityAndAuth::test_cors_headers_present - ht...
+FAILED tests/test_e2e.py::TestSecurityAndAuth::test_security_headers - httpx....
+FAILED tests/test_e2e.py::TestErrorHandling::test_malformed_request_rejected
+FAILED tests/test_e2e.py::TestErrorHandling::test_nonexistent_endpoint_404 - ...
+FAILED tests/test_e2e.py::TestErrorHandling::test_oversized_payload - httpx.C...
+FAILED tests/test_e2e.py::TestErrorHandling::test_empty_message - httpx.Conne...
+FAILED tests/test_e2e.py::TestPerformance::test_response_time_under_limit - h...
+FAILED tests/test_e2e.py::TestPerformance::test_health_check_fast - httpx.Con...
+FAILED tests/test_e2e.py::TestSystemMonitoring::test_telemetry_available - ht...
+FAILED tests/test_e2e.py::TestSystemMonitoring::test_network_topology - httpx...
+FAILED tests/test_e2e.py::TestSummary::test_all_systems_operational - httpx.C...
+FAILED tests/test_e2e_backend.py::test_agent_scheduler_endpoints - AssertionE...
+FAILED tests/test_e2e_integration.py::TestBackendLifecycle::test_launcher_module_imports
+FAILED tests/test_e2e_integration.py::TestBackendLifecycle::test_port_check_function
+FAILED tests/test_export_compiler.py::test_rest_export_epub - assert 404 == 200
+FAILED tests/test_export_compiler.py::test_rest_export_markdown - assert 404 ...
+FAILED tests/test_export_compiler.py::test_rest_export_custom_filename - asse...
+FAILED tests/test_export_compiler.py::test_rest_export_invalid_format - asser...
+FAILED tests/test_export_compiler.py::test_rest_export_async_epub - assert 40...
+FAILED tests/test_graph_manager.py::test_rest_get_relationships - assert 404 ...
+FAILED tests/test_graph_manager.py::test_rest_add_relationship - assert 404 =...
+FAILED tests/test_graph_manager.py::test_rest_add_relationship_invalid_type
+FAILED tests/test_graph_manager.py::test_rest_update_relationship - assert 40...
+FAILED tests/test_graph_manager.py::test_rest_remove_relationship - assert 40...
+FAILED tests/test_graph_manager.py::test_rest_relationship_summary - assert 4...
+FAILED tests/test_graph_manager.py::test_rest_check_conflict - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_export_graph - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_create_faction - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_list_factions - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_get_faction - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_update_faction - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_delete_faction - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_add_character_to_faction - asse...
+FAILED tests/test_graph_manager.py::test_rest_remove_character_from_faction
+FAILED tests/test_local_crypto.py::test_store_seconds_until_lock_counts_down
+FAILED tests/test_timeline_manager.py::test_rest_get_timeline - assert 404 ==...
+FAILED tests/test_timeline_manager.py::test_rest_get_timeline_stats - assert ...
+FAILED tests/test_timeline_manager.py::test_rest_get_chronology - assert 404 ...
+FAILED tests/test_timeline_manager.py::test_rest_create_timeline_event - asse...
+FAILED tests/test_timeline_manager.py::test_rest_create_timeline_event_invalid_type
+FAILED tests/test_timeline_manager.py::test_rest_list_timeline_events - asser...
+FAILED tests/test_timeline_manager.py::test_rest_get_timeline_event - KeyErro...
+FAILED tests/test_timeline_manager.py::test_rest_update_timeline_event - KeyE...
+FAILED tests/test_timeline_manager.py::test_rest_delete_timeline_event - KeyE...
+FAILED tests/test_timeline_manager.py::test_rest_create_timeline_link - KeyEr...
+FAILED tests/test_timeline_manager.py::test_rest_delete_timeline_link - KeyEr...
+FAILED tests/test_timeline_manager.py::test_rest_list_timeline_links - assert...
+FAILED tests/test_timeline_manager.py::test_rest_create_timeline_thread - ass...
+FAILED tests/test_timeline_manager.py::test_rest_list_timeline_threads - asse...
+FAILED tests/test_timeline_manager.py::test_rest_get_timeline_thread - assert...
+FAILED tests/test_timeline_manager.py::test_rest_update_timeline_thread - ass...
+FAILED tests/test_timeline_manager.py::test_rest_delete_timeline_thread - ass...
+FAILED tests/test_timeline_manager.py::test_rest_add_event_to_thread - KeyErr...
+FAILED tests/test_timeline_manager.py::test_rest_validate_chronology - assert...
+FAILED tests/test_timeline_manager.py::test_rest_check_sequence - KeyError: '...
+FAILED tests/test_timeline_manager.py::test_rest_check_sequence_valid - KeyEr...
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py", line 1113, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\huggingface_hub\utils\_http.py", line 413, in close_session
+    client.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_client.py", line 1270, in close
+    self._transport.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py", line 262, in close
+    self._pool.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py", line 353, in close
+    self._close_connections(closing_connections)
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py", line 345, in _close_connections
+    connection.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection.py", line 172, in close
+    with Trace("close", logger, None, {}):
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_trace.py", line 52, in __enter__
+    self.trace(f"{self.name}.started", info)
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_trace.py", line 47, in trace
+    self.logger.debug(message)
+Message: 'close.started'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py", line 1113, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\huggingface_hub\utils\_http.py", line 413, in close_session
+    client.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_client.py", line 1270, in close
+    self._transport.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py", line 262, in close
+    self._pool.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py", line 353, in close
+    self._close_connections(closing_connections)
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py", line 345, in _close_connections
+    connection.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection.py", line 172, in close
+    with Trace("close", logger, None, {}):
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_trace.py", line 64, in __exit__
+    self.trace(f"{self.name}.complete", info)
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_trace.py", line 47, in trace
+    self.logger.debug(message)
+Message: 'close.complete'
+Arguments: ()
+EXIT=1

@@ -1,0 +1,7850 @@
+[
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345609.9590538,
+    "finished_at": 1789345609.9590538,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345610.0076535,
+    "finished_at": 1789345610.0076535,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345610.0257022,
+    "finished_at": 1789345610.0257022,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345610.0292065,
+    "finished_at": 1789345610.0292065,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345610.031738,
+    "finished_at": 1789345610.031738,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345639.857261,
+    "finished_at": 1789345639.857261,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345639.8602648,
+    "finished_at": 1789345639.8602648,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345639.8743248,
+    "finished_at": 1789345639.8743248,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 51
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.080934,
+    "finished_at": 1789345640.1325374,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.1866593,
+    "finished_at": 1789345640.1866593,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-bd4df36a",
+    "directive": {
+      "mission_id": "mission-bd4df36a",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-bd4df36a-s1",
+        "mission_id": "mission-bd4df36a",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-bd4df36a-s2",
+        "mission_id": "mission-bd4df36a",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-bd4df36a-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-bd4df36a-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-bd4df36a",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.2142458,
+    "finished_at": 1789345640.2142458,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.2358954,
+    "finished_at": 1789345640.2358954,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.2569563,
+    "finished_at": 1789345640.2569563,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.3100986,
+    "finished_at": 1789345640.3100986,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.3427074,
+    "finished_at": 1789345640.3427074,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.348715,
+    "finished_at": 1789345640.348715,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345640.3552537,
+    "finished_at": 1789345640.3552537,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345698.2974317,
+    "finished_at": 1789345698.2974317,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345698.3009377,
+    "finished_at": 1789345698.3009377,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345698.310464,
+    "finished_at": 1789345698.310464,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 50
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345698.5151086,
+    "finished_at": 1789345698.5657039,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345699.9672978,
+    "finished_at": 1789345699.9672978,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-a351bf89",
+    "directive": {
+      "mission_id": "mission-a351bf89",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-a351bf89-s1",
+        "mission_id": "mission-a351bf89",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-a351bf89-s2",
+        "mission_id": "mission-a351bf89",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-a351bf89-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-a351bf89-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-a351bf89",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345699.9853384,
+    "finished_at": 1789345699.9853384,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345700.0094404,
+    "finished_at": 1789345700.0094404,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345700.0356917,
+    "finished_at": 1789345700.0356917,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345700.075892,
+    "finished_at": 1789345700.075892,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345700.094913,
+    "finished_at": 1789345700.094913,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345700.0996356,
+    "finished_at": 1789345700.0996356,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345700.1037242,
+    "finished_at": 1789345700.1037242,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345719.6955307,
+    "finished_at": 1789345719.6955307,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345719.7010367,
+    "finished_at": 1789345719.7010367,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345719.7115703,
+    "finished_at": 1789345719.7115703,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 51
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345719.9166172,
+    "finished_at": 1789345719.9677825,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345721.3848178,
+    "finished_at": 1789345721.3848178,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-32a0db06",
+    "directive": {
+      "mission_id": "mission-32a0db06",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-32a0db06-s1",
+        "mission_id": "mission-32a0db06",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-32a0db06-s2",
+        "mission_id": "mission-32a0db06",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-32a0db06-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-32a0db06-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-32a0db06",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345721.405856,
+    "finished_at": 1789345721.405856,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345721.4278994,
+    "finished_at": 1789345721.4278994,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345721.446949,
+    "finished_at": 1789345721.446949,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345721.4840264,
+    "finished_at": 1789345721.4840264,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345721.504767,
+    "finished_at": 1789345721.504767,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345721.5109088,
+    "finished_at": 1789345721.5109088,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345721.517065,
+    "finished_at": 1789345721.517065,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345740.4287815,
+    "finished_at": 1789345740.4287815,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345740.43431,
+    "finished_at": 1789345740.43431,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345740.4478304,
+    "finished_at": 1789345740.4478304,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 51
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345740.653079,
+    "finished_at": 1789345740.7041848,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345742.615614,
+    "finished_at": 1789345742.615614,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-d6467939",
+    "directive": {
+      "mission_id": "mission-d6467939",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-d6467939-s1",
+        "mission_id": "mission-d6467939",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-d6467939-s2",
+        "mission_id": "mission-d6467939",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-d6467939-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-d6467939-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-d6467939",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345742.6517193,
+    "finished_at": 1789345742.6517193,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345742.6848552,
+    "finished_at": 1789345742.6848552,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345742.7134106,
+    "finished_at": 1789345742.7134106,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345742.7731564,
+    "finished_at": 1789345742.7731564,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345742.7962208,
+    "finished_at": 1789345742.7962208,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345742.803731,
+    "finished_at": 1789345742.803731,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345742.8107393,
+    "finished_at": 1789345742.8107393,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345796.5560057,
+    "finished_at": 1789345796.5560057,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345796.562514,
+    "finished_at": 1789345796.562514,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345796.5750415,
+    "finished_at": 1789345796.5750415,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 50
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345796.780229,
+    "finished_at": 1789345796.8308325,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345798.1436782,
+    "finished_at": 1789345798.1436782,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-40c2d8cf",
+    "directive": {
+      "mission_id": "mission-40c2d8cf",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-40c2d8cf-s1",
+        "mission_id": "mission-40c2d8cf",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-40c2d8cf-s2",
+        "mission_id": "mission-40c2d8cf",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-40c2d8cf-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-40c2d8cf-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-40c2d8cf",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345798.165741,
+    "finished_at": 1789345798.165741,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345798.185784,
+    "finished_at": 1789345798.185784,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345798.210358,
+    "finished_at": 1789345798.210358,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345798.250954,
+    "finished_at": 1789345798.250954,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345798.2730665,
+    "finished_at": 1789345798.2730665,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345798.281578,
+    "finished_at": 1789345798.281578,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345798.2890856,
+    "finished_at": 1789345798.2890856,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345831.2334075,
+    "finished_at": 1789345831.2334075,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345831.2414181,
+    "finished_at": 1789345831.2414181,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345831.2544532,
+    "finished_at": 1789345831.2544532,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 51
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345831.4594948,
+    "finished_at": 1789345831.5106575,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345833.144889,
+    "finished_at": 1789345833.144889,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-ba99ee77",
+    "directive": {
+      "mission_id": "mission-ba99ee77",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-ba99ee77-s1",
+        "mission_id": "mission-ba99ee77",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-ba99ee77-s2",
+        "mission_id": "mission-ba99ee77",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-ba99ee77-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-ba99ee77-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-ba99ee77",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345833.1649277,
+    "finished_at": 1789345833.1649277,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345833.1864855,
+    "finished_at": 1789345833.1864855,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345833.2075257,
+    "finished_at": 1789345833.2075257,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345833.2516127,
+    "finished_at": 1789345833.2516127,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345833.2741723,
+    "finished_at": 1789345833.2741723,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345833.2831814,
+    "finished_at": 1789345833.2831814,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789345833.2917054,
+    "finished_at": 1789345833.2917054,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349228.5682313,
+    "finished_at": 1789349228.5682313,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349228.5812426,
+    "finished_at": 1789349228.5812426,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349228.59926,
+    "finished_at": 1789349228.59926,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 50
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349228.80638,
+    "finished_at": 1789349228.8564355,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349231.1769483,
+    "finished_at": 1789349231.177949,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-dbbaac5a",
+    "directive": {
+      "mission_id": "mission-dbbaac5a",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-dbbaac5a-s1",
+        "mission_id": "mission-dbbaac5a",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-dbbaac5a-s2",
+        "mission_id": "mission-dbbaac5a",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-dbbaac5a-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-dbbaac5a-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-dbbaac5a",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349231.2089777,
+    "finished_at": 1789349231.2089777,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349231.23951,
+    "finished_at": 1789349231.23951,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349231.270539,
+    "finished_at": 1789349231.270539,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349231.3280942,
+    "finished_at": 1789349231.3280942,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349231.3591235,
+    "finished_at": 1789349231.3591235,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349231.375138,
+    "finished_at": 1789349231.375138,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349231.3931549,
+    "finished_at": 1789349231.3931549,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349268.8347006,
+    "finished_at": 1789349268.8347006,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349268.845711,
+    "finished_at": 1789349268.845711,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349268.8647282,
+    "finished_at": 1789349268.8647282,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 50
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349269.06925,
+    "finished_at": 1789349269.1193013,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349271.6035542,
+    "finished_at": 1789349271.6035542,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-b685dd5c",
+    "directive": {
+      "mission_id": "mission-b685dd5c",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-b685dd5c-s1",
+        "mission_id": "mission-b685dd5c",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-b685dd5c-s2",
+        "mission_id": "mission-b685dd5c",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-b685dd5c-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-b685dd5c-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-b685dd5c",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349271.63158,
+    "finished_at": 1789349271.63158,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349271.6636107,
+    "finished_at": 1789349271.6636107,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349271.6951406,
+    "finished_at": 1789349271.6951406,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349271.7546601,
+    "finished_at": 1789349271.7546601,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349271.788193,
+    "finished_at": 1789349271.788193,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349271.8057752,
+    "finished_at": 1789349271.8057752,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789349271.8212924,
+    "finished_at": 1789349271.8212924,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m2",
+    "directive": {
+      "mission_id": "m2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {
+        "q": 1
+      }
+    },
+    "steps": [
+      {
+        "step_id": "m2-s1",
+        "mission_id": "m2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      },
+      {
+        "step_id": "m2-s2",
+        "mission_id": "m2",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {
+          "q": 1
+        },
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m2-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "params": {
+            "q": 1
+          },
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.1130102,
+    "finished_at": 1789353110.1130102,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m4",
+    "directive": {
+      "mission_id": "m4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m4-s1",
+        "mission_id": "m4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "error"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "error",
+        "output": null,
+        "error": "boom",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m4",
+      "title": "t",
+      "completed_steps": 0,
+      "total_steps": 1,
+      "success": false,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.126022,
+    "finished_at": 1789353110.126022,
+    "status": "error",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m8",
+    "directive": {
+      "mission_id": "m8",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m8-s1",
+        "mission_id": "m8",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m8-s2",
+        "mission_id": "m8",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m8-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m8-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "params": {},
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m8",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.1430378,
+    "finished_at": 1789353110.1430378,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "m3",
+    "directive": {
+      "mission_id": "m3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "m3-s1",
+        "mission_id": "m3",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "m3-s2",
+        "mission_id": "m3",
+        "order": 2,
+        "name": "step-mesh-2",
+        "scope": "mesh",
+        "description": "Ejecutar scope: mesh",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s3",
+        "mission_id": "m3",
+        "order": 3,
+        "name": "step-audit-3",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "skip"
+      },
+      {
+        "step_id": "m3-s4",
+        "mission_id": "m3",
+        "order": 4,
+        "name": "step-sandbox-4",
+        "scope": "sandbox",
+        "description": "Ejecutar scope: sandbox",
+        "params": {},
+        "status": "skip"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "m3-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 50
+      },
+      {
+        "step_id": "m3-s2",
+        "order": 2,
+        "scope": "mesh",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s3",
+        "order": 3,
+        "scope": "audit",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "m3-s4",
+        "order": 4,
+        "scope": "sandbox",
+        "status": "skip",
+        "output": null,
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "m3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 4,
+      "success": false,
+      "target_scopes": [
+        "rag",
+        "mesh",
+        "audit",
+        "sandbox"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.349909,
+    "finished_at": 1789353110.400475,
+    "status": "aborted",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e1-s2",
+        "mission_id": "e1",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e1-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "Recon offline",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.458032,
+    "finished_at": 1789353110.458032,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "mission-563cea1e",
+    "directive": {
+      "mission_id": "mission-563cea1e",
+      "title": "Autonoma",
+      "description": "sin scopes",
+      "scopes": [
+        "rag",
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "mission-563cea1e-s1",
+        "mission_id": "mission-563cea1e",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "mission-563cea1e-s2",
+        "mission_id": "mission-563cea1e",
+        "order": 2,
+        "name": "step-audit-2",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "mission-563cea1e-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "mission-563cea1e-s2",
+        "order": 2,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "mission-563cea1e",
+      "title": "Autonoma",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.4905639,
+    "finished_at": 1789353110.4905639,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag",
+        "memory"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      },
+      {
+        "step_id": "e2-s2",
+        "mission_id": "e2",
+        "order": 2,
+        "name": "step-memory-2",
+        "scope": "memory",
+        "description": "Ejecutar scope: memory",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      },
+      {
+        "step_id": "e2-s2",
+        "order": 2,
+        "scope": "memory",
+        "status": "success",
+        "output": {
+          "scope": "memory",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 2,
+      "total_steps": 2,
+      "success": true,
+      "target_scopes": [
+        "rag",
+        "memory"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.5143921,
+    "finished_at": 1789353110.5143921,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e3",
+    "directive": {
+      "mission_id": "e3",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e3-s1",
+        "mission_id": "e3",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e3-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e3",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.5384142,
+    "finished_at": 1789353110.5384142,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e4",
+    "directive": {
+      "mission_id": "e4",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "rag"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e4-s1",
+        "mission_id": "e4",
+        "order": 1,
+        "name": "step-rag-1",
+        "scope": "rag",
+        "description": "Ejecutar scope: rag",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e4-s1",
+        "order": 1,
+        "scope": "rag",
+        "status": "success",
+        "output": {
+          "scope": "rag",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e4",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "rag"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.5989726,
+    "finished_at": 1789353110.5989726,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e0",
+    "directive": {
+      "mission_id": "e0",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e0-s1",
+        "mission_id": "e0",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e0-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e0",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.6249964,
+    "finished_at": 1789353110.6249964,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e1",
+    "directive": {
+      "mission_id": "e1",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e1-s1",
+        "mission_id": "e1",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e1-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e1",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.6380084,
+    "finished_at": 1789353110.6380084,
+    "status": "success",
+    "offline_only": true
+  },
+  {
+    "mission_id": "e2",
+    "directive": {
+      "mission_id": "e2",
+      "title": "t",
+      "description": "d",
+      "scopes": [
+        "audit"
+      ],
+      "priority": "normal",
+      "params": {}
+    },
+    "steps": [
+      {
+        "step_id": "e2-s1",
+        "mission_id": "e2",
+        "order": 1,
+        "name": "step-audit-1",
+        "scope": "audit",
+        "description": "Ejecutar scope: audit",
+        "params": {},
+        "status": "success"
+      }
+    ],
+    "results": [
+      {
+        "step_id": "e2-s1",
+        "order": 1,
+        "scope": "audit",
+        "status": "success",
+        "output": {
+          "scope": "audit",
+          "offline": true
+        },
+        "error": "",
+        "latency_ms": 0
+      }
+    ],
+    "summary": {
+      "mission_id": "e2",
+      "title": "t",
+      "completed_steps": 1,
+      "total_steps": 1,
+      "success": true,
+      "target_scopes": [
+        "audit"
+      ],
+      "notes": "Ejecucion completada; 0ms ultimo step"
+    },
+    "started_at": 1789353110.6490185,
+    "finished_at": 1789353110.6490185,
+    "status": "success",
+    "offline_only": true
+  }
+]

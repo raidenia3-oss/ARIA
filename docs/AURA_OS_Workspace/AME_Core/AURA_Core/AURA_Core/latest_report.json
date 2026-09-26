@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-06-19T03:21:38.338721",
+  "ecosystem_health": {
+    "nodes": {
+      "Search Node": "online",
+      "HF Space": "online",
+      "JARVIS HUD": "online"
+    },
+    "summary": "Todos los nodos operativos"
+  },
+  "market_analysis": {
+    "topics": [
+      "desarrollo de software",
+      "inteligencia artificial"
+    ],
+    "top_threads": [
+      {
+        "title": "Tendencias AI 2026",
+        "source": "Reddit",
+        "url": "https://reddit.com/ai2026"
+      },
+      {
+        "title": "Nuevas APIs de modelos locales",
+        "source": "Noticias",
+        "url": "https://news.local/apis"
+      },
+      {
+        "title": "Optimización de pipelines LLM",
+        "source": "Reddit",
+        "url": "https://reddit.com/llm"
+      }
+    ]
+  },
+  "bot_strategy": {
+    "status": "running",
+    "metrics": {
+      "hashrate": "125.4 H/s",
+      "uptime": "4h",
+      "tasks": 12
+    },
+    "auto_heal_triggered": false
+  }
+}

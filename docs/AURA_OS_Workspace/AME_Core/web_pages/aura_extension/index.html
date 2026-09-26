@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AURA Command Center</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                background: #080408;
+                color: #f0f0f8;
+                font-family: "Segoe UI", sans-serif;
+                min-height: 100vh;
+            }
+            .header {
+                background: linear-gradient(135deg, #0a0008, #1a0010);
+                border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+                padding: 16px 24px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .logo {
+                font-size: 20px;
+                font-weight: 900;
+                color: #dc143c;
+                letter-spacing: 3px;
+            }
+            .logo span {
+                color: #ffd700;
+            }
+            .status-bar {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 12px;
+                letter-spacing: 1px;
+                color: rgba(240, 240, 248, 0.6);
+            }
+            .status-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #00ff88;
+                box-shadow: 0 0 8px #00ff88;
+            }
+            .status-dot.offline {
+                background: #dc143c;
+                box-shadow: 0 0 8px #dc143c;
+            }
+            .container {
+                display: grid;
+                grid-template-columns: 300px 1fr;
+                min-height: calc(100vh - 60px);
+            }
+            .sidebar {
+                background: rgba(255, 255, 255, 0.02);
+                border-right: 1px solid rgba(220, 20, 60, 0.15);
+                padding: 20px;
+            }
+            .sidebar h3 {
+                font-size: 11px;
+                color: rgba(240, 240, 248, 0.3);
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin-bottom: 12px;
+                margin-top: 20px;
+            }
+            .sidebar h3:first-child {
+                margin-top: 0;
+            }
+            .node-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 12px;
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(220, 20, 60, 0.1);
+                margin-bottom: 6px;
+                font-size: 12px;
+            }
+            .node-name {
+                color: #f0f0f8;
+                font-weight: 600;
+            }
+            .node-status {
+                font-size: 10px;
+                padding: 2px 8px;
+                border-radius: 2px;
+            }
+            .online {
+                background: rgba(0, 255, 136, 0.15);
+                color: #00ff88;
+            }
+            .offline {
+                background: rgba(220, 20, 60, 0.15);
+                color: #dc143c;
+            }
+            .main-area {
+                padding: 24px;
+            }
+            .panel {
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(220, 20, 60, 0.15);
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            .panel h2 {
+                font-size: 16px;
+                font-weight: 700;
+                color: #dc143c;
+                letter-spacing: 1px;
+                margin-bottom: 16px;
+            }
+            .action-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 10px;
+            }
+            .action-btn {
+                background: rgba(220, 20, 60, 0.1);
+                border: 1px solid rgba(220, 20, 60, 0.25);
+                color: #f0f0f8;
+                padding: 12px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 1px;
+                cursor: pointer;
+                transition: all 0.2s;
+                text-align: center;
+            }
+            .action-btn:hover {
+                background: rgba(220, 20, 60, 0.25);
+                border-color: #dc143c;
+            }
+            .log-area {
+                background: rgba(0, 0, 0, 0.3);
+                border: 1px solid rgba(220, 20, 60, 0.1);
+                padding: 12px;
+                font-family: "Courier New", monospace;
+                font-size: 11px;
+                color: rgba(240, 240, 248, 0.5);
+                max-height: 200px;
+                overflow-y: auto;
+            }
+            .log-entry {
+                color: rgba(240, 240, 248, 0.4);
+                padding: 2px 0;
+            }
+            .log-entry .time {
+                color: rgba(220, 20, 60, 0.6);
+            }
+            .chat-section {
+                margin-top: 20px;
+            }
+            .chat-box {
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(220, 20, 60, 0.2);
+                padding: 20px;
+            }
+            .chat-title {
+                font-size: 16px;
+                font-weight: 700;
+                color: #dc143c;
+                margin-bottom: 12px;
+                letter-spacing: 1px;
+            }
+            .chat-input-area {
+                display: flex;
+                gap: 10px;
+                margin-top: 12px;
+            }
+            .chat-input {
+                flex: 1;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(220, 20, 60, 0.25);
+                color: #f0f0f8;
+                padding: 10px 14px;
+                font-size: 13px;
+                outline: none;
+                font-family: inherit;
+            }
+            .chat-input:focus {
+                border-color: #dc143c;
+            }
+            .chat-send {
+                background: #dc143c;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 2px;
+                cursor: pointer;
+            }
+            .chat-send:hover {
+                background: #ff1a3a;
+            }
+            .chat-msgs {
+                min-height: 150px;
+                max-height: 300px;
+                overflow-y: auto;
+                padding: 8px 0;
+            }
+            .msg-user {
+                text-align: right;
+                color: #ffd700;
+                margin: 6px 0;
+                font-size: 13px;
+            }
+            .msg-ai {
+                text-align: left;
+                color: rgba(240, 240, 248, 0.8);
+                margin: 6px 0;
+                font-size: 13px;
+                line-height: 1.5;
+                padding: 8px;
+                background: rgba(220, 20, 60, 0.05);
+                border-left: 2px solid rgba(220, 20, 60, 0.3);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="logo">AURA <span>COMMAND CENTER</span></div>
+            <div class="status-bar" id="statusBar">
+                <span class="status-dot offline" id="statusDot"></span>
+                <span id="statusText">VERIFICANDO...</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="sidebar">
+                <h3>Nodos</h3>
+                <div id="nodeList">
+                    <div class="node-item">
+                        <span class="node-name">AURA Core</span
+                        ><span class="node-status online">ACTIVO</span>
+                    </div>
+                    <div class="node-item">
+                        <span class="node-name">HF Space</span
+                        ><span class="node-status online">ACTIVO</span>
+                    </div>
+                    <div class="node-item">
+                        <span class="node-name">AME Mobile</span
+                        ><span class="node-status offline">OFFLINE</span>
+                    </div>
+                    <div class="node-item">
+                        <span class="node-name">Shadow Core</span
+                        ><span class="node-status offline">OFFLINE</span>
+                    </div>
+                </div>
+                <h3>Acciones rápidas</h3>
+                <div class="action-grid">
+                    <div class="action-btn" onclick="sendCmd('health')">Health Check</div>
+                    <div class="action-btn" onclick="sendCmd('status')">Estado</div>
+                    <div class="action-btn" onclick="sendCmd('rollcoin')">RollerCoin</div>
+                </div>
+            </div>
+            <div class="main-area">
+                <div class="panel">
+                    <h2>◈ LOG DEL SISTEMA</h2>
+                    <div class="log-area" id="logArea">
+                        <div class="log-entry">
+                            <span class="time">[00:00:00]</span> Sistema iniciado
+                        </div>
+                        <div class="log-entry">
+                            <span class="time">[00:00:01]</span> Conectando a AURA EventBus...
+                        </div>
+                        <div class="log-entry">
+                            <span class="time">[00:00:02]</span> Conexion establecida
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-section">
+                    <div class="chat-box">
+                        <div class="chat-title">◈ TERMINAL IA</div>
+                        <div class="chat-msgs" id="chatMsgs">
+                            <div class="msg-ai">Sistema listo. Canal de comunicacion abierto.</div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input
+                                class="chat-input"
+                                id="chatInp"
+                                placeholder="Comando..."
+                                onkeypress="if (event.key === 'Enter') sendChat();"
+                            />
+                            <button class="chat-send" onclick="sendChat()">→</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const HF_URL = "https://raiden456-slut.hf.space/v1/chat/completions";
+            const chatMsgs = [
+                {
+                    role: "system",
+                    content:
+                        "Eres el Command Center de AURA/AME. Responde en español de forma tecnica y concisa. El usuario esta operando el sistema.",
+                },
+            ];
+
+            function addLog(msg, time) {
+                const t = time || new Date().toTimeString().slice(0, 8);
+                const el = document.getElementById("logArea");
+                el.innerHTML += `<div class="log-entry"><span class="time">[${t}]</span> ${msg}</div>`;
+                el.scrollTop = el.scrollHeight;
+            }
+
+            function updateStatus(online) {
+                const dot = document.getElementById("statusDot");
+                const txt = document.getElementById("statusText");
+                if (online) {
+                    dot.className = "status-dot";
+                    txt.textContent = "AURA ACTIVO";
+                } else {
+                    dot.className = "status-dot offline";
+                    txt.textContent = "AURA OFFLINE";
+                }
+            }
+
+            function sendCmd(cmd) {
+                addLog("Enviando comando: " + cmd);
+            }
+
+            async function sendChat() {
+                const inp = document.getElementById("chatInp");
+                const chat = document.getElementById("chatMsgs");
+                const text = inp.value.trim();
+                if (!text) return;
+                inp.value = "";
+                chat.innerHTML += `<div class="msg-user">> ${text}</div>`;
+                chat.innerHTML += `<div class="msg-ai" id="ctyping">Procesando...</div>`;
+                chat.scrollTop = chat.scrollHeight;
+                chatMsgs.push({ role: "user", content: text });
+                try {
+                    const r = await fetch(HF_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            messages: chatMsgs,
+                            max_tokens: 256,
+                            temperature: 0.7,
+                        }),
+                    });
+                    const d = await r.json();
+                    const reply = d.choices?.[0]?.message?.content || "Sin respuesta";
+                    chatMsgs.push({ role: "assistant", content: reply });
+                    const el = document.getElementById("ctyping");
+                    if (el) el.outerHTML = `<div class="msg-ai">${reply}</div>`;
+                    chat.scrollTop = chat.scrollHeight;
+                    addLog("Chat: respuesta recibida");
+                } catch (e) {
+                    const el = document.getElementById("ctyping");
+                    if (el)
+                        el.outerHTML = `<div class="msg-ai" style="color:#dc143c">Error de conexion con HF Space</div>`;
+                }
+            }
+
+            async function checkHealth() {
+                try {
+                    const r = await fetch(HF_URL.replace("/v1/chat/completions", "/health"));
+                    if (r.ok) {
+                        updateStatus(true);
+                        addLog("HF Space responde correctamente");
+                    } else {
+                        updateStatus(false);
+                        addLog("HF Space: health check fallo");
+                    }
+                } catch (e) {
+                    updateStatus(false);
+                    addLog("No se puede alcanzar HF Space - modo offline");
+                }
+            }
+
+            setInterval(checkHealth, 30000);
+            checkHealth();
+            addLog("Panel de control iniciado");
+        </script>
+    </body>
+</html>

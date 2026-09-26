@@ -1,0 +1,347 @@
+@import "tailwindcss";
+
+@theme {
+  --color-aura-bg: #05070a;
+  --color-aura-surface: #0a0f14;
+  --color-aura-panel: #0d1117;
+  --color-aura-border: rgba(56, 189, 248, 0.25);
+  --color-aura-primary: #38bdf8;
+  --color-aura-secondary: #6366f1;
+  --color-aura-accent: #22d3ee;
+  --color-aura-danger: #ef4444;
+  --color-aura-success: #22c55e;
+  --color-aura-warning: #facc15;
+  --color-aura-muted: #94a3b8;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════ */
+/* AURA NUCLEUS OS - GLOBAL STYLES                                         */
+/* ═════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --primary-color: #6366f1;
+  --rgb-primary: 99, 102, 241;
+  --secondary-color: #06b6d4;
+  --accent-color: #ec4899;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  
+  --bg-primary: #0a0e27;
+  --bg-secondary: #161b3a;
+  --bg-tertiary: #0f1729;
+  
+  --text-primary: #e0e8ff;
+  --text-secondary: #a8b0d9;
+  --text-tertiary: #7c82ad;
+  
+  --border-color: rgba(224, 232, 255, 0.1);
+  --glass-bg: rgba(15, 23, 41, 0.4);
+  --glass-border: 1px solid rgba(224, 232, 255, 0.1);
+}
+
+* {
+  @apply transition-colors duration-200;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  @apply bg-gray-950 text-white font-mono;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+  font-family: 'Inter', 'Fira Code', 'Roboto Mono', monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold tracking-wider;
+}
+
+h1 {
+  @apply text-3xl;
+}
+
+h2 {
+  @apply text-2xl;
+}
+
+h3 {
+  @apply text-lg;
+}
+
+p {
+  @apply text-sm leading-relaxed;
+}
+
+a {
+  @apply text-aura-primary hover:text-aura-accent underline;
+}
+
+/* Glassmorphism Base */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  border: var(--glass-border);
+  border-radius: 12px;
+}
+
+.glass:hover {
+  border-color: rgba(224, 232, 255, 0.2);
+  background: rgba(15, 23, 41, 0.5);
+}
+
+/* Glow Effect */
+.glow {
+  box-shadow: 0 0 20px rgba(var(--rgb-primary), 0.3),
+              inset 0 0 20px rgba(var(--rgb-primary), 0.1);
+}
+
+.glow-sm {
+  box-shadow: 0 0 10px rgba(var(--rgb-primary), 0.2);
+}
+
+.glow-lg {
+  box-shadow: 0 0 30px rgba(var(--rgb-primary), 0.4),
+              inset 0 0 30px rgba(var(--rgb-primary), 0.15);
+}
+
+/* Buttons */
+button {
+  @apply px-4 py-2 rounded-lg font-medium cursor-pointer;
+  @apply transition-all duration-200;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+button:hover:not(:disabled) {
+  @apply scale-105;
+}
+
+button:active:not(:disabled) {
+  @apply scale-95;
+}
+
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Inputs */
+input, textarea, select {
+  @apply bg-gray-900 border border-gray-700 rounded-lg px-3 py-2;
+  @apply text-white placeholder-gray-500;
+  @apply focus:outline-none focus:ring-2 focus:ring-aura-primary focus:border-transparent;
+  @apply transition-all duration-200;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 41, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--rgb-primary), 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--rgb-primary), 0.8);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(var(--rgb-primary), 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(var(--rgb-primary), 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-scan {
+  animation: scan-line 3s linear infinite;
+}
+
+/* Utility Classes */
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.grid-auto {
+  @apply grid gap-4;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-gradient {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid transparent;
+  background-image: linear-gradient(var(--glass-bg), var(--glass-bg)), 
+                    linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Status Indicators */
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.status-dot.online {
+  background-color: var(--success-color);
+}
+
+.status-dot.offline {
+  background-color: var(--error-color);
+}
+
+.status-dot.idle {
+  background-color: var(--warning-color);
+}
+
+/* Loading Spinner */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(var(--rgb-primary), 0.2);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  h1 {
+    @apply text-2xl;
+  }
+  
+  h2 {
+    @apply text-xl;
+  }
+  
+  p {
+    @apply text-xs;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 12px;
+  }
+  
+  .glass {
+    border-radius: 8px;
+  }
+}
+
+/* Telemetry Component Styles */
+.telemetry {
+  @apply rounded-xl border border-aura-border/40 bg-aura-panel/60 p-4;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+}
+
+.telemetry-header {
+  @apply mb-3 text-xs font-bold uppercase tracking-widest text-aura-primary;
+}
+
+.telemetry-section {
+  @apply mb-3;
+}
+
+.telemetry-section h4 {
+  @apply mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-aura-muted;
+}
+
+.stat-item {
+  @apply flex items-center justify-between py-1;
+}
+
+.stat-item span:first-child {
+  @apply text-[10px] uppercase tracking-wider text-aura-muted;
+}
+
+.stat-item .value {
+  @apply text-xs font-bold text-aura-primary;
+}
+
+.empty {
+  @apply text-xs text-aura-muted;
+}
+
+.telemetry-footer {
+  @apply mt-3 border-t border-aura-border/40 pt-2 text-right text-[10px] text-aura-muted;
+}

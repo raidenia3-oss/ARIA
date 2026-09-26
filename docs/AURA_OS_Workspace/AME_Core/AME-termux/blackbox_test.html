@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackBox Test</title>
+    <link rel="stylesheet" href="/static/css/blackbox.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="black-box-terminal" id="blackBoxTerminal">
+            <div class="black-box-header">📜 CAJA NEGRA - LOGS SISTEMA</div>
+            <div class="black-box-tabs">
+                <div class="black-box-tab active" data-tab="system">Sistema</div>
+                <div class="black-box-tab" data-tab="emergency">Emergencia</div>
+                <div class="black-box-tab" data-tab="server">Servidor</div>
+            </div>
+            <div class="black-box-content" id="blackBoxContent">
+                <!-- Logs se cargarán aquí -->
+            </div>
+            <div class="black-box-status">Conectado a /api/tactical/logs</div>
+            <div class="black-box-lock" id="blackBoxLock"></div>
+        </div>
+        <div class="black-box-toggle" id="blackBoxToggle"></div>
+    </div>
+
+    <script src="/static/js/blackbox.js"></script>
+    <script>
+        // Simular logs para pruebas
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simular datos de logs para pruebas
+            const mockLogs = {
+                system: {
+                    entries: [
+                        "📡 [INFO] Sistema AURA iniciado",
+                        "🔧 [INFO] Cargando módulos de evolución...",
+                        "✅ [SUCCESS] Conexión establecida con el núcleo",
+                        "📡 [INFO] Escaneando entorno perimetral...",
+                        "⚠ [WARNING] Sensores CSI mostrando fluctuaciones leves",
+                        "🔄 [INFO] Actualizando propuestas de evolución...",
+                        "📊 [INFO] Telemetría en línea",
+                        "🔒 [INFO] Sistema en modo seguro",
+                        "🌐 [INFO] Conexión establecida con nodos remotos",
+                        "🔄 [INFO] Polling de logs cada 3 segundos"
+                    ]
+                },
+                emergency: {
+                    entries: [
+                        "🚨 [EMERGENCY] ALERTA DE SEGURIDAD: Intrusión detectada en sector 3",
+                        "⚠ [WARNING] Sensores acústicos detectaron actividad sospechosa",
+                        "🔴 [CRITICAL] Fallo en módulo de autenticación",
+                        "🚨 [EMERGENCY] Sistema en modo de bloqueo automático",
+                        "⚠ [WARNING] Conexión inestable con nodos remotos",
+                        "🚨 [EMERGENCY] Activando protocolo de contención",
+                        "⚠ [WARNING] Sensores CSI mostrando fluctuaciones críticas",
+                        "🚨 [EMERGENCY] Desconectando módulos no esenciales"
+                    ]
+                },
+                server: {
+                    entries: [
+                        "🔄 [INFO] Servidor principal en línea",
+                        "📡 [INFO] Conexión establecida con el núcleo AURA",
+                        "✅ [SUCCESS] Módulo de telemetría activado",
+                        "🔧 [INFO] Actualizando configuración del servidor...",
+                        "⚠ [WARNING] Latencia alta en conexión con nodos remotos",
+                        "📊 [INFO] Recursos del servidor: 78% CPU, 42% RAM",
+                        "🔄 [INFO] Reiniciando módulos de seguridad...",
+                        "✅ [SUCCESS] Conexión establecida con base de datos",
+                        "📡 [INFO] Escaneando puertos abiertos..."
+                    ]
+                }
+            };
+
+            // Simular la función fetch para pruebas
+            const originalFetch = window.fetch;
+            window.fetch = async function(url) {
+                if (url === '/api/tactical/logs') {
+                    return {
+                        json: async () => {
+                            return mockLogs;
+                        }
+                    };
+                }
+                return originalFetch.apply(this, arguments);
+            };
+        });
+    </script>
+</body>
+</html>

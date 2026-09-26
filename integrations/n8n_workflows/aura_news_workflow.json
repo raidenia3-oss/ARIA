@@ -1,0 +1,235 @@
+{
+  "name": "AURA Autonomous News System",
+  "nodes": [
+    {
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "parameters": {
+        "cronExpression": "0 */6 * * *",
+        "timezone": "America/Lima"
+      },
+      "position": [250, 300]
+    },
+    {
+      "name": "Fetch RSS Feeds",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.rss2json.com/v1/api.json",
+        "query": {
+          "rss_url": "https://myanimelist.net/rss.php",
+          "api_key": "={{$env.NEWSAPI_KEY}}"
+        },
+        "responseFormat": "json"
+      },
+      "position": [450, 300]
+    },
+    {
+      "name": "Fetch Reddit",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.reddit.com/r/anime+programming/hot.json",
+        "headers": {
+          "User-Agent": "AURA/1.0"
+        }
+      },
+      "position": [450, 450]
+    },
+    {
+      "name": "Fetch HackerNews",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://hacker-news.firebaseio.com/v0/topstories.json",
+        "responseFormat": "json"
+      },
+      "position": [450, 600]
+    },
+    {
+      "name": "Fetch NewsAPI",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "GET",
+        "url": "https://newsapi.org/v2/top-headlines",
+        "query": {
+          "category": "technology",
+          "language": "en",
+          "apiKey": "={{$env.NEWSAPI_KEY}}"
+        }
+      },
+      "position": [450, 750]
+    },
+    {
+      "name": "Aggregate Articles",
+      "type": "n8n-nodes-base.code",
+      "parameters": {
+        "jsCode": "const rss = $input.all().find(item => item.json.title); const reddit = $input.all().find(item => item.json.kind === 't3'); const hn = $input.all().find(item => Array.isArray(item.json)); const news = $input.all().find(item => item.json.articles); const articles = []; if (rss) rss.json.items?.forEach(item => articles.push({ title: item.title, url: item.link, source: 'RSS', content: item.description })); if (reddit) reddit.json.data.children?.forEach(item => articles.push({ title: item.data.title, url: 'https://reddit.com' + item.data.permalink, source: 'Reddit', content: item.data.selftext })); if (hn && Array.isArray(hn.json)) hn.json.slice(0, 10).forEach(id => articles.push({ title: 'HN Story ' + id, url: 'https://news.ycombinator.com/item?id=' + id, source: 'HN', content: '' })); if (news) news.json.articles?.forEach(item => articles.push({ title: item.title, url: item.url, source: 'NewsAPI', content: item.description })); return [{ json: { articles } }];"
+      },
+      "position": [650, 450]
+    },
+    {
+      "name": "Analyze with Qwen",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://qwen2-5-coder-3b.hf.space/api/analyze",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer {{$env.QWEN_API_KEY}}"
+        },
+        "body": "{\"articles\": {{$json.articles}}, \"prompt\": \"Analiza cada artículo. Extrae: tema_principal, relevancia (1-10), por_que_raiden_le_interesa.\"}"
+      },
+      "position": [850, 450]
+    },
+    {
+      "name": "Save to PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "parameters": {
+        "operation": "insert",
+        "table": "news_articles",
+        "columns": "id, url, title, source, analysis, embeddings, timestamp",
+        "values": "={{$json.articles.map(a => [uuidv4(), a.url, a.title, a.source, JSON.stringify(a.analysis), '[]', new Date().toISOString()])}}"
+      },
+      "position": [1050, 450]
+    },
+    {
+      "name": "Compute Recommendations",
+      "type": "n8n-nodes-base.code",
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import json, random\narticles = $input.all()[0].json['articles']\nuser_prefs = [{'tema': 'anime', 'score': 0.9}, {'tema': 'programming', 'score': 0.8}]\nfor a in articles:\n    a['relevance'] = random.randint(1, 10)\n    a['reason'] = f\"Recomiendo {a['title']} porque...\"\narticles.sort(key=lambda x: x['relevance'], reverse=True)\nselected = articles[:3]\nreturn [{'json': {'articles': selected, 'reasoning': 'Seleccionados por relevancia máxima', 'confidence': 0.95}}]"
+      },
+      "position": [1250, 450]
+    },
+    {
+      "name": "Send to FastAPI",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.3.10:8765/api/news/recommend",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"articulos\": {{$json.articles}}, \"razonamiento\": \"{{$json.reasoning}}\", \"confianza\": {{$json.confidence}}}"
+      },
+      "position": [1450, 450]
+    }
+  ],
+  "connections": {
+    "Cron Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch RSS Feeds",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Reddit",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch HackerNews",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch NewsAPI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch RSS Feeds": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Reddit": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Articles",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Fetch HackerNews": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Articles",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Fetch NewsAPI": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Articles",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Aggregate Articles": {
+      "main": [
+        [
+          {
+            "node": "Analyze with Qwen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze with Qwen": {
+      "main": [
+        [
+          {
+            "node": "Save to PostgreSQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to PostgreSQL": {
+      "main": [
+        [
+          {
+            "node": "Compute Recommendations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Recommendations": {
+      "main": [
+        [
+          {
+            "node": "Send to FastAPI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

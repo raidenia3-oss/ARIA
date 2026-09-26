@@ -1,0 +1,1020 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.11.7, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\User\Downloads\AURA
+configfile: pyproject.toml
+plugins: anyio-4.14.2, asyncio-1.4.0, cov-7.1.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 10 items
+
+tests\test_block74_kilo.py FFF..FFFFF                                    [100%]
+
+================================== FAILURES ===================================
+_________________________ TestVoiceStatus.test_status _________________________
+tests\test_block74_kilo.py:27: in test_status
+    assert "stt_engine" in body
+E   AssertionError: assert 'stt_engine' in {'status': 'ok', 'state': 'idle', 'available': True, 'stt_available': False, ...}
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "No se pudo iniciar el worker de noticias: No module named 'news_worker'"}
+{"timestamp": null, "level": null, "name": "AURA.Orchestrator", "message": "Monitor de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Orquestador de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA.Improvement", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Treasury Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Federated Trainer iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Narrative Engine iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Update Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "AI Router iniciado"}
+{"timestamp": null, "level": null, "name": "AURAScreenBridge", "message": "Screen capture backend: PIL.ImageGrab"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: coherence_audit (interval=600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: jan_reflection (interval=3600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: plot_summary (interval=86400s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: cache_cleanup (interval=300s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: vault_backup (interval=1800s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon started with 5 tasks"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon iniciado con 5 tareas programadas"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Task Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Mobile Automation Manager iniciado"}
+SelfLearning: inicializando...
+SelfLearning: auto-configurando...
+SelfLearning: auto-configuraci�n completa
+SelfLearning: sistema listo
+{"timestamp": null, "level": null, "name": "AURA", "message": "Self-Learning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Analytics Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Localization Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Security Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Device Orchestrator iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Fine-Tuning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "N.O.M.A.D. Module cargado"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Automation monitoring started"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon main loop started"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Coherence audit completed for 4 works"}
+Mobile: iniciando automation loop
+[AutomationEngine] Monitoring started
+Mobile: ejecutando Rollercoin
+Mobile: ejecutando TaskRabbit
+Mobile: ejecutando Mistplay
+Mobile: ganancias del d�a $0.00
+{"timestamp": null, "level": null, "name": "backend.cache.redis_client", "message": "Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz\u00f3 la conexi\u00f3n de red."}
+{"timestamp": null, "level": null, "name": "AURA", "message": "mDNS start failed: "}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio backend -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan_primary -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:1337 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:11434 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "HealthDaemon iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Local Health Daemon iniciado (diagn\u00f3sticos del sistema)"}
+[ProviderManager] Monitoring started (interval: 300s)
+{"timestamp": null, "level": null, "name": "AURA", "message": "Omniroute provider monitoring started"}
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+----------------------------- Captured log setup ------------------------------
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+ERROR    AURA:main.py:1203 No se pudo iniciar el worker de noticias: No module named 'news_worker'
+INFO     AURA.Orchestrator:orchestrator.py:262 Monitor de disponibilidad iniciado
+INFO     AURA:main.py:1244 Orquestador de disponibilidad iniciado
+INFO     AURA.Improvement:continuous_improvement.py:137 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1246 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1257 Treasury Manager iniciado
+INFO     AURA:main.py:1267 Federated Trainer iniciado
+INFO     AURA:main.py:1285 Narrative Engine iniciado
+INFO     AURA:main.py:1290 Update Manager iniciado
+INFO     AURA:main.py:1293 AI Router iniciado
+INFO     AURAScreenBridge:screen_bridge.py:204 Screen capture backend: PIL.ImageGrab
+INFO     AURA:main.py:1301 BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: coherence_audit (interval=600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: jan_reflection (interval=3600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: plot_summary (interval=86400s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: cache_cleanup (interval=300s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: vault_backup (interval=1800s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:336 BackgroundDaemon started with 5 tasks
+INFO     AURA:main.py:1310 Agent daemon iniciado con 5 tareas programadas
+INFO     AURA:main.py:1319 Task Manager iniciado
+INFO     AURA:main.py:1324 Mobile Automation Manager iniciado
+INFO     AURA:main.py:1330 Self-Learning Manager iniciado
+INFO     AURA:main.py:1333 Analytics Manager iniciado
+INFO     AURA:main.py:1336 Localization Manager iniciado
+INFO     AURA:main.py:1339 Security Manager iniciado
+INFO     AURA:main.py:1342 Device Orchestrator iniciado
+INFO     AURA:main.py:1345 Fine-Tuning Manager iniciado
+INFO     AURA:main.py:1347 N.O.M.A.D. Module cargado
+INFO     AURA:main.py:1350 Plugins hook on_startup ejecutado
+INFO     AURA:main.py:1353 Automation monitoring started
+INFO     AURA:main.py:1356 Plugins hook on_startup ejecutado
+INFO     AURA.AgentScheduler:agent_scheduler.py:314 BackgroundDaemon main loop started
+INFO     AURA.AgentScheduler:agent_scheduler.py:389 Coherence audit completed for 4 works
+ERROR    backend.cache.redis_client:redis_client.py:22 Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz� la conexi�n de red.
+WARNING  AURA:main.py:2289 mDNS start failed: 
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio backend -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan_primary -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:1337 -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:11434 -> down
+INFO     AURA.Diagnostics.Health:health.py:440 HealthDaemon iniciado
+INFO     AURA:main.py:2294 Local Health Daemon iniciado (diagn�sticos del sistema)
+INFO     AURA:main.py:2300 Omniroute provider monitoring started
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: GET http://testserver/api/audio/voice/status \"HTTP/1.1 200 OK\""}
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/audio/voice/status "HTTP/1.1 200 OK"
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon stopped"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon detenido"}
+[ProviderManager] Monitoring stopped
+---------------------------- Captured log teardown ----------------------------
+INFO     AURA.AgentScheduler:agent_scheduler.py:472 BackgroundDaemon stopped
+INFO     AURA:main.py:2327 Agent daemon detenido
+__________________ TestSessionEndpoints.test_create_and_list __________________
+tests\test_block74_kilo.py:35: in test_create_and_list
+    assert r.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "No se pudo iniciar el worker de noticias: No module named 'news_worker'"}
+{"timestamp": null, "level": null, "name": "AURA.Orchestrator", "message": "Monitor de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Orquestador de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA.Improvement", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Treasury Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Federated Trainer iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Narrative Engine iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Update Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "AI Router iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: coherence_audit (interval=600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: jan_reflection (interval=3600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: plot_summary (interval=86400s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: cache_cleanup (interval=300s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: vault_backup (interval=1800s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon started with 5 tasks"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon iniciado con 5 tareas programadas"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Task Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Mobile Automation Manager iniciado"}
+SelfLearning: inicializando...
+SelfLearning: auto-configurando...
+SelfLearning: auto-configuraci�n completa
+SelfLearning: sistema listo
+{"timestamp": null, "level": null, "name": "AURA", "message": "Self-Learning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Analytics Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Localization Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Security Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Device Orchestrator iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Fine-Tuning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "N.O.M.A.D. Module cargado"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Automation monitoring started"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon main loop started"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Coherence audit completed for 4 works"}
+Mobile: iniciando automation loop
+[AutomationEngine] Monitoring started
+Mobile: ejecutando Rollercoin
+Mobile: ejecutando TaskRabbit
+Mobile: ejecutando Mistplay
+Mobile: ganancias del d�a $0.00
+{"timestamp": null, "level": null, "name": "backend.cache.redis_client", "message": "Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz\u00f3 la conexi\u00f3n de red."}
+{"timestamp": null, "level": null, "name": "AURA", "message": "mDNS start failed: "}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio backend -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan_primary -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:1337 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:11434 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "HealthDaemon iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Local Health Daemon iniciado (diagn\u00f3sticos del sistema)"}
+[ProviderManager] Monitoring started (interval: 300s)
+{"timestamp": null, "level": null, "name": "AURA", "message": "Omniroute provider monitoring started"}
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+----------------------------- Captured log setup ------------------------------
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+ERROR    AURA:main.py:1203 No se pudo iniciar el worker de noticias: No module named 'news_worker'
+INFO     AURA.Orchestrator:orchestrator.py:262 Monitor de disponibilidad iniciado
+INFO     AURA:main.py:1244 Orquestador de disponibilidad iniciado
+INFO     AURA.Improvement:continuous_improvement.py:137 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1246 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1257 Treasury Manager iniciado
+INFO     AURA:main.py:1267 Federated Trainer iniciado
+INFO     AURA:main.py:1285 Narrative Engine iniciado
+INFO     AURA:main.py:1290 Update Manager iniciado
+INFO     AURA:main.py:1293 AI Router iniciado
+INFO     AURA:main.py:1301 BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: coherence_audit (interval=600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: jan_reflection (interval=3600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: plot_summary (interval=86400s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: cache_cleanup (interval=300s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: vault_backup (interval=1800s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:336 BackgroundDaemon started with 5 tasks
+INFO     AURA:main.py:1310 Agent daemon iniciado con 5 tareas programadas
+INFO     AURA:main.py:1319 Task Manager iniciado
+INFO     AURA:main.py:1324 Mobile Automation Manager iniciado
+INFO     AURA:main.py:1330 Self-Learning Manager iniciado
+INFO     AURA:main.py:1333 Analytics Manager iniciado
+INFO     AURA:main.py:1336 Localization Manager iniciado
+INFO     AURA:main.py:1339 Security Manager iniciado
+INFO     AURA:main.py:1342 Device Orchestrator iniciado
+INFO     AURA:main.py:1345 Fine-Tuning Manager iniciado
+INFO     AURA:main.py:1347 N.O.M.A.D. Module cargado
+INFO     AURA:main.py:1350 Plugins hook on_startup ejecutado
+INFO     AURA:main.py:1353 Automation monitoring started
+INFO     AURA:main.py:1356 Plugins hook on_startup ejecutado
+INFO     AURA.AgentScheduler:agent_scheduler.py:314 BackgroundDaemon main loop started
+INFO     AURA.AgentScheduler:agent_scheduler.py:389 Coherence audit completed for 4 works
+ERROR    backend.cache.redis_client:redis_client.py:22 Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz� la conexi�n de red.
+WARNING  AURA:main.py:2289 mDNS start failed: 
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio backend -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan_primary -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:1337 -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:11434 -> down
+INFO     AURA.Diagnostics.Health:health.py:440 HealthDaemon iniciado
+INFO     AURA:main.py:2294 Local Health Daemon iniciado (diagn�sticos del sistema)
+INFO     AURA:main.py:2300 Omniroute provider monitoring started
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/audio/voice/sessions \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/audio/voice/sessions "HTTP/1.1 404 Not Found"
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon stopped"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon detenido"}
+[ProviderManager] Monitoring stopped
+---------------------------- Captured log teardown ----------------------------
+INFO     AURA.AgentScheduler:agent_scheduler.py:472 BackgroundDaemon stopped
+INFO     AURA:main.py:2327 Agent daemon detenido
+___________________ TestSessionEndpoints.test_close_session ___________________
+tests\test_block74_kilo.py:48: in test_close_session
+    sid = r.json()["session_id"]
+          ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'session_id'
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "No se pudo iniciar el worker de noticias: No module named 'news_worker'"}
+{"timestamp": null, "level": null, "name": "AURA.Orchestrator", "message": "Monitor de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Orquestador de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA.Improvement", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Treasury Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Federated Trainer iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Narrative Engine iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Update Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "AI Router iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: coherence_audit (interval=600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: jan_reflection (interval=3600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: plot_summary (interval=86400s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: cache_cleanup (interval=300s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: vault_backup (interval=1800s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon started with 5 tasks"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon iniciado con 5 tareas programadas"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Task Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Mobile Automation Manager iniciado"}
+SelfLearning: inicializando...
+SelfLearning: auto-configurando...
+SelfLearning: auto-configuraci�n completa
+SelfLearning: sistema listo
+{"timestamp": null, "level": null, "name": "AURA", "message": "Self-Learning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Analytics Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Localization Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Security Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Device Orchestrator iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Fine-Tuning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "N.O.M.A.D. Module cargado"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Automation monitoring started"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon main loop started"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Coherence audit completed for 4 works"}
+Mobile: iniciando automation loop
+[AutomationEngine] Monitoring started
+Mobile: ejecutando Rollercoin
+Mobile: ejecutando TaskRabbit
+Mobile: ejecutando Mistplay
+Mobile: ganancias del d�a $0.00
+{"timestamp": null, "level": null, "name": "backend.cache.redis_client", "message": "Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz\u00f3 la conexi\u00f3n de red."}
+{"timestamp": null, "level": null, "name": "AURA", "message": "mDNS start failed: "}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio backend -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan_primary -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:1337 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:11434 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "HealthDaemon iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Local Health Daemon iniciado (diagn\u00f3sticos del sistema)"}
+[ProviderManager] Monitoring started (interval: 300s)
+{"timestamp": null, "level": null, "name": "AURA", "message": "Omniroute provider monitoring started"}
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+----------------------------- Captured log setup ------------------------------
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+ERROR    AURA:main.py:1203 No se pudo iniciar el worker de noticias: No module named 'news_worker'
+INFO     AURA.Orchestrator:orchestrator.py:262 Monitor de disponibilidad iniciado
+INFO     AURA:main.py:1244 Orquestador de disponibilidad iniciado
+INFO     AURA.Improvement:continuous_improvement.py:137 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1246 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1257 Treasury Manager iniciado
+INFO     AURA:main.py:1267 Federated Trainer iniciado
+INFO     AURA:main.py:1285 Narrative Engine iniciado
+INFO     AURA:main.py:1290 Update Manager iniciado
+INFO     AURA:main.py:1293 AI Router iniciado
+INFO     AURA:main.py:1301 BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: coherence_audit (interval=600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: jan_reflection (interval=3600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: plot_summary (interval=86400s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: cache_cleanup (interval=300s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: vault_backup (interval=1800s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:336 BackgroundDaemon started with 5 tasks
+INFO     AURA:main.py:1310 Agent daemon iniciado con 5 tareas programadas
+INFO     AURA:main.py:1319 Task Manager iniciado
+INFO     AURA:main.py:1324 Mobile Automation Manager iniciado
+INFO     AURA:main.py:1330 Self-Learning Manager iniciado
+INFO     AURA:main.py:1333 Analytics Manager iniciado
+INFO     AURA:main.py:1336 Localization Manager iniciado
+INFO     AURA:main.py:1339 Security Manager iniciado
+INFO     AURA:main.py:1342 Device Orchestrator iniciado
+INFO     AURA:main.py:1345 Fine-Tuning Manager iniciado
+INFO     AURA:main.py:1347 N.O.M.A.D. Module cargado
+INFO     AURA:main.py:1350 Plugins hook on_startup ejecutado
+INFO     AURA:main.py:1353 Automation monitoring started
+INFO     AURA:main.py:1356 Plugins hook on_startup ejecutado
+INFO     AURA.AgentScheduler:agent_scheduler.py:314 BackgroundDaemon main loop started
+INFO     AURA.AgentScheduler:agent_scheduler.py:389 Coherence audit completed for 4 works
+ERROR    backend.cache.redis_client:redis_client.py:22 Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz� la conexi�n de red.
+WARNING  AURA:main.py:2289 mDNS start failed: 
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio backend -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan_primary -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:1337 -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:11434 -> down
+INFO     AURA.Diagnostics.Health:health.py:440 HealthDaemon iniciado
+INFO     AURA:main.py:2294 Local Health Daemon iniciado (diagn�sticos del sistema)
+INFO     AURA:main.py:2300 Omniroute provider monitoring started
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/audio/voice/sessions \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/audio/voice/sessions "HTTP/1.1 404 Not Found"
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon stopped"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon detenido"}
+[ProviderManager] Monitoring stopped
+---------------------------- Captured log teardown ----------------------------
+INFO     AURA.AgentScheduler:agent_scheduler.py:472 BackgroundDaemon stopped
+INFO     AURA:main.py:2327 Agent daemon detenido
+_______________ TestSessionEndpoints.test_process_empty_session _______________
+tests\test_block74_kilo.py:63: in test_process_empty_session
+    sid = r.json()["session_id"]
+          ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'session_id'
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "No se pudo iniciar el worker de noticias: No module named 'news_worker'"}
+{"timestamp": null, "level": null, "name": "AURA.Orchestrator", "message": "Monitor de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Orquestador de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA.Improvement", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Treasury Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Federated Trainer iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Narrative Engine iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Update Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "AI Router iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: coherence_audit (interval=600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: jan_reflection (interval=3600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: plot_summary (interval=86400s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: cache_cleanup (interval=300s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: vault_backup (interval=1800s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon started with 5 tasks"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon iniciado con 5 tareas programadas"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Task Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Mobile Automation Manager iniciado"}
+SelfLearning: inicializando...
+SelfLearning: auto-configurando...
+SelfLearning: auto-configuraci�n completa
+SelfLearning: sistema listo
+{"timestamp": null, "level": null, "name": "AURA", "message": "Self-Learning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Analytics Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Localization Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Security Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Device Orchestrator iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Fine-Tuning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "N.O.M.A.D. Module cargado"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Automation monitoring started"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon main loop started"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Coherence audit completed for 4 works"}
+Mobile: iniciando automation loop
+[AutomationEngine] Monitoring started
+Mobile: ejecutando Rollercoin
+Mobile: ejecutando TaskRabbit
+Mobile: ejecutando Mistplay
+Mobile: ganancias del d�a $0.00
+{"timestamp": null, "level": null, "name": "backend.cache.redis_client", "message": "Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz\u00f3 la conexi\u00f3n de red."}
+{"timestamp": null, "level": null, "name": "AURA", "message": "mDNS start failed: "}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio backend -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan_primary -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:1337 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:11434 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "HealthDaemon iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Local Health Daemon iniciado (diagn\u00f3sticos del sistema)"}
+[ProviderManager] Monitoring started (interval: 300s)
+{"timestamp": null, "level": null, "name": "AURA", "message": "Omniroute provider monitoring started"}
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+----------------------------- Captured log setup ------------------------------
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+ERROR    AURA:main.py:1203 No se pudo iniciar el worker de noticias: No module named 'news_worker'
+INFO     AURA.Orchestrator:orchestrator.py:262 Monitor de disponibilidad iniciado
+INFO     AURA:main.py:1244 Orquestador de disponibilidad iniciado
+INFO     AURA.Improvement:continuous_improvement.py:137 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1246 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1257 Treasury Manager iniciado
+INFO     AURA:main.py:1267 Federated Trainer iniciado
+INFO     AURA:main.py:1285 Narrative Engine iniciado
+INFO     AURA:main.py:1290 Update Manager iniciado
+INFO     AURA:main.py:1293 AI Router iniciado
+INFO     AURA:main.py:1301 BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: coherence_audit (interval=600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: jan_reflection (interval=3600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: plot_summary (interval=86400s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: cache_cleanup (interval=300s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: vault_backup (interval=1800s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:336 BackgroundDaemon started with 5 tasks
+INFO     AURA:main.py:1310 Agent daemon iniciado con 5 tareas programadas
+INFO     AURA:main.py:1319 Task Manager iniciado
+INFO     AURA:main.py:1324 Mobile Automation Manager iniciado
+INFO     AURA:main.py:1330 Self-Learning Manager iniciado
+INFO     AURA:main.py:1333 Analytics Manager iniciado
+INFO     AURA:main.py:1336 Localization Manager iniciado
+INFO     AURA:main.py:1339 Security Manager iniciado
+INFO     AURA:main.py:1342 Device Orchestrator iniciado
+INFO     AURA:main.py:1345 Fine-Tuning Manager iniciado
+INFO     AURA:main.py:1347 N.O.M.A.D. Module cargado
+INFO     AURA:main.py:1350 Plugins hook on_startup ejecutado
+INFO     AURA:main.py:1353 Automation monitoring started
+INFO     AURA:main.py:1356 Plugins hook on_startup ejecutado
+INFO     AURA.AgentScheduler:agent_scheduler.py:314 BackgroundDaemon main loop started
+INFO     AURA.AgentScheduler:agent_scheduler.py:389 Coherence audit completed for 4 works
+ERROR    backend.cache.redis_client:redis_client.py:22 Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz� la conexi�n de red.
+WARNING  AURA:main.py:2289 mDNS start failed: 
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio backend -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan_primary -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:1337 -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:11434 -> down
+INFO     AURA.Diagnostics.Health:health.py:440 HealthDaemon iniciado
+INFO     AURA:main.py:2294 Local Health Daemon iniciado (diagn�sticos del sistema)
+INFO     AURA:main.py:2300 Omniroute provider monitoring started
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/audio/voice/sessions \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/audio/voice/sessions "HTTP/1.1 404 Not Found"
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon stopped"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon detenido"}
+[ProviderManager] Monitoring stopped
+---------------------------- Captured log teardown ----------------------------
+INFO     AURA.AgentScheduler:agent_scheduler.py:472 BackgroundDaemon stopped
+INFO     AURA:main.py:2327 Agent daemon detenido
+________________ TestSessionEndpoints.test_receive_audio_chunk ________________
+tests\test_block74_kilo.py:72: in test_receive_audio_chunk
+    sid = r.json()["session_id"]
+          ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'session_id'
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "No se pudo iniciar el worker de noticias: No module named 'news_worker'"}
+{"timestamp": null, "level": null, "name": "AURA.Orchestrator", "message": "Monitor de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Orquestador de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA.Improvement", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Treasury Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Federated Trainer iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Narrative Engine iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Update Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "AI Router iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: coherence_audit (interval=600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: jan_reflection (interval=3600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: plot_summary (interval=86400s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: cache_cleanup (interval=300s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: vault_backup (interval=1800s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon started with 5 tasks"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon iniciado con 5 tareas programadas"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Task Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Mobile Automation Manager iniciado"}
+SelfLearning: inicializando...
+SelfLearning: auto-configurando...
+SelfLearning: auto-configuraci�n completa
+SelfLearning: sistema listo
+{"timestamp": null, "level": null, "name": "AURA", "message": "Self-Learning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Analytics Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Localization Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Security Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Device Orchestrator iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Fine-Tuning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "N.O.M.A.D. Module cargado"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Automation monitoring started"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon main loop started"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Coherence audit completed for 4 works"}
+Mobile: iniciando automation loop
+[AutomationEngine] Monitoring started
+Mobile: ejecutando Rollercoin
+Mobile: ejecutando TaskRabbit
+Mobile: ejecutando Mistplay
+Mobile: ganancias del d�a $0.00
+{"timestamp": null, "level": null, "name": "backend.cache.redis_client", "message": "Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz\u00f3 la conexi\u00f3n de red."}
+{"timestamp": null, "level": null, "name": "AURA", "message": "mDNS start failed: "}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio backend -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan_primary -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:1337 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:11434 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "HealthDaemon iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Local Health Daemon iniciado (diagn\u00f3sticos del sistema)"}
+[ProviderManager] Monitoring started (interval: 300s)
+{"timestamp": null, "level": null, "name": "AURA", "message": "Omniroute provider monitoring started"}
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+----------------------------- Captured log setup ------------------------------
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+ERROR    AURA:main.py:1203 No se pudo iniciar el worker de noticias: No module named 'news_worker'
+INFO     AURA.Orchestrator:orchestrator.py:262 Monitor de disponibilidad iniciado
+INFO     AURA:main.py:1244 Orquestador de disponibilidad iniciado
+INFO     AURA.Improvement:continuous_improvement.py:137 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1246 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1257 Treasury Manager iniciado
+INFO     AURA:main.py:1267 Federated Trainer iniciado
+INFO     AURA:main.py:1285 Narrative Engine iniciado
+INFO     AURA:main.py:1290 Update Manager iniciado
+INFO     AURA:main.py:1293 AI Router iniciado
+INFO     AURA:main.py:1301 BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: coherence_audit (interval=600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: jan_reflection (interval=3600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: plot_summary (interval=86400s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: cache_cleanup (interval=300s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: vault_backup (interval=1800s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:336 BackgroundDaemon started with 5 tasks
+INFO     AURA:main.py:1310 Agent daemon iniciado con 5 tareas programadas
+INFO     AURA:main.py:1319 Task Manager iniciado
+INFO     AURA:main.py:1324 Mobile Automation Manager iniciado
+INFO     AURA:main.py:1330 Self-Learning Manager iniciado
+INFO     AURA:main.py:1333 Analytics Manager iniciado
+INFO     AURA:main.py:1336 Localization Manager iniciado
+INFO     AURA:main.py:1339 Security Manager iniciado
+INFO     AURA:main.py:1342 Device Orchestrator iniciado
+INFO     AURA:main.py:1345 Fine-Tuning Manager iniciado
+INFO     AURA:main.py:1347 N.O.M.A.D. Module cargado
+INFO     AURA:main.py:1350 Plugins hook on_startup ejecutado
+INFO     AURA:main.py:1353 Automation monitoring started
+INFO     AURA:main.py:1356 Plugins hook on_startup ejecutado
+INFO     AURA.AgentScheduler:agent_scheduler.py:314 BackgroundDaemon main loop started
+INFO     AURA.AgentScheduler:agent_scheduler.py:389 Coherence audit completed for 4 works
+ERROR    backend.cache.redis_client:redis_client.py:22 Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz� la conexi�n de red.
+WARNING  AURA:main.py:2289 mDNS start failed: 
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio backend -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan_primary -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:1337 -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:11434 -> down
+INFO     AURA.Diagnostics.Health:health.py:440 HealthDaemon iniciado
+INFO     AURA:main.py:2294 Local Health Daemon iniciado (diagn�sticos del sistema)
+INFO     AURA:main.py:2300 Omniroute provider monitoring started
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/audio/voice/sessions \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/audio/voice/sessions "HTTP/1.1 404 Not Found"
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon stopped"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon detenido"}
+[ProviderManager] Monitoring stopped
+---------------------------- Captured log teardown ----------------------------
+INFO     AURA.AgentScheduler:agent_scheduler.py:472 BackgroundDaemon stopped
+INFO     AURA:main.py:2327 Agent daemon detenido
+_____________ TestSessionEndpoints.test_receive_audio_invalid_b64 _____________
+tests\test_block74_kilo.py:84: in test_receive_audio_invalid_b64
+    sid = r.json()["session_id"]
+          ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'session_id'
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "No se pudo iniciar el worker de noticias: No module named 'news_worker'"}
+{"timestamp": null, "level": null, "name": "AURA.Orchestrator", "message": "Monitor de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Orquestador de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA.Improvement", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Treasury Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Federated Trainer iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Narrative Engine iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Update Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "AI Router iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: coherence_audit (interval=600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: jan_reflection (interval=3600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: plot_summary (interval=86400s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: cache_cleanup (interval=300s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: vault_backup (interval=1800s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon started with 5 tasks"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon iniciado con 5 tareas programadas"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Task Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Mobile Automation Manager iniciado"}
+SelfLearning: inicializando...
+SelfLearning: auto-configurando...
+SelfLearning: auto-configuraci�n completa
+SelfLearning: sistema listo
+{"timestamp": null, "level": null, "name": "AURA", "message": "Self-Learning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Analytics Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Localization Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Security Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Device Orchestrator iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Fine-Tuning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "N.O.M.A.D. Module cargado"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Automation monitoring started"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon main loop started"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Coherence audit completed for 4 works"}
+Mobile: iniciando automation loop
+[AutomationEngine] Monitoring started
+Mobile: ejecutando Rollercoin
+Mobile: ejecutando TaskRabbit
+Mobile: ejecutando Mistplay
+Mobile: ganancias del d�a $0.00
+{"timestamp": null, "level": null, "name": "backend.cache.redis_client", "message": "Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz\u00f3 la conexi\u00f3n de red."}
+{"timestamp": null, "level": null, "name": "AURA", "message": "mDNS start failed: "}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio backend -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan_primary -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:1337 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:11434 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "HealthDaemon iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Local Health Daemon iniciado (diagn\u00f3sticos del sistema)"}
+[ProviderManager] Monitoring started (interval: 300s)
+{"timestamp": null, "level": null, "name": "AURA", "message": "Omniroute provider monitoring started"}
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+----------------------------- Captured log setup ------------------------------
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+ERROR    AURA:main.py:1203 No se pudo iniciar el worker de noticias: No module named 'news_worker'
+INFO     AURA.Orchestrator:orchestrator.py:262 Monitor de disponibilidad iniciado
+INFO     AURA:main.py:1244 Orquestador de disponibilidad iniciado
+INFO     AURA.Improvement:continuous_improvement.py:137 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1246 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1257 Treasury Manager iniciado
+INFO     AURA:main.py:1267 Federated Trainer iniciado
+INFO     AURA:main.py:1285 Narrative Engine iniciado
+INFO     AURA:main.py:1290 Update Manager iniciado
+INFO     AURA:main.py:1293 AI Router iniciado
+INFO     AURA:main.py:1301 BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: coherence_audit (interval=600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: jan_reflection (interval=3600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: plot_summary (interval=86400s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: cache_cleanup (interval=300s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: vault_backup (interval=1800s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:336 BackgroundDaemon started with 5 tasks
+INFO     AURA:main.py:1310 Agent daemon iniciado con 5 tareas programadas
+INFO     AURA:main.py:1319 Task Manager iniciado
+INFO     AURA:main.py:1324 Mobile Automation Manager iniciado
+INFO     AURA:main.py:1330 Self-Learning Manager iniciado
+INFO     AURA:main.py:1333 Analytics Manager iniciado
+INFO     AURA:main.py:1336 Localization Manager iniciado
+INFO     AURA:main.py:1339 Security Manager iniciado
+INFO     AURA:main.py:1342 Device Orchestrator iniciado
+INFO     AURA:main.py:1345 Fine-Tuning Manager iniciado
+INFO     AURA:main.py:1347 N.O.M.A.D. Module cargado
+INFO     AURA:main.py:1350 Plugins hook on_startup ejecutado
+INFO     AURA:main.py:1353 Automation monitoring started
+INFO     AURA:main.py:1356 Plugins hook on_startup ejecutado
+INFO     AURA.AgentScheduler:agent_scheduler.py:314 BackgroundDaemon main loop started
+INFO     AURA.AgentScheduler:agent_scheduler.py:389 Coherence audit completed for 4 works
+ERROR    backend.cache.redis_client:redis_client.py:22 Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz� la conexi�n de red.
+WARNING  AURA:main.py:2289 mDNS start failed: 
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio backend -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan_primary -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:1337 -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:11434 -> down
+INFO     AURA.Diagnostics.Health:health.py:440 HealthDaemon iniciado
+INFO     AURA:main.py:2294 Local Health Daemon iniciado (diagn�sticos del sistema)
+INFO     AURA:main.py:2300 Omniroute provider monitoring started
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+---------------------------- Captured stdout call -----------------------------
+{"timestamp": null, "level": null, "name": "httpx", "message": "HTTP Request: POST http://testserver/api/audio/voice/sessions \"HTTP/1.1 404 Not Found\""}
+------------------------------ Captured log call ------------------------------
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/audio/voice/sessions "HTTP/1.1 404 Not Found"
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon stopped"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon detenido"}
+[ProviderManager] Monitoring stopped
+---------------------------- Captured log teardown ----------------------------
+INFO     AURA.AgentScheduler:agent_scheduler.py:472 BackgroundDaemon stopped
+INFO     AURA:main.py:2327 Agent daemon detenido
+________________ TestWebSocketStream.test_ws_connect_and_ping _________________
+tests\test_block74_kilo.py:96: in test_ws_connect_and_ping
+    assert msg["event"] == "connected"
+           ^^^^^^^^^^^^
+E   KeyError: 'event'
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "No se pudo iniciar el worker de noticias: No module named 'news_worker'"}
+{"timestamp": null, "level": null, "name": "AURA.Orchestrator", "message": "Monitor de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Orquestador de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA.Improvement", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Treasury Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Federated Trainer iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Narrative Engine iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Update Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "AI Router iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: coherence_audit (interval=600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: jan_reflection (interval=3600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: plot_summary (interval=86400s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: cache_cleanup (interval=300s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: vault_backup (interval=1800s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon started with 5 tasks"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon iniciado con 5 tareas programadas"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Task Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Mobile Automation Manager iniciado"}
+SelfLearning: inicializando...
+SelfLearning: auto-configurando...
+SelfLearning: auto-configuraci�n completa
+SelfLearning: sistema listo
+{"timestamp": null, "level": null, "name": "AURA", "message": "Self-Learning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Analytics Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Localization Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Security Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Device Orchestrator iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Fine-Tuning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "N.O.M.A.D. Module cargado"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Automation monitoring started"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon main loop started"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Coherence audit completed for 4 works"}
+Mobile: iniciando automation loop
+[AutomationEngine] Monitoring started
+Mobile: ejecutando Rollercoin
+Mobile: ejecutando TaskRabbit
+Mobile: ejecutando Mistplay
+Mobile: ganancias del d�a $0.00
+{"timestamp": null, "level": null, "name": "backend.cache.redis_client", "message": "Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz\u00f3 la conexi\u00f3n de red."}
+{"timestamp": null, "level": null, "name": "AURA", "message": "mDNS start failed: "}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio backend -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan_primary -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:1337 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:11434 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "HealthDaemon iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Local Health Daemon iniciado (diagn\u00f3sticos del sistema)"}
+[ProviderManager] Monitoring started (interval: 300s)
+{"timestamp": null, "level": null, "name": "AURA", "message": "Omniroute provider monitoring started"}
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+----------------------------- Captured log setup ------------------------------
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+ERROR    AURA:main.py:1203 No se pudo iniciar el worker de noticias: No module named 'news_worker'
+INFO     AURA.Orchestrator:orchestrator.py:262 Monitor de disponibilidad iniciado
+INFO     AURA:main.py:1244 Orquestador de disponibilidad iniciado
+INFO     AURA.Improvement:continuous_improvement.py:137 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1246 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1257 Treasury Manager iniciado
+INFO     AURA:main.py:1267 Federated Trainer iniciado
+INFO     AURA:main.py:1285 Narrative Engine iniciado
+INFO     AURA:main.py:1290 Update Manager iniciado
+INFO     AURA:main.py:1293 AI Router iniciado
+INFO     AURA:main.py:1301 BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: coherence_audit (interval=600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: jan_reflection (interval=3600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: plot_summary (interval=86400s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: cache_cleanup (interval=300s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: vault_backup (interval=1800s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:336 BackgroundDaemon started with 5 tasks
+INFO     AURA:main.py:1310 Agent daemon iniciado con 5 tareas programadas
+INFO     AURA:main.py:1319 Task Manager iniciado
+INFO     AURA:main.py:1324 Mobile Automation Manager iniciado
+INFO     AURA:main.py:1330 Self-Learning Manager iniciado
+INFO     AURA:main.py:1333 Analytics Manager iniciado
+INFO     AURA:main.py:1336 Localization Manager iniciado
+INFO     AURA:main.py:1339 Security Manager iniciado
+INFO     AURA:main.py:1342 Device Orchestrator iniciado
+INFO     AURA:main.py:1345 Fine-Tuning Manager iniciado
+INFO     AURA:main.py:1347 N.O.M.A.D. Module cargado
+INFO     AURA:main.py:1350 Plugins hook on_startup ejecutado
+INFO     AURA:main.py:1353 Automation monitoring started
+INFO     AURA:main.py:1356 Plugins hook on_startup ejecutado
+INFO     AURA.AgentScheduler:agent_scheduler.py:314 BackgroundDaemon main loop started
+INFO     AURA.AgentScheduler:agent_scheduler.py:389 Coherence audit completed for 4 works
+ERROR    backend.cache.redis_client:redis_client.py:22 Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz� la conexi�n de red.
+WARNING  AURA:main.py:2289 mDNS start failed: 
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio backend -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan_primary -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:1337 -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:11434 -> down
+INFO     AURA.Diagnostics.Health:health.py:440 HealthDaemon iniciado
+INFO     AURA:main.py:2294 Local Health Daemon iniciado (diagn�sticos del sistema)
+INFO     AURA:main.py:2300 Omniroute provider monitoring started
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon stopped"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon detenido"}
+[ProviderManager] Monitoring stopped
+---------------------------- Captured log teardown ----------------------------
+INFO     AURA.AgentScheduler:agent_scheduler.py:472 BackgroundDaemon stopped
+INFO     AURA:main.py:2327 Agent daemon detenido
+_________________ TestWebSocketStream.test_ws_create_session __________________
+tests\test_block74_kilo.py:106: in test_ws_create_session
+    assert msg["event"] == "session_created"
+           ^^^^^^^^^^^^
+E   KeyError: 'event'
+---------------------------- Captured stdout setup ----------------------------
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "No se pudo iniciar el worker de noticias: No module named 'news_worker'"}
+{"timestamp": null, "level": null, "name": "AURA.Orchestrator", "message": "Monitor de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Orquestador de disponibilidad iniciado"}
+{"timestamp": null, "level": null, "name": "AURA.Improvement", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Sistema de mejora continua iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Treasury Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Federated Trainer iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Narrative Engine iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Update Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "AI Router iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: coherence_audit (interval=600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: jan_reflection (interval=3600s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: plot_summary (interval=86400s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: cache_cleanup (interval=300s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Scheduled task registered: vault_backup (interval=1800s)"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon started with 5 tasks"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon iniciado con 5 tareas programadas"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Task Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Mobile Automation Manager iniciado"}
+SelfLearning: inicializando...
+SelfLearning: auto-configurando...
+SelfLearning: auto-configuraci�n completa
+SelfLearning: sistema listo
+{"timestamp": null, "level": null, "name": "AURA", "message": "Self-Learning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Analytics Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Localization Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Security Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Device Orchestrator iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Fine-Tuning Manager iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "N.O.M.A.D. Module cargado"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Automation monitoring started"}
+[Example Plugin] AURA iniciado
+{"timestamp": null, "level": null, "name": "AURA", "message": "Plugins hook on_startup ejecutado"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon main loop started"}
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "Coherence audit completed for 4 works"}
+Mobile: iniciando automation loop
+[AutomationEngine] Monitoring started
+Mobile: ejecutando Rollercoin
+Mobile: ejecutando TaskRabbit
+Mobile: ejecutando Mistplay
+Mobile: ganancias del d�a $0.00
+{"timestamp": null, "level": null, "name": "backend.cache.redis_client", "message": "Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz\u00f3 la conexi\u00f3n de red."}
+{"timestamp": null, "level": null, "name": "AURA", "message": "mDNS start failed: "}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio backend -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan_primary -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:1337 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "Servicio jan:11434 -> down"}
+{"timestamp": null, "level": null, "name": "AURA.Diagnostics.Health", "message": "HealthDaemon iniciado"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Local Health Daemon iniciado (diagn\u00f3sticos del sistema)"}
+[ProviderManager] Monitoring started (interval: 300s)
+{"timestamp": null, "level": null, "name": "AURA", "message": "Omniroute provider monitoring started"}
+{"timestamp": null, "level": null, "name": "AURAWebRTCAudio", "message": "WebRTC audio pipeline ready"}
+{"timestamp": null, "level": null, "name": "AURAActions", "message": "Action Engine ready with 37 tools"}
+{"timestamp": null, "level": null, "name": "AURAMemory", "message": "Memory Engine ready with 0 memories"}
+----------------------------- Captured log setup ------------------------------
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+ERROR    AURA:main.py:1203 No se pudo iniciar el worker de noticias: No module named 'news_worker'
+INFO     AURA.Orchestrator:orchestrator.py:262 Monitor de disponibilidad iniciado
+INFO     AURA:main.py:1244 Orquestador de disponibilidad iniciado
+INFO     AURA.Improvement:continuous_improvement.py:137 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1246 Sistema de mejora continua iniciado
+INFO     AURA:main.py:1257 Treasury Manager iniciado
+INFO     AURA:main.py:1267 Federated Trainer iniciado
+INFO     AURA:main.py:1285 Narrative Engine iniciado
+INFO     AURA:main.py:1290 Update Manager iniciado
+INFO     AURA:main.py:1293 AI Router iniciado
+INFO     AURA:main.py:1301 BLOQUE 52: Vision Bridge conectado al motor de razonamiento (ReactLoop)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: coherence_audit (interval=600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: jan_reflection (interval=3600s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: plot_summary (interval=86400s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: cache_cleanup (interval=300s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:285 Scheduled task registered: vault_backup (interval=1800s)
+INFO     AURA.AgentScheduler:agent_scheduler.py:336 BackgroundDaemon started with 5 tasks
+INFO     AURA:main.py:1310 Agent daemon iniciado con 5 tareas programadas
+INFO     AURA:main.py:1319 Task Manager iniciado
+INFO     AURA:main.py:1324 Mobile Automation Manager iniciado
+INFO     AURA:main.py:1330 Self-Learning Manager iniciado
+INFO     AURA:main.py:1333 Analytics Manager iniciado
+INFO     AURA:main.py:1336 Localization Manager iniciado
+INFO     AURA:main.py:1339 Security Manager iniciado
+INFO     AURA:main.py:1342 Device Orchestrator iniciado
+INFO     AURA:main.py:1345 Fine-Tuning Manager iniciado
+INFO     AURA:main.py:1347 N.O.M.A.D. Module cargado
+INFO     AURA:main.py:1350 Plugins hook on_startup ejecutado
+INFO     AURA:main.py:1353 Automation monitoring started
+INFO     AURA:main.py:1356 Plugins hook on_startup ejecutado
+INFO     AURA.AgentScheduler:agent_scheduler.py:314 BackgroundDaemon main loop started
+INFO     AURA.AgentScheduler:agent_scheduler.py:389 Coherence audit completed for 4 works
+ERROR    backend.cache.redis_client:redis_client.py:22 Redis connection failed: Error 22 connecting to localhost:6379. El equipo remoto rechaz� la conexi�n de red.
+WARNING  AURA:main.py:2289 mDNS start failed: 
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio backend -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan_primary -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:1337 -> down
+INFO     AURA.Diagnostics.Health:health.py:178 Servicio jan:11434 -> down
+INFO     AURA.Diagnostics.Health:health.py:440 HealthDaemon iniciado
+INFO     AURA:main.py:2294 Local Health Daemon iniciado (diagn�sticos del sistema)
+INFO     AURA:main.py:2300 Omniroute provider monitoring started
+INFO     AURAWebRTCAudio:webrtc.py:38 WebRTC audio pipeline ready
+INFO     AURAActions:actions.py:26 Action Engine ready with 37 tools
+INFO     AURAMemory:memory.py:26 Memory Engine ready with 0 memories
+-------------------------- Captured stdout teardown ---------------------------
+{"timestamp": null, "level": null, "name": "AURA.AgentScheduler", "message": "BackgroundDaemon stopped"}
+{"timestamp": null, "level": null, "name": "AURA", "message": "Agent daemon detenido"}
+[ProviderManager] Monitoring stopped
+---------------------------- Captured log teardown ----------------------------
+INFO     AURA.AgentScheduler:agent_scheduler.py:472 BackgroundDaemon stopped
+INFO     AURA:main.py:2327 Agent daemon detenido
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_block74_kilo.py::TestVoiceStatus::test_status - AssertionEr...
+FAILED tests/test_block74_kilo.py::TestSessionEndpoints::test_create_and_list
+FAILED tests/test_block74_kilo.py::TestSessionEndpoints::test_close_session
+FAILED tests/test_block74_kilo.py::TestSessionEndpoints::test_process_empty_session
+FAILED tests/test_block74_kilo.py::TestSessionEndpoints::test_receive_audio_chunk
+FAILED tests/test_block74_kilo.py::TestSessionEndpoints::test_receive_audio_invalid_b64
+FAILED tests/test_block74_kilo.py::TestWebSocketStream::test_ws_connect_and_ping
+FAILED tests/test_block74_kilo.py::TestWebSocketStream::test_ws_create_session
+============= 8 failed, 2 passed, 1 warning in 221.29s (0:03:41) ==============

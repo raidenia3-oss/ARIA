@@ -1,0 +1,287 @@
+/* AURA NUCLEUS OS - Reactor Matrix */
+
+.reactor-matrix {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.matrix-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  border-radius: 8px;
+  backdrop-filter: blur(16px);
+}
+
+.matrix-header h2 {
+  font-size: 16px;
+  letter-spacing: 2px;
+  color: var(--text-primary);
+}
+
+.timestamp {
+  font-size: 11px;
+  font-family: 'Fira Code', monospace;
+  color: var(--text-tertiary);
+  letter-spacing: 1px;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.metric-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  border-color: rgba(var(--rgb-primary), 0.5);
+  background: rgba(var(--rgb-primary), 0.1);
+  transform: translateY(-2px);
+}
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+}
+
+.metric-icon {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.metric-card:hover .metric-icon {
+  opacity: 1;
+}
+
+.metric-label {
+  text-transform: uppercase;
+}
+
+.metric-display {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+}
+
+.metric-unit {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-left: 4px;
+}
+
+.metric-max {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  opacity: 0.6;
+}
+
+.metric-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(var(--rgb-primary), 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--rgb-primary), 0.2);
+}
+
+.metric-fill {
+  height: 100%;
+  border-radius: 3px;
+  box-shadow: 0 0 8px rgba(var(--rgb-primary), 0.5);
+}
+
+/* Tactical Table */
+.tactical-table {
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.tactical-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.tactical-table thead {
+  border-bottom: 2px solid var(--border-color);
+}
+
+.tactical-table th {
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.tactical-table tbody tr {
+  border-bottom: 1px solid rgba(var(--rgb-primary), 0.1);
+  transition: all 0.3s ease;
+}
+
+.tactical-table tbody tr:hover {
+  background: rgba(var(--rgb-primary), 0.1);
+  border-bottom-color: rgba(var(--rgb-primary), 0.3);
+}
+
+.tactical-table td {
+  padding: 12px 8px;
+  color: var(--text-primary);
+  font-family: 'Fira Code', monospace;
+}
+
+.agent-id {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.status.active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status.idle {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.mini-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(var(--rgb-primary), 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.mini-fill {
+  height: 100%;
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(var(--rgb-primary), 0.5);
+}
+
+/* Network Stats */
+.network-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.stat-item {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tactical-table {
+    font-size: 11px;
+  }
+
+  .tactical-table th,
+  .tactical-table td {
+    padding: 10px 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reactor-matrix {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tactical-table {
+    padding: 12px;
+    font-size: 10px;
+  }
+
+  .metric-value {
+    font-size: 24px;
+  }
+
+  .network-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+}

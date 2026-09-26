@@ -1,0 +1,39 @@
+{
+  "name": "ame",
+  "version": "1.0.0",
+  "description": "Aplicación móvil AME con Capacitor",
+  "main": "index.js",
+  "scripts": {
+    "start": "capacitor run android"
+  },
+  "dependencies": {
+    "@capacitor/camera": "^8.2.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/local-notifications": "^8.2.0",
+    "@capgo/capacitor-native-biometric": "^8.4.11",
+    "playwright": "^1.61.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.3"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raidenia3-oss/AURA-server.01.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/raidenia3-oss/AURA-server.01/issues"
+  },
+  "homepage": "https://github.com/raidenia3-oss/AURA-server.01#readme"
+}

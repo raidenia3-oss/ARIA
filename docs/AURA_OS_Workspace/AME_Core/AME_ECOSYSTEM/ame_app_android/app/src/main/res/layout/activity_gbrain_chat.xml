@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FF0D1117">
+
+    <!-- Header táctico -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#FF161B22"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="🧠 GBrain TACTICAL"
+            android:textColor="#FF58A6FF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvConnectionStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="● OFFLINE"
+            android:textColor="#FFFF7B72"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Barra de modo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:background="#FF21262D">
+
+        <Spinner
+            android:id="@+id/spinnerMode"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/spinner_background" />
+
+        <TextView
+            android:id="@+id/tvModelInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="deepseek-coder:6.7b"
+            android:textColor="#FF8B949E"
+            android:textSize="11sp"
+            android:paddingStart="12dp"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <!-- Lista de mensajes (ScrollView con RecyclerView-like) -->
+    <ScrollView
+        android:id="@+id/scrollMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="12dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/layoutMessages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
+
+    <!-- ProgressBar de carga (oculto por defecto) -->
+    <LinearLayout
+        android:id="@+id/layoutLoading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            style="?android:attr/progressBarStyleSmall" />
+
+        <TextView
+            android:id="@+id/tvLoadingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GBrain procesando..."
+            android:textColor="#FF58A6FF"
+            android:textSize="13sp"
+            android:paddingStart="8dp" />
+    </LinearLayout>
+
+    <!-- Barra de entrada -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:background="#FF161B22"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/etMessage"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="#FF21262D"
+            android:hint="Mensaje táctico..."
+            android:textColor="#FFC9D1D9"
+            android:textColorHint="#FF6E7681"
+            android:paddingHorizontal="14dp"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:imeOptions="actionSend"
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/btnSend"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="#FF238636"
+            android:src="@android:drawable/ic_menu_send"
+            android:scaleType="centerInside"
+            android:contentDescription="Enviar" />
+    </LinearLayout>
+
+</LinearLayout>

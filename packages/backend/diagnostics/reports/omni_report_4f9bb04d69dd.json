@@ -1,0 +1,119 @@
+{
+  "report_id": "4f9bb04d69dd",
+  "ts": 1789269553.53496,
+  "checks_total": 9,
+  "counts": {
+    "pass": 7,
+    "warn": 0,
+    "fail": 1,
+    "skip": 1
+  },
+  "verdict": "action_required",
+  "results": [
+    {
+      "name": "concurrent_load",
+      "status": "pass",
+      "latency_ms": 0,
+      "details": {
+        "threads": 8,
+        "errors": []
+      },
+      "error": ""
+    },
+    {
+      "name": "daemon_persistence",
+      "status": "pass",
+      "latency_ms": 0,
+      "details": {
+        "store_path": "C:\\Users\\User\\Downloads\\AURA\\backend\\daemon_state\\daemon.json",
+        "persisted": false,
+        "autostart": null
+      },
+      "error": ""
+    },
+    {
+      "name": "encryption_integrity",
+      "status": "pass",
+      "latency_ms": 0,
+      "details": {
+        "roundtrip": true,
+        "packet_bytes": 90
+      },
+      "error": ""
+    },
+    {
+      "name": "env_isolation",
+      "status": "skip",
+      "latency_ms": 0,
+      "details": {
+        "reason": ".env.local no existe (no leido jamas)"
+      },
+      "error": ""
+    },
+    {
+      "name": "filesystem",
+      "status": "fail",
+      "latency_ms": 0,
+      "details": {
+        "repo_root": "C:\\Users\\User\\AppData\\Local\\Temp\\pytest-of-User\\pytest-618\\test_export0",
+        "missing": [
+          "backend",
+          "tests"
+        ]
+      },
+      "error": ""
+    },
+    {
+      "name": "mesh_communication",
+      "status": "pass",
+      "latency_ms": 0,
+      "details": {
+        "packet_roundtrip": true,
+        "engine_status": true,
+        "packet_bytes": 95
+      },
+      "error": ""
+    },
+    {
+      "name": "modules_importable",
+      "status": "pass",
+      "latency_ms": 0,
+      "details": {
+        "importable": [
+          "backend.knowledge.rag",
+          "backend.automation.memory_injector",
+          "backend.sandbox.executor",
+          "backend.network_mesh.mesh",
+          "backend.master_control.master",
+          "backend.daemon.bootstrapper"
+        ],
+        "failed": []
+      },
+      "error": ""
+    },
+    {
+      "name": "offline_scan",
+      "status": "pass",
+      "latency_ms": 0,
+      "details": {
+        "scanned_files": 0,
+        "leaks": [],
+        "external_count": 0
+      },
+      "error": ""
+    },
+    {
+      "name": "secrets_scan",
+      "status": "pass",
+      "latency_ms": 0,
+      "details": {
+        "scanned_files": 0,
+        "findings": [],
+        "secret_count": 0
+      },
+      "error": ""
+    }
+  ],
+  "total_latency_ms": 0,
+  "offline_only": true
+}

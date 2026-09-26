@@ -1,0 +1,158 @@
+#!/usr/bin/env ruby
+
+# aura-os/ruby-tools/bin/aura-ruby
+
+require_relative '../lib/aura_tools'
+
+module AuraTools
+  class CLI
+    def self.run(args)
+      command = args[0]
+      subcommand = args[1]
+      params = args[2..-1]
+
+      case command
+      when 'network'
+        handle_network(subcommand, params)
+      when 'dns'
+        handle_dns(subcommand, params)
+      when 'hash'
+        handle_hash(subcommand, params)
+      when 'system'
+        handle_system(subcommand, params)
+      when 'version'
+        puts "AURA Ruby Tools v#{AuraTools::VERSION}"
+      when 'help', nil
+        print_help
+      else
+        puts "Unknown command: #{command}"
+        print_help
+      end
+    end
+
+    private
+
+    def self.handle_network(subcommand, params)
+      scanner = AuraTools::NetworkScanner.new
+
+      case subcommand
+      when 'ping'
+        result = scanner.ping(params[0])
+        puts JSON.pretty_generate(result)
+      when 'scan'
+        result = scanner.scan_network(params[0])
+        puts JSON.pretty_generate(result)
+      when 'ports'
+        result = scanner.scan_ports(params[0])
+        puts JSON.pretty_generate(result)
+      when 'traceroute'
+        result = scanner.traceroute(params[0])
+        puts JSON.pretty_generate(result)
+      when 'info'
+        result = scanner.local_network_info
+        puts JSON.pretty_generate(result)
+      else
+        puts "Network commands: ping, scan, ports, traceroute, info"
+      end
+    end
+
+    def self.handle_dns(subcommand, params)
+      resolver = AuraTools::DNSResolver.new
+
+      case subcommand
+      when 'lookup'
+        result = resolver.lookup(params[0])
+        puts JSON.pretty_generate(result)
+      when 'reverse'
+        result = resolver.reverse_lookup(params[0])
+        puts JSON.pretty_generate(result)
+      when 'whois'
+        result = resolver.whois(params[0])
+        puts JSON.pretty_generate(result)
+      when 'mx'
+        result = resolver.mx_records(params[0])
+        puts JSON.pretty_generate(result)
+      when 'ns'
+        result = resolver.ns_records(params[0])
+        puts JSON.pretty_generate(result)
+      when 'subdomains'
+        result = resolver.find_subdomains(params[0])
+        puts JSON.pretty_generate(result)
+      else
+        puts "DNS commands: lookup, reverse, whois, mx, ns, subdomains"
+      end
+    end
+
+    def self.handle_hash(subcommand, params)
+      string = params[0]
+
+      case subcommand
+      when 'md5'
+        puts AuraTools::HashTools.md5(string)
+      when 'sha1'
+        puts AuraTools::HashTools.sha1(string)
+      when 'sha256'
+        puts AuraTools::HashTools.sha256(string)
+      when 'sha512'
+        puts AuraTools::HashTools.sha512(string)
+      when 'bcrypt'
+        puts AuraTools::HashTools.bcrypt(string)
+      when 'b64encode'
+        puts AuraTools::HashTools.base64_encode(string)
+      when 'b64decode'
+        puts AuraTools::HashTools.base64_decode(string)
+      when 'identify'
+        puts AuraTools::HashTools.identify_hash(string)
+      else
+        puts "Hash commands: md5, sha1, sha256, sha512, bcrypt, b64encode, b64decode, identify"
+      end
+    end
+
+    def self.handle_system(subcommand, params)
+      case subcommand
+      when 'cpu'
+        result = AuraTools::SystemTools.cpu_usage
+        puts JSON.pretty_generate(result)
+      when 'memory'
+        result = AuraTools::SystemTools.memory_usage
+        puts JSON.pretty_generate(result)
+      when 'processes'
+        result = AuraTools::SystemTools.list_processes
+        puts JSON.pretty_generate(result)
+      when 'find'
+        result = AuraTools::SystemTools.find_process(params[0])
+        puts JSON.pretty_generate(result)
+      when 'uptime'
+        result = AuraTools::SystemTools.uptime
+        puts JSON.pretty_generate(result)
+      else
+        puts "System commands: cpu, memory, processes, find, uptime"
+      end
+    end
+
+    def self.print_help
+      puts <<~HELP
+        AURA Ruby Tools v#{AuraTools::VERSION}
+
+        Usage: aura-ruby <command> <subcommand> [params]
+
+        Commands:
+          network    Networking tools (ping, scan, ports, traceroute, info)
+          dns        DNS tools (lookup, reverse, whois, mx, ns, subdomains)
+          hash       Hashing tools (md5, sha1, sha256, sha512, bcrypt, base64)
+          system     System tools (cpu, memory, processes, find, uptime)
+          version    Show version
+          help       Show this help
+
+        Examples:
+          aura-ruby network ping google.com
+          aura-ruby network scan 192.168.1.0/24
+          aura-ruby dns lookup example.com
+          aura-ruby hash sha256 "hello world"
+          aura-ruby system cpu
+      HELP
+    end
+  end
+end
+
+AuraTools::CLI.run(ARGV)

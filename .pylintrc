@@ -1,0 +1,6 @@
+[MASTER]
+max-line-length=100
+fail-under=8.0
+
+[FORMAT]
+indent-string='    '

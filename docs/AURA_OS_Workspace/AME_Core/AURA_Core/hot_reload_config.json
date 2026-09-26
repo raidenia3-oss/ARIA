@@ -1,0 +1,44 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el servicio de Hot-Reload de AME",
+    "ame_frontend_dir": "AME_Core",
+    "websocket_host": "0.0.0.0",
+    "websocket_port": 8080,
+    "ignored_dirs": [
+        ".git",
+        "node_modules",
+        "__pycache__",
+        ".venv",
+        ".env",
+        ".vscode",
+        "dist",
+        "build",
+        "logs",
+        "spec",
+        "AURA-Desktop",
+        ".idea",
+        ".DS_Store",
+        "venv",
+        "env",
+        "__pycache__",
+        "*.egg-info"
+    ],
+    "relevant_extensions": [
+        ".html",
+        ".js",
+        ".css",
+        ".json",
+        ".ts",
+        ".tsx"
+    ],
+    "debounce_time": 1.0,
+    "log_file": "hot_reload_server.log",
+    "max_retries": 3,
+    "retry_delay": 5,
+    "verbose": true,
+    "metadata": {
+        "last_reload": null,
+        "total_reloads": 0,
+        "last_successful_reload": null
+    }
+}

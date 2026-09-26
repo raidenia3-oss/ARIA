@@ -1,0 +1,46 @@
+{
+  "test_001": {
+    "id": "test_001",
+    "target": "example.com",
+    "type": "domain",
+    "tags": [
+      "test"
+    ],
+    "priority": "high",
+    "added": "2026-05-25T12:00:00",
+    "status": "active"
+  },
+  "e6d35644": {
+    "id": "e6d35644",
+    "target": "test.local",
+    "type": "domain",
+    "tags": [
+      "auto_test"
+    ],
+    "priority": "medium",
+    "added": "2026-05-25T23:00:55",
+    "status": "active"
+  },
+  "6d17fc6c": {
+    "id": "6d17fc6c",
+    "target": "test.local",
+    "type": "domain",
+    "tags": [
+      "auto_test"
+    ],
+    "priority": "medium",
+    "added": "2026-05-25T23:01:36",
+    "status": "active"
+  },
+  "614a10d3": {
+    "id": "614a10d3",
+    "target": "test.local",
+    "type": "domain",
+    "tags": [
+      "auto_test"
+    ],
+    "priority": "medium",
+    "added": "2026-08-10T20:15:15",
+    "status": "active"
+  }
+}

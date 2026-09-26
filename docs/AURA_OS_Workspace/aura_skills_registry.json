@@ -1,0 +1,175 @@
+{
+  "skills": [
+    {
+      "id": "skill_repair_path",
+      "name": "Reparar rutas de comandos",
+      "description": "Ajusta las rutas de comandos para evitar errores de PATH en entornos Windows/Linux.",
+      "environment": ["PC", "Termux"],
+      "command": [
+        {
+          "platform": "Windows",
+          "command": "python -c \"import sys; print(sys.executable)\"",
+          "validation": "python --version"
+        },
+        {
+          "platform": "Linux/Termux",
+          "command": "which python3 || echo '/usr/bin/python3'",
+          "validation": "python3 --version"
+        }
+      ],
+      "priority": "high"
+    },
+    {
+      "id": "skill_force_absolute_bin",
+      "name": "Forzar rutas absolutas en binarios",
+      "description": "Convierte rutas relativas a absolutas para evitar errores de 'command not found'.",
+      "environment": ["PC", "Termux"],
+      "command": [
+        {
+          "platform": "Windows",
+          "command": "python -c \"import os; print(os.path.abspath('python'))\"",
+          "validation": "python --version"
+        },
+        {
+          "platform": "Linux/Termux",
+          "command": "readlink -f $(which python3) || echo '/usr/bin/python3'",
+          "validation": "python3 --version"
+        }
+      ],
+      "priority": "high"
+    },
+    {
+      "id": "skill_check_java_path",
+      "name": "Verificar ruta de Java",
+      "description": "Valida y ajusta la ruta de Java en el PATH.",
+      "environment": ["PC", "Termux"],
+      "command": [
+        {
+          "platform": "Windows",
+          "command": "where java || echo 'C:\\Program Files\\Java\\jdk-17\\bin\\java.exe'",
+          "validation": "java -version"
+        },
+        {
+          "platform": "Linux/Termux",
+          "command": "which java || echo '/data/data/com.termux/files/usr/bin/java'",
+          "validation": "java -version"
+        }
+      ],
+      "priority": "medium"
+    },
+    {
+      "id": "skill_check_python_env",
+      "name": "Verificar entorno de Python",
+      "description": "Valida y ajusta el entorno de Python para evitar conflictos de versiones.",
+      "environment": ["PC", "Termux"],
+      "command": [
+        {
+          "platform": "Windows",
+          "command": "python -m pip list",
+          "validation": "python -c \"import sys; print(sys.version)\""
+        },
+        {
+          "platform": "Linux/Termux",
+          "command": "python3 -m pip list",
+          "validation": "python3 -c \"import sys; print(sys.version)\""
+        }
+      ],
+      "priority": "medium"
+    },
+    {
+      "id": "skill_reinstall_packages",
+      "name": "Reinstalar paquetes críticos",
+      "description": "Reinstala paquetes críticos en caso de corrupción o errores de dependencia.",
+      "environment": ["PC", "Termux"],
+      "command": [
+        {
+          "platform": "Windows",
+          "command": "pip install --upgrade pip && pip install -r requirements.txt",
+          "validation": "pip list | findstr \"sqlite3\""
+        },
+        {
+          "platform": "Linux/Termux",
+          "command": "pkg install --reinstall python && pip install -r requirements.txt",
+          "validation": "pip list | grep \"sqlite3\""
+        }
+      ],
+      "priority": "high"
+    },
+    {
+      "id": "skill_fix_permissions",
+      "name": "Corregir permisos de archivos",
+      "description": "Ajusta permisos de archivos y directorios en Termux para evitar errores de ejecución.",
+      "environment": ["Termux"],
+      "command": [
+        {
+          "platform": "Termux",
+          "command": "chmod -R 755 ~/AURA && chown -R $USER:$USER ~/AURA",
+          "validation": "ls -la ~/AURA | grep \"^d\" | awk '{print $1}' | grep -E \"^d.*[rwx]\""
+        }
+      ],
+      "priority": "high"
+    },
+    {
+      "id": "skill_check_network",
+      "name": "Verificar conectividad de red",
+      "description": "Valida la conectividad de red y ajusta configuraciones si es necesario.",
+      "environment": ["PC", "Termux"],
+      "command": [
+        {
+          "platform": "Windows",
+          "command": "ping -n 1 google.com && curl --version",
+          "validation": "curl -I https://google.com"
+        },
+        {
+          "platform": "Linux/Termux",
+          "command": "ping -c 1 google.com && curl --version",
+          "validation": "curl -I https://google.com"
+        }
+      ],
+      "priority": "medium"
+    },
+    {
+      "id": "skill_validate_ollama",
+      "name": "Validar instalación de Ollama",
+      "description": "Verifica la instalación y configuración de Ollama en el sistema.",
+      "environment": ["PC", "Termux"],
+      "command": [
+        {
+          "platform": "Windows",
+          "command": "ollama --version",
+          "validation": "ollama pull hello-world"
+        },
+        {
+          "platform": "Linux/Termux",
+          "command": "ollama --version",
+          "validation": "ollama pull hello-world"
+        }
+      ],
+      "priority": "medium"
+    },
+    {
+      "id": "skill_fix_java_home",
+      "name": "Configurar JAVA_HOME",
+      "description": "Ajusta la variable JAVA_HOME en el entorno para evitar errores de compilación.",
+      "environment": ["PC", "Termux"],
+      "command": [
+        {
+          "platform": "Windows",
+          "command": "echo %JAVA_HOME% || echo 'C:\\Program Files\\Java\\jdk-17'",
+          "validation": "java -version"
+        },
+        {
+          "platform": "Linux/Termux",
+          "command": "echo $JAVA_HOME || echo '/data/data/com.termux/files/usr/lib/jvm/java-17-openjdk'",
+          "validation": "java -version"
+        }
+      ],
+      "priority": "high"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2026-06-04",
+    "description": "Registro de habilidades internas para autodiagnóstico y autocuración en el ecosistema AURA."
+  }
+}

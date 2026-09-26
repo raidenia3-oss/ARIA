@@ -1,0 +1,359 @@
+
+        <html>
+        <head>
+            <title>ARIA OS v3.2 — Verification Report</title>
+            <style>
+                body { font-family: monospace; background: #0a0e27; color: #00ff88; padding: 20px; }
+                h1 { color: #ff006e; }
+                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                th, td { border: 1px solid #00d9ff; padding: 10px; text-align: left; }
+                th { background: #1a1f3a; color: #00d9ff; }
+                tr:nth-child(even) { background: #141829; }
+                .pass { color: #00ff88; }
+                .fail { color: #ff006e; }
+                .warn { color: #ffd600; }
+                .summary { background: #1a1f3a; padding: 15px; border: 1px solid #00d9ff; margin: 20px 0; }
+            </style>
+        </head>
+        <body>
+            <h1>ARIA OS v3.2 — Verification Report</h1>
+
+            <div class="summary">
+                <h2>Summary</h2>
+                <p>Timestamp: 2026-09-19T23:03:19.775708</p>
+                <p>Total Tests: 37</p>
+                <p><span class="pass">Passed: 12</span></p>
+                <p><span class="fail">Failed: 20</span></p>
+                <p><span class="warn">Warnings: 5</span></p>
+                <p>Success Rate: 32.4%</p>
+            </div>
+
+            <h2>Detailed Results</h2>
+            <table>
+                <tr>
+                    <th>Test</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+        
+                <tr>
+                    <td>Server running</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"latency_ms": 2085.995
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: Health check</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/health",
+"latency_ms": 2328.23
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: System status</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/api/system/status",
+"latency_ms": 2139.065
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: ARIA health</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/api/aria/health",
+"latency_ms": 2043.234
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: User profile</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/api/aria/profile",
+"latency_ms": 2051.8900000000003
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: Skills registry</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/api/skills",
+"latency_ms": 2333.222
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: Recent memory</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/api/memory/recent",
+"latency_ms": 2041.592
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: Ollama status</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/api/ai/ollama",
+"latency_ms": 6121.347
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: Plugins</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/api/plugins",
+"latency_ms": 2284.045
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Endpoint: Learning rules</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"endpoint": "/api/learning/rules",
+"latency_ms": 2040.993
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Chat endpoint</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)",
+"latency_ms": "N/A"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Ollama connection</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Database (memory JSON)</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"path": "C:\\Users\\User\\Downloads\\AURA\\AURA_APP\\memory",
+"note": "Using JSON memory store"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.app</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.aria_engine</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.aria_observer_v2</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.aria_suggestion_engine</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.aria_integration</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.generation.content_generator</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.ml.lora_trainer</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.connectors.base</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.aria_brain</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.training.fine_tuning_pipeline</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.resilience.circuit_breaker</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Import: AURA_APP.backend.observability.metrics_collector</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>AriaEngine instantiation</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>AriaBrain instantiation</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"error": "No module named 'AURA_APP'"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Response time: /health</td>
+                    <td class="warn">⚠️ SLOW (2720ms > 100ms)</td>
+                    <td><pre>{
+"latency_ms": 2720.059633255005,
+"threshold_ms": 100
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Response time: /api/system/status</td>
+                    <td class="warn">⚠️ SLOW (2452ms > 200ms)</td>
+                    <td><pre>{
+"latency_ms": 2451.6563415527344,
+"threshold_ms": 200
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Response time: /api/aria/health</td>
+                    <td class="warn">⚠️ SLOW (2856ms > 200ms)</td>
+                    <td><pre>{
+"latency_ms": 2856.2874794006348,
+"threshold_ms": 200
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Response time: /api/skills</td>
+                    <td class="warn">⚠️ SLOW (2279ms > 300ms)</td>
+                    <td><pre>{
+"latency_ms": 2279.4253826141357,
+"threshold_ms": 300
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Response time: /api/memory/recent</td>
+                    <td class="warn">⚠️ SLOW (2826ms > 500ms)</td>
+                    <td><pre>{
+"latency_ms": 2826.1823654174805,
+"threshold_ms": 500
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Memory usage</td>
+                    <td class="pass">✅ PASS</td>
+                    <td><pre>{
+"memory_mb": 0,
+"threshold_mb": 2000
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Chat quality: greeting</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"message": "Hola",
+"error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Chat quality: time_query</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"message": "\u00bfQu\u00e9 hora es?",
+"error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Chat quality: system_command</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"message": "Abre notepad",
+"error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)"
+}</pre></td>
+                </tr>
+            
+                <tr>
+                    <td>Chat quality: creative</td>
+                    <td class="fail">❌ FAIL</td>
+                    <td><pre>{
+"message": "Cu\u00e9ntame un chiste",
+"error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)"
+}</pre></td>
+                </tr>
+            
+            </table>
+        </body>
+        </html>
+        

@@ -1,0 +1,44 @@
+{
+  "name": "AURA-OS-Production",
+  "services": [
+    {
+      "name": "aura-backend",
+      "start": "python AME_Core/AME_Core/servidor_ame.py",
+      "buildCommand": "pip install -r AME_Core/AME_Core/requirements.txt",
+      "env": {
+        "FLASK_ENV": "production",
+        "PYTHONUNBUFFERED": "1",
+        "PORT": "8000"
+      },
+      "autoDeploy": true,
+      "healthcheckPath": "/api/status",
+      "healthcheckTimeout": 30
+    },
+    {
+      "name": "aura-frontend",
+      "start": "serve -s AURA_Tactical_UI/dist -l 3000",
+      "buildCommand": "cd AURA_Tactical_UI && npm install && npm run build",
+      "env": {
+        "VITE_API_URL": "https://aura-backend.up.railway.app"
+      },
+      "static": true
+    }
+  ],
+  "domains": [
+    {
+      "name": "aura-backend",
+      "service": "aura-backend",
+      "path": "/"
+    },
+    {
+      "name": "aura-frontend",
+      "service": "aura-frontend",
+      "path": "/"
+    }
+  ],
+  "variables": {
+    "RAILWAY_API_URL": "https://aura-backend.up.railway.app",
+    "HF_SPACE_URL": "https://raiden456-slut.hf.space/v1",
+    "AI_PROVIDER_PREFERENCE": "huggingface"
+  }
+}

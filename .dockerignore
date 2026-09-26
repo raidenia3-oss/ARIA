@@ -1,0 +1,12 @@
+*.pyc
+__pycache__/
+.pytest_cache/
+.git/
+.gitignore
+*.log
+venv/
+.env
+*.swp
+.DS_Store
+node_modules/
+*.lock

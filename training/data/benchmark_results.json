@@ -1,0 +1,203 @@
+{
+  "total_queries": 20,
+  "avg_latency_ms": 0.0,
+  "min_latency_ms": 0.0,
+  "max_latency_ms": 0.0,
+  "complexity_accuracy": 0.95,
+  "provider_stats": {
+    "local": {
+      "count": 15,
+      "avg_latency_ms": 0.0,
+      "min_latency_ms": 0.0,
+      "max_latency_ms": 0.0
+    },
+    "cloud": {
+      "count": 5,
+      "avg_latency_ms": 0.0,
+      "min_latency_ms": 0.0,
+      "max_latency_ms": 0.0
+    }
+  },
+  "results": [
+    {
+      "prompt": "¿Qué hora es?",
+      "expected_complexity": "low",
+      "detected_complexity": "low",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "complexity_low",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Hola, ¿cómo estás?",
+      "expected_complexity": "low",
+      "detected_complexity": "low",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "complexity_low",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "¿Qué puedes hacer?",
+      "expected_complexity": "low",
+      "detected_complexity": "low",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "complexity_low",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Abre el navegador",
+      "expected_complexity": "low",
+      "detected_complexity": "low",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "complexity_low",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Lista los archivos del directorio actual",
+      "expected_complexity": "low",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Explica brevemente qué es un modelo de lenguaje",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "¿Cuál es la capital de Francia y su población?",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Resume el concepto de aprendizaje por refuerzo",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "¿Cómo funciona una red neuronal convolucional?",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Dame 3 consejos para mejorar la productividad",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "¿Qué diferencias hay entre Python y JavaScript?",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Explica qué es la computación en la nube",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "¿Cómo se entrena un modelo de clasificación de texto?",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Describe el ciclo de vida del desarrollo de software",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "¿Qué es el overfitting y cómo evitarlo?",
+      "expected_complexity": "medium",
+      "detected_complexity": "medium",
+      "provider": "local",
+      "model": "qwen2.5:0.5b",
+      "reason": "default_hybrid_local",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Analiza en profundidad la arquitectura de un sistema distribuido de microservicios y propón mejoras",
+      "expected_complexity": "high",
+      "detected_complexity": "high",
+      "provider": "cloud",
+      "model": "gemini-2.0-flash-exp",
+      "reason": "complexity_high",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Diseña una estrategia de optimización de rendimiento para una base de datos PostgreSQL con millones de registros",
+      "expected_complexity": "high",
+      "detected_complexity": "high",
+      "provider": "cloud",
+      "model": "gemini-2.0-flash-exp",
+      "reason": "complexity_high",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Investiga y compara en detalle los frameworks de machine learning más usados en producción en 2025",
+      "expected_complexity": "high",
+      "detected_complexity": "high",
+      "provider": "cloud",
+      "model": "gemini-2.0-flash-exp",
+      "reason": "complexity_high",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Planifica una arquitectura de seguridad de red para una empresa con múltiples sucursales y acceso remoto",
+      "expected_complexity": "high",
+      "detected_complexity": "high",
+      "provider": "cloud",
+      "model": "gemini-2.0-flash-exp",
+      "reason": "complexity_high",
+      "latency_ms": 0.0
+    },
+    {
+      "prompt": "Implementa un algoritmo de recomendación colaborativa explicando cada paso del razonamiento",
+      "expected_complexity": "high",
+      "detected_complexity": "high",
+      "provider": "cloud",
+      "model": "gemini-2.0-flash-exp",
+      "reason": "complexity_high",
+      "latency_ms": 0.0
+    }
+  ]
+}

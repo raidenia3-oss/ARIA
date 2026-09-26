@@ -1,0 +1,27 @@
+name: social-research-twitter
+description: Automated social media research and trend analysis
+trigger: manual
+schedule: null
+enabled: true
+version: "1.0"
+
+steps:
+  - name: fetch_trends
+    action: social.fetch_trending
+    timeout_sec: 120
+    retry_on_failure: true
+
+  - name: analyze_sentiment
+    action: social.analyze_sentiment
+    timeout_sec: 60
+    retry_on_failure: false
+
+  - name: extract_insights
+    action: social.extract_insights
+    timeout_sec: 90
+    retry_on_failure: true
+
+  - name: save_report
+    action: social.save_report
+    timeout_sec: 30
+    retry_on_failure: false

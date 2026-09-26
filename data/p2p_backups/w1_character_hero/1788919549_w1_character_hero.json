@@ -1,0 +1,36 @@
+{
+  "doc_id": "w1/character/hero",
+  "type": "character",
+  "work_id": "w1",
+  "winner": "sd",
+  "strategy": "lww",
+  "reason": "concurrent_edit",
+  "base_hash": "sha256:base",
+  "base": {},
+  "pc": {
+    "hash": "sha256:pc-new",
+    "updated_at": 200,
+    "version": 2,
+    "payload": {
+      "bio": "editada en PC"
+    },
+    "metadata": {
+      "mood": "calm",
+      "age": 30
+    }
+  },
+  "sd": {
+    "hash": "sha256:sd-new",
+    "updated_at": 500,
+    "version": 3,
+    "payload": {
+      "bio": "editada en SD"
+    },
+    "metadata": {
+      "mood": "furious",
+      "alias": "Ari"
+    }
+  },
+  "backed_up_at": 1788919549.7356153,
+  "backed_up_iso": "2026-09-08T21:05:49-0500"
+}

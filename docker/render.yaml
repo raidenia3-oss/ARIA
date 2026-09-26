@@ -1,0 +1,83 @@
+# =====================================================================
+# Render Blueprint – AURA Backend (Docker)
+# Despliegue automático 24/7 en Render Free Tier
+# =====================================================================
+# Render usará el Dockerfile multietapa en la raíz del proyecto.
+# No necesita buildCommand ni startCommand: el Dockerfile lo define todo.
+# =====================================================================
+
+services:
+  - type: web
+    name: aura-backend
+    env: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+        healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      # --- Críticas (sin fallback en código, la app no arranca si faltan) ---
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_SECRET_ADMIN
+        sync: false
+      - key: BRIDGE_SECRET
+        sync: false
+      # --- APIs de IA (al menos una para procesar datos reales) ---
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: HF_TOKEN
+        sync: false
+      # --- Modo Libre: proveedores sin restricciones (API key secundaria) ---
+      - key: OPENROUTER_FREE_KEY
+        sync: false
+      - key: DEEPINFRA_API_KEY
+        sync: false
+      - key: DEEPINFRA_FREE_KEY
+        sync: false
+      - key: DEEPINFRA_BASE_URL
+        sync: false
+      - key: OPENROUTER_FREE_MODEL
+        sync: false
+      - key: DEEPINFRA_FREE_MODEL
+        sync: false
+      # --- Opcionales (tienen defaults sensatos en el código) ---
+      - key: DATABASE_URL
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      # --- Red Soberana: Discord + Mesh privada ---
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: DISCORD_ALERT_CHANNEL_ID
+        sync: false
+      - key: MESH_KEY
+        sync: false
+      # --- Replicación Multi-Nodo (enjambre) ---
+      - key: SWARM_TOKEN
+        sync: false
+      - key: MIRROR_NODE_URL
+        sync: false
+      - key: RENDER_URL
+        sync: false
+      # --- Interfaz Soberana Definitiva: Rocket.Chat (no-op si faltan) ---
+      - key: ROCKET_CHAT_URL
+        sync: false
+      - key: ROCKET_USER
+        sync: false
+      - key: ROCKET_PASSWORD
+        sync: false
+      - key: ROCKET_WEBHOOK_URL
+        sync: false
+      - key: ROCKET_CHANNEL
+        sync: false
+      - key: ROCKET_BOT_USERNAME
+        sync: false
+

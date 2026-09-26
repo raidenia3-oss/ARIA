@@ -1,0 +1,283 @@
+name: AURA OS CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - master
+      - develop
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Job 1: Lint & Syntax Check
+  lint:
+    name: Lint & Syntax Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      # Python checks
+      - name: Install Python dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          pip install pylint black isort
+
+      - name: Python syntax check
+        run: |
+          python - <<'PY'
+          import pathlib, py_compile
+          for path in pathlib.Path("backend").rglob("*.py"):
+              py_compile.compile(str(path), doraise=True)
+          PY
+
+      - name: Python linting
+        run: pylint backend/ --disable=all --enable=syntax-error,undefined-variable
+
+      - name: Python formatting check
+        run: black --check backend/
+
+      # Go checks
+      - name: Go mod tidy
+        run: cd aura-os/go-tools && go mod tidy
+
+      - name: Go build
+        run: cd aura-os/go-tools && make build
+
+      - name: Go lint
+        run: |
+          cd aura-os/go-tools
+          go vet ./...
+
+      # Ruby checks
+      - name: Ruby syntax check
+        run: ruby -c aura-os/ruby-tools/bin/aura-pentest
+
+      - name: Ruby lint
+        run: |
+          cd aura-os/ruby-tools
+          bundle exec rubocop lib/ bin/
+
+      # Bash checks
+      - name: Bash syntax check
+        run: |
+          for script in aura-os/entrypoint.sh aura-os/post-install.sh aura-os/distro-builder/*.sh; do
+            bash -n "$script"
+          done
+
+  # Job 2: Unit Tests
+  test:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    needs: lint
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          pip install pytest pytest-asyncio pytest-cov
+
+      - name: Run unit tests
+        run: pytest tests/ -v --cov=backend --cov-report=xml
+
+      - name: Run omniroute tests
+        run: pytest tests/test_omniroute.py -v -m "not integration"
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+
+  # Job 3: Build Docker Image
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+
+    permissions:
+      contents: read
+      packages: write
+
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./aura-os/distro-builder/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  # Job 4: Build Release Artifacts
+  build-release:
+    name: Build Release Artifacts
+    runs-on: ubuntu-latest
+    needs: test
+
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Build Go binaries
+        run: |
+          cd aura-os/go-tools
+          make clean
+          make build
+
+          mkdir -p release
+          cp bin/* release/
+          tar czf aura-go-tools-${{ github.ref_name }}.tar.gz -C release .
+
+      - name: Build Alpine rootfs
+        run: |
+          docker build -t aura-os:${{ github.ref_name }} -f aura-os/distro-builder/Dockerfile .
+          docker run --name aura-build aura-os:${{ github.ref_name }} true
+          docker export aura-build | gzip > aura-os-rootfs-${{ github.ref_name }}.tar.gz
+          docker rm aura-build
+
+      - name: Generate checksums
+        run: |
+          sha256sum aura-go-tools-${{ github.ref_name }}.tar.gz > aura-go-tools-${{ github.ref_name }}.sha256
+          sha256sum aura-os-rootfs-${{ github.ref_name }}.tar.gz > aura-os-rootfs-${{ github.ref_name }}.sha256
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-artifacts
+          path: |
+            aura-*.tar.gz
+            aura-*.sha256
+
+  # Job 5: Create GitHub Release
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build-release
+
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: release-artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            aura-*.tar.gz
+            aura-*.sha256
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Job 6: Update Documentation
+  update-docs:
+    name: Update Documentation
+    runs-on: ubuntu-latest
+    needs: release
+
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Build documentation
+        run: |
+          pip install mkdocs mkdocs-material
+          cd docs
+          mkdocs build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site

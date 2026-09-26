@@ -1,0 +1,30 @@
+{
+  "test-agent": {
+    "requests_today": 7,
+    "requests_yesterday": 6,
+    "requests_week": 13,
+    "accuracy_pct": 100.0,
+    "revenue": 6.5,
+    "avg_time_ms": 100.0,
+    "errors": 0,
+    "total_requests": 13,
+    "total_latency": 1300.0,
+    "total_success": 13,
+    "total_attempts": 13,
+    "last_request_date": "2026-09-17T00:00:00"
+  },
+  "agent1": {
+    "requests_today": 14,
+    "requests_yesterday": 12,
+    "requests_week": 26,
+    "accuracy_pct": 50.0,
+    "revenue": 0.0,
+    "avg_time_ms": 75.0,
+    "errors": 13,
+    "total_requests": 26,
+    "total_latency": 1950.0,
+    "total_success": 13,
+    "total_attempts": 26,
+    "last_request_date": "2026-09-17T00:00:00"
+  }
+}

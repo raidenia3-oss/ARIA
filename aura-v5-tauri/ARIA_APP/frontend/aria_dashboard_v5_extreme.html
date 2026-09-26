@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA OS v3.2 — HUD Cyberpunk Extreme</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(0,255,136,0.3);border-radius:2px;}
+:root{
+  --bg-primary:#0a0e27;--bg-secondary:#1a1f3a;--bg-tertiary:#252d48;
+  --neon-green:#00ff88;--neon-pink:#ff006e;--neon-cyan:#00d9ff;
+  --neon-yellow:#ffd600;--neon-purple:#b537f2;--neon-blue:#0080ff;
+  --text-primary:#00ff88;--text-secondary:#00d9ff;--text-tertiary:#888899;
+  --glow-green:0 0 10px #00ff88,0 0 20px #00ff88;
+  --glow-pink:0 0 10px #ff006e,0 0 20px #ff006e;
+  --glow-cyan:0 0 10px #00d9ff,0 0 20px #00d9ff;
+  --glow-yellow:0 0 10px #ffd600,0 0 20px #ffd600;
+  --glow-purple:0 0 10px #b537f2,0 0 20px #b537f2;
+}
+@keyframes glitch{0%{text-shadow:2px 0 #ff006e,-2px 0 #00d9ff;}25%{text-shadow:-2px 0 #ff006e,2px 0 #00d9ff;}50%{text-shadow:2px 2px #ff006e,-2px -2px #00d9ff;}75%{text-shadow:-2px -1px #ff006e,2px 1px #00d9ff;}100%{text-shadow:0 0 0,0 0 0;}}
+@keyframes glitch2{0%,90%,100%{transform:translate(0);}92%{transform:translate(-3px,1px);}94%{transform:translate(2px,-1px);}96%{transform:translate(-1px,2px);}98%{transform:translate(3px,-2px);}}
+@keyframes scanline{0%{top:-5%;}100%{top:105%;}}
+@keyframes flicker{0%,100%{opacity:1;}50%{opacity:0.8;}75%{opacity:0.95;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+@keyframes breathe{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+@keyframes auroraShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+@keyframes neonPulse{0%,100%{box-shadow:0 0 5px var(--neon-green),0 0 10px var(--neon-green);}50%{box-shadow:0 0 15px var(--neon-green),0 0 30px var(--neon-green);}}
+@keyframes slideInLeft{from{transform:translateX(-30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+@keyframes cycleGlow{0%{border-color:var(--neon-green);box-shadow:0 0 5px var(--neon-green);}25%{border-color:var(--neon-cyan);box-shadow:0 0 5px var(--neon-cyan);}50%{border-color:var(--neon-pink);box-shadow:0 0 5px var(--neon-pink);}75%{border-color:var(--neon-yellow);box-shadow:0 0 5px var(--neon-yellow);}100%{border-color:var(--neon-green);box-shadow:0 0 5px var(--neon-green);}}
+@keyframes codeRainFall{0%{transform:translateY(-100%);opacity:1;}100%{transform:translateY(100vh);opacity:0;}}
+@keyframes equalizer{0%,100%{height:3px;}25%{height:20px;}50%{height:12px;}75%{height:25px;}}
+@keyframes rotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes holographicShift{0%{background:linear-gradient(135deg,rgba(0,255,136,0.1),rgba(0,217,255,0.1));}33%{background:linear-gradient(135deg,rgba(255,0,110,0.1),rgba(0,255,136,0.1));}66%{background:linear-gradient(135deg,rgba(0,217,255,0.1),rgba(255,214,0,0.1));}100%{background:linear-gradient(135deg,rgba(0,255,136,0.1),rgba(0,217,255,0.1));}}
+@keyframes bloomExpand{0%{transform:scale(0.9);opacity:0.5;}50%{transform:scale(1.1);opacity:1;}100%{transform:scale(1);opacity:0.8;}}
+body{background:var(--bg-primary);color:#e2e8f0;font-family:'JetBrains Mono','Consolas','Monaco',monospace;min-height:100vh;overflow:hidden;position:relative;font-size:13px;}
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:9998;animation:flicker 4s infinite;}
+#codeRainCanvas{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.12;}
+#filmGrain{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:flicker 0.1s infinite;}
+#scanlines{position:fixed;inset:0;z-index:9996;pointer-events:none;overflow:hidden;}
+#scanlines::before{content:'';position:absolute;width:100%;height:3px;background:linear-gradient(180deg,transparent,rgba(0,255,136,0.15),transparent);animation:scanline 4s linear infinite;}
+.app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
+header{background:rgba(10,14,39,0.6);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,255,136,0.2);padding:8px 16px;display:flex;justify-content:space-between;align-items:center;height:48px;animation:flicker 6s infinite;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-text{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;background:linear-gradient(90deg,var(--neon-green),var(--neon-cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:glitch 3s infinite;}
+.logo-orb{width:20px;height:20px;border-radius:50%;background:radial-gradient(circle,var(--neon-green),var(--neon-cyan));box-shadow:var(--glow-green);animation:breathe 2s ease-in-out infinite;}
+.header-status{display:flex;align-items:center;gap:14px;font-size:11px;color:rgba(226,232,240,0.7);}
+.status-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;animation:pulse 1.5s infinite;}
+.status-dot.ok{background:var(--neon-green);box-shadow:var(--glow-green);}
+.status-dot.warn{background:var(--neon-yellow);box-shadow:var(--glow-yellow);}
+.status-dot.err{background:var(--neon-pink);box-shadow:var(--glow-pink);}
+.fps-counter{color:var(--neon-cyan);font-size:10px;}
+.main{display:grid;grid-template-columns:20% 50% 30%;gap:8px;padding:8px;flex:1;min-height:0;}
+.panel{background:rgba(10,14,39,0.5);backdrop-filter:blur(12px);border:1px solid rgba(0,255,136,0.15);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;animation:holographicShift 8s ease-in-out infinite;transition:border-color 0.5s;position:relative;overflow:hidden;}
+.panel:hover{border-color:rgba(0,255,136,0.4);box-shadow:0 0 20px rgba(0,255,136,0.1);}
+.panel-title{font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--neon-cyan);border-bottom:1px solid rgba(0,217,255,0.2);padding-bottom:4px;margin-bottom:4px;}
+.panel-content{flex:1;overflow:hidden;min-height:0;}
+.screen-capture-panel{border-color:rgba(0,255,136,0.25);animation:cycleGlow 6s infinite;}
+.screen-capture-preview{width:100%;aspect-ratio:16/9;background:#050816;border:1px solid rgba(0,255,136,0.3);border-radius:4px;position:relative;overflow:hidden;}
+.screen-capture-preview::after{content:'LIVE';position:absolute;top:4px;right:4px;font-size:9px;color:var(--neon-pink);background:rgba(255,0,110,0.3);padding:1px 4px;border-radius:2px;animation:pulse 1s infinite;}
+.screen-canvas{width:100%;height:100%;display:block;}
+.orb-container{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;min-height:0;}
+#orbCanvas{width:100%;height:100%;display:block;cursor:pointer;}
+.orb-state-label{font-size:10px;color:var(--neon-green);letter-spacing:3px;text-transform:uppercase;margin-top:4px;text-shadow:var(--glow-green);}
+.ocr-feed{height:100%;overflow-y:auto;font-size:10px;line-height:1.6;max-height:100%;}
+.ocr-line{display:flex;gap:6px;padding:2px 4px;border-bottom:1px solid rgba(0,217,255,0.05);animation:slideInLeft 0.3s ease-out;}
+.ocr-line:hover{background:rgba(0,255,136,0.05);}
+.ocr-timestamp{color:var(--neon-cyan);flex-shrink:0;font-size:9px;}
+.ocr-text{color:var(--text-secondary);flex:1;word-break:break-all;}
+.ocr-keyword{color:var(--neon-green);text-shadow:0 0 4px var(--neon-green);font-weight:600;}
+.audio-meter{height:100%;display:flex;flex-direction:column;gap:4px;}
+.equalizer{display:flex;align-items:flex-end;gap:2px;height:60px;padding:4px 0;}
+.eq-bar{flex:1;background:linear-gradient(180deg,var(--neon-cyan),var(--neon-green));border-radius:1px 1px 0 0;animation:equalizer 0.8s ease-in-out infinite;min-height:3px;}
+.eq-bar:nth-child(odd){animation-delay:0.1s;}
+.eq-bar:nth-child(3n){animation-delay:0.2s;}
+.eq-bar:nth-child(5n){animation-delay:0.3s;}
+.rms-meter{height:6px;background:rgba(15,23,42,0.5);border-radius:3px;overflow:hidden;}
+.rms-fill{height:100%;background:linear-gradient(90deg,var(--neon-green),var(--neon-yellow),var(--neon-pink));border-radius:3px;transition:width 0.1s;}
+.audio-info{font-size:10px;color:var(--text-tertiary);}
+.activity-flow{height:100%;display:flex;flex-direction:column;gap:4px;}
+.event-item{display:flex;align-items:center;gap:6px;padding:4px 6px;background:rgba(15,23,42,0.3);border-radius:4px;border-left:2px solid var(--neon-cyan);animation:slideInLeft 0.3s ease-out;font-size:10px;max-width:100%;}
+.event-item:nth-child(1){border-left-color:var(--neon-green);}
+.event-item:nth-child(2){border-left-color:var(--neon-cyan);}
+.event-item:nth-child(3){border-left-color:var(--neon-yellow);}
+.event-item:nth-child(4){border-left-color:var(--neon-pink);}
+.event-item:nth-child(5){border-left-color:var(--neon-purple);}
+.event-time{color:var(--text-tertiary);flex-shrink:0;font-size:9px;}
+.event-type{color:var(--neon-cyan);flex-shrink:0;font-size:9px;font-weight:600;}
+.event-msg{color:#e2e8f0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.suggestion-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;overflow-y:auto;}
+.suggestion-card{padding:8px;border-radius:6px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;}
+.suggestion-card:hover{transform:scale(1.03);}
+.suggestion-card.discovery{background:linear-gradient(135deg,rgba(0,128,255,0.15),rgba(181,55,242,0.1));border:1px solid rgba(0,128,255,0.3);}
+.suggestion-card.discovery:hover{border-color:var(--neon-blue);box-shadow:0 0 15px rgba(0,128,255,0.2);}
+.suggestion-card.creation{background:linear-gradient(135deg,rgba(0,255,136,0.15),rgba(0,217,255,0.1));border:1px solid rgba(0,255,136,0.3);}
+.suggestion-card.creation:hover{border-color:var(--neon-green);box-shadow:0 0 15px rgba(0,255,136,0.2);}
+.suggestion-card.delivery{background:linear-gradient(135deg,rgba(255,214,0,0.15),rgba(255,0,110,0.1));border:1px solid rgba(255,214,0,0.3);}
+.suggestion-card.delivery:hover{border-color:var(--neon-yellow);box-shadow:0 0 15px rgba(255,214,0,0.2);}
+.suggestion-card.cybersecurity{background:linear-gradient(135deg,rgba(255,0,110,0.15),rgba(181,55,242,0.1));border:1px solid rgba(255,0,110,0.3);}
+.suggestion-card.cybersecurity:hover{border-color:var(--neon-pink);box-shadow:0 0 15px rgba(255,0,110,0.2);}
+.suggestion-icon{font-size:16px;margin-bottom:4px;}
+.suggestion-title{font-size:10px;font-weight:600;color:#e2e8f0;}
+.suggestion-desc{font-size:9px;color:var(--text-tertiary);margin-top:2px;}
+.chat-input-area{display:flex;gap:6px;padding:8px;background:rgba(10,14,39,0.4);border-top:1px solid rgba(0,255,136,0.15);}
+.chat-input{flex:1;padding:8px 12px;background:rgba(15,23,42,0.6);border:1px solid rgba(0,255,136,0.2);border-radius:8px;color:#e2e8f0;font-family:inherit;font-size:12px;transition:all 0.3s;}
+.chat-input:focus{outline:none;border-color:var(--neon-green);box-shadow:0 0 10px rgba(0,255,136,0.15);}
+.send-btn{padding:8px 16px;background:linear-gradient(135deg,var(--neon-green),var(--neon-cyan));border:none;border-radius:8px;color:#0a0e27;font-weight:700;cursor:pointer;font-family:inherit;font-size:12px;transition:all 0.2s;}
+.send-btn:hover{transform:scale(1.05);box-shadow:var(--glow-green);}
+.mic-btn{padding:8px;background:rgba(255,0,110,0.1);border:1px solid rgba(255,0,110,0.3);border-radius:8px;color:var(--neon-pink);cursor:pointer;font-size:14px;transition:all 0.2s;}
+.mic-btn:hover{background:rgba(255,0,110,0.2);}
+.bottom-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px;}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.metric-row{display:flex;justify-content:space-between;align-items:center;font-size:10px;padding:2px 0;}
+.metric-label{color:var(--text-tertiary);}
+.metric-value{color:var(--neon-green);font-weight:600;}
+.metric-bar-bg{flex:2;height:4px;background:rgba(15,23,42,0.5);border-radius:2px;margin-left:8px;overflow:hidden;}
+.metric-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--neon-green),var(--neon-cyan));transition:width 0.5s;}
+.dimensions-bar{display:flex;gap:4px;justify-content:center;align-items:center;}
+.dim-pill{padding:4px 8px;border-radius:12px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;animation:neonPulse 2s infinite;}
+.dim-pill.d1{background:rgba(0,128,255,0.15);color:var(--neon-blue);border:1px solid rgba(0,128,255,0.3);}
+.dim-pill.d2{background:rgba(0,255,136,0.15);color:var(--neon-green);border:1px solid rgba(0,255,136,0.3);animation-delay:0.3s;}
+.dim-pill.d3{background:rgba(255,214,0,0.15);color:var(--neon-yellow);border:1px solid rgba(255,214,0,0.3);animation-delay:0.6s;}
+.dim-pill.d4{background:rgba(255,0,110,0.15);color:var(--neon-pink);border:1px solid rgba(255,0,110,0.3);animation-delay:0.9s;}
+.status-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.status-pill{display:flex;align-items:center;gap:4px;font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(15,23,42,0.4);}
+.left-col,.right-col{display:flex;flex-direction:column;gap:8px;min-height:0;}
+.flex-fill{flex:1;min-height:0;}
+.flex-auto{flex:0 0 auto;}
+.glass{background:rgba(10,14,39,0.5);backdrop-filter:blur(12px);border:1px solid rgba(0,255,136,0.15);border-radius:8px;}
+.glitch-text{animation:glitch 3s infinite;}
+.glow-text-green{text-shadow:var(--glow-green);}
+.glow-text-cyan{text-shadow:var(--glow-cyan);}
+.glow-text-pink{text-shadow:var(--glow-pink);}
+.glow-text-yellow{text-shadow:var(--glow-yellow);}
+.hidden{display:none;}
+/* === TRANSITIONS === */
+.panel, .suggestion-card, .skill-card, .send-btn, .mic-btn, .status-dot, .orb-canvas { transition: all 0.3s ease-out; }
+.panel:hover .panel-title { color: var(--neon-green); text-shadow: var(--glow-green); }
+.suggestion-card { position: relative; overflow: hidden; }
+.suggestion-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transition: left 0.5s; }
+.suggestion-card:hover::before { left: 100%; }
+/* === HOLOGRAPHIC REFLECTION === */
+.holo { background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,217,255,0.1), rgba(255,0,110,0.1)); background-size: 200% 200%; animation: auroraShift 8s ease-in-out infinite; }
+/* === CHROMATIC ABERRATION HOVER === */
+.glitch-hover:hover { text-shadow: 2px 0 #ff006e, -2px 0 #00d9ff; }
+/* === SCAN LINE OVERLAY === */
+.scan-overlay { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--neon-green), transparent); opacity: 0.5; animation: scanline 3s linear infinite; pointer-events: none; }
+/* === PARTICLE EFFECT === */
+.particle { position: absolute; width: 3px; height: 3px; background: var(--neon-green); border-radius: 50%; pointer-events: none; animation: particleRain 2s linear infinite; }
+/* === PULSE RING === */
+.pulse-ring { position: absolute; border: 1px solid var(--neon-green); border-radius: 50%; animation: bloomExpand 2s ease-out infinite; pointer-events: none; }
+/* === TERMINAL CURSOR === */
+.terminal-cursor::after { content: '_'; animation: pulse 0.8s infinite; color: var(--neon-green); }
+/* === GLITCH BLOCK === */
+.glitch-block { background: rgba(255,0,110,0.05); border: 1px solid rgba(255,0,110,0.2); padding: 2px 6px; animation: glitch2 5s infinite; }
+/* === PROGRESS BAR GLOW === */
+.metric-bar-fill-glow { box-shadow: 0 0 8px var(--neon-green); }
+/* === TOOLTIP === */
+.tooltip { position: relative; }
+.tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(10,14,39,0.9); color: var(--neon-cyan); padding: 4px 8px; border-radius: 4px; font-size: 10px; white-space: nowrap; border: 1px solid rgba(0,217,255,0.3); }
+/* === RESPONSIVE === */
+@media(min-width:1400px) { .main { grid-template-columns: 15% 55% 30%; } .orb-container { min-height: 500px; } }
+@media(min-width:1920px) { .main { grid-template-columns: 12% 58% 30%; gap: 12px; padding: 12px; } }
+@media(max-width:480px) { .main { grid-template-columns: 1fr; gap: 4px; padding: 4px; } .panel { padding: 6px; } .bottom-bar { grid-template-columns: 1fr; } }
+/* === SCROLLBAR THEME === */
+::-webkit-scrollbar-thumb { background: rgba(0,255,136,0.4); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,255,136,0.7); }
+::-webkit-scrollbar-track { background: rgba(10,14,39,0.8); }
+/* === SELECTION COLOR === */
+::selection { background: rgba(0,255,136,0.3); color: #fff; }
+</style>
+</head>
+<body>
+<canvas id="codeRainCanvas"></canvas>
+<div id="filmGrain"></div>
+<div id="scanlines"></div>
+<div class="app">
+<header>
+<div class="logo">
+<div class="logo-orb"></div>
+<span class="logo-text glitch-text">AURA OS v3.2</span>
+</div>
+<div class="header-status">
+<span class="status-pill"><span class="status-dot ok" id="backendDot"></span>Backend</span>
+<span class="status-pill"><span class="status-dot ok" id="ollamaDot"></span>Ollama</span>
+<span class="status-pill"><span class="status-dot ok" id="observerDot"></span>Observer</span>
+<span class="status-pill"><span class="status-dot warn" id="learningDot"></span>Learning</span>
+<span class="status-pill"><span class="status-dot ok" id="networkDot"></span>Network</span>
+<span class="fps-counter" id="fpsCounter">60 FPS</span>
+</div>
+</header>
+<div class="main">
+<div class="left-col">
+<div class="panel screen-capture-panel flex-fill">
+<div class="panel-title">▌ Screen Capture Live</div>
+<div class="panel-content">
+<div class="screen-capture-preview">
+<canvas id="screenCaptureCanvas" class="screen-canvas" width="320" height="180"></canvas>
+</div>
+</div>
+</div>
+<div class="panel activity-flow flex-fill">
+<div class="panel-title">▌ Activity Flow</div>
+<div class="panel-content">
+<div class="activity-flow" id="activityFlow"></div>
+</div>
+</div>
+</div>
+<div class="panel flex-fill" style="border-color:rgba(0,255,136,0.3)">
+<div class="panel-title">▌ Núcleo ARIA — Esfera 3D</div>
+<div class="panel-content orb-container">
+<canvas id="orbCanvas"></canvas>
+<div class="orb-state-label" id="orbLabel">READY</div>
+</div>
+</div>
+<div class="right-col">
+<div class="panel flex-fill">
+<div class="panel-title">▌ OCR Feed</div>
+<div class="panel-content">
+<input type="text" id="ocrSearch" placeholder="Search OCR..." style="width:100%;padding:4px 8px;background:rgba(15,23,42,0.6);border:1px solid rgba(0,217,255,0.2);border-radius:4px;color:#e2e8f0;font-size:10px;font-family:inherit;margin-bottom:4px;">
+<div class="ocr-feed" id="ocrFeed"></div>
+</div>
+</div>
+<div class="panel flex-fill">
+<div class="panel-title">▌ Audio Monitor</div>
+<div class="panel-content">
+<div class="audio-meter">
+<div class="equalizer" id="equalizer"></div>
+<div class="rms-meter"><div class="rms-fill" id="rmsFill" style="width:0%"></div></div>
+<div class="audio-info" id="audioInfo">Audio: detecting...</div>
+</div>
+</div>
+</div>
+<div class="panel flex-auto">
+<div class="panel-title">▌ System Metrics</div>
+<div class="panel-content">
+<div class="metrics-grid">
+<div class="metric-row"><span class="metric-label">CPU</span><span class="metric-value" id="cpuVal">--%</span><div class="metric-bar-bg"><div class="metric-bar-fill" id="cpuFill" style="width:0%"></div></div></div>
+<div class="metric-row"><span class="metric-label">RAM</span><span class="metric-value" id="ramVal">--%</span><div class="metric-bar-bg"><div class="metric-bar-fill" id="ramFill" style="width:0%"></div></div></div>
+<div class="metric-row"><span class="metric-label">GPU</span><span class="metric-value" id="gpuVal">--%</span><div class="metric-bar-bg"><div class="metric-bar-fill" id="gpuFill" style="width:0%"></div></div></div>
+<div class="metric-row"><span class="metric-label">NET</span><span class="metric-value" id="netVal">--%</span><div class="metric-bar-bg"><div class="metric-bar-fill" id="netFill" style="width:0%"></div></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-bar">
+<div class="panel flex-fill" style="padding:0;border:none;background:transparent;backdrop-filter:none;animation:none;">
+<div class="chat-input-area">
+<input class="chat-input" id="chatInput" placeholder="Habla con ARIA...">
+<button class="send-btn" id="sendBtn">ENVIAR</button>
+<button class="mic-btn" id="micBtn" title="Voice input">🎤</button>
+</div>
+</div>
+<div class="panel flex-auto" style="padding:6px 8px;">
+<div class="dimensions-bar">
+<span class="dim-pill d1">🔍 Discovery</span>
+<span class="dim-pill d2">✨ Creation</span>
+<span class="dim-pill d3">📦 Delivery</span>
+<span class="dim-pill d4">🛡️ Security</span>
+</div>
+</div>
+<div class="panel flex-auto" style="padding:6px 8px;">
+<div class="status-bar">
+<span class="status-pill" style="font-size:9px" id="moodIndicator">Mood: neutral</span>
+<span class="status-pill" style="font-size:9px" id="intentIndicator">Intent: general</span>
+<span class="status-pill" style="font-size:9px" id="contextIndicator">Ctx: idle</span>
+</div>
+</div>
+</div>
+<div id="suggestionsContainer" class="bottom-bar" style="padding-top:0;display:none;">
+<div class="panel flex-fill" style="padding:8px;">
+<div class="panel-title">▌ Suggestion Engine — 4D Dimensions</div>
+<div class="suggestion-grid" id="suggestionGrid"></div>
+</div>
+</div>
+    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="aria_core_extreme.js"></script>
+<script>
+// === GLITCH ENGINE ===
+let glitchTimer = 0;
+function triggerGlitch() {
+  document.body.style.filter = 'hue-rotate(90deg) saturate(2)';
+  const gs = document.createElement('style');
+  gs.textContent = '@keyframes g{0%{transform:translate(2px,-1px)}25%{transform:translate(-2px,1px)}50%{transform:translate(1px,2px)}75%{transform:translate(-1px,-2px)}100%{transform:translate(0)}}';
+  document.head.appendChild(gs);
+  document.querySelectorAll('h1,h2,h3,.logo-text,.panel-title').forEach(e => {
+    e.style.animation = 'g 0.15s 3';
+  });
+  setTimeout(() => { document.body.style.filter = 'none'; gs.remove(); }, 200);
+}
+setInterval(() => { if (Math.random() < 0.3) triggerGlitch(); }, 5000);
+
+// === CHROMATIC ABERRATION ===
+document.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 4;
+  const y = (e.clientY / window.innerHeight - 0.5) * 4;
+  document.body.style.textShadow = `${x}px 0 rgba(255,0,110,0.03), ${-x}px 0 rgba(0,217,255,0.03)`;
+});
+
+// === CODE RAIN ===
+const crCanvas = document.getElementById('codeRainCanvas');
+if (crCanvas) {
+  const crCtx = crCanvas.getContext('2d');
+  crCanvas.width = window.innerWidth;
+  crCanvas.height = window.innerHeight;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*(){}[]<>/';
+  const drops = [];
+  const fontSize = 14;
+  const columns = Math.floor(crCanvas.width / fontSize);
+  for (let i = 0; i < columns; i++) drops[i] = Math.random() * -100;
+  function drawCodeRain() {
+    crCtx.fillStyle = 'rgba(10,14,39,0.06)';
+    crCtx.fillRect(0, 0, crCanvas.width, crCanvas.height);
+    crCtx.fillStyle = 'rgba(0,255,136,0.4)';
+    crCtx.font = fontSize + 'px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      crCtx.fillText(char, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > crCanvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  setInterval(drawCodeRain, 60);
+  window.addEventListener('resize', () => { crCanvas.width = window.innerWidth; crCanvas.height = window.innerHeight; });
+}
+
+// === MOOD TRACKER ===
+function updateMoodTracker() {
+  const moods = ['focused','relaxed','creative','exploring','stressed','excited'];
+  const mood = moods[Math.floor(Math.random() * moods.length)];
+  const intensity = Math.floor(Math.random() * 60 + 20);
+  $('moodIndicator').textContent = 'Mood: ' + mood + ' (' + intensity + '%)';
+  $('moodIndicator').style.color = mood === 'stressed' ? '#ff006e' : mood === 'focused' ? '#00ff88' : '#00d9ff';
+}
+setInterval(updateMoodTracker, 6000);
+
+// === INTENT TRACKER ===
+function updateIntentTracker() {
+  const intents = ['storytelling','creation','research','design','communication','media','security','general'];
+  const intent = intents[Math.floor(Math.random() * intents.length)];
+  const conf = Math.floor(Math.random() * 40 + 40);
+  $('intentIndicator').textContent = 'Intent: ' + intent + ' (' + conf + '%)';
+}
+setInterval(updateIntentTracker, 5000);
+
+// === CONTEXT TRACKER ===
+function updateContextTracker() {
+  const contexts = ['coding in VS Code','viewing anime','researching web','listening to music','idle','email composition'];
+  const ctx = contexts[Math.floor(Math.random() * contexts.length)];
+  $('contextIndicator').textContent = 'Ctx: ' + ctx;
+}
+setInterval(updateContextTracker, 4500);
+
+// === SUGGESTION ENGINE REFRESH ===
+function refreshSuggestions() {
+  const grid = $('suggestionGrid');
+  if (!grid || grid.children.length === 0) return;
+  const cards = grid.querySelectorAll('.suggestion-card');
+  cards.forEach((card, i) => {
+    card.style.animation = 'bloomExpand 0.5s ease-out';
+    setTimeout(() => { card.style.animation = ''; }, 500);
+  });
+}
+setInterval(refreshSuggestions, 8000);
+
+// === NETWORK MONITOR ===
+function updateNetworkMonitor() {
+  const net = Math.floor(Math.random() * 80 + 5);
+  $('networkDot').className = 'status-dot ' + (net > 50 ? 'ok' : 'warn');
+}
+setInterval(updateNetworkMonitor, 3000);
+
+// === FPS COUNTER ACTUAL ===
+let fpsFrames = 0, fpsLast = performance.now();
+function updateFPSActual() {
+  fpsFrames++;
+  const now = performance.now();
+  if (now - fpsLast >= 1000) {
+    fpsCounter.textContent = fpsFrames + ' FPS';
+    fpsFrames = 0;
+    fpsLast = now;
+  }
+  requestAnimationFrame(updateFPSActual);
+}
+updateFPSActual();
+
+// === PARTICLE BURST ON CLICK ===
+document.addEventListener('click', (e) => {
+  if (e.target.closest('button') || e.target.closest('input')) return;
+  const burst = document.createElement('div');
+  burst.style.cssText = 'position:fixed;left:' + e.clientX + 'px;top:' + e.clientY + 'px;width:4px;height:4px;background:#00ff88;border-radius:50%;pointer-events:none;z-index:99999;animation:bloomExpand 0.6s ease-out forwards';
+  document.body.appendChild(burst);
+  setTimeout(() => burst.remove(), 600);
+  for (let i = 0; i < 6; i++) {
+    const p = document.createElement('div');
+    p.style.cssText = 'position:fixed;left:' + e.clientX + 'px;top:' + e.clientY + 'px;width:2px;height:2px;background:#' + ['00ff88','00d9ff','ff006e','ffd600'][i%4] + ';border-radius:50%;pointer-events:none;z-index:99999;animation:bloomExpand 0.4s ease-out forwards';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 400);
+  }
+});
+
+// === GLITCH TEXT ON TITLES ===
+setInterval(() => {
+  const titles = document.querySelectorAll('.logo-text');
+  titles.forEach(t => {
+    t.style.animation = 'glitch 0.2s 2';
+    setTimeout(() => { t.style.animation = 'glitch 3s infinite'; }, 400);
+  });
+}, 10000);
+
+// === PANEL BORDER CYCLE ===
+setInterval(() => {
+  document.querySelectorAll('.panel').forEach((p, i) => {
+    p.style.transition = 'border-color 0.5s';
+    const colors = ['rgba(0,255,136,0.15)','rgba(0,217,255,0.2)','rgba(255,0,110,0.15)','rgba(255,214,0,0.15)'];
+    p.style.borderColor = colors[i % 4];
+  });
+}, 6000);
+
+// === HOVER GLOW EFFECT ===
+document.querySelectorAll('.panel').forEach(panel => {
+  panel.addEventListener('mouseenter', () => {
+    panel.style.boxShadow = '0 0 30px rgba(0,255,136,0.1), 0 0 60px rgba(0,217,255,0.05)';
+  });
+  panel.addEventListener('mouseleave', () => {
+    panel.style.boxShadow = 'none';
+  });
+});
+
+// === OCR KEYWORD HIGHLIGHTER ===
+setInterval(() => {
+  const keywords = ['async','await','import','class','def','return','self','True','None'];
+  document.querySelectorAll('.ocr-text').forEach(el => {
+    let text = el.textContent;
+    keywords.forEach(kw => {
+      const regex = new RegExp('\\b' + kw + '\\b', 'g');
+      text = text.replace(regex, '<span class="ocr-keyword">' + kw + '</span>');
+    });
+    if (!el.innerHTML.includes('ocr-keyword')) el.innerHTML = text;
+  });
+}, 3000);
+
+// === ACTIVITY FLOW AUTO-SCROLL ===
+setInterval(() => {
+  const flow = $('activityFlow');
+  if (flow && flow.children.length > 0) {
+    flow.scrollTop = 0;
+  }
+}, 1000);
+
+// === EQUALIZER RMS UPDATE ===
+setInterval(() => {
+  const bars = document.querySelectorAll('.eq-bar');
+  bars.forEach(bar => {
+    bar.style.height = (Math.random() * 55 + 5) + 'px';
+  });
+  const rms = Math.random() * 60 + 10;
+  rmsFill.style.width = rms + '%';
+}, 200);
+
+// === CHAT SUGGESTION AUTOCOMPLETE ===
+const SUGGESTIONS = ['Genera una historia', 'Crea un personaje', 'Analiza mi actividad', '¿Qué estás haciendo?', 'Sugerencia creativa'];
+chatInput.addEventListener('input', (e) => {
+  if (e.target.value.length > 2) {
+    // Show suggestion tooltip (visual only)
+    chatInput.style.borderColor = '#00d9ff';
+  } else {
+    chatInput.style.borderColor = 'rgba(0,255,136,0.2)';
+  }
+});
+
+// === INIT ALL ===
+updateMoodTracker();
+updateIntentTracker();
+updateContextTracker();
+updateNetworkMonitor();
+</script>
+</body>
+</html>

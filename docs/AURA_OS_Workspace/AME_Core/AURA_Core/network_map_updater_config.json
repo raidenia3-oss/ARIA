@@ -1,0 +1,137 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el actualizador del Network Map AURA",
+    "node_id": "server_node_001",
+    "interface": "eth0",
+    "network_prefix": "192.168.1.",
+    "db_path": "/data/data/com.termux/files/home/aura_intel.db",
+    "known_devices_file": "/data/data/com.termux/files/home/known_devices.json",
+    "network_map_file": "/data/data/com.termux/files/home/network_map.json",
+    "alert_threshold": "high",
+    "alert_destination": "dashboard",
+    "device_whitelist": [
+        "00:11:22:33:44:55",
+        "AA:BB:CC:DD:EE:FF",
+        "00:22:33:44:55:66",
+        "11:22:33:44:55:66"
+    ],
+    "device_blacklist": [
+        "FF:FF:FF:FF:FF:FF",
+        "00:00:00:00:00:00",
+        "00:00:00:00:00:01",
+        "00:00:00:00:00:02"
+    ],
+    "alert_severity_mapping": {
+        "unknown_device": "high",
+        "new_device": "medium",
+        "disappeared_device": "low",
+        "changed_device": "medium",
+        "blacklisted_device": "high",
+        "suspicious_activity": "high",
+        "network_change": "medium"
+    },
+    "mobile_db_config": {
+        "version": "1.0.0",
+        "db_path": "/data/data/com.termux/files/home/aura_intel.db",
+        "ssh_host": "localhost",
+        "ssh_port": 8022,
+        "ssh_user": "user",
+        "ssh_timeout": 30,
+        "log_file": "/data/data/com.termux/files/home/mobile_database_manager.log"
+    },
+    "log_file": "/data/data/com.termux/files/home/network_map_updater.log",
+    "enable_alerts": true,
+    "enable_network_map": true,
+    "enable_mobile_db_sync": true,
+    "last_updated": "2026-06-02T00:00:00Z",
+    "device_change_threshold": 0.1,
+    "max_unknown_devices": 5,
+    "alert_notification_endpoints": [
+        {
+            "type": "dashboard",
+            "url": "http://localhost:3000/api/alerts",
+            "auth_token": "aura_dashboard_token_123"
+        },
+        {
+            "type": "email",
+            "email": "security@aura-system.com",
+            "subject_prefix": "[AURA] Alert: "
+        },
+        {
+            "type": "slack",
+            "webhook_url": "https://hooks.slack.com/services/XXX/YYY/ZZZ",
+            "channel": "#security-alerts"
+        }
+    ],
+    "device_status_mapping": {
+        "active": "Dispositivo activo en la red",
+        "disappeared": "Dispositivo no detectado en la red",
+        "unknown": "Dispositivo con fabricante desconocido",
+        "blacklisted": "Dispositivo bloqueado por el sistema",
+        "whitelisted": "Dispositivo permitido en la red",
+        "suspicious": "Dispositivo con actividad sospechosa"
+    },
+    "network_change_types": [
+        "new_device",
+        "disappeared_device",
+        "changed_device",
+        "status_change",
+        "vendor_change",
+        "ip_change"
+    ],
+    "device_ttl": 86400,
+    "unknown_device_ttl": 3600,
+    "alert_resolution_timeout": 86400,
+    "max_concurrent_updates": 5,
+    "update_interval": 60,
+    "enable_device_tracking": true,
+    "enable_change_detection": true,
+    "enable_alert_escalation": true,
+    "alert_escalation_threshold": 3,
+    "device_geolocation_enabled": false,
+    "device_vendor_database": "/data/data/com.termux/files/home/vendor_mac.db",
+    "enable_automatic_whitelisting": false,
+    "whitelist_expiration_days": 30,
+    "enable_automatic_blacklisting": true,
+    "blacklist_reason": "Dispositivo desconocido detectado en la red",
+    "enable_network_visualization": true,
+    "visualization_update_interval": 300,
+    "enable_api_access": true,
+    "api_endpoints": [
+        {
+            "path": "/api/network/devices",
+            "method": "GET",
+            "description": "Obtener lista de dispositivos en la red"
+        },
+        {
+            "path": "/api/network/alerts",
+            "method": "GET",
+            "description": "Obtener lista de alertas de red"
+        },
+        {
+            "path": "/api/network/changes",
+            "method": "GET",
+            "description": "Obtener cambios recientes en la red"
+        }
+    ],
+    "data_retention_policy": {
+        "devices": 90,
+        "alerts": 30,
+        "network_changes": 180
+    },
+    "security_settings": {
+        "enable_device_authentication": true,
+        "require_ssl": true,
+        "api_rate_limit": 100,
+        "rate_limit_window": 60,
+        "enable_audit_logging": true,
+        "audit_log_retention": 30
+    },
+    "performance_settings": {
+        "query_timeout": 10,
+        "transaction_timeout": 30,
+        "max_result_size": 1000,
+        "cache_enabled": true,
+        "cache_expiration": 300
+    }
+}

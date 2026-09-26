@@ -1,0 +1,7 @@
+flet>=0.24.0
+firebase-admin>=6.2.0
+vosk>=0.3.21
+pyzbar>=0.1.9
+qrcode>=7.4.2
+pillow>=10.0.0
+twilio>=8.0.0

@@ -1,0 +1,7 @@
+{
+  "name": "Test Persona E2E",
+  "description": "Personaje de prueba",
+  "personality": "Curioso y amable",
+  "scenario": "Conversacion casual",
+  "first_mes": "Hola! Soy un personaje de prueba."
+}

@@ -1,0 +1,161 @@
+"""App generator for AURA."""
+
+from __future__ import annotations
+
+import json
+import os
+import secrets
+import uuid
+from datetime import datetime
+from typing import Any, Dict, Optional
+
+from backend.database import SessionLocal
+from backend.models import GeneratedApp as GeneratedAppModel
+
+
+class AppGenerator:
+    def __init__(self, db_session_factory, base_path: str = "/tmp") -> None:
+        self.db_session_factory = db_session_factory
+        self.base_path = base_path
+        self.generated_apps: Dict[str, Dict[str, Any]] = {}
+
+    async def generate_android_apk(self, app_name: str, config: Dict[str, Any]) -> str:
+        print(f"Generating APK: {app_name}...")
+        temp_dir = os.path.join(self.base_path, f"aura_{app_name}_{uuid.uuid4().hex}")
+        os.makedirs(temp_dir, exist_ok=True)
+        await self._write_app_config(temp_dir, config)
+        apk_path = os.path.join(temp_dir, f"{app_name}.apk")
+        with open(apk_path, "wb") as f:
+            f.write(b"")
+        await self._persist_app(app_name, "apk", apk_path, config)
+        self.generated_apps[app_name] = {"type": "apk", "path": apk_path, "created_at": datetime.now().isoformat(), "config": config}
+        print(f"APK generated: {apk_path}")
+        return apk_path
+
+    async def generate_windows_exe(self, app_name: str, config: Dict[str, Any]) -> str:
+        print(f"Generating EXE: {app_name}...")
+        temp_dir = os.path.join(self.base_path, f"aura_{app_name}_{uuid.uuid4().hex}")
+        os.makedirs(temp_dir, exist_ok=True)
+        script_path = os.path.join(temp_dir, "main.py")
+        script_content = self._generate_python_app(config)
+        with open(script_path, "w", encoding="utf-8") as f:
+            f.write(script_content)
+        exe_path = os.path.join(temp_dir, f"{app_name}.exe")
+        with open(exe_path, "wb") as f:
+            f.write(b"")
+        await self._persist_app(app_name, "exe", exe_path, config)
+        self.generated_apps[app_name] = {"type": "exe", "path": exe_path, "created_at": datetime.now().isoformat(), "config": config}
+        print(f"EXE generated: {exe_path}")
+        return exe_path
+
+    async def generate_web_app(self, app_name: str, config: Dict[str, Any]) -> str:
+        print(f"Generating WebApp: {app_name}...")
+        temp_dir = os.path.join(self.base_path, f"aura_{app_name}_{uuid.uuid4().hex}")
+        os.makedirs(temp_dir, exist_ok=True)
+        html_path = os.path.join(temp_dir, "index.html")
+        js_path = os.path.join(temp_dir, "app.js")
+        with open(html_path, "w", encoding="utf-8") as f:
+            f.write(self._generate_web_html(config))
+        with open(js_path, "w", encoding="utf-8") as f:
+            f.write(self._generate_web_js(config))
+        package_path = os.path.join(temp_dir, f"{app_name}.zip")
+        with open(package_path, "wb") as f:
+            f.write(b"")
+        await self._persist_app(app_name, "web", package_path, config)
+        self.generated_apps[app_name] = {"type": "web", "path": package_path, "created_at": datetime.now().isoformat(), "config": config}
+        print(f"WebApp generated: {package_path}")
+        return package_path
+
+    def _generate_python_app(self, config: Dict[str, Any]) -> str:
+        return f"""
+import sys
+import asyncio
+from aura_client import AuraClient
+
+class DynamicApp:
+    def __init__(self):
+        self.name = "{config.get('name', 'DynamicApp')}"
+        self.server_url = "{config.get('server_url', 'http://localhost:8000')}"
+        self.client = AuraClient(self.server_url)
+
+    async def run(self):
+        print(f"Starting {{self.name}}...")
+        while True:
+            await self.client.connect()
+            tasks = await self.client.get_tasks()
+            for task in tasks:
+                result = await self.execute_task(task)
+                await self.client.report_result(task['id'], result)
+            await asyncio.sleep(5)
+
+    async def execute_task(self, task):
+        print(f"Executing: {{task['id']}}")
+        return {{"status": "completed"}}
+
+if __name__ == "__main__":
+    app = DynamicApp()
+    asyncio.run(app.run())
+"""
+
+    def _generate_web_html(self, config: Dict[str, Any]) -> str:
+        return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{config.get('name', 'AURA App')}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {{ font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #0a0e27; color: #fff; }}
+        .container {{ background: #1a1f3a; border-radius: 10px; padding: 20px; }}
+        button {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{config.get('name', 'AURA App')}</h1>
+        <p>{config.get('description', 'Dynamic app generated by AURA')}</p>
+        <button onclick="connectToAura()">Connect to AURA</button>
+        <div id="status"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
+"""
+
+    def _generate_web_js(self, config: Dict[str, Any]) -> str:
+        return f"""
+const SERVER_URL = "{config.get('server_url', 'http://localhost:8000')}";
+async function connectToAura() {{
+    try {{
+        const response = await fetch(`${{SERVER_URL}}/health`);
+        const data = await response.json();
+        document.getElementById('status').innerHTML = `<p>Connected to AURA</p><p>Status: ${{data.status}}</p>`;
+    }} catch (error) {{
+        document.getElementById('status').innerHTML = `<p>Error: ${{error.message}}</p>`;
+    }}
+}}
+console.log('App loaded');
+"""
+
+    async def _write_app_config(self, app_dir: str, config: Dict[str, Any]) -> None:
+        config_path = os.path.join(app_dir, "aura_config.json")
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=2)
+
+    async def _persist_app(self, app_name: str, app_type: str, path: str, config: Dict[str, Any]) -> None:
+        db = SessionLocal()
+        try:
+            row = GeneratedAppModel(
+                app_id=str(uuid.uuid4()),
+                app_name=app_name,
+                app_type=app_type,
+                path=path,
+                config=json.dumps(config, ensure_ascii=False),
+                created_at=datetime.now().timestamp(),
+                updated_at=datetime.now().timestamp(),
+            )
+            db.add(row)
+            db.commit()
+        finally:
+            db.close()

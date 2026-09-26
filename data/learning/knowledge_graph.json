@@ -1,0 +1,13 @@
+{
+  "nodes": [
+    {
+      "node_id": "integration_test",
+      "label": "integration_test",
+      "type": "topic",
+      "properties": {},
+      "created_at": 1789675117.7434304,
+      "access_count": 0
+    }
+  ],
+  "edges": []
+}

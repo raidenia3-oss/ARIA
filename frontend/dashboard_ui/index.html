@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>AURA Dashboard</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+                    sans-serif;
+                background: #0f172a;
+                color: #e2e8f0;
+                min-height: 100vh;
+                padding: 16px;
+            }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 16px;
+            }
+            .card {
+                background: #1e293b;
+                border-radius: 12px;
+                padding: 16px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                border: 1px solid #334155;
+            }
+            .card h3 {
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: #94a3b8;
+                margin-bottom: 8px;
+            }
+            .card .value {
+                font-size: 28px;
+                font-weight: 700;
+            }
+            .success {
+                color: #22c55e;
+            }
+            .warn {
+                color: #eab308;
+            }
+            .danger {
+                color: #ef4444;
+            }
+            .btn {
+                width: 100%;
+                margin-top: 12px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                background: #ef4444;
+                color: white;
+            }
+            .btn:active {
+                opacity: 0.9;
+            }
+            .logs {
+                margin-top: 16px;
+            }
+            .logs .item {
+                padding: 8px 0;
+                border-bottom: 1px solid #334155;
+                font-size: 13px;
+            }
+            .logs .item:last-child {
+                border-bottom: none;
+            }
+            .logs .meta {
+                display: flex;
+                justify-content: space-between;
+                color: #94a3b8;
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="grid">
+            <div class="card">
+                <h3>Saldo Total</h3>
+                <div class="value" id="balance">--</div>
+            </div>
+            <div class="card">
+                <h3>Tasa de éxito</h3>
+                <div class="value success" id="success-rate">--</div>
+            </div>
+            <div class="card">
+                <h3>Bot Status</h3>
+                <div id="status"></div>
+            </div>
+        </div>
+
+        <div class="card logs">
+            <h3>Últimos logs</h3>
+            <div id="activity"></div>
+        </div>
+
+        <button class="btn" onclick="emergency()">🛑 Emergencia / Apagado seguro</button>
+
+        <script>
+            const BASE = window.location.origin + '/api';
+            async function load() {
+                const bal = await fetch(BASE + "/balance").then((r) => r.json());
+                document.getElementById("balance").textContent = "$" + bal.total_balance.toFixed(2);
+
+                const status = await fetch(BASE + "/status").then((r) => r.json());
+                const statusEl = document.getElementById("status");
+                statusEl.innerHTML = status
+                    .map(
+                        (s) =>
+                            `<div>${s.name}: <span class="${s.status === "Running" ? "success" : s.status === "Blocked" ? "danger" : "warn"}">${s.status}</span></div>`,
+                    )
+                    .join("");
+
+                const activity = await fetch(BASE + "/activity?limit=5").then((r) => r.json());
+                document.getElementById("activity").innerHTML = activity
+                    .map(
+                        (a) => `
+    <div class="item">
+      <div class="meta"><span>${a.level}</span><span>${a.ts}</span></div>
+      <div>${a.message}</div>
+    </div>
+  `,
+                    )
+                    .join("");
+            }
+            async function emergency() {
+                if (!confirm("¿Detener todos los bots de forma segura?")) return;
+                await fetch(window.location.origin + "/emergency", { method: "POST" });
+                alert("Secuencia de apagado iniciada");
+            }
+            load();
+            setInterval(load, 5000);
+        </script>
+    </body>
+</html>

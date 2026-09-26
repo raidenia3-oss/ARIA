@@ -74,7 +74,7 @@ class ARIASelfImprovement:
             logger.error(f"[ERROR] Self-improvement init failed: {e}")
             return False
 
-    def run_improvement_cycle(self) -> Dict[str, Any]:
+    def run_improvement_cycle(self, params: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Run a full self-improvement cycle
 
@@ -84,31 +84,60 @@ class ARIASelfImprovement:
         if not self._initialized and not self.initialize():
             return {"error": "Not initialized"}
 
+        p = params or {}
+        auto_commit = p.get("auto_commit", True)
+        analyze_prs = p.get("analyze_prs", True)
+        triage_issues = p.get("triage_issues", True)
+        auto_release = p.get("auto_release", False)
+        gen_docs = p.get("gen_docs", False)
+
         results = {
             "timestamp": datetime.now().isoformat(),
             "repo": self.repo_name,
-            "actions": []
+            "actions": [],
+            "auto_commit": auto_commit,
+            "analyze_prs": analyze_prs,
+            "triage_issues": triage_issues,
+            "auto_release": auto_release,
+            "gen_docs": gen_docs,
         }
 
         # 1. Auto-commit any pending changes
-        commit_result = self._auto_commit_changes()
-        results["actions"].append({"action": "auto_commit", **commit_result})
+        if auto_commit:
+            commit_result = self._auto_commit_changes()
+            results["actions"].append({"action": "auto_commit", **commit_result})
 
         # 2. Analyze open PRs
-        pr_results = self._analyze_open_prs()
-        results["actions"].append({"action": "analyze_prs", **pr_results})
+        if analyze_prs:
+            pr_results = self._analyze_open_prs()
+            results["actions"].append({"action": "analyze_prs", **pr_results})
+        else:
+            pr_results = {"status": "skipped"}
+            results["actions"].append({"action": "analyze_prs", "status": "skipped"})
 
         # 3. Triaging open issues
-        issue_results = self._triaging_issues()
-        results["actions"].append({"action": "triaging_issues", **issue_results})
+        if triage_issues:
+            issue_results = self._triaging_issues()
+            results["actions"].append({"action": "triaging_issues", **issue_results})
+        else:
+            issue_results = {"status": "skipped"}
+            results["actions"].append({"action": "triaging_issues", "status": "skipped"})
 
         # 4. Check for auto-release opportunity
-        release_result = self._check_auto_release()
-        results["actions"].append({"action": "auto_release", **release_result})
+        if auto_release:
+            release_result = self._check_auto_release()
+            results["actions"].append({"action": "auto_release", **release_result})
+        else:
+            release_result = {"status": "skipped"}
+            results["actions"].append({"action": "auto_release", "status": "skipped"})
 
         # 5. Generate/update documentation
-        docs_result = self._generate_docs()
-        results["actions"].append({"action": "generate_docs", **docs_result})
+        if gen_docs:
+            docs_result = self._generate_docs()
+            results["actions"].append({"action": "generate_docs", **docs_result})
+        else:
+            docs_result = {"status": "skipped"}
+            results["actions"].append({"action": "generate_docs", "status": "skipped"})
 
         # 6. Create improvement proposals
         proposals = self._create_improvement_proposals()
@@ -123,11 +152,13 @@ class ARIASelfImprovement:
             if not os.path.exists(os.path.join(self.repo_path, ".git")):
                 return {"status": "skipped", "reason": "Not a git repo"}
 
-            config = {
-                "repo_path": self.repo_path,
-                "branch": "main",
-                "push_after_commit": True
-            }
+            from github_admin.auto_commit import CommitConfig
+
+            config = CommitConfig(
+                repo_path=self.repo_path,
+                branch="main",
+                push_after_commit=True
+            )
             committed = self.auto_commit.auto_commit(
                 self.repo_path,
                 "[ARIA] self-improvement: auto-commit pending changes",
@@ -335,7 +366,7 @@ def trigger_self_improvement(params: Dict[str, Any]) -> Dict[str, Any]:
     elif action == "proposals":
         return {"proposals": engine._create_improvement_proposals()}
     else:
-        return engine.run_improvement_cycle()
+        return engine.run_improvement_cycle(params)
 
 
 # Module entry point for skill registry
@@ -348,7 +379,7 @@ def run(params: Dict[str, Any] = None) -> Dict[str, Any]:
         return {"error": "Not initialized", "github_configured": bool(engine.github_token)}
 
     if action == "cycle":
-        return engine.run_improvement_cycle()
+        return engine.run_improvement_cycle(params)
     elif action == "status":
         return {
             "initialized": engine._initialized,

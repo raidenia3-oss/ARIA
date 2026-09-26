@@ -1,0 +1,679 @@
+"""PARTE 7: ENHANCED DASHBOARD (400 lines) — UI v4 cyberpunk.
+
+Redesign completo:
+- Tema cyberpunk oscuro extremo
+- Neón colors
+- Glitch effects
+- Animated background
+- Glassmorphism panels
+- Live Screen Capture
+- OCR text feed
+- Audio activity meter
+- Contextual understanding
+- Prediction widget
+- Pattern display
+- Privacy indicator
+"""
+
+HTML = r'''<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARIA OS v3.2 — Dashboard Cyberpunk</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #0a0a1a;
+  color: #e2e8f0;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(0,255,255,0.3) 50%, transparent 50%),
+    radial-gradient(2px 2px at 40% 70%, rgba(255,0,255,0.3) 50%, transparent 50%),
+    radial-gradient(2px 2px at 60% 20%, rgba(168,255,0,0.2) 50%, transparent 50%),
+    radial-gradient(2px 2px at 80% 80%, rgba(0,255,255,0.2) 50%, transparent 50%),
+    radial-gradient(1px 1px at 10% 90%, rgba(255,0,255,0.3) 50%, transparent 50%);
+  background-size: 200px 200px;
+  animation: stars 60s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes stars {
+  from { transform: translateY(0); }
+  to { transform: translateY(-200px); }
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes glitch {
+  0%, 100% { text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff; }
+  25% { text-shadow: -2px -1px #00ffff, 2px 1px #ff00ff; }
+  50% { text-shadow: 1px 2px #00ffff, -1px -2px #ff00ff; }
+  75% { text-shadow: -1px 1px #00ffff, 1px -1px #ff00ff; }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes neon-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(0,255,255,0.5), 0 0 10px rgba(0,255,255,0.3); }
+  50% { box-shadow: 0 0 15px rgba(0,255,255,0.8), 0 0 30px rgba(0,255,255,0.4); }
+}
+
+.dashboard {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto auto 1fr;
+  gap: 8px;
+  padding: 8px;
+  height: 100vh;
+  min-height: 700px;
+}
+
+.header {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(10,10,26,0.9);
+  border: 1px solid rgba(0,255,255,0.3);
+  border-radius: 8px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 15px rgba(0,255,255,0.2);
+}
+
+.header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0,255,255,0.8), 0 0 20px rgba(0,255,255,0.4);
+  animation: glitch 3s infinite;
+}
+
+.header .status {
+  font-size: 11px;
+  color: #00ff00;
+  padding: 4px 10px;
+  border: 1px solid rgba(0,255,0,0.3);
+  border-radius: 4px;
+  background: rgba(0,255,0,0.05);
+  animation: pulse 2s infinite;
+}
+
+.panel {
+  background: rgba(10,10,26,0.85);
+  border: 1px solid rgba(0,255,255,0.15);
+  border-radius: 8px;
+  padding: 12px;
+  overflow-y: auto;
+  backdrop-filter: blur(15px);
+  position: relative;
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,255,255,0.5), transparent);
+}
+
+.panel h2, .panel h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0,255,255,0.2);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.panel h2 { font-size: 12px; }
+
+.discovery h2 { color: #00ffff; }
+.creation h2 { color: #a8ff00; }
+.delivery h2 { color: #ff00ff; }
+.cyber h2 { color: #ff4444; }
+
+.monitor {
+  background: rgba(10,10,26,0.9);
+  border: 1px solid rgba(0,255,255,0.3);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.monitor h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  color: #00ffff;
+  margin-bottom: 4px;
+  text-shadow: 0 0 5px rgba(0,255,255,0.5);
+}
+
+.screen-preview {
+  background: #000;
+  border: 1px solid rgba(0,255,255,0.3);
+  border-radius: 4px;
+  padding: 4px;
+  height: 120px;
+  overflow: hidden;
+  position: relative;
+}
+
+.screen-preview::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 3px);
+  pointer-events: none;
+}
+
+.ocr-feed {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(0,255,255,0.2);
+  border-radius: 4px;
+  padding: 8px;
+  height: 120px;
+  overflow-y: auto;
+  font-size: 10px;
+  color: #00ffff;
+}
+
+.ocr-line {
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(0,255,255,0.05);
+}
+
+.meter {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.meter-fill.cyan { background: linear-gradient(90deg, #00ffff, #38bdf8); box-shadow: 0 0 8px rgba(0,255,255,0.5); }
+.meter-fill.magenta { background: linear-gradient(90deg, #ff00ff, #a855f7); box-shadow: 0 0 8px rgba(255,0,255,0.5); }
+.meter-fill.lime { background: linear-gradient(90deg, #a8ff00, #10b981); box-shadow: 0 0 8px rgba(168,255,0,0.5); }
+.meter-fill.red { background: linear-gradient(90deg, #ef4444, #ff6b35); box-shadow: 0 0 8px rgba(239,68,68,0.5); }
+
+.context-box {
+  background: rgba(0,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.2);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+
+.context-box .highlight {
+  color: #00ffff;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(0,255,255,0.5);
+}
+
+.prediction {
+  background: linear-gradient(135deg, rgba(168,255,0,0.1), rgba(0,255,255,0.05));
+  border: 1px solid rgba(168,255,0,0.3);
+  border-radius: 6px;
+  padding: 10px;
+  text-align: center;
+}
+
+.prediction .label {
+  font-size: 10px;
+  color: #a8ff00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.prediction .value {
+  font-size: 13px;
+  color: #e2e8f0;
+  margin: 4px 0;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.prediction .confidence {
+  font-size: 10px;
+  color: #00ff00;
+}
+
+.pattern-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 4px;
+  margin-bottom: 4px;
+  font-size: 10px;
+  border-left: 2px solid #00ffff;
+}
+
+.pattern-item .freq { color: #a8ff00; font-weight: bold; }
+
+.privacy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(0,255,0,0.05);
+  border: 1px solid rgba(0,255,0,0.2);
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.privacy-icon { font-size: 16px; }
+.privacy-score { color: #00ff00; font-weight: bold; font-family: 'Orbitron', sans-serif; }
+
+.audio-meter-section {
+  grid-column: 1/-1;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(10,10,26,0.85);
+  border: 1px solid rgba(255,0,255,0.2);
+  border-radius: 8px;
+}
+
+.audio-meter-section h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  color: #ff00ff;
+  margin-right: 12px;
+  text-shadow: 0 0 5px rgba(255,0,255,0.5);
+}
+
+.chat-panel {
+  background: rgba(10,10,26,0.9);
+  border: 1px solid rgba(0,255,255,0.2);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chat-msg {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  max-width: 85%;
+}
+.chat-msg.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+}
+.chat-msg.aria {
+  align-self: flex-start;
+  background: rgba(0,255,255,0.1);
+  border: 1px solid rgba(0,255,255,0.2);
+  color: #e2e8f0;
+}
+
+.chat-input {
+  display: flex;
+  padding: 6px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  gap: 6px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 6px;
+  background: rgba(10,10,26,0.7);
+  border: 1px solid rgba(0,255,255,0.2);
+  border-radius: 4px;
+  color: #e2e8f0;
+  font-family: inherit;
+  font-size: 11px;
+  outline: none;
+}
+.chat-input input:focus { border-color: #00ffff; box-shadow: 0 0 8px rgba(0,255,255,0.3); }
+.chat-input button {
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #00ffff, #a855f7);
+  border: none;
+  border-radius: 4px;
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 11px;
+  font-family: inherit;
+}
+
+.ws-status {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.ws-connected { background: rgba(0,255,0,0.15); color: #00ff00; }
+.ws-disconnected { background: rgba(255,68,68,0.15); color: #ff4444; }
+
+.suggestion-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.suggestion-card:hover {
+  border-color: rgba(0,255,255,0.4);
+  background: rgba(0,255,255,0.06);
+  transform: translateX(2px);
+}
+.suggestion-card .sc-title { font-size: 11px; font-weight: bold; margin-bottom: 3px; }
+.suggestion-card .sc-preview { font-size: 10px; color: #94a3b8; line-height: 1.3; }
+.suggestion-card .sc-meta { font-size: 9px; color: #64748b; margin-top: 4px; }
+
+@media (max-width: 1024px) {
+  .dashboard { grid-template-columns: 1fr 1fr; }
+  .header { grid-column: 1/-1; }
+  .audio-meter-section { grid-column: 1/-1; }
+}
+@media (max-width: 768px) {
+  .dashboard { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <div class="header">
+    <h1>&#9830; ARIA OS v3.2</h1>
+    <span class="ws-status ws-connected" id="ws-status">&#9679; Conectado</span>
+    <span class="status">&#9889; Sistema Activo</span>
+  </div>
+
+  <div class="audio-meter-section">
+    <h3>&#9836; AUDIO</h3>
+    <div style="flex:1">
+      <div class="meter"><div class="meter-fill magenta" id="audio-meter" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:#64748b;">
+        <span id="audio-status">Monitoreando...</span>
+        <span id="audio-volume">Vol: 0%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel discovery">
+    <h2>&#9672; Discovery</h2>
+    <div id="discovery-suggestions"></div>
+  </div>
+
+  <div class="panel creation">
+    <h2>&#9672; Creation</h2>
+    <div id="creation-suggestions"></div>
+  </div>
+
+  <div class="panel delivery">
+    <h2>&#9672; Delivery</h2>
+    <div id="delivery-suggestions"></div>
+  </div>
+
+  <div class="monitor" style="grid-column:1;">
+    <h3>&#128269; Activity Monitor</h3>
+    <div class="screen-preview" id="screen-preview">
+      <div style="color:#00ffff;font-size:10px;padding:4px;">Cargando captura...</div>
+    </div>
+    <div style="margin-top:4px;">
+      <div style="font-size:9px;color:#64748b;margin-bottom:2px;">OCR:</div>
+      <div class="ocr-feed" id="ocr-feed">
+        <div class="ocr-line">Esperando texto...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-panel" style="grid-column:2; grid-row: 3/5;">
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-msg aria">ARIA v3.2 activa. Observando, escuchando y aprendiendo...</div>
+    </div>
+    <div class="chat-input">
+      <input id="chat-input-field" type="text" placeholder="Pregunta a ARIA...">
+      <button onclick="sendChat()">Enviar</button>
+    </div>
+  </div>
+
+  <div style="grid-column:3; grid-row: 3; display:flex; flex-direction:column; gap:8px;">
+    <div class="context-box" id="context-box">
+      <span class="highlight">&#9432; Contexto:</span><br>
+      <span id="context-text">Iniciando an&#225;lisis...</span>
+    </div>
+    <div class="prediction" id="prediction">
+      <div class="label">&#9889; Pr&#243;xima acci&#243;n</div>
+      <div class="value" id="prediction-value">Analizando...</div>
+      <div class="confidence" id="prediction-confidence">Confianza: --</div>
+    </div>
+  </div>
+
+  <div style="grid-column:3; grid-row: 4; display:flex; flex-direction:column; gap:6px;">
+    <div class="panel" style="padding:8px; flex:1;">
+      <h3 style="font-size:10px;color:#a8ff00;">&#9881; Patrones</h3>
+      <div id="patterns-list">
+        <div style="font-size:10px;color:#64748b;">Analizando patrones...</div>
+      </div>
+    </div>
+    <div class="privacy" id="privacy-indicator">
+      <span class="privacy-icon">&#128274;</span>
+      <span>Privacidad:</span>
+      <span class="privacy-score" id="privacy-score">100%</span>
+      <span style="font-size:9px;color:#64748b;">Datos filtrados</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const DIM_MAP = { discovery:'discovery', creation:'creation', delivery:'delivery', cyber:'cyber' };
+let suggestions = [];
+let ws = null;
+let audioLevel = 0;
+let lastContextUpdate = 0;
+let lastPrediction = 0;
+let lastPatterns = 0;
+
+function addSuggestionCard(s) {
+  const panelId = s.suggestion_type + '-suggestions';
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const card = document.createElement('div');
+  card.className = 'suggestion-card';
+  card.dataset.id = s.suggestion_id;
+  card.innerHTML = `
+    <div class="sc-title">${s.title || s.suggestion_type}</div>
+    <div class="sc-preview">${s.preview || ''}</div>
+    <div class="sc-meta"><span>${s.suggestion_type}</span><span>conf: ${(s.confidence||0.5).toFixed(0)}%</span></div>
+  `;
+  panel.insertBefore(card, panel.firstChild);
+}
+
+function updateContext(text) {
+  const el = document.getElementById('context-text');
+  if (el) el.textContent = text;
+}
+
+function updatePrediction(prediction, confidence) {
+  const val = document.getElementById('prediction-value');
+  const conf = document.getElementById('prediction-confidence');
+  if (val) val.textContent = prediction;
+  if (conf) conf.textContent = `Confianza: ${Math.round(confidence*100)}%`;
+}
+
+function updateAudioMeter(volume) {
+  const meter = document.getElementById('audio-meter');
+  const status = document.getElementById('audio-status');
+  const vol = document.getElementById('audio-volume');
+  if (meter) {
+    meter.style.width = Math.min(volume, 100) + '%';
+    if (volume > 50) meter.className = 'meter-fill red';
+    else if (volume > 20) meter.className = 'meter-fill magenta';
+    else meter.className = 'meter-fill cyan';
+  }
+  if (vol) vol.textContent = `Vol: ${Math.round(volume)}%`;
+  if (status) status.textContent = volume > 20 ? 'Audio detectado' : 'Silencio';
+}
+
+function addPattern(description, frequency) {
+  const list = document.getElementById('patterns-list');
+  if (!list) return;
+  const item = document.createElement('div');
+  item.className = 'pattern-item';
+  item.innerHTML = `<span>${description}</span><span class="freq">${frequency}x</span>`;
+  list.insertBefore(item, list.firstChild);
+}
+
+function connectWS() {
+  ws = new WebSocket('ws://localhost:8000/api/aria/g7/stream');
+  ws.onopen = () => {
+    const el = document.getElementById('ws-status');
+    if (el) { el.className = 'ws-status ws-connected'; el.textContent = '&#9679; Conectado'; }
+  };
+  ws.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    if (data.type === 'suggestion') addSuggestionCard(data.suggestion);
+    if (data.type === 'mood') {
+      const icon = {'exploring':'&#128270;','creating':'&#128994;','relaxed':'&#128526;','idle':'&#128302;'}[data.mood] || '&#128302;';
+      const moodEl = document.querySelector('.mood-indicator span:first-child');
+      if (moodEl) moodEl.innerHTML = icon;
+    }
+  };
+  ws.onclose = () => {
+    const el = document.getElementById('ws-status');
+    if (el) { el.className = 'ws-status ws-disconnected'; el.textContent = 'Reconectando...'; }
+    setTimeout(connectWS, 3000);
+  };
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input-field');
+  if (!input) return;
+  const msg = input.value.trim();
+  if (!msg) return;
+  const messages = document.getElementById('chat-messages');
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg user';
+  userDiv.textContent = msg;
+  messages.appendChild(userDiv);
+  input.value = '';
+  try {
+    const res = await fetch('http://localhost:8000/api/aria/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:msg}),
+    });
+    const data = await res.json();
+    const ariaDiv = document.createElement('div');
+    ariaDiv.className = 'chat-msg aria';
+    ariaDiv.textContent = data.response || '...';
+    messages.appendChild(ariaDiv);
+  } catch(e) {
+    const errDiv = document.createElement('div');
+    errDiv.className = 'chat-msg aria';
+    errDiv.textContent = 'Error de conexi&#243;n';
+    messages.appendChild(errDiv);
+  }
+  messages.scrollTop = messages.scrollHeight;
+}
+
+setInterval(async () => {
+  try {
+    const resp = await fetch('http://localhost:8000/api/aria/context/understand');
+    const data = await resp.json();
+    if (data.state) updateContext(data.state);
+    if (data.confidence) {
+      const confEl = document.getElementById('context-text');
+      if (confEl) confEl.textContent += ` [${Math.round(data.confidence*100)}%]`
+    }
+  } catch(e) {}
+
+  try {
+    const pred = await fetch('http://localhost:8000/api/aria/predict');
+    if (pred.ok) {
+      const data = await pred.json();
+      updatePrediction(data.prediction || 'Analizando...', data.confidence || 0);
+    }
+  } catch(e) {}
+}, 5000);
+
+setInterval(async () => {
+  try {
+    const resp = await fetch('http://localhost:8000/api/aria/audio/analyze');
+    if (resp.ok) {
+      const data = await resp.json();
+      updateAudioMeter(data.volume || 0);
+      if (data.music_playing) {
+        const status = document.getElementById('audio-status');
+        if (status) status.textContent = '&#9836; M&#250;sica';
+      }
+    }
+  } catch(e) {}
+
+  try {
+    const resp = await fetch('http://localhost:8000/api/aria/privacy/report');
+    if (resp.ok) {
+      const data = await resp.json();
+      const score = document.getElementById('privacy-score');
+      if (score) score.textContent = (data.score || 100) + '%';
+    }
+  } catch(e) {}
+}, 8000);
+
+setTimeout(() => connectWS(), 1000);
+document.getElementById('chat-input-field')?.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') sendChat();
+});
+</script>
+</body>
+</html>
+'''

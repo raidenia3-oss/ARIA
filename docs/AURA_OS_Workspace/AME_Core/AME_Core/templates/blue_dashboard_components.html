@@ -1,0 +1,106 @@
+<!-- Componentes para el nuevo dashboard táctico -->
+<div class="dashboard-panel tactical-panel">
+    <div class="panel-header">
+        <h3>📡 Radar de Amenazas</h3>
+        <div class="panel-controls">
+            <button class="panel-toggle">⚙️</button>
+            <button class="panel-maximize">⬛</button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="radar-chart-container">
+            <canvas id="threatRadarChart" width="300" height="300"></canvas>
+        </div>
+        <div class="radar-legend">
+            <div class="legend-item critical">🔴 Crítico</div>
+            <div class="legend-item high">🟡 Alto</div>
+            <div class="legend-item medium">🟢 Medio</div>
+            <div class="legend-item low">🔵 Bajo</div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-panel resource-panel">
+    <div class="panel-header">
+        <h3>🖥️ Estado de Recursos</h3>
+        <div class="panel-controls">
+            <button class="panel-toggle">⚙️</button>
+            <button class="panel-maximize">⬛</button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="resource-grid">
+            <div class="resource-item cpu">
+                <div class="resource-label">CPU</div>
+                <div class="resource-bar">
+                    <div class="resource-fill" id="cpuFill"></div>
+                </div>
+                <div class="resource-value" id="cpuValue">0%</div>
+            </div>
+            <div class="resource-item ram">
+                <div class="resource-label">RAM</div>
+                <div class="resource-bar">
+                    <div class="resource-fill" id="ramFill"></div>
+                </div>
+                <div class="resource-value" id="ramValue">0%</div>
+            </div>
+            <div class="resource-item bandwidth">
+                <div class="resource-label">Ancho de Banda</div>
+                <div class="resource-bar">
+                    <div class="resource-fill" id="bandwidthFill"></div>
+                </div>
+                <div class="resource-value" id="bandwidthValue">0%</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-panel network-panel">
+    <div class="panel-header">
+        <h3>🌐 Estado de Red</h3>
+        <div class="panel-controls">
+            <button class="panel-toggle">⚙️</button>
+            <button class="panel-maximize">⬛</button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="network-status">
+            <div class="network-item">
+                <div class="network-label">Conexión</div>
+                <div class="network-status-indicator online" id="connectionStatus"></div>
+                <div class="network-value" id="connectionValue">Desconectado</div>
+            </div>
+            <div class="network-item">
+                <div class="network-label">Latencia</div>
+                <div class="network-value" id="latencyValue">0 ms</div>
+            </div>
+            <div class="network-item">
+                <div class="network-label">Túnel</div>
+                <div class="network-status-indicator" id="tunnelStatus"></div>
+                <div class="network-value" id="tunnelValue">Desconectado</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-panel console-panel">
+    <div class="panel-header">
+        <h3>🖥️ Consola Táctica</h3>
+        <div class="panel-controls">
+            <button class="panel-toggle">⚙️</button>
+            <button class="panel-maximize">⬛</button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="console-header">
+            <div class="console-title">AURA > Tactical Console</div>
+            <div class="console-input-container">
+                <input type="text" class="console-input" placeholder="Ingresa un comando...">
+                <button class="console-submit">➤</button>
+            </div>
+        </div>
+        <div class="console-output" id="consoleOutput">
+            <!-- Logs se cargarán aquí -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+{
+  "start_time": "2026-08-04T20:44:59.351624",
+  "target_accuracy": 0.6,
+  "max_cycles": 1,
+  "cycles": [
+    {
+      "cycle": 1,
+      "evolved_samples": 407,
+      "evolution": {
+        "best_accuracy": 0.7,
+        "total_items": 1586,
+        "cycles": [
+          {
+            "cycle": 1,
+            "accuracy_before": 0.703,
+            "accuracy_after": 0.7,
+            "weaknesses": [
+              "general",
+              "math",
+              "command",
+              "ocr",
+              "ui_analysis",
+              "documents",
+              "objects",
+              "errors",
+              "forms",
+              "notifications",
+              "terminals"
+            ],
+            "new_items": 11,
+            "hyperparameters": {
+              "adjustments": {
+                "lr": 5e-05,
+                "lora_r": 32
+              },
+              "new_hyperparams": {
+                "lr": 5e-05,
+                "lora_r": 32,
+                "lora_alpha": 64,
+                "batch_size": 2,
+                "epochs": 5
+              }
+            },
+            "timestamp": "2026-08-04T20:44:59.588737"
+          }
+        ],
+        "final_hyperparams": {
+          "lr": 5e-05,
+          "lora_r": 32,
+          "lora_alpha": 64,
+          "batch_size": 2,
+          "epochs": 5
+        }
+      },
+      "model_path": null,
+      "training_metrics": {},
+      "evaluation": {
+        "qa_accuracy": 0,
+        "perplexity": Infinity,
+        "status": "no_model"
+      },
+      "accuracy": 0,
+      "expanded_samples": 437,
+      "dataset_count": 1588,
+      "elapsed_sec": 196.5,
+      "timestamp": "2026-08-04T20:48:15.831796"
+    }
+  ],
+  "best_accuracy": 0.0,
+  "best_model": null,
+  "status": "max_cycles_reached",
+  "end_time": "2026-08-04T20:48:15.834675",
+  "total_elapsed_sec": 196.5
+}

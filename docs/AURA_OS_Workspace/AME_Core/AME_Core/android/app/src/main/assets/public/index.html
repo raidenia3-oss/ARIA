@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA Mobile</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/biometricAuth.js" defer></script>
+    <script src="static/js/authInterceptor.js" defer></script>
+    <script src="static/js/wsAuthInterceptor.js" defer></script>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Contenido principal será cargado dinámicamente -->
+        <div id="loading-screen">
+            <div class="spinner"></div>
+            <p>Iniciando autenticación biométrica...</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Inicializar el sistema de autenticación
+                const authSuccess = await window.initBiometricAuth();
+
+                if (authSuccess) {
+                    // Configurar interceptores de autenticación
+                    await window.configureWSAuthInterceptor();
+
+                    // Cargar la pantalla principal
+                    const mainContent = document.createElement('div');
+                    mainContent.id = 'main-content';
+                    mainContent.innerHTML = `
+                        <h1>Bienvenido a AURA</h1>
+                        <p>Su sesión ha sido autenticada correctamente.</p>
+                        <button id="loadDashboard">Cargar Dashboard</button>
+                    `;
+
+                    document.getElementById('app-container').appendChild(mainContent);
+
+                    // Cargar el dashboard cuando el usuario lo solicite
+                    document.getElementById('loadDashboard').addEventListener('click', () => {
+                        window.location.href = 'dashboard.html';
+                    });
+                }
+            } catch (error) {
+                console.error('Error inicializando aplicación:', error);
+                // Redirigir a pantalla de bloqueo
+                window.location.href = 'lockscreen.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"profile":"normal","cfg":{"move_speed":1.0,"typing_speed":1.0,"delay_mult":1.0,"jitter":0.2,"overshoot":0.08}}

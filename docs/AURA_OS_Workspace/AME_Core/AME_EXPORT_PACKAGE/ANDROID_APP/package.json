@@ -1,0 +1,18 @@
+{
+  "name": "aura-mobile",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "start": "capacitor run android",
+    "build": "capacitor build android",
+    "sync": "capacitor sync android"
+  },
+  "dependencies": {
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor-community/biometric-auth": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.0.0"
+  }
+}

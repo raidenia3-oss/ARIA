@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AURA Desktop</title>
+        <link rel="stylesheet" href="static/css/style.css" />
+        <link rel="stylesheet" href="static/css/tactical_dashboard.css" />
+        <link rel="stylesheet" href="static/css/blackbox.css" />
+        <link rel="stylesheet" href="static/css/decision_core_styles.css" />
+    </head>
+    <body>
+        <div id="app">
+            <div class="header">
+                <h1>AURA Desktop</h1>
+                <div class="controls">
+                    <button id="minimize-btn">Minimizar</button>
+                    <button id="close-btn">Cerrar</button>
+                </div>
+            </div>
+            <div class="dashboard-container">
+                <iframe
+                    id="dashboard-frame"
+                    src="../AME_Core/dashboard.html"
+                    frameborder="0"
+                    style="width: 100%; height: 100%; border: none"
+                ></iframe>
+            </div>
+        </div>
+
+        <script src="static/js/tauri.js"></script>
+        <script>
+            document.getElementById("minimize-btn").addEventListener("click", () => {
+                window.tauri?.invoke("minimize");
+            });
+
+            document.getElementById("close-btn").addEventListener("click", () => {
+                window.tauri?.invoke("close");
+            });
+        </script>
+    </body>
+</html>

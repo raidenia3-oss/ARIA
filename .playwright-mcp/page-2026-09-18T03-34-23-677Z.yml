@@ -1,0 +1,253 @@
+- generic [active] [ref=e1]:
+  - text: "\"\\n\\n\\n \\n \\n \\n \\n\\n\\n \\n"
+  - generic [ref=e2]:
+    - text: \n
+    - banner [ref=e3]:
+      - text: \n
+      - generic [ref=e4]: \n \n AURA OS v2.0\n
+      - text: \n
+      - generic [ref=e5]:
+        - text: \n
+        - generic [ref=e6]: "Backend: checking..."
+        - text: \n
+        - generic [ref=e7]: "CPU: -- | RAM: --"
+        - text: \n
+        - button "Tema claro" [ref=e8]
+        - text: \n
+      - text: \n
+    - text: \n\n \n
+    - generic [ref=e9]:
+      - text: \n
+      - generic [ref=e10]:
+        - text: \n
+        - generic [ref=e11]:
+          - text: \n
+          - generic "\\\"Cerrar\\\""
+          - text: \n
+          - generic "\\\"Minimizar\\\""
+          - text: \n
+          - generic "\\\"Maximizar\\\""
+          - text: \n
+        - text: \n interface.ts — SageCore\n
+      - text: \n
+      - generic [ref=e12]:
+        - text: \n
+        - generic [ref=e13]: "import { SageCore } from '@aura/sage'"
+        - text: \n
+        - generic [ref=e14]: "const core = new SageCore({"
+        - text: \n
+        - generic [ref=e15]: "name: \\\"El Gran Sabio\\\","
+        - text: \n
+        - generic [ref=e16]: "aura: \\\"Tensura v3.2\\\","
+        - text: \n
+        - generic [ref=e17]: "voice: \\\"Raphael\\\","
+        - text: \n
+        - generic [ref=e18]: "particles: 1280,"
+        - text: \n
+        - generic [ref=e19]: "orbit: 2,"
+        - text: \n
+        - generic [ref=e20]: "glow: true"
+        - text: \n
+        - generic [ref=e21]: "});"
+        - text: \n
+        - generic [ref=e22]: // Inicializando núcleo de sabiduría...
+        - text: \n
+        - generic [ref=e23]: await core.init();
+        - text: \n
+        - generic [ref=e24]: core.listen(); // Esperando comando
+        - text: \n
+      - text: \n
+    - text: \n\n \n
+    - generic [ref=e25]: \n 12:50\n :\n 00\n PM\n
+    - text: \n\n
+    - main [ref=e26]:
+      - text: \n
+      - generic [ref=e27]:
+        - text: \n
+        - generic [ref=e28]:
+          - text: \n
+          - generic [ref=e29]: \n \n \n \n \n
+          - text: \n
+          - generic [ref=e31]: Listo y operativo
+          - text: \n
+        - text: \n
+        - generic [ref=e32]:
+          - text: \n
+          - generic [ref=e33]:
+            - text: \n
+            - generic [ref=e34]: Inicializando AURA OS v2.0...
+            - text: \n
+          - text: \n \n
+          - generic [ref=e35]:
+            - text: \n
+            - textbox "\\\"Pregúntame" [ref=e36]
+            - text: \n
+            - button "🎤" [ref=e37]
+            - text: \n
+            - button "Enviar" [ref=e38]
+            - text: \n
+          - text: \n
+        - text: \n
+      - text: \n
+      - generic [ref=e39]:
+        - text: \n
+        - generic [ref=e40]:
+          - text: \n
+          - heading "Habilidades" [level=3] [ref=e41]
+          - text: \n \n
+        - text: \n
+        - generic [ref=e42]:
+          - text: \n
+          - heading "Sync P2P (PC ⇄ AME)" [level=3] [ref=e43]
+          - text: \n
+          - generic [ref=e44]: Docs conciliados --
+          - text: \n
+          - generic [ref=e45]: Conflictos --
+          - text: \n
+          - generic [ref=e46]: Respaldos --
+          - text: \n
+          - generic [ref=e47]: Última conciliación --
+          - text: \n
+          - heading "Eventos" [level=3] [ref=e48]
+          - text: \n \n
+        - text: \n
+        - generic [ref=e49]:
+          - text: \n
+          - heading "Salud del Sistema" [level=3] [ref=e50]
+          - text: \n
+          - generic [ref=e51]:
+            - text: \n
+            - generic [ref=e52]: Estado global --
+            - text: \n \n
+          - text: \n
+          - generic [ref=e53]: Backend --
+          - text: \n
+          - generic [ref=e54]: Jan --
+          - text: \n
+          - generic [ref=e55]: WebSocket --
+          - text: \n
+          - generic [ref=e56]: mDNS pares --
+          - text: \n
+          - generic [ref=e57]: Sync SD --
+          - text: \n
+          - heading "Motor de Refactorización (Bloque 91)" [level=3] [ref=e58]
+          - text: \n
+          - generic [ref=e59]: Total parches --
+          - text: \n
+          - generic [ref=e60]: Aplicados --
+          - text: \n
+          - generic [ref=e61]: Rollbacks --
+          - text: \n
+          - generic [ref=e62]: Hallazgos (AST) --
+          - text: \n
+          - generic [ref=e63]:
+            - text: \n
+            - generic [ref=e64]: Estado del motor --
+            - text: \n
+          - text: \n
+          - button "\\n 🔍 Auditar código (AST)\\n" [ref=e65]
+          - text: \n
+          - button "\\n ✨ Proponer refactorización\\n" [ref=e66]
+          - text: \n
+          - heading "Planificador de Objetivos (Bloque 92)" [level=3] [ref=e67]
+          - text: \n
+          - generic [ref=e68]: Metas activas --
+          - text: \n
+          - generic [ref=e69]: Completadas --
+          - text: \n
+          - generic [ref=e70]: En progreso --
+          - text: \n
+          - generic [ref=e71]: Bloqueadas --
+          - text: \n
+          - generic [ref=e72]: Progreso global --%
+          - text: \n
+          - generic [ref=e73]:
+            - text: \n
+            - generic [ref=e74]: Estado del planificador --
+            - text: \n
+          - text: \n
+          - button "\\n 🎯 Descomponer nuevo objetivo\\n" [ref=e75]
+          - text: \n
+          - button "\\n 🔄 Actualizar panel de planificación\\n" [ref=e76]
+          - text: \n\n
+          - heading "Verificación ZKP y Auditoría (Bloque 94)" [level=3] [ref=e77]
+          - text: \n
+          - generic [ref=e78]: Pruebas ZKP --
+          - text: \n
+          - generic [ref=e79]: Entradas auditoría --
+          - text: \n
+          - generic [ref=e80]: Cadena válida --
+          - text: \n
+          - generic [ref=e81]: Esquema Schnorr
+          - text: \n
+          - generic [ref=e82]:
+            - text: \n
+            - generic [ref=e83]: Estado ZKP --
+            - text: \n
+          - text: \n
+          - button "\\n 🔐 Generar prueba ZKP\\n" [ref=e84]
+          - text: \n
+          - button "\\n ✅ Verificar prueba ZKP\\n\\n Sincronización Cross-Device (Bloque 95) \\n Nodo local -- \\n Pares conectados -- \\n Daemon -- \\n Uptime -- \\n Salud -- \\n" [ref=e85]:
+            - text: \n ✅ Verificar prueba ZKP\n\n
+            - heading "Sincronización Cross-Device (Bloque 95)" [level=3] [ref=e86]
+            - text: \n
+            - generic [ref=e87]: Nodo local --
+            - text: \n
+            - generic [ref=e88]: Pares conectados --
+            - text: \n
+            - generic [ref=e89]: Daemon --
+            - text: \n
+            - generic [ref=e90]: Uptime --
+            - text: \n
+            - generic [ref=e91]: Salud --
+            - text: \n
+          - button "\\n 🔗 Registrar par\\n" [ref=e92]
+          - text: \n
+          - button "\\n 🔄 Sincronizar con par\\n" [ref=e93]
+          - text: \n
+          - button "\\n 🔄 Actualizar sync\\n" [ref=e94]
+          - text: \n\n \n
+          - button "\\n 🔄 Actualizar panel ZKP\\n" [ref=e95]
+          - text: \n\n\n
+          - heading "Mercado de Habilidades (Bloque 93)" [level=3] [ref=e96]
+          - text: \n
+          - generic [ref=e97]: Nodos activos --
+          - text: \n
+          - generic [ref=e98]: Habilidades publicadas --
+          - text: \n
+          - generic [ref=e99]: Asignaciones activas --
+          - text: \n
+          - generic [ref=e100]: Reputación media --
+          - text: \n
+          - generic [ref=e101]:
+            - text: \n
+            - generic [ref=e102]: Estado del mercado --
+            - text: \n
+          - text: \n
+          - button "\\n 📦 Publicar habilidad\\n" [ref=e103]
+          - text: \n
+          - button "\\n 🔍 Descubrir habilidades\\n" [ref=e104]
+          - text: \n
+          - button "\\n 🔄 Actualizar mercado\\n" [ref=e105]
+          - text: \n\n\n
+          - heading "Métricas" [level=3] [ref=e106]
+          - text: \n
+          - generic [ref=e107]:
+            - text: \n
+            - generic [ref=e108]: CPU --%
+            - text: \n \n
+          - text: \n
+          - generic [ref=e109]:
+            - text: \n
+            - generic [ref=e110]: RAM --
+            - text: \n \n
+          - text: \n
+          - generic [ref=e111]:
+            - text: \n
+            - generic [ref=e112]: Disco --%
+            - text: \n \n
+          - text: \n
+        - text: \n
+      - text: \n
+    - text: \n
+  - text: \n \n\n\n"

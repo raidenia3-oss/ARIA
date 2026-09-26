@@ -1,0 +1,32 @@
+name: backup-data
+description: Automated data backup to storage
+trigger: schedule
+schedule: "0 2 * * *"
+enabled: true
+version: "1.0"
+
+steps:
+  - name: scan_for_backup
+    action: backup.scan
+    timeout_sec: 60
+    retry_on_failure: true
+
+  - name: compress_data
+    action: backup.compress
+    timeout_sec: 300
+    retry_on_failure: true
+
+  - name: upload_backup
+    action: backup.upload
+    timeout_sec: 600
+    retry_on_failure: true
+
+  - name: verify_integrity
+    action: backup.verify
+    timeout_sec: 60
+    retry_on_failure: false
+
+  - name: cleanup_temp
+    action: backup.cleanup
+    timeout_sec: 30
+    retry_on_failure: false

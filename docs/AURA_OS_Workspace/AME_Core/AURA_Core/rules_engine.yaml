@@ -1,0 +1,1689 @@
+---
+# rules_engine.yaml - Motor de Reglas para AURA
+# Este archivo define las reglas de acción que se ejecutarán en respuesta a eventos detectados
+# en el ecosistema AURA. Las reglas siguen el formato:
+#
+# SI [condición] -> ENTONCES [acción]
+#
+# Las condiciones pueden ser combinadas con AND/OR y los eventos pueden ser filtrados
+# por tipo, ubicación, severidad, etc.
+
+version: "1.0"
+description: "Motor de Reglas para AURA - Sistema de Respuesta Automática a Eventos"
+last_updated: "2026-06-02T00:00:00Z"
+enabled: true
+debug_mode: false
+validation_required: true
+gatekeeper_validation: true
+priority_rules: ["critical", "high", "medium", "low"]
+
+# Configuración global del motor de reglas
+global_settings:
+  default_timeout: 300  # Tiempo de espera por defecto para acciones (segundos)
+  max_concurrent_actions: 5
+  retry_attempts: 3
+  retry_delay: 60  # Segundos entre reintentos
+  action_logging: true
+  action_audit: true
+  allowed_modules:
+    - "osint_venice"
+    - "network_scan"
+    - "security_audit"
+    - "data_exfiltration_check"
+    - "device_quarantine"
+    - "alert_notification"
+    - "threat_intelligence_update"
+    - "automated_response"
+    - "log_analysis"
+    - "behavioral_analysis"
+  restricted_modules:
+    - "system_reboot"
+    - "firewall_modification"
+    - "data_wipe"
+  module_whitelist: []  # Si está vacío, se usan los allowed_modules
+  module_blacklist: []   # Si está vacío, no hay módulos bloqueados
+
+# Definición de eventos soportados
+event_types:
+  - "device_new"
+  - "device_disappeared"
+  - "device_changed"
+  - "network_scan_complete"
+  - "osint_scan_complete"
+  - "threat_detected"
+  - "anomaly_detected"
+  - "device_relationship_created"
+  - "data_exfiltration_attempt"
+  - "configuration_vulnerability"
+  - "unauthorized_access_attempt"
+  - "malware_detected"
+  - "high_risk_device"
+  - "rogue_device"
+  - "system_alert"
+  - "custom_event"
+
+# Definición de acciones soportadas
+action_types:
+  - "run_module"
+  - "dispatch_task"
+  - "send_alert"
+  - "update_threat_intel"
+  - "quarantine_device"
+  - "block_network_access"
+  - "log_event"
+  - "notify_team"
+  - "execute_script"
+  - "run_analysis"
+  - "update_database"
+  - "trigger_workflow"
+
+# Reglas de seguridad y validación
+security_rules:
+  - rule_id: "rule_security_001"
+    name: "Validación de Gatekeeper para todas las acciones"
+    description: "Todas las acciones deben ser validadas por el Gatekeeper antes de ejecutarse"
+    condition: "event.type == '*'"
+    actions:
+      - type: "validate_gatekeeper"
+        module: "gatekeeper_validation"
+        parameters:
+          action_type: "{{event.action_type}}"
+          target: "{{event.target}}"
+          severity: "{{event.severity}}"
+          source: "{{event.source}}"
+    priority: "high"
+    enabled: true
+
+  - rule_id: "rule_security_002"
+    name: "Bloqueo de acciones no autorizadas"
+    description: "Bloquear acciones que no estén en la lista de módulos permitidos"
+    condition: "event.action_type not in allowed_modules and event.action_type not in restricted_modules"
+    actions:
+      - type: "log_event"
+        module: "security_audit"
+        parameters:
+          message: "Acción no autorizada detectada: {{event.action_type}}"
+          severity: "critical"
+          source: "rules_engine"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com"]
+          subject: "[ALERTA] Acción no autorizada detectada"
+          message: "Se intentó ejecutar una acción no autorizada: {{event.action_type}}"
+          severity: "critical"
+    priority: "critical"
+    enabled: true
+
+# Reglas de respuesta a dispositivos nuevos
+device_new_rules:
+  - rule_id: "rule_device_new_001"
+    name: "Dispositivo nuevo detectado - Análisis básico"
+    description: "Ejecutar análisis básico cuando se detecta un nuevo dispositivo en la red"
+    condition: |
+      event.type == "device_new" and
+      event.device.vendor != "Unknown" and
+      event.device.risk_score < 50
+    actions:
+      - type: "run_module"
+        module: "device_analysis"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          device_ip: "{{event.device.ip}}"
+          analysis_type: "basic"
+          timeout: 120
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Análisis básico iniciado para dispositivo nuevo: {{event.device.mac}}"
+          device_mac: "{{event.device.mac}}"
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+  - rule_id: "rule_device_new_002"
+    name: "Dispositivo nuevo con vendor desconocido - Acción inmediata"
+    description: "Ejecutar acciones inmediatas cuando se detecta un dispositivo con vendor desconocido"
+    condition: |
+      event.type == "device_new" and
+      event.device.vendor == "Unknown" and
+      event.network.name in ["red_corporativa", "red_critica"]
+    actions:
+      - type: "quarantine_device"
+        module: "device_quarantine"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Vendor desconocido"
+          severity: "high"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "threat_intel@aura-system.com"]
+          subject: "[ALERTA] Dispositivo nuevo con vendor desconocido detectado"
+          message: |
+            Dispositivo nuevo detectado con MAC {{event.device.mac}} e IP {{event.device.ip}}.
+            Vendor: {{event.device.vendor}} (desconocido).
+            Ubicación: {{event.network.name}}.
+            Acción: Cuarentena iniciada.
+          severity: "high"
+      - type: "run_module"
+        module: "osint_venice"
+        parameters:
+          target: "{{event.device.ip}}"
+          module_name: "deep_osint_scan"
+          timeout: 600
+          priority: "high"
+    priority: "high"
+    enabled: true
+
+  - rule_id: "rule_device_new_003"
+    name: "Dispositivo nuevo en red crítica - Escaneo OSINT avanzado"
+    description: "Ejecutar escaneo OSINT avanzado para dispositivos nuevos en redes críticas"
+    condition: |
+      event.type == "device_new" and
+      event.network.name == "red_critica" and
+      event.device.risk_score >= 30
+    actions:
+      - type: "dispatch_task"
+        module: "swarm_manager"
+        parameters:
+          task_type: "OSINT_SCAN"
+          task_parameters:
+            target: "{{event.device.ip}}"
+            tools: ["PhantomOSINT", "SubdomainEnumeration", "DeepWebAnalysis"]
+            depth: 3
+            timeout: 1800
+          priority: "high"
+      - type: "update_threat_intel"
+        module: "threat_intelligence"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          device_ip: "{{event.device.ip}}"
+          threat_type: "potential_rogue_device"
+          severity: "medium"
+          description: "Dispositivo nuevo detectado en red crítica"
+    priority: "high"
+    enabled: true
+
+# Reglas de respuesta a dispositivos desaparecidos
+device_disappeared_rules:
+  - rule_id: "rule_device_disappeared_001"
+    name: "Dispositivo desaparecido - Verificación de seguridad"
+    description: "Verificar si la desaparición de un dispositivo podría indicar una amenaza"
+    condition: |
+      event.type == "device_disappeared" and
+      event.device.risk_score >= 40
+    actions:
+      - type: "run_module"
+        module: "security_audit"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          audit_type: "device_disappearance"
+          timeout: 180
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Dispositivo desaparecido detectado: {{event.device.mac}}"
+          device_mac: "{{event.device.mac}}"
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+  - rule_id: "rule_device_disappeared_002"
+    name: "Dispositivo crítico desaparecido - Alerta inmediata"
+    description: "Generar alerta inmediata cuando desaparece un dispositivo crítico"
+    condition: |
+      event.type == "device_disappeared" and
+      event.device.threat_level in ["high", "critical"]
+    actions:
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com"]
+          subject: "[ALERTA CRÍTICA] Dispositivo crítico desaparecido"
+          message: |
+            Dispositivo crítico desaparecido detectado:
+            MAC: {{event.device.mac}}
+            IP: {{event.device.ip}}
+            Último avistamiento: {{event.device.last_seen}}
+            Nivel de amenaza: {{event.device.threat_level}}
+            Acción recomendada: Investigar posible robo o compromiso.
+          severity: "critical"
+      - type: "update_threat_intel"
+        module: "threat_intelligence"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          threat_type: "device_tampering"
+          severity: "high"
+          description: "Dispositivo crítico desaparecido - posible robo o compromiso"
+    priority: "critical"
+    enabled: true
+
+# Reglas de respuesta a cambios en dispositivos
+device_changed_rules:
+  - rule_id: "rule_device_changed_001"
+    name: "Cambio de IP en dispositivo - Verificación de actividad sospechosa"
+    description: "Verificar si cambios de IP podrían indicar actividad sospechosa"
+    condition: |
+      event.type == "device_changed" and
+      event.change_type == "ip_change" and
+      event.device.ip_changes > 3
+    actions:
+      - type: "run_module"
+        module: "behavioral_analysis"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          analysis_type: "ip_change_analysis"
+          timeout: 120
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Cambio de IP detectado en dispositivo {{event.device.mac}} (cambio #{{event.device.ip_changes}})"
+          device_mac: "{{event.device.mac}}"
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+  - rule_id: "rule_device_changed_002"
+    name: "Cambio de vendor en dispositivo - Análisis de seguridad"
+    description: "Analizar cambios en la información del vendor del dispositivo"
+    condition: |
+      event.type == "device_changed" and
+      event.change_type == "vendor_change" and
+      event.device.vendor == "Unknown"
+    actions:
+      - type: "quarantine_device"
+        module: "device_quarantine"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Cambio de vendor a desconocido"
+          severity: "high"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com"]
+          subject: "[ALERTA] Cambio de vendor a desconocido en dispositivo"
+          message: |
+            Cambio de vendor detectado en dispositivo {{event.device.mac}}:
+            Nuevo vendor: {{event.device.vendor}}
+            Cambios previos: {{event.device.vendor_changes}}
+            Acción: Cuarentena iniciada.
+          severity: "high"
+    priority: "high"
+    enabled: true
+
+# Reglas de respuesta a amenazas detectadas
+threat_detection_rules:
+  - rule_id: "rule_threat_001"
+    name: "Amenaza detectada - Actualización de inteligencia"
+    description: "Actualizar la base de datos de inteligencia de amenazas cuando se detecta una amenaza"
+    condition: |
+      event.type == "threat_detected" and
+      event.threat.severity in ["high", "critical"]
+    actions:
+      - type: "update_threat_intel"
+        module: "threat_intelligence"
+        parameters:
+          threat_id: "{{event.threat.id}}"
+          threat_type: "{{event.threat.type}}"
+          severity: "{{event.threat.severity}}"
+          description: "{{event.threat.description}}"
+          indicators: "{{event.threat.indicators}}"
+          related_devices: ["{{event.device.mac}}"]
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Amenaza detectada: {{event.threat.type}} (severidad: {{event.threat.severity}})"
+          threat_id: "{{event.threat.id}}"
+          severity: "{{event.threat.severity}}"
+    priority: "high"
+    enabled: true
+
+  - rule_id: "rule_threat_002"
+    name: "Amenaza crítica detectada - Respuesta inmediata"
+    description: "Ejecutar respuesta inmediata para amenazas críticas"
+    condition: |
+      event.type == "threat_detected" and
+      event.threat.severity == "critical"
+    actions:
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com"]
+          subject: "[ALERTA CRÍTICA] {{event.threat.type}} detectada"
+          message: |
+            Amenaza crítica detectada:
+            Tipo: {{event.threat.type}}
+            Severidad: {{event.threat.severity}}
+            Descripción: {{event.threat.description}}
+            Dispositivo afectado: {{event.device.mac}}
+            Acción recomendada: Respuesta inmediata requerida.
+          severity: "critical"
+      - type: "run_module"
+        module: "automated_response"
+        parameters:
+          threat_type: "{{event.threat.type}}"
+          device_mac: "{{event.device.mac}}"
+          response_level: "critical"
+      - type: "quarantine_device"
+        module: "device_quarantine"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "{{event.threat.description}}"
+          severity: "critical"
+    priority: "critical"
+    enabled: true
+
+# Reglas de respuesta a intentos de exfiltración de datos
+data_exfiltration_rules:
+  - rule_id: "rule_exfiltration_001"
+    name: "Intento de exfiltración de datos detectado - Bloqueo inmediato"
+    description: "Bloquear el dispositivo y notificar al equipo de seguridad cuando se detecta exfiltración"
+    condition: |
+      event.type == "data_exfiltration_attempt" and
+      event.data_transfer.size > 1000  # Más de 1MB
+    actions:
+      - type: "block_network_access"
+        module: "network_control"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Intento de exfiltración de datos detectado"
+          severity: "critical"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com"]
+          subject: "[ALERTA CRÍTICA] Intento de exfiltración de datos detectado"
+          message: |
+            Intento de exfiltración de datos detectado desde dispositivo {{event.device.mac}}:
+            Tamaño del transferencia: {{event.data_transfer.size}} MB
+            Destino: {{event.data_transfer.destination}}
+            Hora: {{event.timestamp}}
+            Acción: Acceso a la red bloqueado.
+          severity: "critical"
+      - type: "update_threat_intel"
+        module: "threat_intelligence"
+        parameters:
+          threat_type: "data_exfiltration"
+          severity: "critical"
+          description: "Intento de exfiltración de datos desde {{event.device.mac}}"
+          indicators: ["{{event.device.mac}}", "{{event.data_transfer.destination}}"]
+          related_devices: ["{{event.device.mac}}"]
+    priority: "critical"
+    enabled: true
+
+  - rule_id: "rule_exfiltration_002"
+    name: "Exfiltración de datos sospechosa - Análisis forense"
+    description: "Iniciar análisis forense cuando se detecta actividad sospechosa de exfiltración"
+    condition: |
+      event.type == "data_exfiltration_attempt" and
+      event.data_transfer.size <= 1000 and
+      event.data_transfer.destination in ["suspicious_domains"]
+    actions:
+      - type: "run_module"
+        module: "forensic_analysis"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          analysis_type: "data_exfiltration"
+          timeout: 1800
+          priority: "high"
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Análisis forense iniciado para posible exfiltración desde {{event.device.mac}}"
+          device_mac: "{{event.device.mac}}"
+          severity: "high"
+    priority: "high"
+    enabled: true
+
+# Reglas de respuesta a relaciones entre dispositivos
+device_relationship_rules:
+  - rule_id: "rule_relationship_001"
+    name: "Relación sospechosa entre dispositivos - Análisis de comunicación"
+    description: "Analizar comunicación entre dispositivos cuando se detecta una relación sospechosa"
+    condition: |
+      event.type == "device_relationship_created" and
+      event.relationship.type in ["potential_communication", "shared_behavior"] and
+      event.relationship.strength > 0.7
+    actions:
+      - type: "run_module"
+        module: "network_analysis"
+        parameters:
+          device1_mac: "{{event.device1.mac}}"
+          device2_mac: "{{event.device2.mac}}"
+          analysis_type: "communication_pattern"
+          timeout: 300
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Relación sospechosa detectada entre {{event.device1.mac}} y {{event.device2.mac}} (fuerza: {{event.relationship.strength}})"
+          device1_mac: "{{event.device1.mac}}"
+          device2_mac: "{{event.device2.mac}}"
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+  - rule_id: "rule_relationship_002"
+    name: "Relación de duplicado potencial - Verificación de dispositivos"
+    description: "Verificar si dispositivos relacionados podrían ser el mismo dispositivo con MACs diferentes"
+    condition: |
+      event.type == "device_relationship_created" and
+      event.relationship.type == "potential_duplicate" and
+      event.relationship.strength > 0.85
+    actions:
+      - type: "run_module"
+        module: "device_verification"
+        parameters:
+          device1_mac: "{{event.device1.mac}}"
+          device2_mac: "{{event.device2.mac}}"
+          verification_type: "mac_duplicate_check"
+          timeout: 180
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com"]
+          subject: "[ALERTA] Posible duplicado de dispositivo detectado"
+          message: |
+            Posible duplicado de dispositivo detectado:
+            Dispositivo 1: {{event.device1.mac}} ({{event.device1.vendor}})
+            Dispositivo 2: {{event.device2.mac}} ({{event.device2.vendor}})
+            Fuerza de relación: {{event.relationship.strength}}
+            Acción: Verificación en curso.
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+# Reglas de respuesta a vulnerabilidades de configuración
+configuration_vulnerability_rules:
+  - rule_id: "rule_vulnerability_001"
+    name: "Vulnerabilidad de configuración detectada - Corrección automática"
+    description: "Corregir vulnerabilidades de configuración cuando sean detectadas"
+    condition: |
+      event.type == "configuration_vulnerability" and
+      event.vulnerability.severity in ["medium", "high"]
+    actions:
+      - type: "run_module"
+        module: "configuration_fix"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          vulnerability_type: "{{event.vulnerability.type}}"
+          fix_parameters: "{{event.vulnerability.fix_parameters}}"
+          timeout: 300
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Corrección de vulnerabilidad iniciada para {{event.device.mac}}: {{event.vulnerability.type}}"
+          device_mac: "{{event.device.mac}}"
+          severity: "{{event.vulnerability.severity}}"
+    priority: "medium"
+    enabled: true
+
+  - rule_id: "rule_vulnerability_002"
+    name: "Vulnerabilidad crítica detectada - Alerta inmediata"
+    description: "Generar alerta inmediata para vulnerabilidades críticas"
+    condition: |
+      event.type == "configuration_vulnerability" and
+      event.vulnerability.severity == "critical"
+    actions:
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "admin_network@aura-system.com"]
+          subject: "[ALERTA CRÍTICA] Vulnerabilidad crítica detectada en {{event.device.mac}}"
+          message: |
+            Vulnerabilidad crítica detectada:
+            Tipo: {{event.vulnerability.type}}
+            Severidad: {{event.vulnerability.severity}}
+            Descripción: {{event.vulnerability.description}}
+            Dispositivo afectado: {{event.device.mac}}
+            Acción recomendada: Corrección inmediata requerida.
+          severity: "critical"
+      - type: "quarantine_device"
+        module: "device_quarantine"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Vulnerabilidad crítica detectada: {{event.vulnerability.type}}"
+          severity: "critical"
+    priority: "critical"
+    enabled: true
+
+# Reglas de respuesta a intentos de acceso no autorizado
+unauthorized_access_rules:
+  - rule_id: "rule_unauthorized_001"
+    name: "Intento de acceso no autorizado detectado - Bloqueo inmediato"
+    description: "Bloquear el dispositivo y notificar al equipo de seguridad cuando se detecta acceso no autorizado"
+    condition: |
+      event.type == "unauthorized_access_attempt" and
+      event.attempt.success == false
+    actions:
+      - type: "block_network_access"
+        module: "network_control"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Intento de acceso no autorizado detectado"
+          severity: "high"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com"]
+          subject: "[ALERTA] Intento de acceso no autorizado desde {{event.device.mac}}"
+          message: |
+            Intento de acceso no autorizado detectado:
+            Dispositivo: {{event.device.mac}}
+            IP: {{event.device.ip}}
+            Usuario: {{event.attempt.username}}
+            Éxito: {{event.attempt.success}}
+            Método: {{event.attempt.method}}
+            Acción: Acceso a la red bloqueado.
+          severity: "high"
+      - type: "update_threat_intel"
+        module: "threat_intelligence"
+        parameters:
+          threat_type: "unauthorized_access_attempt"
+          severity: "high"
+          description: "Intento de acceso no autorizado desde {{event.device.mac}}"
+          indicators: ["{{event.device.mac}}", "{{event.device.ip}}", "{{event.attempt.username}}"]
+          related_devices: ["{{event.device.mac}}"]
+    priority: "high"
+    enabled: true
+
+  - rule_id: "rule_unauthorized_002"
+    name: "Acceso no autorizado exitoso - Respuesta crítica"
+    description: "Ejecutar respuesta crítica cuando se detecta acceso no autorizado exitoso"
+    condition: |
+      event.type == "unauthorized_access_attempt" and
+      event.attempt.success == true
+    actions:
+      - type: "quarantine_device"
+        module: "device_quarantine"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Acceso no autorizado exitoso detectado"
+          severity: "critical"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com", "admin_network@aura-system.com"]
+          subject: "[ALERTA CRÍTICA] ACCESO NO AUTORIZADO EXITOSO desde {{event.device.mac}}"
+          message: |
+            ACCESO NO AUTORIZADO EXITOSO DETECTADO (CRÍTICO):
+            Dispositivo: {{event.device.mac}}
+            IP: {{event.device.ip}}
+            Usuario: {{event.attempt.username}}
+            Método: {{event.attempt.method}}
+            Hora: {{event.timestamp}}
+            Acción: Dispositivo puesto en cuarentena. INVESTIGACIÓN INMEDIATA REQUERIDA.
+          severity: "critical"
+      - type: "run_module"
+        module: "incident_response"
+        parameters:
+          incident_type: "unauthorized_access"
+          device_mac: "{{event.device.mac}}"
+          response_level: "critical"
+          timeout: 3600
+    priority: "critical"
+    enabled: true
+
+# Reglas de respuesta a malware detectado
+malware_detection_rules:
+  - rule_id: "rule_malware_001"
+    name: "Malware detectado - Cuarentena y análisis"
+    description: "Poner en cuarentena el dispositivo y analizar el malware cuando sea detectado"
+    condition: |
+      event.type == "malware_detected" and
+      event.malware.severity in ["medium", "high", "critical"]
+    actions:
+      - type: "quarantine_device"
+        module: "device_quarantine"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Malware detectado: {{event.malware.type}}"
+          severity: "{{event.malware.severity}}"
+      - type: "run_module"
+        module: "malware_analysis"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          malware_type: "{{event.malware.type}}"
+          analysis_type: "deep"
+          timeout: 1800
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com"]
+          subject: "[ALERTA] Malware detectado en {{event.device.mac}}"
+          message: |
+            Malware detectado:
+            Tipo: {{event.malware.type}}
+            Severidad: {{event.malware.severity}}
+            Descripción: {{event.malware.description}}
+            Dispositivo afectado: {{event.device.mac}}
+            Acción: Dispositivo puesto en cuarentena. Análisis en curso.
+          severity: "{{event.malware.severity}}"
+    priority: "high"
+    enabled: true
+
+  - rule_id: "rule_malware_002"
+    name: "Malware crítico detectado - Respuesta de emergencia"
+    description: "Ejecutar respuesta de emergencia para malware crítico"
+    condition: |
+      event.type == "malware_detected" and
+      event.malware.severity == "critical"
+    actions:
+      - type: "quarantine_device"
+        module: "device_quarantine"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Malware crítico detectado: {{event.malware.type}}"
+          severity: "critical"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com", "admin_network@aura-system.com"]
+          subject: "[ALERTA CRÍTICA] MALWARE CRÍTICO DETECTADO en {{event.device.mac}}"
+          message: |
+            MALWARE CRÍTICO DETECTADO (EMERGENCIA):
+            Tipo: {{event.malware.type}}
+            Severidad: {{event.malware.severity}}
+            Descripción: {{event.malware.description}}
+            Dispositivo afectado: {{event.device.mac}}
+            Acción: RESPUESTA DE EMERGENCIA INICIADA. TODO EL TRÁFICO DEL DISPOSITIVO DEBE SER MONITOREADO.
+          severity: "critical"
+      - type: "run_module"
+        module: "emergency_response"
+        parameters:
+          incident_type: "critical_malware"
+          device_mac: "{{event.device.mac}}"
+          malware_type: "{{event.malware.type}}"
+          response_level: "emergency"
+          timeout: 3600
+    priority: "critical"
+    enabled: true
+
+# Reglas de respuesta a dispositivos de alto riesgo
+high_risk_device_rules:
+  - rule_id: "rule_high_risk_001"
+    name: "Dispositivo de alto riesgo detectado - Monitoreo intensivo"
+    description: "Iniciar monitoreo intensivo para dispositivos de alto riesgo"
+    condition: |
+      event.type == "high_risk_device" and
+      event.device.risk_score >= 70 and
+      event.device.risk_score < 90
+    actions:
+      - type: "run_module"
+        module: "intensive_monitoring"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          monitoring_level: "high"
+          duration: 86400  # 24 horas
+          timeout: 86400
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "threat_intel@aura-system.com"]
+          subject: "[ALERTA] Dispositivo de alto riesgo detectado: {{event.device.mac}}"
+          message: |
+            Dispositivo de alto riesgo detectado:
+            MAC: {{event.device.mac}}
+            IP: {{event.device.ip}}
+            Puntuación de riesgo: {{event.device.risk_score}}
+            Nivel de amenaza: {{event.device.threat_level}}
+            Acción: Monitoreo intensivo iniciado (24 horas).
+          severity: "high"
+    priority: "high"
+    enabled: true
+
+  - rule_id: "rule_high_risk_002"
+    name: "Dispositivo crítico detectado - Respuesta inmediata"
+    description: "Ejecutar respuesta inmediata para dispositivos críticos"
+    condition: |
+      event.type == "high_risk_device" and
+      event.device.risk_score >= 90
+    actions:
+      - type: "quarantine_device"
+        module: "device_quarantine"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Dispositivo crítico detectado (riesgo: {{event.device.risk_score}})"
+          severity: "critical"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com"]
+          subject: "[ALERTA CRÍTICA] DISPOSITIVO CRÍTICO DETECTADO: {{event.device.mac}}"
+          message: |
+            DISPOSITIVO CRÍTICO DETECTADO (RIESGO EXTREMO):
+            MAC: {{event.device.mac}}
+            IP: {{event.device.ip}}
+            Puntuación de riesgo: {{event.device.risk_score}}
+            Nivel de amenaza: {{event.device.threat_level}}
+            Acción: DISPOSITIVO PUESTO EN CUARENTENA. INVESTIGACIÓN INMEDIATA REQUERIDA.
+          severity: "critical"
+      - type: "run_module"
+        module: "critical_device_response"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          risk_score: "{{event.device.risk_score}}"
+          response_level: "critical"
+          timeout: 3600
+    priority: "critical"
+    enabled: true
+
+# Reglas de respuesta a dispositivos no autorizados (rogue devices)
+rogue_device_rules:
+  - rule_id: "rule_rogue_001"
+    name: "Dispositivo no autorizado detectado - Bloqueo inmediato"
+    description: "Bloquear inmediatamente dispositivos no autorizados en la red"
+    condition: |
+      event.type == "rogue_device" and
+      event.device.vendor == "Unknown"
+    actions:
+      - type: "block_network_access"
+        module: "network_control"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          reason: "Dispositivo no autorizado detectado"
+          severity: "critical"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com"]
+          subject: "[ALERTA CRÍTICA] DISPOSITIVO NO AUTORIZADO DETECTADO: {{event.device.mac}}"
+          message: |
+            DISPOSITIVO NO AUTORIZADO DETECTADO (CRÍTICO):
+            MAC: {{event.device.mac}}
+            IP: {{event.device.ip}}
+            Vendor: {{event.device.vendor}} (desconocido)
+            Ubicación: {{event.network.name}}
+            Acción: ACCESO A LA RED BLOQUEADO. INVESTIGACIÓN INMEDIATA REQUERIDA.
+          severity: "critical"
+      - type: "run_module"
+        module: "rogue_device_investigation"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          investigation_type: "immediate"
+          timeout: 3600
+    priority: "critical"
+    enabled: true
+
+  - rule_id: "rule_rogue_002"
+    name: "Dispositivo no autorizado con actividad sospechosa"
+    description: "Analizar dispositivos no autorizados con actividad sospechosa"
+    condition: |
+      event.type == "rogue_device" and
+      event.device.activity_score > 50
+    actions:
+      - type: "run_module"
+        module: "suspicious_activity_analysis"
+        parameters:
+          device_mac: "{{event.device.mac}}"
+          analysis_type: "rogue_device"
+          timeout: 1800
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "threat_intel@aura-system.com"]
+          subject: "[ALERTA] Actividad sospechosa en dispositivo no autorizado: {{event.device.mac}}"
+          message: |
+            Actividad sospechosa detectada en dispositivo no autorizado:
+            MAC: {{event.device.mac}}
+            IP: {{event.device.ip}}
+            Puntuación de actividad sospechosa: {{event.device.activity_score}}
+            Acción: Análisis en curso.
+          severity: "high"
+    priority: "high"
+    enabled: true
+
+# Reglas de respuesta a eventos personalizados
+custom_event_rules:
+  - rule_id: "rule_custom_001"
+    name: "Evento personalizado - Ejecución de workflow"
+    description: "Ejecutar un workflow personalizado cuando se detecta un evento personalizado"
+    condition: |
+      event.type == "custom_event" and
+      event.custom_data.workflow == "security_audit"
+    actions:
+      - type: "trigger_workflow"
+        module: "workflow_engine"
+        parameters:
+          workflow_name: "{{event.custom_data.workflow}}"
+          workflow_parameters:
+            target_device: "{{event.device.mac}}"
+            audit_type: "{{event.custom_data.audit_type}}"
+            timeout: "{{event.custom_data.timeout | default(3600)}}"
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Workflow personalizado iniciado: {{event.custom_data.workflow}} para dispositivo {{event.device.mac}}"
+          device_mac: "{{event.device.mac}}"
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+# Reglas de respuesta a escaneos completados
+scan_completion_rules:
+  - rule_id: "rule_scan_complete_001"
+    name: "Escaneo de red completado - Análisis de resultados"
+    description: "Analizar los resultados de un escaneo de red completado"
+    condition: |
+      event.type == "network_scan_complete" and
+      event.scan.type == "full_network_scan"
+    actions:
+      - type: "run_module"
+        module: "scan_analysis"
+        parameters:
+          scan_id: "{{event.scan.id}}"
+          scan_type: "{{event.scan.type}}"
+          network_name: "{{event.network.name}}"
+          analysis_type: "full"
+          timeout: 1800
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Análisis de escaneo completado para {{event.network.name}} (ID: {{event.scan.id}})"
+          network_name: "{{event.network.name}}"
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+  - rule_id: "rule_scan_complete_002"
+    name: "Escaneo OSINT completado - Actualización de inteligencia"
+    description: "Actualizar la inteligencia de amenazas con los resultados de un escaneo OSINT"
+    condition: |
+      event.type == "osint_scan_complete" and
+      event.scan.targets.length > 0
+    actions:
+      - type: "update_threat_intel"
+        module: "threat_intelligence"
+        parameters:
+          scan_id: "{{event.scan.id}}"
+          scan_type: "{{event.scan.type}}"
+          targets: "{{event.scan.targets}}"
+          findings: "{{event.scan.findings}}"
+          severity: "{{event.scan.severity}}"
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Actualización de inteligencia de amenazas con resultados de escaneo OSINT (ID: {{event.scan.id}})"
+          scan_id: "{{event.scan.id}}"
+          severity: "{{event.scan.severity}}"
+    priority: "medium"
+    enabled: true
+
+# Reglas de respuesta a anomalías detectadas
+anomaly_detection_rules:
+  - rule_id: "rule_anomaly_001"
+    name: "Anomalía detectada - Análisis adicional"
+    description: "Realizar análisis adicional cuando se detecta una anomalía"
+    condition: |
+      event.type == "anomaly_detected" and
+      event.anomaly.score > 60
+    actions:
+      - type: "run_module"
+        module: "anomaly_analysis"
+        parameters:
+          anomaly_id: "{{event.anomaly.id}}"
+          device_mac: "{{event.device.mac}}"
+          anomaly_type: "{{event.anomaly.type}}"
+          analysis_type: "deep"
+          timeout: 1800
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Análisis adicional iniciado para anomalía detectada (ID: {{event.anomaly.id}})"
+          anomaly_id: "{{event.anomaly.id}}"
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+  - rule_id: "rule_anomaly_002"
+    name: "Anomalía crítica detectada - Respuesta inmediata"
+    description: "Ejecutar respuesta inmediata para anomalías críticas"
+    condition: |
+      event.type == "anomaly_detected" and
+      event.anomaly.score >= 80
+    actions:
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "incident_response@aura-system.com"]
+          subject: "[ALERTA] Anomalía crítica detectada: {{event.anomaly.type}}"
+          message: |
+            Anomalía crítica detectada:
+            Tipo: {{event.anomaly.type}}
+            Puntuación: {{event.anomaly.score}}
+            Dispositivo: {{event.device.mac}}
+            Descripción: {{event.anomaly.description}}
+            Acción: Análisis en curso. Posible amenaza.
+          severity: "high"
+      - type: "run_module"
+        module: "critical_anomaly_response"
+        parameters:
+          anomaly_id: "{{event.anomaly.id}}"
+          device_mac: "{{event.device.mac}}"
+          response_level: "high"
+          timeout: 3600
+    priority: "high"
+    enabled: true
+
+# Reglas de respuesta a alertas del sistema
+system_alert_rules:
+  - rule_id: "rule_system_alert_001"
+    name: "Alerta del sistema - Registro y notificación"
+    description: "Registrar alertas del sistema y notificar al equipo de operaciones"
+    condition: |
+      event.type == "system_alert" and
+      event.alert.severity in ["medium", "high", "critical"]
+    actions:
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Alerta del sistema registrada: {{event.alert.message}}"
+          alert_id: "{{event.alert.id}}"
+          severity: "{{event.alert.severity}}"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["operations@aura-system.com"]
+          subject: "[ALERTA DEL SISTEMA] {{event.alert.message}}"
+          message: |
+            Alerta del sistema:
+            ID: {{event.alert.id}}
+            Mensaje: {{event.alert.message}}
+            Severidad: {{event.alert.severity}}
+            Origen: {{event.alert.source}}
+            Hora: {{event.timestamp}}
+          severity: "{{event.alert.severity}}"
+    priority: "medium"
+    enabled: true
+
+  - rule_id: "rule_system_alert_002"
+    name: "Alerta crítica del sistema - Respuesta inmediata"
+    description: "Ejecutar respuesta inmediata para alertas críticas del sistema"
+    condition: |
+      event.type == "system_alert" and
+      event.alert.severity == "critical"
+    actions:
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com", "admin_network@aura-system.com", "operations@aura-system.com"]
+          subject: "[ALERTA CRÍTICA DEL SISTEMA] {{event.alert.message}}"
+          message: |
+            ALERTA CRÍTICA DEL SISTEMA:
+            ID: {{event.alert.id}}
+            Mensaje: {{event.alert.message}}
+            Severidad: {{event.alert.severity}}
+            Origen: {{event.alert.source}}
+            Hora: {{event.timestamp}}
+            Acción: RESPUESTA INMEDIATA REQUERIDA.
+          severity: "critical"
+      - type: "run_module"
+        module: "system_response"
+        parameters:
+          alert_id: "{{event.alert.id}}"
+          alert_type: "{{event.alert.type}}"
+          response_level: "critical"
+          timeout: 3600
+    priority: "critical"
+    enabled: true
+
+# Reglas de validación y seguridad adicionales
+additional_security_rules:
+  - rule_id: "rule_security_003"
+    name: "Validación de origen de eventos"
+    description: "Validar que los eventos provengan de fuentes confiables"
+    condition: |
+      event.source not in ["network_sensor", "data_lakehouse", "swarm_manager", "gatekeeper"]
+    actions:
+      - type: "log_event"
+        module: "security_audit"
+        parameters:
+          message: "Evento de origen no confiable detectado: {{event.source}}"
+          event_id: "{{event.id}}"
+          severity: "high"
+      - type: "send_alert"
+        module: "alert_notification"
+        parameters:
+          recipients: ["security@aura-system.com"]
+          subject: "[ALERTA] Evento de origen no confiable detectado"
+          message: |
+            Evento de origen no confiable detectado:
+            ID: {{event.id}}
+            Tipo: {{event.type}}
+            Origen: {{event.source}}
+            Acción: Evento registrado pero no procesado.
+          severity: "high"
+    priority: "high"
+    enabled: true
+
+  - rule_id: "rule_security_004"
+    name: "Detección de eventos duplicados"
+    description: "Detectar y evitar procesamiento de eventos duplicados"
+    condition: |
+      event.duplicate == true
+    actions:
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Evento duplicado detectado (ID: {{event.id}}). Evento ignorado."
+          event_id: "{{event.id}}"
+          severity: "low"
+    priority: "low"
+    enabled: true
+
+# Reglas de limpieza y mantenimiento
+maintenance_rules:
+  - rule_id: "rule_maintenance_001"
+    name: "Limpieza de reglas obsoletas"
+    description: "Eliminar reglas que no se han ejecutado en más de 90 días"
+    condition: |
+      event.type == "maintenance_check" and
+      event.check_type == "rule_cleanup"
+    actions:
+      - type: "run_module"
+        module: "rule_maintenance"
+        parameters:
+          cleanup_type: "obsolete_rules"
+          days_threshold: 90
+          dry_run: false
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Limpieza de reglas obsoletas completada"
+          severity: "medium"
+    priority: "low"
+    enabled: true
+
+  - rule_id: "rule_maintenance_002"
+    name: "Actualización de reglas"
+    description: "Verificar y actualizar reglas cuando se detectan cambios en el sistema"
+    condition: |
+      event.type == "system_update" and
+      event.update_type in ["new_module", "configuration_change", "policy_update"]
+    actions:
+      - type: "run_module"
+        module: "rule_validation"
+        parameters:
+          validation_type: "full"
+          update_type: "{{event.update_type}}"
+          updated_module: "{{event.updated_module}}"
+      - type: "log_event"
+        module: "system_logging"
+        parameters:
+          message: "Validación de reglas completada después de actualización del sistema"
+          update_type: "{{event.update_type}}"
+          severity: "medium"
+    priority: "medium"
+    enabled: true
+
+# Plantilla para reglas personalizadas (ejemplo)
+# custom_rules:
+#   - rule_id: "rule_custom_001"
+#     name: "Regla personalizada - Ejemplo"
+#     description: "Ejemplo de regla personalizada que puede ser añadida por el arquitecto"
+#     condition: |
+#       event.type == "custom_event" and
+#       event.custom_data.example_flag == true
+#     actions:
+#       - type: "run_module"
+#         module: "custom_module"
+#         parameters:
+#           example_parameter: "{{event.custom_data.example_value}}"
+#           timeout: 300
+#     priority: "medium"
+#     enabled: false
+
+# Configuración de prioridades y grupos de reglas
+rule_groups:
+  - group_id: "critical_rules"
+    name: "Reglas Críticas"
+    description: "Reglas que manejan situaciones críticas y requieren respuesta inmediata"
+    rules:
+      - "rule_security_001"
+      - "rule_security_002"
+      - "rule_threat_002"
+      - "rule_unauthorized_002"
+      - "rule_malware_002"
+      - "rule_high_risk_002"
+      - "rule_rogue_001"
+      - "rule_exfiltration_001"
+      - "rule_system_alert_002"
+      - "rule_anomaly_002"
+
+  - group_id: "high_priority_rules"
+    name: "Reglas de Alta Prioridad"
+    description: "Reglas importantes que requieren atención pronta"
+    rules:
+      - "rule_device_new_002"
+      - "rule_device_new_003"
+      - "rule_threat_001"
+      - "rule_unauthorized_001"
+      - "rule_malware_001"
+      - "rule_high_risk_001"
+      - "rule_rogue_002"
+      - "rule_exfiltration_002"
+      - "rule_vulnerability_002"
+      - "rule_relationship_002"
+      - "rule_anomaly_001"
+
+  - group_id: "medium_priority_rules"
+    name: "Reglas de Prioridad Media"
+    description: "Reglas que deben ser procesadas pero no requieren respuesta inmediata"
+    rules:
+      - "rule_device_new_001"
+      - "rule_device_disappeared_001"
+      - "rule_device_changed_001"
+      - "rule_threat_001"
+      - "rule_vulnerability_001"
+      - "rule_device_disappeared_002"
+      - "rule_device_changed_002"
+      - "rule_relationship_001"
+      - "rule_scan_complete_001"
+      - "rule_scan_complete_002"
+      - "rule_anomaly_001"
+      - "rule_system_alert_001"
+
+  - group_id: "low_priority_rules"
+    name: "Reglas de Baja Prioridad"
+    description: "Reglas informativas o de mantenimiento"
+    rules:
+      - "rule_security_003"
+      - "rule_security_004"
+      - "rule_maintenance_001"
+      - "rule_maintenance_002"
+
+# Configuración de flujos de trabajo
+workflows:
+  - workflow_id: "security_audit_workflow"
+    name: "Flujo de Trabajo de Auditoría de Seguridad"
+    description: "Flujo de trabajo completo para auditoría de seguridad de dispositivos"
+    steps:
+      - step_id: "step_1"
+        name: "Análisis inicial"
+        action:
+          type: "run_module"
+          module: "device_analysis"
+          parameters:
+            device_mac: "{{target_device}}"
+            analysis_type: "full"
+            timeout: 300
+        condition: "success == true"
+
+      - step_id: "step_2"
+        name: "Escaneo OSINT"
+        action:
+          type: "dispatch_task"
+          module: "swarm_manager"
+          parameters:
+            task_type: "OSINT_SCAN"
+            task_parameters:
+              target: "{{target_device}}"
+              tools: ["PhantomOSINT", "DeepWebAnalysis"]
+              depth: 2
+              timeout: 1800
+            priority: "high"
+        condition: "success == true"
+
+      - step_id: "step_3"
+        name: "Análisis de vulnerabilidades"
+        action:
+          type: "run_module"
+          module: "vulnerability_scan"
+          parameters:
+            device_mac: "{{target_device}}"
+            scan_type: "deep"
+            timeout: 1800
+        condition: "success == true"
+
+      - step_id: "step_4"
+        name: "Generación de informe"
+        action:
+          type: "run_module"
+          module: "report_generator"
+          parameters:
+            device_mac: "{{target_device}}"
+            report_type: "security_audit"
+            include_osint: true
+            include_vulnerabilities: true
+            timeout: 600
+        condition: "success == true"
+
+      - step_id: "step_5"
+        name: "Notificación de resultados"
+        action:
+          type: "send_alert"
+          module: "alert_notification"
+          parameters:
+            recipients: ["security@aura-system.com", "audit_team@aura-system.com"]
+            subject: "[INFORME] Auditoría de seguridad completada para {{target_device}}"
+            message: |
+              Auditoría de seguridad completada para dispositivo {{target_device}}.
+              Se ha generado un informe detallado con los resultados.
+              Puntuación de riesgo: {{risk_score}}
+              Nivel de amenaza: {{threat_level}}
+            severity: "medium"
+        condition: "success == true"
+
+  - workflow_id: "incident_response_workflow"
+    name: "Flujo de Trabajo de Respuesta a Incidentes"
+    description: "Flujo de trabajo para respuesta a incidentes de seguridad"
+    steps:
+      - step_id: "step_1"
+        name: "Contención inicial"
+        action:
+          type: "quarantine_device"
+          module: "device_quarantine"
+          parameters:
+            device_mac: "{{target_device}}"
+            reason: "{{incident_type}}"
+            severity: "{{incident_severity}}"
+        condition: "success == true"
+
+      - step_id: "step_2"
+        name: "Notificación al equipo de respuesta"
+        action:
+          type: "send_alert"
+          module: "alert_notification"
+          parameters:
+            recipients: ["incident_response@aura-system.com", "security@aura-system.com"]
+            subject: "[INCIDENTE] {{incident_type}} detectado en {{target_device}}"
+            message: |
+              Incidente detectado:
+              Tipo: {{incident_type}}
+              Severidad: {{incident_severity}}
+              Dispositivo afectado: {{target_device}}
+              Acción: Contención iniciada. Respuesta en curso.
+            severity: "{{incident_severity}}"
+        condition: "success == true"
+
+      - step_id: "step_3"
+        name: "Análisis forense"
+        action:
+          type: "run_module"
+          module: "forensic_analysis"
+          parameters:
+            device_mac: "{{target_device}}"
+            analysis_type: "full"
+            timeout: 3600
+        condition: "success == true"
+
+      - step_id: "step_4"
+        name: "Determinación de alcance"
+        action:
+          type: "run_module"
+          module: "incident_scope"
+          parameters:
+            device_mac: "{{target_device}}"
+            incident_type: "{{incident_type}}"
+            timeout: 1800
+        condition: "success == true"
+
+      - step_id: "step_5"
+        name: "Implementación de contramedidas"
+        action:
+          type: "run_module"
+          module: "countermeasures"
+          parameters:
+            device_mac: "{{target_device}}"
+            incident_type: "{{incident_type}}"
+            scope: "{{incident_scope}}"
+            timeout: 3600
+        condition: "success == true"
+
+      - step_id: "step_6"
+        name: "Generación de informe post-incidente"
+        action:
+          type: "run_module"
+          module: "incident_report"
+          parameters:
+            device_mac: "{{target_device}}"
+            incident_type: "{{incident_type}}"
+            report_type: "post_incident"
+            timeout: 1800
+        condition: "success == true"
+
+      - step_id: "step_7"
+        name: "Notificación de cierre"
+        action:
+          type: "send_alert"
+          module: "alert_notification"
+          parameters:
+            recipients: ["incident_response@aura-system.com", "security@aura-system.com"]
+            subject: "[CIERRE] Incidente {{incident_type}} en {{target_device}}"
+            message: |
+              Incidente {{incident_type}} en {{target_device}}:
+              Estado: {{incident_status}}
+              Acción: {{incident_action}}
+              Recomendaciones: {{incident_recommendations}}
+            severity: "{{incident_severity}}"
+        condition: "success == true"
+
+# Configuración de plantillas para eventos
+event_templates:
+  - template_id: "device_new_event"
+    name: "Evento de dispositivo nuevo"
+    description: "Plantilla para eventos de dispositivos nuevos detectados"
+    structure:
+      type: "device_new"
+      timestamp: "{{now}}"
+      device:
+        mac: "{{device_mac}}"
+        ip: "{{device_ip}}"
+        vendor: "{{device_vendor}}"
+        first_seen: "{{first_seen}}"
+        last_seen: "{{last_seen}}"
+        risk_score: "{{risk_score}}"
+        threat_level: "{{threat_level}}"
+        manufacturer: "{{manufacturer}}"
+        model: "{{model}}"
+        os: "{{os}}"
+        device_type: "{{device_type}}"
+      network:
+        name: "{{network_name}}"
+        location: "{{network_location}}"
+      source: "{{event_source}}"
+      severity: "{{severity}}"
+
+  - template_id: "threat_detected_event"
+    name: "Evento de amenaza detectada"
+    description: "Plantilla para eventos de amenazas detectadas"
+    structure:
+      type: "threat_detected"
+      timestamp: "{{now}}"
+      threat:
+        id: "{{threat_id}}"
+        type: "{{threat_type}}"
+        description: "{{threat_description}}"
+        severity: "{{threat_severity}}"
+        confidence: "{{threat_confidence}}"
+        indicators: ["{{threat_indicators}}"]
+      device:
+        mac: "{{device_mac}}"
+        ip: "{{device_ip}}"
+        vendor: "{{device_vendor}}"
+        risk_score: "{{risk_score}}"
+        threat_level: "{{threat_level}}"
+      source: "{{event_source}}"
+      severity: "{{severity}}"
+
+  - template_id: "anomaly_detected_event"
+    name: "Evento de anomalía detectada"
+    description: "Plantilla para eventos de anomalías detectadas"
+    structure:
+      type: "anomaly_detected"
+      timestamp: "{{now}}"
+      anomaly:
+        id: "{{anomaly_id}}"
+        type: "{{anomaly_type}}"
+        description: "{{anomaly_description}}"
+        score: "{{anomaly_score}}"
+        confidence: "{{anomaly_confidence}}"
+      device:
+        mac: "{{device_mac}}"
+        ip: "{{device_ip}}"
+        vendor: "{{device_vendor}}"
+        risk_score: "{{risk_score}}"
+      source: "{{event_source}}"
+      severity: "{{severity}}"
+
+# Configuración de plantillas para acciones
+action_templates:
+  - template_id: "run_module_action"
+    name: "Ejecutar módulo"
+    description: "Plantilla para acciones de ejecución de módulos"
+    structure:
+      type: "run_module"
+      module: "{{module_name}}"
+      parameters:
+        param1: "{{param1_value}}"
+        param2: "{{param2_value}}"
+      timeout: "{{timeout}}"
+      priority: "{{priority}}"
+
+  - template_id: "dispatch_task_action"
+    name: "Despachar tarea"
+    description: "Plantilla para acciones de despacho de tareas"
+    structure:
+      type: "dispatch_task"
+      module: "{{module_name}}"
+      parameters:
+        task_type: "{{task_type}}"
+        task_parameters: "{{task_parameters}}"
+        priority: "{{priority}}"
+
+  - template_id: "send_alert_action"
+    name: "Enviar alerta"
+    description: "Plantilla para acciones de envío de alertas"
+    structure:
+      type: "send_alert"
+      module: "{{module_name}}"
+      parameters:
+        recipients: ["{{recipient1}}", "{{recipient2}}"]
+        subject: "{{alert_subject}}"
+        message: "{{alert_message}}"
+        severity: "{{severity}}"
+
+# Configuración de validación de reglas
+validation_settings:
+  - validation_id: "rule_syntax_validation"
+    name: "Validación de sintaxis de reglas"
+    description: "Verificar que todas las reglas tengan sintaxis válida"
+    enabled: true
+    parameters:
+      check_conditions: true
+      check_actions: true
+      check_variables: true
+      check_priority: true
+
+  - validation_id: "rule_logic_validation"
+    name: "Validación lógica de reglas"
+    description: "Verificar que las reglas tengan lógica consistente"
+    enabled: true
+    parameters:
+      check_duplicates: true
+      check_conflicts: true
+      check_coverage: true
+      check_performance: true
+
+  - validation_id: "rule_security_validation"
+    name: "Validación de seguridad de reglas"
+    description: "Verificar que las reglas no representen riesgos de seguridad"
+    enabled: true
+    parameters:
+      check_module_permissions: true
+      check_data_access: true
+      check_network_access: true
+      check_privilege_escalation: true
+
+# Configuración de logging y auditoría
+logging_settings:
+  - log_level: "INFO"
+  - log_file: "/data/data/com.termux/files/home/rules_engine.log"
+  - max_log_size: 10  # MB
+  - log_retention_days: 30
+  - audit_log_enabled: true
+  - audit_log_file: "/data/data/com.termux/files/home/rules_engine_audit.log"
+  - audit_retention_days: 90
+  - sensitive_data_logging: false
+
+# Configuración de rendimiento
+performance_settings:
+  - max_rules_per_second: 10
+  - max_actions_per_second: 5
+  - rule_evaluation_timeout: 10  # segundos
+  - action_execution_timeout: 30  # segundos
+  - queue_size: 1000
+  - worker_threads: 4
+  - cache_enabled: true
+  - cache_size: 100  # MB
+
+# Configuración de integración con otros sistemas
+integration_settings:
+  - system: "gatekeeper"
+    endpoint: "/api/gatekeeper/validate"
+    auth_method: "api_key"
+    auth_key: "aura_rules_engine_key_123"
+    timeout: 10
+    enabled: true
+
+  - system: "swarm_manager"
+    endpoint: "/api/swarm/assign"
+    auth_method: "api_key"
+    auth_key: "aura_swarm_token_123"
+    timeout: 30
+    enabled: true
+
+  - system: "data_lakehouse"
+    endpoint: "/api/data_lakehouse/store"
+    auth_method: "api_key"
+    auth_key: "aura_data_lakehouse_api_key_123"
+    timeout: 20
+    enabled: true
+
+  - system: "alert_system"
+    endpoint: "/api/alerts/send"
+    auth_method: "api_key"
+    auth_key: "aura_alerts_token_123"
+    timeout: 15
+    enabled: true
+
+# Configuración de notificaciones
+notification_settings:
+  - channel: "email"
+    enabled: true
+    smtp_server: "smtp.aura-system.com"
+    smtp_port: 587
+    from_address: "rules_engine@aura-system.com"
+    recipients:
+      - "security@aura-system.com"
+      - "threat_intel@aura-system.com"
+    template_path: "/data/data/com.termux/files/home/email_templates/alert_template.html"
+
+  - channel: "slack"
+    enabled: true
+    webhook_url: "https://hooks.slack.com/services/XXX/YYY/ZZZ"
+    channel: "#security-alerts"
+    username: "AURA Rules Engine"
+    icon_emoji: ":aura_alert:"
+
+  - channel: "dashboard"
+    enabled: true
+    endpoint: "/api/dashboard/notifications"
+    auth_method: "api_key"
+    auth_key: "aura_dashboard_token_123"
+    timeout: 10
+
+# Configuración de métricas y monitoreo
+monitoring_settings:
+  - metrics_enabled: true
+  - metrics_interval: 60  # segundos
+  - metrics_endpoint: "/api/monitoring/rules"
+  - metrics_storage: "influxdb"
+  - metrics_retention: 30  # días
+  - health_check_enabled: true
+  - health_check_interval: 300  # segundos
+  - health_check_endpoint: "/api/health/rules_engine"
+
+# Configuración de actualización automática
+auto_update_settings:
+  - enabled: true
+  - update_interval: 86400  # 24 horas
+  - update_source: "github"
+  - update_repository: "https://github.com/aura-system/rules_engine"
+  - update_branch: "main"
+  - update_notification: true
+  - update_notification_recipients: ["devops@aura-system.com"]
+  - dry_run_enabled: false
+  - validation_before_update: true
+  - backup_before_update: true
+  - backup_retention: 7  # días
+
+# Configuración de pruebas y simulación
+testing_settings:
+  - test_mode_enabled: false
+  - test_event_queue: []
+  - simulation_enabled: false
+  - simulation_speed: 1.0
+  - dry_run_enabled: false
+  - validation_mode: "full"
+  - test_coverage_threshold: 0.95
+
+# Configuración de internacionalización
+i18n_settings:
+  - default_language: "es"
+  - supported_languages:
+      - "es"
+      - "en"
+  - language_files_path: "/data/data/com.termux/files/home/rules_engine/languages"
+  - fallback_language: "en"
+  - date_format: "YYYY-MM-DD HH:mm:ss"
+  - time_format: "HH:mm:ss"
+  - timestamp_format: "YYYY-MM-DDTHH:mm:ssZ"
+  - number_format: "decimal"
+  - currency_format: "$#,##0.00"
+  - date_time_format: "{{date_format}} {{time_format}}"
+
+# Configuración de seguridad adicional
+advanced_security_settings:
+  - rate_limiting_enabled: true
+  - max_requests_per_minute: 100
+  - max_burst_requests: 50
+  - ip_whitelisting_enabled: true
+  - allowed_ips:
+      - "127.0.0.1"
+      - "192.168.1.0/24"
+      - "10.0.0.0/8"
+  - ip_blacklisting_enabled: false
+  - blacklisted_ips: []
+  - api_key_rotation_enabled: true
+  - api_key_rotation_interval: 30  # días
+  - audit_trail_enabled: true
+  - sensitive_operations_logging: false
+  - encryption_enabled: true
+  - encryption_key_path: "/data/data/com.termux/files/home/rules_engine_encryption.key"
+  - data_integrity_checks: true
+  - signature_verification: true
+  - code_signing_enabled: true
+  - code_signing_key_path: "/data/data/com.termux/files/home/rules_engine_signing.key"
+
+# Configuración de escalabilidad
+scalability_settings:
+  - horizontal_scaling_enabled: false
+  - max_instances: 5
+  - auto_scaling_enabled: false
+  - scaling_threshold: 0.8
+  - scaling_cooldown: 300  # segundos
+  - vertical_scaling_enabled: true
+  - max_memory_usage: 0.9  # 90% de la memoria disponible
+  - max_cpu_usage: 0.85  # 85% del CPU disponible
+  - resource_monitoring_enabled: true
+  - resource_monitoring_interval: 60  # segundos
+  - load_balancing_enabled: false
+  - load_balancing_algorithm: "round_robin"
+  - health_check_url: "/api/health"
+  - health_check_interval: 30  # segundos
+  - health_check_timeout: 5  # segundos
+  - circuit_breaker_enabled: true
+  - circuit_breaker_threshold: 0.6
+  - circuit_breaker_reset_timeout: 60  # segundos
+
+# Configuración de compatibilidad
+compatibility_settings:
+  - backward_compatibility_enabled: true
+  - deprecated_features_warning: true
+  - deprecated_features_logging: true
+  - migration_path_provided: true
+  - version_check_enabled: true
+  - version_check_interval: 86400  # 24 horas
+  - version_check_endpoint: "https://api.aura-system.com/versions/rules_engine"
+  - supported_versions:
+      - "1.0"
+      - "1.1"
+      - "1.2"
+  - minimum_required_version: "1.0"
+  - maximum_supported_version: "1.2"
+  - migration_tools_enabled: true
+  - migration_tools_path: "/data/data/com.termux/files/home/rules_engine/migration"
+  - data_migration_enabled: true
+  - data_migration_schedule: "weekly"
+  - data_migration_window: "03:00-05:00"

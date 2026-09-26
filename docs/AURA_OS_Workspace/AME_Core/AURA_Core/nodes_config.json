@@ -1,0 +1,236 @@
+{
+  "version": "1.0.0",
+  "description": "Configuración de nodos para el sistema AURA. Define las capacidades de cada nodo móvil disponible en la red.",
+  "nodes": [
+    {
+      "id": "node_001",
+      "name": "AURA-NODE-001",
+      "status": "online",
+      "last_seen": "2026-06-02T12:00:00Z",
+      "capabilities": [
+        "wifi_scan",
+        "network_analysis",
+        "osint_tools",
+        "module_execution",
+        "battery_monitoring"
+      ],
+      "location": {
+        "type": "mobile",
+        "coordinates": {
+          "latitude": -12.0464,
+          "longitude": -77.0428
+        },
+        "network": "2.4GHz",
+        "ip_address": "192.168.1.101"
+      },
+      "hardware": {
+        "cpu": "Qualcomm Snapdragon 8 Gen 1",
+        "ram": "8GB",
+        "storage": "128GB",
+        "battery_capacity": "4500mAh"
+      },
+      "software": {
+        "os": "Android 13",
+        "termux_version": "0.118.0",
+        "python_version": "3.10.8"
+      },
+      "connection": {
+        "ssh_port": 8022,
+        "last_heartbeat": "2026-06-02T12:00:00Z",
+        "signal_strength": "excellent",
+        "battery_level": 85
+      },
+      "metadata": {
+        "owner": "security_team",
+        "role": "primary_osint_node",
+        "last_maintenance": "2026-05-28",
+        "notes": "Nodo principal para operaciones de OSINT y análisis de red."
+      }
+    },
+    {
+      "id": "node_002",
+      "name": "AURA-NODE-002",
+      "status": "online",
+      "last_seen": "2026-06-02T12:05:00Z",
+      "capabilities": [
+        "wifi_scan",
+        "battery_monitoring",
+        "security_audit",
+        "basic_osint"
+      ],
+      "location": {
+        "type": "mobile",
+        "coordinates": {
+          "latitude": -12.0511,
+          "longitude": -77.0489
+        },
+        "network": "5GHz",
+        "ip_address": "192.168.1.102"
+      },
+      "hardware": {
+        "cpu": "MediaTek Dimensity 1200",
+        "ram": "6GB",
+        "storage": "256GB",
+        "battery_capacity": "5000mAh"
+      },
+      "software": {
+        "os": "Android 12",
+        "termux_version": "0.117.0",
+        "python_version": "3.9.2"
+      },
+      "connection": {
+        "ssh_port": 8022,
+        "last_heartbeat": "2026-06-02T12:05:00Z",
+        "signal_strength": "good",
+        "battery_level": 78
+      },
+      "metadata": {
+        "owner": "security_team",
+        "role": "secondary_osint_node",
+        "last_maintenance": "2026-05-25",
+        "notes": "Nodo secundario para operaciones básicas de OSINT y monitoreo de batería."
+      }
+    },
+    {
+      "id": "node_003",
+      "name": "AURA-NODE-003",
+      "status": "online",
+      "last_seen": "2026-06-02T12:10:00Z",
+      "capabilities": [
+        "network_capture",
+        "packet_analysis",
+        "osint_tools",
+        "advanced_osint"
+      ],
+      "location": {
+        "type": "mobile",
+        "coordinates": {
+          "latitude": -12.0482,
+          "longitude": -77.0456
+        },
+        "network": "2.4GHz",
+        "ip_address": "192.168.1.103"
+      },
+      "hardware": {
+        "cpu": "Exynos 2100",
+        "ram": "12GB",
+        "storage": "256GB",
+        "battery_capacity": "4300mAh"
+      },
+      "software": {
+        "os": "Android 13",
+        "termux_version": "0.118.0",
+        "python_version": "3.10.8"
+      },
+      "connection": {
+        "ssh_port": 8022,
+        "last_heartbeat": "2026-06-02T12:10:00Z",
+        "signal_strength": "excellent",
+        "battery_level": 92
+      },
+      "metadata": {
+        "owner": "network_team",
+        "role": "network_analysis_node",
+        "last_maintenance": "2026-06-01",
+        "notes": "Nodo especializado en captura y análisis de paquetes de red."
+      }
+    },
+    {
+      "id": "node_004",
+      "name": "AURA-NODE-004",
+      "status": "online",
+      "last_seen": "2026-06-02T12:15:00Z",
+      "capabilities": [
+        "module_execution",
+        "battery_monitoring",
+        "basic_analysis"
+      ],
+      "location": {
+        "type": "mobile",
+        "coordinates": {
+          "latitude": -12.0501,
+          "longitude": -77.0478
+        },
+        "network": "5GHz",
+        "ip_address": "192.168.1.104"
+      },
+      "hardware": {
+        "cpu": "Snapdragon 888",
+        "ram": "8GB",
+        "storage": "128GB",
+        "battery_capacity": "4000mAh"
+      },
+      "software": {
+        "os": "Android 11",
+        "termux_version": "0.115.0",
+        "python_version": "3.8.2"
+      },
+      "connection": {
+        "ssh_port": 8022,
+        "last_heartbeat": "2026-06-02T12:15:00Z",
+        "signal_strength": "good",
+        "battery_level": 88
+      },
+      "metadata": {
+        "owner": "dev_team",
+        "role": "execution_node",
+        "last_maintenance": "2026-05-20",
+        "notes": "Nodo para ejecución de módulos Venice y monitoreo básico."
+      }
+    }
+  ],
+  "node_capabilities": {
+    "node_001": [
+      "wifi_scan",
+      "network_analysis",
+      "osint_tools",
+      "module_execution",
+      "battery_monitoring"
+    ],
+    "node_002": [
+      "wifi_scan",
+      "battery_monitoring",
+      "security_audit",
+      "basic_osint"
+    ],
+    "node_003": [
+      "network_capture",
+      "packet_analysis",
+      "osint_tools",
+      "advanced_osint"
+    ],
+    "node_004": ["module_execution", "battery_monitoring", "basic_analysis"]
+  },
+  "task_type_requirements": {
+    "SCAN_WIFI": ["wifi_scan"],
+    "ANALIZAR_RED_LOCAL": ["network_analysis"],
+    "OSINT_SCAN": ["osint_tools"],
+    "OSINT_SHODAN": ["osint_tools", "module_execution"],
+    "MONITOREO_BATERIA": ["battery_monitoring"],
+    "EJECUTAR_MODULE_VENICE": ["module_execution"],
+    "CAPTURA_TRANSACCIONES": ["network_capture", "packet_analysis"],
+    "NETWORK_PING": ["network_analysis", "module_execution"],
+    "AUDITORIA_SEGURIDAD": ["security_audit"]
+  },
+  "capability_descriptions": {
+    "wifi_scan": "Capacidad para escanear redes WiFi y dispositivos conectados",
+    "network_analysis": "Capacidad para analizar redes locales y detectar dispositivos no autorizados",
+    "osint_tools": "Acceso a herramientas de OSINT (PhantomOSINT, SubdomainEnumeration, etc.)",
+    "module_execution": "Capacidad para ejecutar módulos Python en el dispositivo",
+    "battery_monitoring": "Capacidad para monitorear el nivel de batería del dispositivo",
+    "network_capture": "Capacidad para capturar tráfico de red (pcap)",
+    "packet_analysis": "Capacidad para analizar paquetes capturados",
+    "security_audit": "Capacidad para realizar auditorías de seguridad del sistema",
+    "basic_osint": "Herramientas básicas de OSINT (limitadas)",
+    "advanced_osint": "Herramientas avanzadas de OSINT (PhantomOSINT, etc.)",
+    "basic_analysis": "Análisis básico de datos y logs"
+  },
+  "node_status_codes": {
+    "online": "Nodo disponible y conectado",
+    "offline": "Nodo no disponible o desconectado",
+    "maintenance": "Nodo en mantenimiento",
+    "unavailable": "Nodo temporalmente no disponible",
+    "degraded": "Nodo con rendimiento degradado"
+  },
+  "last_updated": "2026-06-02T12:25:00Z"
+}

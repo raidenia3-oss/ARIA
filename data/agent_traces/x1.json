@@ -1,0 +1,12 @@
+{
+  "trace_id": "x1",
+  "task_id": "t1",
+  "objective": "test",
+  "outcome": "success",
+  "steps": [],
+  "error": "",
+  "correction": "",
+  "duration_ms": 0.0,
+  "created_at": 1789071121.655187,
+  "metadata": {}
+}

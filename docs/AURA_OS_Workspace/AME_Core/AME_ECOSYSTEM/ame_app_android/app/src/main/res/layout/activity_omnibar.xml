@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0a0a0f"
+    android:padding="12dp">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⚡ AURA OMNI-BAR"
+        android:textColor="#00ff88"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="8dp" />
+
+    <!-- Status Bar -->
+    <TextView
+        android:id="@+id/status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Estado: Inicializando..."
+        android:textColor="#88ffcc"
+        android:textSize="11sp"
+        android:paddingBottom="8dp"
+        android:background="#0d1a12" />
+
+    <!-- OmniBar Input -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#0d0d1a"
+        android:padding="4dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="❯ "
+            android:textColor="#00ff88"
+            android:textSize="16sp"
+            android:gravity="center_vertical" />
+
+        <EditText
+            android:id="@+id/omni_input"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:hint="Escribe un comando... (/bot start, /sys stats)"
+            android:textColor="#00ff88"
+            android:textColorHint="#335544"
+            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:inputType="textNoSuggestions"
+            android:imeOptions="actionSend"
+            android:singleLine="true"
+            android:paddingStart="8dp" />
+    </LinearLayout>
+
+    <!-- Quick Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/btn_quick_bot_start"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:text="BOT ▶"
+            android:textColor="#0a0a0f"
+            android:textSize="11sp"
+            android:textAllCaps="false"
+            android:background="#00ff88" />
+
+        <Button
+            android:id="@+id/btn_quick_bot_stop"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:text="BOT ■"
+            android:textColor="#0a0a0f"
+            android:textSize="11sp"
+            android:textAllCaps="false"
+            android:background="#ff4444" />
+
+        <Button
+            android:id="@+id/btn_quick_stats"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:text="SYS"
+            android:textColor="#0a0a0f"
+            android:textSize="11sp"
+            android:textAllCaps="false"
+            android:background="#ffaa00" />
+
+        <Button
+            android:id="@+id/btn_quick_daemon"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:text="DMN"
+            android:textColor="#0a0a0f"
+            android:textSize="11sp"
+            android:textAllCaps="false"
+            android:background="#00aaff" />
+    </LinearLayout>
+
+    <!-- Results Area -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="─ SALIDA ──────────────────"
+        android:textColor="#333355"
+        android:textSize="10sp"
+        android:paddingBottom="4dp" />
+
+    <ScrollView
+        android:id="@+id/scroll_results"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#0d0d1a">
+
+        <LinearLayout
+            android:id="@+id/results_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp" />
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,61 @@
+[
+  {
+    "timestamp": "2026-08-31T01:45:09.888792Z",
+    "user": "ARIA Fase 1 completada con exito",
+    "response": "ARIA Fase 1 completada con exito",
+    "meta": {
+      "type": "fact",
+      "phase": 1
+    }
+  },
+  {
+    "timestamp": "2026-08-31T01:53:30.395379Z",
+    "user": "Test Fase 5",
+    "response": "Test Fase 5",
+    "meta": {
+      "type": "fact"
+    }
+  },
+  {
+    "timestamp": "2026-08-31T01:54:18.112688Z",
+    "user": "End-to-end test OK",
+    "response": "End-to-end test OK",
+    "meta": {
+      "type": "fact"
+    }
+  },
+  {
+    "timestamp": "2026-08-31T20:47:46.756359Z",
+    "user": "ARIA v2.0 FASES 1-6 OK",
+    "response": "ARIA v2.0 FASES 1-6 OK",
+    "meta": {
+      "type": "fact",
+      "phase": 6
+    }
+  },
+  {
+    "timestamp": "2026-08-31T20:51:51.317959Z",
+    "user": "ARIA v2.0 FASES 1-6 OK",
+    "response": "ARIA v2.0 FASES 1-6 OK",
+    "meta": {
+      "type": "fact",
+      "phase": 6
+    }
+  },
+  {
+    "timestamp": "2026-08-31T20:57:24.653744Z",
+    "user": "Full system test complete",
+    "response": "Full system test complete",
+    "meta": {
+      "type": "test"
+    }
+  },
+  {
+    "timestamp": "2026-08-31T21:02:57.286498Z",
+    "user": "Full system test complete",
+    "response": "Full system test complete",
+    "meta": {
+      "type": "test"
+    }
+  }
+]

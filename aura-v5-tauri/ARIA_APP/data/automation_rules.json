@@ -1,0 +1,107 @@
+{
+  "ea9f5340": {
+    "id": "ea9f5340",
+    "name": "test_rule",
+    "description": null,
+    "trigger": {
+      "type": "on_time",
+      "params": {},
+      "hour": 14,
+      "minute": 30,
+      "days": [
+        "monday",
+        "wednesday"
+      ],
+      "event": null,
+      "skill": null,
+      "condition": null
+    },
+    "actions": [
+      {
+        "type": "chat",
+        "params": {},
+        "skill": null,
+        "message": "Hola, es hora del recordatorio",
+        "method": "POST",
+        "url": null,
+        "seconds": null,
+        "title": null,
+        "body": null
+      }
+    ],
+    "enabled": true,
+    "tags": [],
+    "created_at": "2026-08-31T22:22:40.084468",
+    "last_executed": null,
+    "execution_count": 0,
+    "last_error": null
+  },
+  "30b908be": {
+    "id": "30b908be",
+    "name": "readme_example",
+    "description": null,
+    "trigger": {
+      "type": "on_time",
+      "params": {},
+      "hour": 9,
+      "minute": 0,
+      "days": null,
+      "event": null,
+      "skill": null,
+      "condition": null
+    },
+    "actions": [
+      {
+        "type": "chat",
+        "params": {},
+        "skill": null,
+        "message": "Buenos dias",
+        "method": "POST",
+        "url": null,
+        "seconds": null,
+        "title": null,
+        "body": null
+      }
+    ],
+    "enabled": true,
+    "tags": [],
+    "created_at": "2026-08-31T22:22:40.084468",
+    "last_executed": null,
+    "execution_count": 0,
+    "last_error": null
+  },
+  "c48fa0c2": {
+    "id": "c48fa0c2",
+    "name": "readme_test",
+    "description": null,
+    "trigger": {
+      "type": "on_time",
+      "params": {},
+      "hour": 9,
+      "minute": 0,
+      "days": null,
+      "event": null,
+      "skill": null,
+      "condition": null
+    },
+    "actions": [
+      {
+        "type": "chat",
+        "params": {},
+        "skill": null,
+        "message": "Buenos dias",
+        "method": "POST",
+        "url": null,
+        "seconds": null,
+        "title": null,
+        "body": null
+      }
+    ],
+    "enabled": true,
+    "tags": [],
+    "created_at": "2026-08-31T22:23:12.045199",
+    "last_executed": null,
+    "execution_count": 0,
+    "last_error": null
+  }
+}

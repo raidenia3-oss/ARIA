@@ -1,0 +1,52 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el sensor de red AURA en Termux",
+    "node_id": "mobile_node_001",
+    "interface": "wlan0",
+    "network_prefix": "192.168.1.",
+    "known_devices_file": "/data/data/com.termux/files/home/known_devices.json",
+    "db_path": "/data/data/com.termux/files/home/aura_intel.db",
+    "ssh_host": "localhost",
+    "ssh_port": 8022,
+    "ssh_user": "user",
+    "scan_interval": 60,
+    "max_retries": 3,
+    "retry_delay": 5,
+    "command_timeout": 30,
+    "log_file": "/data/data/com.termux/files/home/network_sensor.log",
+    "alert_threshold": "high",
+    "vendor_lookup_enabled": true,
+    "nmap_options": "-sn --disable-arp-ping",
+    "arp_scan_options": "--interface=wlan0 --localnet",
+    "known_devices_ttl": 86400,
+    "unknown_device_action": "alert_and_register",
+    "network_map_update_script": "/data/data/com.termux/files/home/aura_core/network_map_updater.py",
+    "max_concurrent_scans": 1,
+    "scan_retry_delay": 10,
+    "device_change_threshold": 0.1,
+    "min_signal_strength": -80,
+    "max_unknown_devices": 5,
+    "alert_severity_mapping": {
+        "unknown_device": "high",
+        "new_device": "medium",
+        "disappeared_device": "low",
+        "changed_device": "medium"
+    },
+    "device_whitelist": [
+        "00:11:22:33:44:55",
+        "AA:BB:CC:DD:EE:FF"
+    ],
+    "device_blacklist": [
+        "FF:FF:FF:FF:FF:FF",
+        "00:00:00:00:00:00"
+    ],
+    "vendor_database_path": "/data/data/com.termux/files/home/vendor_mac.db",
+    "enable_arp_scan": true,
+    "enable_nmap_scan": true,
+    "fallback_to_nmap": true,
+    "use_terminating_zero_in_mac": true,
+    "log_level": "INFO",
+    "enable_alerts": true,
+    "alert_destination": "aura_server",
+    "last_scan_timestamp": "2026-06-02T00:00:00Z"
+}

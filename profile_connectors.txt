@@ -1,0 +1,28 @@
+         33691 function calls (33591 primitive calls) in 0.048 seconds
+
+   Ordered by: cumulative time
+   List reduced from 172 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       50    0.000    0.000    0.047    0.001 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:160(run)
+       50    0.000    0.000    0.023    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:58(__enter__)
+      100    0.000    0.000    0.023    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:131(_lazy_init)
+       50    0.000    0.000    0.023    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\events.py:804(new_event_loop)
+       50    0.000    0.000    0.022    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\events.py:689(new_event_loop)
+       50    0.000    0.000    0.022    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\windows_events.py:312(__init__)
+       50    0.000    0.000    0.022    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\proactor_events.py:631(__init__)
+       50    0.000    0.000    0.020    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\proactor_events.py:782(_make_self_pipe)
+       50    0.001    0.000    0.020    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\socket.py:616(socketpair)
+       50    0.000    0.000    0.015    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:62(__exit__)
+       50    0.000    0.000    0.015    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:65(close)
+      150    0.001    0.000    0.013    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:617(run_until_complete)
+      150    0.000    0.000    0.011    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\windows_events.py:317(run_forever)
+       50    0.010    0.000    0.010    0.000 {method 'connect' of '_socket.socket' objects}
+       50    0.000    0.000    0.009    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\runners.py:86(run)
+      150    0.001    0.000    0.009    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:593(run_forever)
+      300    0.001    0.000    0.007    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\base_events.py:1845(_run_once)
+       50    0.000    0.000    0.005    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\proactor_events.py:684(close)
+      550    0.000    0.000    0.004    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\asyncio\events.py:78(_run)
+      300    0.001    0.000    0.004    0.000 C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\enum.py:686(__call__)
+
+

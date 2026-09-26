@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema oscuro AME (AURA OS palette: #0a0e27). Sin telemetría. -->
+    <style name="Theme.AME" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">#0a0e27</item>
+        <item name="colorPrimaryVariant">#0a0e27</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:statusBarColor">#0a0e27</item>
+        <item name="android:windowBackground">#0a0e27</item>
+    </style>
+
+    <style name="Theme.AME.NoActionBarLaunch" parent="Theme.AME">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>

@@ -1,0 +1,1082 @@
+[
+  {
+    "job_id": "45c736cf81",
+    "dataset_id": "a6090e03562a",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T02:35:27.434559+00:00",
+    "scheduled_at": "2026-09-11T02:35:27.434559+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "a689d789fe",
+    "dataset_id": "a133b3b56d7b",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T02:35:37.144587+00:00",
+    "scheduled_at": "2026-09-11T02:35:37.144587+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "5ed91512f2",
+    "dataset_id": "eb9ab725c590",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T02:37:53.823108+00:00",
+    "scheduled_at": "2026-09-11T02:37:53.823108+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "5e7d212b3a",
+    "dataset_id": "2f6fb9ba31cf",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T02:41:08.691185+00:00",
+    "scheduled_at": "2026-09-11T02:41:08.691185+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "e187fe6c1c",
+    "dataset_id": "e3d80f95e7a4",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T02:53:26.809698+00:00",
+    "scheduled_at": "2026-09-11T02:53:26.809698+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "1667ab21f0",
+    "dataset_id": "79e99309d364",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T03:44:42.713139+00:00",
+    "scheduled_at": "2026-09-11T03:44:42.713139+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "de87722aa9",
+    "dataset_id": "69c9eb3e4a8f",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T03:48:30.381607+00:00",
+    "scheduled_at": "2026-09-11T03:48:30.381607+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "09372fb8c8",
+    "dataset_id": "efa9f5c621fb",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T03:51:34.883925+00:00",
+    "scheduled_at": "2026-09-11T03:51:34.883925+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "1ad6853805",
+    "dataset_id": "5bf197274387",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T19:47:31.399714+00:00",
+    "scheduled_at": "2026-09-11T19:47:31.399714+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "9c473dbeb8",
+    "dataset_id": "f3f7e185f18d",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T20:21:27.663998+00:00",
+    "scheduled_at": "2026-09-11T20:21:27.663998+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "322f4dbd45",
+    "dataset_id": "7e29c46c4e34",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T20:26:42.637707+00:00",
+    "scheduled_at": "2026-09-11T20:26:42.637707+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "027f13900e",
+    "dataset_id": "1d580792f9de",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T20:31:57.459807+00:00",
+    "scheduled_at": "2026-09-11T20:31:57.459807+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "cc1f870b53",
+    "dataset_id": "26ff8cb3fb84",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T20:37:58.842478+00:00",
+    "scheduled_at": "2026-09-11T20:37:58.842478+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "b8763c3f2b",
+    "dataset_id": "b674e79e374b",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T20:43:16.974698+00:00",
+    "scheduled_at": "2026-09-11T20:43:16.974698+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "ca53b763d8",
+    "dataset_id": "3f37b6a57411",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T21:09:11.634592+00:00",
+    "scheduled_at": "2026-09-11T21:09:11.634592+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "33357f0548",
+    "dataset_id": "1f43dbfa0046",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T21:14:54.718301+00:00",
+    "scheduled_at": "2026-09-11T21:14:54.718301+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "925da3c111",
+    "dataset_id": "51a907b734c0",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T21:36:09.637849+00:00",
+    "scheduled_at": "2026-09-11T21:36:09.637849+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "72a35f812c",
+    "dataset_id": "c5cd623928a5",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T21:42:07.836126+00:00",
+    "scheduled_at": "2026-09-11T21:42:07.836126+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "0660581d19",
+    "dataset_id": "a0b44bdaf599",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T21:48:36.370301+00:00",
+    "scheduled_at": "2026-09-11T21:48:36.370301+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "3d32d3271c",
+    "dataset_id": "9e744553effc",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T21:54:23.432739+00:00",
+    "scheduled_at": "2026-09-11T21:54:23.432739+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "ab29d21469",
+    "dataset_id": "2175121eecf1",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T22:00:05.765261+00:00",
+    "scheduled_at": "2026-09-11T22:00:05.765261+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "b63dc33906",
+    "dataset_id": "0a795cd5f78a",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T22:05:43.986733+00:00",
+    "scheduled_at": "2026-09-11T22:05:43.986733+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "fb7222c5ab",
+    "dataset_id": "cf6f49cd4a6c",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T22:17:32.219419+00:00",
+    "scheduled_at": "2026-09-11T22:17:32.219419+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "3fd9a33f86",
+    "dataset_id": "214e483a8cee",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-11T22:25:34.245148+00:00",
+    "scheduled_at": "2026-09-11T22:25:34.245148+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "8a534e5155",
+    "dataset_id": "e331e515975c",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T01:35:38.261178+00:00",
+    "scheduled_at": "2026-09-12T01:35:38.261178+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "a07c2a1ef5",
+    "dataset_id": "b9d23a6b068b",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T01:40:46.318285+00:00",
+    "scheduled_at": "2026-09-12T01:40:46.318285+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "b842674c56",
+    "dataset_id": "0df5b0564836",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T01:49:52.255380+00:00",
+    "scheduled_at": "2026-09-12T01:49:52.255380+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "35e42fc4d3",
+    "dataset_id": "ac8d17f1801c",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T02:12:56.439192+00:00",
+    "scheduled_at": "2026-09-12T02:12:56.439192+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "c9903c686d",
+    "dataset_id": "45c69c01c75c",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T02:18:38.715117+00:00",
+    "scheduled_at": "2026-09-12T02:18:38.715117+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "339d87f5aa",
+    "dataset_id": "b7b75b1042da",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T02:23:26.279726+00:00",
+    "scheduled_at": "2026-09-12T02:23:26.279726+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "07f0c6f12d",
+    "dataset_id": "91b0e76d7cb6",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T02:29:40.746870+00:00",
+    "scheduled_at": "2026-09-12T02:29:40.746870+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "fc821d929c",
+    "dataset_id": "8fe7c15bf5d1",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T03:41:25.027033+00:00",
+    "scheduled_at": "2026-09-12T03:41:25.027033+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "25e3a96e13",
+    "dataset_id": "ba8f1dc31219",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T03:43:28.492666+00:00",
+    "scheduled_at": "2026-09-12T03:43:28.492666+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "cc72cfd467",
+    "dataset_id": "2e8e43393eeb",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T04:00:10.754042+00:00",
+    "scheduled_at": "2026-09-12T04:00:10.754042+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "7c16e1b4e2",
+    "dataset_id": "bd9e2e2375a3",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T04:05:21.155907+00:00",
+    "scheduled_at": "2026-09-12T04:05:21.155907+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "3b30b353ba",
+    "dataset_id": "2939eea29eea",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T04:10:48.520751+00:00",
+    "scheduled_at": "2026-09-12T04:10:48.520751+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "4a5488db4d",
+    "dataset_id": "e5546109eb2c",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T04:49:36.203334+00:00",
+    "scheduled_at": "2026-09-12T04:49:36.203334+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "8b05f45632",
+    "dataset_id": "6d40fb2f3787",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T18:55:56.719106+00:00",
+    "scheduled_at": "2026-09-12T18:55:56.719106+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "78e4f54fca",
+    "dataset_id": "44028a41212f",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T19:06:07.189774+00:00",
+    "scheduled_at": "2026-09-12T19:06:07.189774+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "8f9a1ca955",
+    "dataset_id": "ebb625e9d49e",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T20:48:55.857223+00:00",
+    "scheduled_at": "2026-09-12T20:48:55.857223+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "9c600b59a6",
+    "dataset_id": "01437d147fa9",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T20:56:13.641191+00:00",
+    "scheduled_at": "2026-09-12T20:56:13.641191+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "7811f20e38",
+    "dataset_id": "de38f1ffaac5",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T20:58:17.201548+00:00",
+    "scheduled_at": "2026-09-12T20:58:17.201548+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "e43ff8d434",
+    "dataset_id": "1af8db303f42",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T21:25:33.692674+00:00",
+    "scheduled_at": "2026-09-12T21:25:33.692674+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "1ac8ff43c4",
+    "dataset_id": "e21a516b076f",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T22:42:03.091073+00:00",
+    "scheduled_at": "2026-09-12T22:42:03.091073+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "ce403e1844",
+    "dataset_id": "80e369ebb822",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-12T23:07:53.754675+00:00",
+    "scheduled_at": "2026-09-12T23:07:53.754675+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "e422392ef7",
+    "dataset_id": "0cd5f9b4231a",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-13T00:05:17.828663+00:00",
+    "scheduled_at": "2026-09-13T00:05:17.828663+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "ee40612fc6",
+    "dataset_id": "840e981ff105",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-13T02:38:11.512155+00:00",
+    "scheduled_at": "2026-09-13T02:38:11.512155+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "1ee356f55b",
+    "dataset_id": "bcce97318454",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-13T02:48:29.431582+00:00",
+    "scheduled_at": "2026-09-13T02:48:29.431582+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "4388e94922",
+    "dataset_id": "9c5dee9132a9",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-13T16:11:36.199045+00:00",
+    "scheduled_at": "2026-09-13T16:11:36.199045+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "52b1ddd1d3",
+    "dataset_id": "a272165d5cf2",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-13T20:46:23.292755+00:00",
+    "scheduled_at": "2026-09-13T20:46:23.292755+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "7b5e914537",
+    "dataset_id": "1d5583ec9b9c",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-13T21:03:29.340889+00:00",
+    "scheduled_at": "2026-09-13T21:03:29.340889+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "d4276b7f78",
+    "dataset_id": "697dd02a47d6",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-13T21:39:16.291960+00:00",
+    "scheduled_at": "2026-09-13T21:39:16.291960+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "4e49767145",
+    "dataset_id": "3a3415b30e82",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-14T00:01:47.824551+00:00",
+    "scheduled_at": "2026-09-14T00:01:47.824551+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "3d81fa361d",
+    "dataset_id": "04dad3a1b409",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-14T02:24:51.799125+00:00",
+    "scheduled_at": "2026-09-14T02:24:51.799125+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "2031acd089",
+    "dataset_id": "e3ef49afe130",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-14T02:40:24.365022+00:00",
+    "scheduled_at": "2026-09-14T02:40:24.365022+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "415412a64a",
+    "dataset_id": "c5b1b196347d",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-14T02:59:16.745761+00:00",
+    "scheduled_at": "2026-09-14T02:59:16.745761+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "ef474191b5",
+    "dataset_id": "df804a8360f0",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-14T03:07:54.270721+00:00",
+    "scheduled_at": "2026-09-14T03:07:54.270721+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "e5bcf7847f",
+    "dataset_id": "5f6a6dfb876d",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-14T03:10:24.211981+00:00",
+    "scheduled_at": "2026-09-14T03:10:24.211981+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "85431930b6",
+    "dataset_id": "0f3ee0ba113e",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-14T03:36:04.742072+00:00",
+    "scheduled_at": "2026-09-14T03:36:04.742072+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  },
+  {
+    "job_id": "1e8bc47969",
+    "dataset_id": "2c5c443aad79",
+    "base_model": "local-base",
+    "status": "scheduled",
+    "created_at": "2026-09-14T18:57:54.438779+00:00",
+    "scheduled_at": "2026-09-14T18:57:54.438779+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "checkpoint_ids": [],
+    "metrics": {
+      "priority": "normal",
+      "max_checkpoints": 3,
+      "estimated_minutes": 60
+    },
+    "error": null,
+    "advisory": true
+  }
+]

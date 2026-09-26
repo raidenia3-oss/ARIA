@@ -1,0 +1,28 @@
+name: "qa-agent"
+version: "1.0.0"
+author: "AURA"
+description: "Responde preguntas con base de conocimiento y confidence score"
+
+commands:
+  - name: "ask"
+    params: ["question", "context"]
+    async: true
+  - name: "batch_qa"
+    params: ["questions", "context"]
+    async: true
+  - name: "evaluate_answer"
+    params: ["question", "answer", "context"]
+    async: false
+
+dependencies:
+  - "openai>=1.0.0"
+  - "sentence-transformers>=2.0.0"
+
+capabilities:
+  - "question_answering"
+  - "knowledge_retrieval"
+  - "confidence_scoring"
+
+settings:
+  quality_target: 0.88
+  speed_target: 1500

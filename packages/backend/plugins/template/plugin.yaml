@@ -1,0 +1,22 @@
+name: "fanfic-generator-v2"
+version: "1.0.0"
+author: "AURA"
+description: "Genera fanfics mejorados con LoRA"
+
+commands:
+  - name: "generate"
+    params: ["style", "characters", "length"]
+    async: true
+
+dependencies:
+  - "transformers>=4.30.0"
+  - "torch>=2.0.0"
+
+capabilities:
+  - "text_generation"
+  - "learning"
+  - "monetization"
+
+settings:
+  quality_target: 0.95
+  speed_target: 5000

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="#0a0e17" android:padding="12dp">
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="◆ WEB FACTORY ◆"
+        android:textColor="#00FF41" android:textSize="14sp" android:textStyle="bold"
+        android:fontFamily="monospace" android:gravity="center" android:paddingBottom="8dp"/>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Generador autónomo de sitios web · AURA v3.1"
+        android:textColor="#484F58" android:textSize="10sp" android:fontFamily="monospace"
+        android:gravity="center" android:paddingBottom="12dp"/>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:background="#111827" android:padding="12dp"
+        android:layout_marginBottom="8dp">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Título de la página"
+            android:textColor="#3B82F6" android:textSize="11sp" android:fontFamily="monospace"
+            android:paddingBottom="4dp"/>
+        <EditText android:id="@+id/etWebTitle" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="ej: Dashboard Privado AURA"
+            android:inputType="text" android:background="#1a1a2e" android:textColor="#FFF"
+            android:padding="10dp" android:fontFamily="monospace" android:textSize="12sp"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="Nicho / Temática" android:textColor="#3B82F6"
+            android:textSize="11sp" android:fontFamily="monospace" android:paddingTop="8dp" android:paddingBottom="4dp"/>
+        <EditText android:id="@+id/etWebNiche" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="ej: mineria, cripto, dash"
+            android:inputType="text" android:background="#1a1a2e" android:textColor="#FFF"
+            android:padding="10dp" android:fontFamily="monospace" android:textSize="12sp"/>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:orientation="vertical" android:background="#111827"
+        android:padding="10dp" android:layout_marginBottom="8dp">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="┌─ WEB VAULT ─────────────────────────┐"
+            android:textColor="#A855F7" android:textSize="11sp" android:fontFamily="monospace"
+            android:paddingBottom="4dp"/>
+        <ScrollView android:id="@+id/scrollWebLog" android:layout_width="match_parent"
+            android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+            <TextView android:id="@+id/tvWebLog" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text=""
+                android:textColor="#00FF41" android:textSize="10sp" android:fontFamily="monospace"
+                android:textIsSelectable="true"/>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center" android:paddingTop="6dp">
+        <Button android:id="@+id/btnGenerateWeb" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="⚡ GENERAR" android:textColor="#00FF41" android:backgroundTint="#111827"
+            android:textSize="12sp" android:textStyle="bold" android:layout_marginEnd="4dp"/>
+        <Button android:id="@+id/btnOpenWebVault" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="📂 VAULT" android:textColor="#3B82F6" android:backgroundTint="#111827"
+            android:textSize="12sp" android:textStyle="bold" android:layout_marginStart="4dp"/>
+    </LinearLayout>
+</LinearLayout>

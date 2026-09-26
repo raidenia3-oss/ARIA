@@ -1,0 +1,13 @@
+@echo off
+echo Configurando Capacitor para AME...
+
+echo Inicializando Capacitor...
+npx cap init AME com.arquitecto.ame --web-dir=dist
+
+echo Añadiendo plataforma Android...
+npx cap add android
+
+echo Sincronizando archivos de configuración...
+npx cap sync
+
+echo Configuración de Capacitor completada.

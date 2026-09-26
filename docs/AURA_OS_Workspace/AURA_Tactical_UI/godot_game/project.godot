@@ -1,0 +1,26 @@
+; Engine configuration file.
+; AURA Tactics - Idle RPG integrado con AURA Core
+; Archivo generado manualmente para Godot 4.x
+
+[application]
+
+config/name="AURA Tactics"
+run/main_scene="res://scenes/MainMenu.tscn"
+config/features=PackedStringArray("4.2")
+
+[autoload]
+
+AURABridge="*res://autoloads/AURABridge.gd"
+GameState="*res://autoloads/GameState.gd"
+NetworkController="*res://scripts/NetworkController.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+
+[rendering]
+
+renderer/rendering_method="mobile"
+environment/defaults/default_clear_color=Color(0.12, 0.11, 0.18, 1)

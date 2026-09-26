@@ -1,0 +1,55 @@
+[
+  {
+    "role": "user",
+    "content": "Hola AURA, revisa el estado del sistema.",
+    "timestamp": "2025-12-18T10:00:00Z"
+  },
+  {
+    "role": "assistant",
+    "content": "Sistema operativo. Nodos principales en línea.",
+    "timestamp": "2025-12-18T10:00:30Z"
+  },
+  {
+    "role": "user",
+    "content": "Inicia escaneo de red wifi.",
+    "timestamp": "2025-12-18T10:02:00Z"
+  },
+  {
+    "role": "assistant",
+    "content": "Escaneo completado: 12 redes detectadas, 2 vulnerabilidades potenciales.",
+    "timestamp": "2025-12-18T10:03:10Z"
+  },
+  {
+    "role": "user",
+    "content": "Genera reporte de inteligencia.",
+    "timestamp": "2025-12-18T10:04:00Z"
+  },
+  {
+    "role": "assistant",
+    "content": "Reporte generado y enviado al panel táctico.",
+    "timestamp": "2025-12-18T10:05:20Z"
+  },
+  {
+    "role": "user",
+    "content": "Sincroniza datos con el móvil.",
+    "timestamp": "2025-12-18T10:06:00Z"
+  },
+  {
+    "role": "assistant",
+    "content": "Sincronización completada. 3 archivos transferidos.",
+    "timestamp": "2025-12-18T10:06:45Z"
+  },
+  {
+    "role": "user",
+    "content": "Actualiza el radar de conocimiento.",
+    "timestamp": "2025-12-18T10:07:00Z"
+  },
+  {
+    "role": "assistant",
+    "content": "Radar actualizado: 5 nodos de conocimiento añadidos.",
+    "timestamp": "2025-12-18T10:08:10Z"
+  }
+]
+
+</parameter>
+</write_to_file>

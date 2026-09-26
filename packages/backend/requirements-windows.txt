@@ -1,0 +1,28 @@
+# AURA Backend - Windows Native Dependencies
+# Versión ligera para Windows sin dependencias pesadas
+
+# Core
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+aiofiles
+
+# Database
+sqlalchemy
+alembic
+
+# Auth
+python-jose[cryptography]
+passlib[bcrypt]
+
+# Utils
+requests
+feedparser
+schedule
+
+# Optional (si fallan, el backend igual funciona)
+# psycopg2-binary
+# opencv-python-headless
+# mediapipe
+# redis

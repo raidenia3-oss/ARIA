@@ -1,0 +1,360 @@
+{
+  "user_id": "default",
+  "base_emotion": "curiosity",
+  "emotional_variability": 0.4,
+  "triggers": {
+    "usuario": {
+      "count": 50,
+      "emotions": {
+        "frustration": 5,
+        "anxiety": 3,
+        "curiosity": 28,
+        "anger": 2,
+        "neutral": 4,
+        "joy": 6,
+        "sadness": 2
+      }
+    },
+    "frustration:": {
+      "count": 6,
+      "emotions": {
+        "frustration": 5,
+        "curiosity": 1
+      }
+    },
+    "complicado.": {
+      "count": 2,
+      "emotions": {
+        "frustration": 1,
+        "curiosity": 1
+      }
+    },
+    "soluciona": {
+      "count": 14,
+      "emotions": {
+        "frustration": 3,
+        "anxiety": 2,
+        "curiosity": 7,
+        "joy": 1,
+        "neutral": 1
+      }
+    },
+    "esto.": {
+      "count": 15,
+      "emotions": {
+        "frustration": 2,
+        "anger": 2,
+        "curiosity": 7,
+        "anxiety": 1,
+        "joy": 2,
+        "sadness": 1
+      }
+    },
+    "anxiety:": {
+      "count": 6,
+      "emotions": {
+        "anxiety": 3,
+        "curiosity": 3
+      }
+    },
+    "preocupado.": {
+      "count": 2,
+      "emotions": {
+        "anxiety": 1,
+        "curiosity": 1
+      }
+    },
+    "qué.": {
+      "count": 24,
+      "emotions": {
+        "anxiety": 1,
+        "curiosity": 14,
+        "joy": 3,
+        "neutral": 3,
+        "sadness": 1,
+        "frustration": 2
+      }
+    },
+    "curiosity:": {
+      "count": 13,
+      "emotions": {
+        "curiosity": 13
+      }
+    },
+    "aprender.": {
+      "count": 2,
+      "emotions": {
+        "curiosity": 2
+      }
+    },
+    "cómo.": {
+      "count": 12,
+      "emotions": {
+        "curiosity": 8,
+        "neutral": 1,
+        "joy": 1,
+        "frustration": 1,
+        "anxiety": 1
+      }
+    },
+    "anger:": {
+      "count": 6,
+      "emotions": {
+        "anger": 2,
+        "curiosity": 4
+      }
+    },
+    "furioso.": {
+      "count": 1,
+      "emotions": {
+        "anger": 1
+      }
+    },
+    "ayuda": {
+      "count": 18,
+      "emotions": {
+        "anger": 2,
+        "neutral": 3,
+        "curiosity": 6,
+        "joy": 3,
+        "sadness": 2,
+        "frustration": 2
+      }
+    },
+    "neutral:": {
+      "count": 7,
+      "emotions": {
+        "neutral": 4,
+        "curiosity": 3
+      }
+    },
+    "info.": {
+      "count": 1,
+      "emotions": {
+        "neutral": 1
+      }
+    },
+    "saber.": {
+      "count": 2,
+      "emotions": {
+        "curiosity": 2
+      }
+    },
+    "joy:": {
+      "count": 6,
+      "emotions": {
+        "joy": 6
+      }
+    },
+    "contento.": {
+      "count": 2,
+      "emotions": {
+        "joy": 2
+      }
+    },
+    "hola.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "explica": {
+      "count": 9,
+      "emotions": {
+        "curiosity": 9
+      }
+    },
+    "bien.": {
+      "count": 1,
+      "emotions": {
+        "joy": 1
+      }
+    },
+    "pregunta.": {
+      "count": 1,
+      "emotions": {
+        "neutral": 1
+      }
+    },
+    "dato.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "busco.": {
+      "count": 1,
+      "emotions": {
+        "neutral": 1
+      }
+    },
+    "sadness:": {
+      "count": 6,
+      "emotions": {
+        "sadness": 2,
+        "curiosity": 4
+      }
+    },
+    "solo.": {
+      "count": 1,
+      "emotions": {
+        "sadness": 1
+      }
+    },
+    "explica.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "dime": {
+      "count": 9,
+      "emotions": {
+        "curiosity": 6,
+        "anxiety": 1,
+        "joy": 2
+      }
+    },
+    "entiendo.": {
+      "count": 1,
+      "emotions": {
+        "frustration": 1
+      }
+    },
+    "ansiedad.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "rabia.": {
+      "count": 2,
+      "emotions": {
+        "anger": 1,
+        "curiosity": 1
+      }
+    },
+    "frustrado.": {
+      "count": 1,
+      "emotions": {
+        "frustration": 1
+      }
+    },
+    "curioso.": {
+      "count": 3,
+      "emotions": {
+        "curiosity": 3
+      }
+    },
+    "desanimado.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "sirve.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "imposible.": {
+      "count": 1,
+      "emotions": {
+        "frustration": 1
+      }
+    },
+    "necesito.": {
+      "count": 1,
+      "emotions": {
+        "neutral": 1
+      }
+    },
+    "maravilloso.": {
+      "count": 2,
+      "emotions": {
+        "joy": 2
+      }
+    },
+    "emergencia.": {
+      "count": 1,
+      "emotions": {
+        "anxiety": 1
+      }
+    },
+    "basura.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "estrés.": {
+      "count": 1,
+      "emotions": {
+        "anxiety": 1
+      }
+    },
+    "rápido.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "mal.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "interesante.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "vacío.": {
+      "count": 1,
+      "emotions": {
+        "sadness": 1
+      }
+    },
+    "quiero.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "deprimido.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "molesto.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "cansado.": {
+      "count": 1,
+      "emotions": {
+        "frustration": 1
+      }
+    },
+    "inaceptable.": {
+      "count": 1,
+      "emotions": {
+        "curiosity": 1
+      }
+    },
+    "increíble.": {
+      "count": 1,
+      "emotions": {
+        "joy": 1
+      }
+    }
+  },
+  "last_updated": "2026-08-04T19:53:54.467973",
+  "total_records": 50
+}

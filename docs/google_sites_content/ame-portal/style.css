@@ -1,0 +1,8 @@
+body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #080408; color: #F0F0F8; }
+.header { background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 40px 20px; text-align: center; border-bottom: 2px solid #DC143C; }
+.content { max-width: 800px; margin: 0 auto; padding: 20px; }
+.card { background: #1a1a2e; border: 1px solid rgba(220,20,60,0.3); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.card h2 { font-size: 18px; color: #FFD700; }
+.card p { color: #aaa; line-height: 1.6; }
+.btn { display: inline-block; background: #DC143C; color: #F0F0F8; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 12px; }
+.footer { text-align: center; padding: 20px; color: #444; font-size: 12px; }

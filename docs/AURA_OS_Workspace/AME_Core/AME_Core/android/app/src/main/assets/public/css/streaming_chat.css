@@ -1,0 +1,372 @@
+/*
+ * ════════════════════════════════════════════════════════════════════════════════════════════════════
+ *   STREAMING_CHAT — Estilos para Chat en Tiempo Real
+ *   Interfaz táctica con respuesta háptica y auto-scroll inteligente
+ *   AME Project — AURA
+ * ════════════════════════════════════════════════════════════════════════════════════════════════════
+ */
+
+/* ── Contenedor principal del chat ── */
+.streaming-chat-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    display: none;
+    flex-direction: column;
+    padding: 16px;
+    overflow-y: auto;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* ── Contenedor del chat ── */
+.streaming-chat {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 120px);
+    overflow-y: auto;
+    background: rgba(10, 10, 15, 0.8);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    margin-bottom: 16px;
+}
+
+/* ── Contenedor de mensajes ── */
+.streaming-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-bottom: 16px;
+    scroll-behavior: smooth;
+}
+
+/* ── Mensajes del usuario ── */
+.streaming-chat-message.user-message {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    max-width: 80%;
+    align-self: flex-end;
+    background: rgba(255, 152, 0, 0.15);
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+/* ── Mensajes de AURA ── */
+.streaming-chat-message.aura-message {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    max-width: 80%;
+    align-self: flex-start;
+    background: rgba(20, 20, 30, 0.6);
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid rgba(0, 212, 255, 0.1);
+}
+
+/* ── Contenido del mensaje ── */
+.streaming-chat-message-content {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #eee;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    padding: 0 4px;
+}
+
+/* ── Marcadores de tiempo ── */
+.streaming-chat-message-timestamp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #5a6a8a;
+    text-align: right;
+    margin-top: auto;
+}
+
+/* ── Input de mensaje ── */
+.streaming-chat-input-container {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.streaming-chat-input {
+    flex: 1;
+    min-height: 48px;
+    padding: 12px 16px;
+    background: rgba(20, 20, 30, 0.8);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 8px;
+    color: #eee;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+}
+
+.streaming-chat-input::placeholder {
+    color: #5a6a8a;
+}
+
+/* ── Botón de enviar ── */
+.streaming-chat-send {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #00d4ff 0%, #0090cc 100%);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+}
+
+.streaming-chat-send:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+}
+
+.streaming-chat-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ── Botón de micrófono ── */
+.mic-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(255, 152, 0, 0.15);
+    color: #ff9800;
+    border: 1px solid rgba(255, 152, 0, 0.2);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mic-button:hover {
+    background: rgba(255, 152, 0, 0.2);
+}
+
+.recording-indicator {
+    width: 12px;
+    height: 12px;
+    background: #ff4444;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+/* ── Indicador de escritura ── */
+.streaming-chat-typing-indicator {
+    display: none;
+    text-align: center;
+    padding: 12px;
+    color: #5a6a8a;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+/* ── Indicador de streaming ── */
+.streaming-chat-streaming-indicator {
+    display: none;
+    text-align: center;
+    padding: 12px;
+    color: #00d4ff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+.streaming-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: #00d4ff;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* ── Formato Markdown y código ── */
+.streaming-chat-message-content strong {
+    font-weight: 700;
+    color: #ff9800;
+}
+
+.streaming-chat-message-content em {
+    font-style: italic;
+    color: #888;
+}
+
+.streaming-chat-message-content code {
+    background: rgba(20, 20, 30, 0.6);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #00d4ff;
+}
+
+.streaming-chat-message-content ul,
+.streaming-chat-message-content ol {
+    padding-left: 20px;
+    margin: 8px 0;
+}
+
+.streaming-chat-message-content li {
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+/* ── Bloques de código ── */
+.code-block {
+    background: rgba(20, 20, 30, 0.6);
+    border: 1px solid rgba(0, 212, 255, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+}
+
+.code-block .keyword {
+    color: #ff9800;
+}
+
+.code-block .function {
+    color: #00d4ff;
+}
+
+.code-block .string {
+    color: #4caf50;
+}
+
+.code-block .comment {
+    color: #5a6a8a;
+    font-style: italic;
+}
+
+/* ── Header del chat ── */
+.streaming-chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.streaming-chat-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    color: #00d4ff;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.streaming-chat-close-btn {
+    background: none;
+    border: none;
+    color: #5a6a8a;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.streaming-chat-close-btn:hover {
+    color: #00d4ff;
+}
+
+/* ── Footer del chat ── */
+.streaming-chat-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.streaming-chat-footer-btn {
+    background: none;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    color: #00d4ff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 0 8px;
+}
+
+.streaming-chat-footer-btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .streaming-chat-input {
+        padding: 10px 14px;
+    }
+
+    .streaming-chat-send {
+        padding: 10px 18px;
+        font-size: 13px;
+    }
+
+    .mic-button {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .streaming-chat-message {
+        max-width: 90%;
+    }
+}

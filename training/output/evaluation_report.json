@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-08-10T17:21:14",
+  "total_questions": 1,
+  "model_base": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_fine_tuned": "C:\\Users\\User\\Downloads\\AURA\\fine-tuned-ame\\aura_finetuned_lora",
+  "metrics": {
+    "base_avg_latency_ms": 27106.53,
+    "ft_avg_latency_ms": 10275.85,
+    "base_avg_tokens": 86.0,
+    "ft_avg_tokens": 22.0,
+    "base_avg_score": 77.0,
+    "ft_avg_score": 15.0,
+    "win_rate_ft": 0.0,
+    "win_rate_base": 1.0,
+    "ties": 0
+  },
+  "results": [
+    {
+      "prompt": "¿Qué hora es?",
+      "complexity": "low",
+      "base": {
+        "text": "Lo siento por cualquier confusión, pero como Qwen, la IA creado por Alibaba Cloud, no tengo la capacidad de proporcionar información sobre horarios. Soy una inteligencia artificial programada para ayu",
+        "latency_ms": 27106.53,
+        "tokens": 86,
+        "score": 77
+      },
+      "fine_tuned": {
+        "text": "Estoy aquí para ayudarte a saber la hora actual. ¿Cómo puedo asistirte hoy?",
+        "latency_ms": 10275.85,
+        "tokens": 22,
+        "score": 15
+      },
+      "winner": "base",
+      "reason": "heuristic"
+    }
+  ]
+}

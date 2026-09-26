@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-08-10T16:40:54",
+  "steps": {
+    "synthetic": {
+      "skipped": true
+    },
+    "validate": {
+      "script": "validate_dataset.py",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "2026-08-10 16:40:54,678 [INFO] Cargando C:\\Users\\User\\Downloads\\AURA\\training\\data\\continual_dataset.jsonl ...\n2026-08-10 16:40:54,681 [INFO] Registros cargados: 660\n2026-08-10 16:40:54,683 [INFO] Reporte guardado en C:\\Users\\User\\Downloads\\AURA\\training\\data\\validation_report.json\n2026-08-10 16:40:54,683 [INFO] Total: 660 | Válidos: 660 | Duplicados: 183 | Vacíos: 0 | Long. prom. text: 36.17\n",
+      "elapsed_s": 0.12
+    },
+    "benchmark": {
+      "skipped": true
+    },
+    "train": {
+      "returncode": 0,
+      "log": "C:\\Users\\User\\Downloads\\AURA\\training\\output\\train_light.log",
+      "elapsed_s": 33.4
+    }
+  },
+  "status": "OK"
+}

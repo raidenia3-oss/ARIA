@@ -1,0 +1,9 @@
+{
+    "name": "aura-pwa-frontend",
+    "version": "1.0.0",
+    "description": "AURA PWA - Frontend para Vercel",
+    "scripts": {
+        "build": "echo 'Static files ready'",
+        "start": "echo 'Serving static files'"
+    }
+}

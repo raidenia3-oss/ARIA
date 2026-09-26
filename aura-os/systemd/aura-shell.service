@@ -1,0 +1,17 @@
+[Unit]
+Description=AURA Godot Shell (Desktop HUD)
+After=graphical.target aura-brain.service
+Wants=aura-brain.service
+
+[Service]
+Type=simple
+User=aura
+WorkingDirectory=/opt/aura
+ExecStart=/opt/aura/aura_shell_linux.x86_64 --no-window --fullscreen
+Restart=always
+RestartSec=10
+Environment="DISPLAY=:0"
+Environment="XDG_RUNTIME_DIR=/run/user/1000"
+
+[Install]
+WantedBy=graphical.target

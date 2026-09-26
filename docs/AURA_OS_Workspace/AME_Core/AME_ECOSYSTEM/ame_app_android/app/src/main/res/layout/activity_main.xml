@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Home Screen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Conectando a AURA Core..."
+                android:textColor="@color/warning"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"/>
+
+            <Button
+                android:id="@+id/btnCheckStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verificar Conexión"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"/>
+
+            <Button
+                android:id="@+id/btnOSINT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OSINT Recon"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnTarget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Target Analysis"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnNetwork"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Network Scan"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chat"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnConsole"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Consola Táctica"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Inicio"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"/>
+        </LinearLayout>
+
+        <!-- OSINT Screen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OSINT Recon"
+                android:textColor="@color/textPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"/>
+
+            <EditText
+                android:id="@+id/etOSINTQuery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese el objetivo"
+                android:inputType="text"
+                android:background="@color/inputBackground"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/btnOSINTSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ejecutar Búsqueda"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"/>
+        </LinearLayout>
+
+        <!-- Target Screen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Target Analysis"
+                android:textColor="@color/textPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"/>
+
+            <EditText
+                android:id="@+id/etTargetUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese el nombre de usuario"
+                android:inputType="text"
+                android:background="@color/inputBackground"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/btnTargetSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Analizar"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"/>
+        </LinearLayout>
+
+        <!-- Network Screen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Network Scan"
+                android:textColor="@color/textPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"/>
+
+            <EditText
+                android:id="@+id/etNetworkTarget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese la dirección IP o dominio"
+                android:inputType="text"
+                android:background="@color/inputBackground"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/btnNetworkScan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Escanear"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"/>
+        </LinearLayout>
+
+        <!-- Chat Screen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chat"
+                android:textColor="@color/textPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"/>
+
+            <EditText
+                android:id="@+id/etChatMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese su mensaje"
+                android:inputType="textMultiLine"
+                android:background="@color/inputBackground"
+                android:textColor="@color/textPrimary"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/btnChatSend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enviar"
+                android:background="@drawable/spinner_background"
+                android:textColor="@color/textPrimary"/>
+        </LinearLayout>
+    </ViewFlipper>
+</LinearLayout>

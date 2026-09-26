@@ -1,0 +1,374 @@
+/*
+Estilos para el Dashboard Táctico de AURA.
+Incluye estilos para el cursor de mano, gestos detectados, botón de control de gestos y notificaciones.
+*/
+
+/* Estilos globales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
+    overflow-x: hidden;
+    transition: background-color 0.5s ease;
+}
+
+/* Estilos para el cursor de mano */
+.hand-cursor {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background-color: rgba(0, 255, 0, 0.7);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border: 2px solid rgba(0, 255, 0, 0.9);
+    transition: all 0.1s ease;
+    transform: scale(1);
+}
+
+/* Estilos para el overlay de gestos detectados */
+.gesture-overlay {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #00ff00;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    z-index: 9998;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+/* Estilos para el botón de control de gestos */
+.gesture-toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    background-color: #00ff00;
+    color: #000000;
+    border: none;
+    border-radius: 50px;
+    width: 120px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 12px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.gesture-toggle-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+}
+
+.gesture-toggle-button:active {
+    transform: scale(0.98);
+}
+
+.gesture-icon {
+    font-size: 18px;
+}
+
+.gesture-label {
+    font-size: 12px;
+}
+
+/* Estilos para notificaciones inmersivas */
+.immersive-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #00ff00;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 9998;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para el radar de amenazas */
+#threatRadarChart {
+    width: 100%;
+    height: 300px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+}
+
+/* Estilos para las barras de recursos */
+.resource-bars {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+}
+
+.resource-bar {
+    width: 30%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.bar-fill {
+    height: 20px;
+    background-color: #00ff00;
+    border-radius: 3px;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.bar-value {
+    font-size: 12px;
+    color: #00ff00;
+    transition: all 0.3s ease;
+}
+
+/* Estilos para la consola táctica */
+#consoleOutput {
+    height: 200px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    color: #00ff00;
+    transition: all 0.3s ease;
+}
+
+.log-line {
+    margin: 5px 0;
+    padding: 5px;
+    transition: all 0.2s ease;
+}
+
+.log-line.info {
+    color: #00ff00;
+}
+
+.log-line.warning {
+    color: #ffcc00;
+}
+
+.log-line.error {
+    color: #ff0000;
+}
+
+.console-input {
+    width: 100%;
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.console-submit {
+    background-color: #00ff00;
+    color: #000000;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+}
+
+.console-submit:hover {
+    background-color: #00cc00;
+    transform: scale(1.05);
+}
+
+/* Estilos para el Action Queue */
+#actionQueueContainer {
+    width: 100%;
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.action-item {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    transition: all 0.3s ease;
+    transform: translateY(0);
+    opacity: 0;
+}
+
+.action-item.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.action-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+}
+
+.action-header h3 {
+    margin: 0;
+    color: #00ff00;
+    transition: all 0.2s ease;
+}
+
+.action-type {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.action-content {
+    margin: 5px 0;
+    color: #cccccc;
+    transition: all 0.2s ease;
+}
+
+.action-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+
+.action-approve, .action-deny {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.action-approve {
+    background-color: #00ff00;
+    color: #000000;
+}
+
+.action-deny {
+    background-color: #ff0000;
+    color: #ffffff;
+}
+
+.action-approve:hover, .action-deny:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+/* Estilos para dispositivos móviles */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        display: none !important;
+    }
+
+    .main-content {
+        width: 100% !important;
+        padding: 10px !important;
+    }
+
+    .action-queue-panel {
+        width: 100% !important;
+        margin-bottom: 20px !important;
+    }
+
+    .panel-secondary {
+        display: none !important;
+    }
+
+    .ticker-container {
+        font-size: 14px !important;
+    }
+
+    .card {
+        margin-bottom: 15px !important;
+    }
+}
+
+/* Media Queries para Dispositivos Móviles */
+@media screen and (max-width: 768px) {
+    .hand-cursor {
+        width: 30px;
+        height: 30px;
+    }
+
+    .gesture-overlay {
+        font-size: 14px;
+        top: 10px;
+        right: 10px;
+    }
+
+    .gesture-toggle-button {
+        width: 100px;
+        height: 35px;
+        font-size: 10px;
+    }
+}
+
+/* Animaciones para transiciones suaves */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); }
+    to { transform: translateY(0); }
+}
+
+.panel, .card {
+    animation: fadeIn 0.3s ease;
+}
+
+.panel.visible, .card.visible {
+    animation: slideIn 0.3s ease;
+}

@@ -1,0 +1,653 @@
+/* ═══════════════════════════════════════════════
+   AURA Core — Situation Room Theme
+   Dark tactical UI · Inter + JetBrains Mono
+   Archivo: static/css/style.css
+   Propósito: Estilos visuales para el dashboard táctico AURA.
+   Incluye: grid de paneles, animaciones de alerta, ticker, métricas,
+            chat, VOID terminal, y efectos de phosphor glow.
+   ═══════════════════════════════════════════════ */
+
+/* ── Google Fonts (cargados desde HTML) ── */
+/* Inter para cuerpo, JetBrains Mono para datos/títulos */
+
+/* ── Reset & Variables ── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-body: #0a0a0a;
+    --bg-card: #0f0f1a;
+    --bg-input: #14141f;
+    --bg-header: #0c0c14;
+    --border: #1a1a2e;
+    --border-active: #252545;
+    --text-primary: #d6dcef;
+    --text-dim: #5a6a8a;
+    --accent-cyan: #00d4ff;
+    --accent-pink: #ff2d78;
+    --accent-purple: #7c5cfc;
+    --green: #00ff88;
+    --red: #ff3366;
+    --yellow: #ffcc00;
+    --glow-red: #ff0055;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Header ── */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 18px;
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header h1 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.header h1 span {
+    color: var(--accent-pink);
+}
+
+/* ── Health Tag ── */
+.health-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    padding: 2px 10px;
+    border-radius: 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot.ok {
+    background: var(--green);
+    box-shadow: 0 0 5px var(--green);
+}
+
+.dot.bad {
+    background: var(--red);
+    box-shadow: 0 0 5px var(--red);
+}
+
+/* ── Grid de Paneles (Situation Room) ── */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 800px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Panel Widget ── */
+.panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s;
+}
+
+.panel:hover {
+    border-color: var(--border-active);
+}
+
+.panel-header {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    background: var(--bg-input);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-primary);
+}
+
+.panel-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.panel-body p {
+    color: var(--text-dim);
+}
+
+/* ── Chat Panel ── */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 280px;
+    margin-bottom: 8px;
+}
+
+.chat-msg {
+    margin-bottom: 6px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.chat-msg.user {
+    background: rgba(0, 212, 255, 0.07);
+    border-left: 2px solid var(--accent-cyan);
+}
+
+.chat-msg.ai {
+    background: rgba(124, 92, 252, 0.07);
+    border-left: 2px solid var(--accent-purple);
+}
+
+.chat-msg .sender {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.chat-msg.user .sender {
+    color: var(--accent-cyan);
+}
+
+.chat-msg.ai .sender {
+    color: var(--accent-purple);
+}
+
+.chat-msg .text {
+    color: var(--text-primary);
+}
+
+/* ── Chat input row ── */
+.chat-input-row {
+    display: flex;
+    gap: 6px;
+}
+
+.chat-input-row input {
+    flex: 1;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    outline: none;
+    transition: border-color 0.12s;
+}
+
+.chat-input-row input:focus {
+    border-color: var(--accent-cyan);
+}
+
+.chat-input-row input::placeholder {
+    color: var(--text-dim);
+    opacity: 0.7;
+}
+
+.chat-input-row button {
+    background: var(--accent-purple);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.12s;
+}
+
+.chat-input-row button:hover {
+    filter: brightness(1.2);
+}
+
+.chat-input-row button:active {
+    transform: scale(0.97);
+}
+
+/* ── Briefing Items ── */
+.briefing-item {
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.briefing-item:last-child {
+    border-bottom: none;
+}
+
+.briefing-item .src {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--accent-cyan);
+}
+
+.briefing-item .title {
+    color: var(--text-primary);
+}
+
+/* ── Market / BLUE Metrics ── */
+.market-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.metric-tile {
+    background: var(--bg-input);
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid transparent;
+    transition: border-color 0.12s;
+}
+
+.metric-tile:hover {
+    border-color: var(--border-active);
+}
+
+.metric-tile .val {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.metric-tile .lbl {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.chart-box {
+    height: 180px;
+    width: 100%;
+}
+
+/* ── VOID Terminal ── */
+.void-term textarea {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--accent-pink);
+    border-radius: 4px;
+    padding: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    outline: none;
+    resize: vertical;
+    min-height: 60px;
+    transition: border-color 0.12s;
+}
+
+.void-term textarea:focus {
+    border-color: var(--accent-cyan);
+}
+
+.void-term textarea::placeholder {
+    color: var(--text-dim);
+    opacity: 0.7;
+}
+
+.void-term button {
+    margin-top: 6px;
+    background: var(--accent-pink);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.12s;
+}
+
+.void-term button:hover {
+    filter: brightness(1.2);
+}
+
+.void-term button:active {
+    transform: scale(0.97);
+}
+
+.void-term .feedback {
+    font-size: 0.65rem;
+    color: var(--accent-pink);
+    margin-top: 4px;
+    min-height: 16px;
+}
+
+/* ── Buttons genéricos ── */
+.btn-tactical {
+    background: var(--accent-cyan);
+    color: #000;
+    border: none;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.12s;
+}
+
+.btn-tactical:hover {
+    filter: brightness(1.2);
+}
+
+.btn-tactical:active {
+    transform: scale(0.97);
+}
+
+/* ── Scrollbar personalizada ── */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-active);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-cyan);
+}
+
+/* ── Selection ── */
+::selection {
+    background: rgba(0, 212, 255, 0.3);
+    color: #fff;
+}
+
+/* ── Terminal phosphor glow (efecto pantalla fósforo) ── */
+.panel-header,
+.header h1,
+.health-tag,
+.metric-tile .val,
+.ticker-item,
+.early-section ul li strong,
+.chat-msg .sender,
+.btn-tactical {
+    text-shadow: 0 0 4px rgba(0, 212, 255, 0.15);
+}
+
+.tick-critical, .critical-alert, .critical-alert-indicator {
+    text-shadow: 0 0 6px rgba(255, 51, 102, 0.3);
+}
+
+/* ── Presence indicator (CSI Radar) ── */
+.spectrum-status {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+    will-change: transform;
+}
+
+.spectrum-normal {
+    color: var(--green);
+    background: rgba(0, 255, 136, 0.08);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.spectrum-alert {
+    color: var(--glow-red);
+    background: rgba(255, 0, 85, 0.1);
+    border: 1px solid rgba(255, 0, 85, 0.3);
+    animation: alert-blink 1s ease-in-out infinite;
+}
+
+/* ── Console de Eventos Unificada ── */
+.event-console {
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 6px;
+    max-height: 80px;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    line-height: 1.6;
+    margin-top: 6px;
+}
+
+.event-line {
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-line .ts {
+    color: var(--accent-purple);
+}
+
+.event-line .tag-csi {
+    color: var(--accent-cyan);
+}
+
+.event-line .tag-ai {
+    color: var(--green);
+}
+
+.event-line .tag-warn {
+    color: var(--yellow);
+}
+
+.event-line .tag-err {
+    color: var(--red);
+}
+
+/* ── Ajustes compactos para vista única ── */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.header { flex-shrink: 0; }
+.ticker-wrap { flex-shrink: 0; }
+
+.grid {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    gap: 8px;
+}
+
+.panel-body {
+    padding: 8px;
+}
+
+.chat-messages {
+    max-height: 180px;
+}
+
+.chart-box {
+    height: 140px;
+}
+
+.market-metrics {
+    margin-bottom: 4px;
+}
+
+.metric-tile {
+    padding: 4px 8px;
+}
+
+.metric-tile .val {
+    font-size: 0.85rem;
+}
+
+/* ── Animaciones tácticas ── */
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 5px var(--accent-cyan); }
+    50%      { box-shadow: 0 0 15px var(--accent-cyan), 0 0 25px var(--accent-purple); }
+}
+
+@keyframes alert-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+}
+
+@keyframes threat-pulse {
+    0%   { background-color: rgba(255, 51, 102, 0.1); }
+    50%  { background-color: rgba(255, 51, 102, 0.3); }
+    100% { background-color: rgba(255, 51, 102, 0.1); }
+}
+
+.critical-alert {
+    animation: alert-blink 1.2s ease-in-out infinite;
+    color: var(--red) !important;
+    font-weight: 700;
+}
+
+.glow-active {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.threat-active {
+    animation: threat-pulse 2s ease-in-out infinite;
+}
+
+/* ── Ticker Táctico (cinta de alertas) ── */
+.ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg-header);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    height: 22px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 31px;
+    z-index: 99;
+}
+
+.ticker-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 8px;
+    white-space: nowrap;
+    background: var(--bg-input);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker-scroll 45s linear infinite;
+}
+
+.ticker-track:hover {
+    animation-play-state: paused;
+}
+
+.ticker-item {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    padding: 0 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ticker-item .tick-critical {
+    color: var(--red);
+    font-weight: 700;
+}
+
+.ticker-item .tick-warning {
+    color: var(--yellow);
+    font-weight: 600;
+}
+
+.ticker-item .tick-info {
+    color: var(--accent-cyan);
+}
+
+@keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}

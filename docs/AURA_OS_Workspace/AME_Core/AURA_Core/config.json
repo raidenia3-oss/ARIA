@@ -1,0 +1,10 @@
+{
+  "mobile_ip": "192.168.1.0",
+  "mobile_port": 5000,
+  "last_seen": "2026-05-22T00:00:00",
+  "auto_update_ip": true,
+  "webhook_port": 5001,
+  "flask_port": 5000,
+  "ollama_host": "localhost",
+  "ollama_port": 11434
+}

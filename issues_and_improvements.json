@@ -1,0 +1,84 @@
+{
+  "issues": [
+    {
+      "id": 1,
+      "category": "performance",
+      "title": "Chat endpoint slow (54s)",
+      "description": "Ollama inference + build_context takes too long. Solution: cache context with TTL, optimize process_iter",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "created": "2026-09-19T23:03:35.008558",
+      "updated": "2026-09-19T23:03:35.008558"
+    },
+    {
+      "id": 2,
+      "category": "performance",
+      "title": "Screen capture delay",
+      "description": "Screen capture happens every 1s. Should be async/threaded to not block.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "created": "2026-09-19T23:03:35.011561",
+      "updated": "2026-09-19T23:03:35.011561"
+    },
+    {
+      "id": 3,
+      "category": "bug",
+      "title": "WebSocket /api/aria/observe not tested",
+      "description": "WS endpoint defined but no active test. Need real WebSocket client test.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "created": "2026-09-19T23:03:35.014068",
+      "updated": "2026-09-19T23:03:35.014068"
+    },
+    {
+      "id": 4,
+      "category": "feature",
+      "title": "Implement ARIA v4.0 desktop (no HTTP)",
+      "description": "Convert from FastAPI server to IPC pipes architecture. See PHASE_RESEARCH_DESKTOP_ARCHITECTURE.txt",
+      "severity": "CRITICAL",
+      "status": "OPEN",
+      "created": "2026-09-19T23:03:35.015072",
+      "updated": "2026-09-19T23:03:35.015072"
+    },
+    {
+      "id": 5,
+      "category": "optimization",
+      "title": "Reduce model size (quantization)",
+      "description": "Whisper/Ollama models are large. Use quantized versions (Q4, Q5) to reduce disk/memory.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "created": "2026-09-19T23:03:35.016077",
+      "updated": "2026-09-19T23:03:35.016077"
+    },
+    {
+      "id": 6,
+      "category": "optimization",
+      "title": "Memory leak in explanation_generator",
+      "description": "tracemalloc shows 327 KiB growth. Investigate cache/list accumulation.",
+      "severity": "LOW",
+      "status": "OPEN",
+      "created": "2026-09-19T23:03:35.017078",
+      "updated": "2026-09-19T23:03:35.017078"
+    },
+    {
+      "id": 7,
+      "category": "feature",
+      "title": "Add system tray integration",
+      "description": "Implement pystray for minimize-to-tray and hotkey Ctrl+Shift+A.",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "created": "2026-09-19T23:03:35.018079",
+      "updated": "2026-09-19T23:03:35.018079"
+    },
+    {
+      "id": 8,
+      "category": "feature",
+      "title": "Voice activation (wake word)",
+      "description": "Implement Vosk for passive \"ARIA\" wake-word detection.",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "created": "2026-09-19T23:03:35.019080",
+      "updated": "2026-09-19T23:03:35.019080"
+    }
+  ]
+}

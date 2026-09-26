@@ -1,0 +1,571 @@
+{
+  "timestamp": "2026-08-04T21:40:02.764597",
+  "files": [
+    {
+      "name": "training-data.jsonl",
+      "arc": "datasets/training-data.jsonl",
+      "size": 259140,
+      "md5": "9dc6bf3b54b3e8541299b78c59a10156"
+    },
+    {
+      "name": "training-data-collected.jsonl",
+      "arc": "datasets/training-data-collected.jsonl",
+      "size": 905604,
+      "md5": "5a9db46aabb47d56f8a5b957d33e8c4f"
+    },
+    {
+      "name": "training-data-ui.jsonl",
+      "arc": "datasets/training-data-ui.jsonl",
+      "size": 90238,
+      "md5": "c31a83c9490a1b20003e0874d9314828"
+    },
+    {
+      "name": "training-data-web.jsonl",
+      "arc": "datasets/training-data-web.jsonl",
+      "size": 14863,
+      "md5": "5bb2dfbf73e089401024cab41f7c147b"
+    },
+    {
+      "name": "training-data-reasoning.jsonl",
+      "arc": "datasets/training-data-reasoning.jsonl",
+      "size": 49024,
+      "md5": "de0e29f5424762a2f198d295ec12d9ff"
+    },
+    {
+      "name": "training-data-tasks.jsonl",
+      "arc": "datasets/training-data-tasks.jsonl",
+      "size": 55924,
+      "md5": "595efab89af7f60b6a44d94a3517f357"
+    },
+    {
+      "name": "training-data-search.jsonl",
+      "arc": "datasets/training-data-search.jsonl",
+      "size": 33563,
+      "md5": "31a536dbb13dcd17c7352c4e4895bba5"
+    },
+    {
+      "name": "training-data-device.jsonl",
+      "arc": "datasets/training-data-device.jsonl",
+      "size": 48508,
+      "md5": "de320ac87b3924eb2133b6802b361309"
+    },
+    {
+      "name": "training-data-voice.jsonl",
+      "arc": "datasets/training-data-voice.jsonl",
+      "size": 21501,
+      "md5": "88d67f0ac116ed1fa571865914c5c218"
+    },
+    {
+      "name": "training-data-system.jsonl",
+      "arc": "datasets/training-data-system.jsonl",
+      "size": 38606,
+      "md5": "e56fbe43356d68bef3080891f9736790"
+    },
+    {
+      "name": "training-data-memory.jsonl",
+      "arc": "datasets/training-data-memory.jsonl",
+      "size": 20248,
+      "md5": "2f2694229332b381f9c92a10e7617f74"
+    },
+    {
+      "name": "training-data-portable.jsonl",
+      "arc": "datasets/training-data-portable.jsonl",
+      "size": 1081,
+      "md5": "bf6a123c16e9abd1bd1d34fb294f1d55"
+    },
+    {
+      "name": "training-data-sync.jsonl",
+      "arc": "datasets/training-data-sync.jsonl",
+      "size": 1081,
+      "md5": "cf232fd7305807c65f1de4234b5dedaf"
+    },
+    {
+      "name": "training-data-deployment.jsonl",
+      "arc": "datasets/training-data-deployment.jsonl",
+      "size": 1229,
+      "md5": "7d5508908b0fc6735d3036e65dd63645"
+    },
+    {
+      "name": "training-data-vision.jsonl",
+      "arc": "datasets/training-data-vision.jsonl",
+      "size": 38182,
+      "md5": "823d1a68d825750c2669f1ac3bc78b91"
+    },
+    {
+      "name": "training-data-screen.jsonl",
+      "arc": "datasets/training-data-screen.jsonl",
+      "size": 54244,
+      "md5": "0ec66689f29ffcd55bc1fd87ed2a4244"
+    },
+    {
+      "name": "training-data-persuasion.jsonl",
+      "arc": "datasets/training-data-persuasion.jsonl",
+      "size": 30242,
+      "md5": "9d95269d3c90c0cd8717c55175095168"
+    },
+    {
+      "name": "training-data-emotional.jsonl",
+      "arc": "datasets/training-data-emotional.jsonl",
+      "size": 27496,
+      "md5": "e0d397c46f739b5b31a57d03e1ebabb9"
+    },
+    {
+      "name": "training-data-evolved.jsonl",
+      "arc": "datasets/training-data-evolved.jsonl",
+      "size": 275893,
+      "md5": "b17c2ef41d4cc2d0b989377e82a5cd8a"
+    },
+    {
+      "name": "training-data-self_evolved.jsonl",
+      "arc": "datasets/training-data-self_evolved.jsonl",
+      "size": 4821836,
+      "md5": "6c3b211fbd151abca4ad4bebf521180c"
+    },
+    {
+      "name": "training_config_pc.json",
+      "arc": "datasets/training_config_pc.json",
+      "size": 4943,
+      "md5": "410807e4bd0e7568a1ad55569c5b290e"
+    },
+    {
+      "name": "fine-tuned-ame\\adapter_config.json",
+      "arc": "models/fine-tuned-ame/adapter_config.json",
+      "size": 1145,
+      "md5": "cc240bdb4946c753792f572b3d0a2aaa"
+    },
+    {
+      "name": "fine-tuned-ame\\adapter_model.safetensors",
+      "arc": "models/fine-tuned-ame/adapter_model.safetensors",
+      "size": 8745704,
+      "md5": "8d96a8556f1d834d3486c2cbf6aa6352"
+    },
+    {
+      "name": "fine-tuned-ame\\chat_template.jinja",
+      "arc": "models/fine-tuned-ame/chat_template.jinja",
+      "size": 2481,
+      "md5": "5c9e80369446ba4b2a5e1d63066df41f"
+    },
+    {
+      "name": "fine-tuned-ame\\evolution_loop_report.json",
+      "arc": "models/fine-tuned-ame/evolution_loop_report.json",
+      "size": 1899,
+      "md5": "3bdbd45b16d4726402e45a96d5b17ebc"
+    },
+    {
+      "name": "fine-tuned-ame\\README.md",
+      "arc": "models/fine-tuned-ame/README.md",
+      "size": 5188,
+      "md5": "15d0a7f2c42cfc50a9d6d903e843d044"
+    },
+    {
+      "name": "fine-tuned-ame\\tokenizer.json",
+      "arc": "models/fine-tuned-ame/tokenizer.json",
+      "size": 11421990,
+      "md5": "6573cbaef46ea4fffeff04f690c796ba"
+    },
+    {
+      "name": "fine-tuned-ame\\tokenizer_config.json",
+      "arc": "models/fine-tuned-ame/tokenizer_config.json",
+      "size": 755,
+      "md5": "e19bcb7eb6cbb4d2e3bbbc18bca1372b"
+    },
+    {
+      "name": "fine-tuned-ame\\training_config.json",
+      "arc": "models/fine-tuned-ame/training_config.json",
+      "size": 102,
+      "md5": "c3edd32791a9a367c0251ad55b019262"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\adapter_config.json",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\adapter_config.json",
+      "size": 1145,
+      "md5": "cc240bdb4946c753792f572b3d0a2aaa"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\adapter_model.safetensors",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\adapter_model.safetensors",
+      "size": 8745704,
+      "md5": "8d96a8556f1d834d3486c2cbf6aa6352"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\chat_template.jinja",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\chat_template.jinja",
+      "size": 2481,
+      "md5": "5c9e80369446ba4b2a5e1d63066df41f"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\optimizer.pt",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\optimizer.pt",
+      "size": 17614731,
+      "md5": "e99de43da7258c0c92754dd8e1dde8f7"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\README.md",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\README.md",
+      "size": 5188,
+      "md5": "15d0a7f2c42cfc50a9d6d903e843d044"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\rng_state.pth",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\rng_state.pth",
+      "size": 14455,
+      "md5": "b59ee046c1b4b9eac90d610fc042c1b8"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\scheduler.pt",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\scheduler.pt",
+      "size": 1465,
+      "md5": "8e4f728e162fe7c17db317681e670185"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\tokenizer.json",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\tokenizer.json",
+      "size": 11421990,
+      "md5": "6573cbaef46ea4fffeff04f690c796ba"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\tokenizer_config.json",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\tokenizer_config.json",
+      "size": 755,
+      "md5": "e19bcb7eb6cbb4d2e3bbbc18bca1372b"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\trainer_state.json",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\trainer_state.json",
+      "size": 1040,
+      "md5": "f8642254098825c2bffcd3d9510e7e6e"
+    },
+    {
+      "name": "fine-tuned-ame\\checkpoint-2\\training_args.bin",
+      "arc": "models/fine-tuned-ame/checkpoint-2\\training_args.bin",
+      "size": 5137,
+      "md5": "5041611ce49b23434e735a43081b46e2"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\adapter_config.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\adapter_config.json",
+      "size": 1146,
+      "md5": "2cc6d05816bc357f024107dd9928513f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\adapter_model.safetensors",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\adapter_model.safetensors",
+      "size": 17462432,
+      "md5": "929fbced1655a96c6d22f828d21548c8"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\chat_template.jinja",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\chat_template.jinja",
+      "size": 2481,
+      "md5": "5c9e80369446ba4b2a5e1d63066df41f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\metrics.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\metrics.json",
+      "size": 254,
+      "md5": "8acbb76ea110c845df1e99703693a1ab"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\README.md",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\README.md",
+      "size": 5186,
+      "md5": "083542802ded1a595806c7f2c13fb9e5"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\tokenizer.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\tokenizer.json",
+      "size": 11422170,
+      "md5": "e2d19cffeda7a759975c7dd44a8c8ac8"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\tokenizer_config.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\tokenizer_config.json",
+      "size": 726,
+      "md5": "f721e84951a478c1e0fb68d1aec7971b"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\adapter_config.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\adapter_config.json",
+      "size": 1146,
+      "md5": "2cc6d05816bc357f024107dd9928513f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\adapter_model.safetensors",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\adapter_model.safetensors",
+      "size": 17462432,
+      "md5": "929fbced1655a96c6d22f828d21548c8"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\chat_template.jinja",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\chat_template.jinja",
+      "size": 2481,
+      "md5": "5c9e80369446ba4b2a5e1d63066df41f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\optimizer.pt",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\optimizer.pt",
+      "size": 35047307,
+      "md5": "681490c395e5be632da2b6dde30ed53e"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\README.md",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\README.md",
+      "size": 5186,
+      "md5": "083542802ded1a595806c7f2c13fb9e5"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\rng_state.pth",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\rng_state.pth",
+      "size": 14455,
+      "md5": "bfab8a5c4f147b415cb7d08cb30d6fa6"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\scheduler.pt",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\scheduler.pt",
+      "size": 1465,
+      "md5": "5c58372b5030254cacc0cce45a1ea693"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\tokenizer.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\tokenizer.json",
+      "size": 11422170,
+      "md5": "e2d19cffeda7a759975c7dd44a8c8ac8"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\tokenizer_config.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\tokenizer_config.json",
+      "size": 726,
+      "md5": "f721e84951a478c1e0fb68d1aec7971b"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\trainer_state.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\trainer_state.json",
+      "size": 999,
+      "md5": "c568ca8ab9a7f96f1c96c123abc3a52f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894322\\checkpoint-3\\training_args.bin",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894322\\checkpoint-3\\training_args.bin",
+      "size": 5201,
+      "md5": "514704bac4d336c4693a93301c50f72d"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\adapter_config.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\adapter_config.json",
+      "size": 1146,
+      "md5": "171aa2eacd11ef89b916a951c151ace4"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\adapter_model.safetensors",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\adapter_model.safetensors",
+      "size": 17462432,
+      "md5": "47e232862f4839e1d3f89d080fab9c60"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\chat_template.jinja",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\chat_template.jinja",
+      "size": 2481,
+      "md5": "5c9e80369446ba4b2a5e1d63066df41f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\metrics.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\metrics.json",
+      "size": 253,
+      "md5": "e8211949e1efa69d0f69a88bf8bd6383"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\README.md",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\README.md",
+      "size": 5186,
+      "md5": "083542802ded1a595806c7f2c13fb9e5"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\tokenizer.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\tokenizer.json",
+      "size": 11422170,
+      "md5": "e2d19cffeda7a759975c7dd44a8c8ac8"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\tokenizer_config.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\tokenizer_config.json",
+      "size": 726,
+      "md5": "f721e84951a478c1e0fb68d1aec7971b"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\adapter_config.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\adapter_config.json",
+      "size": 1146,
+      "md5": "171aa2eacd11ef89b916a951c151ace4"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\adapter_model.safetensors",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\adapter_model.safetensors",
+      "size": 17462432,
+      "md5": "47e232862f4839e1d3f89d080fab9c60"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\chat_template.jinja",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\chat_template.jinja",
+      "size": 2481,
+      "md5": "5c9e80369446ba4b2a5e1d63066df41f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\optimizer.pt",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\optimizer.pt",
+      "size": 35047307,
+      "md5": "0e1b7f11b374b2d43606b397cb639a56"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\README.md",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\README.md",
+      "size": 5186,
+      "md5": "083542802ded1a595806c7f2c13fb9e5"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\rng_state.pth",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\rng_state.pth",
+      "size": 14455,
+      "md5": "bfab8a5c4f147b415cb7d08cb30d6fa6"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\scheduler.pt",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\scheduler.pt",
+      "size": 1465,
+      "md5": "5c58372b5030254cacc0cce45a1ea693"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\tokenizer.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\tokenizer.json",
+      "size": 11422170,
+      "md5": "e2d19cffeda7a759975c7dd44a8c8ac8"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\tokenizer_config.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\tokenizer_config.json",
+      "size": 726,
+      "md5": "f721e84951a478c1e0fb68d1aec7971b"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\trainer_state.json",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\trainer_state.json",
+      "size": 998,
+      "md5": "c2e3e86fdd0203b1ca4c4e3e628c6f56"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-1\\run-1785894981\\checkpoint-3\\training_args.bin",
+      "arc": "models/fine-tuned-ame/cycle-1\\run-1785894981\\checkpoint-3\\training_args.bin",
+      "size": 5201,
+      "md5": "90760d9250eb7bf41b2559cbe7598441"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\adapter_config.json",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\adapter_config.json",
+      "size": 1146,
+      "md5": "ca82ec57621339f547e82bc140aef556"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\adapter_model.safetensors",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\adapter_model.safetensors",
+      "size": 17462432,
+      "md5": "478e0ec8c8096b05382164de74ee5ddb"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\chat_template.jinja",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\chat_template.jinja",
+      "size": 2481,
+      "md5": "5c9e80369446ba4b2a5e1d63066df41f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\metrics.json",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\metrics.json",
+      "size": 250,
+      "md5": "9108cef5d098eb35f35539f091af0356"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\README.md",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\README.md",
+      "size": 5186,
+      "md5": "083542802ded1a595806c7f2c13fb9e5"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\tokenizer.json",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\tokenizer.json",
+      "size": 11422170,
+      "md5": "e2d19cffeda7a759975c7dd44a8c8ac8"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\tokenizer_config.json",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\tokenizer_config.json",
+      "size": 726,
+      "md5": "f721e84951a478c1e0fb68d1aec7971b"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\adapter_config.json",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\adapter_config.json",
+      "size": 1146,
+      "md5": "ca82ec57621339f547e82bc140aef556"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\adapter_model.safetensors",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\adapter_model.safetensors",
+      "size": 17462432,
+      "md5": "478e0ec8c8096b05382164de74ee5ddb"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\chat_template.jinja",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\chat_template.jinja",
+      "size": 2481,
+      "md5": "5c9e80369446ba4b2a5e1d63066df41f"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\optimizer.pt",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\optimizer.pt",
+      "size": 35047307,
+      "md5": "5c07f316cc6b8497d7ca34f1feb48c29"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\README.md",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\README.md",
+      "size": 5186,
+      "md5": "083542802ded1a595806c7f2c13fb9e5"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\rng_state.pth",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\rng_state.pth",
+      "size": 14455,
+      "md5": "bfab8a5c4f147b415cb7d08cb30d6fa6"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\scheduler.pt",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\scheduler.pt",
+      "size": 1465,
+      "md5": "5c58372b5030254cacc0cce45a1ea693"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\tokenizer.json",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\tokenizer.json",
+      "size": 11422170,
+      "md5": "e2d19cffeda7a759975c7dd44a8c8ac8"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\tokenizer_config.json",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\tokenizer_config.json",
+      "size": 726,
+      "md5": "f721e84951a478c1e0fb68d1aec7971b"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\trainer_state.json",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\trainer_state.json",
+      "size": 998,
+      "md5": "4bef8d3da96954082ae23fee763f2b88"
+    },
+    {
+      "name": "fine-tuned-ame\\cycle-test\\run-1785894526\\checkpoint-3\\training_args.bin",
+      "arc": "models/fine-tuned-ame/cycle-test\\run-1785894526\\checkpoint-3\\training_args.bin",
+      "size": 5137,
+      "md5": "1a56fb9e899c460a03ee5ee09b82ab69"
+    }
+  ],
+  "zip": "C:\\Users\\User\\Downloads\\AURA\\aura_cloud_package.zip",
+  "zip_size": 233287654
+}

@@ -1,0 +1,4350 @@
+{
+  "nodes": [
+    {
+      "node_id": "n_6d8749c4fe",
+      "label": "e2e",
+      "kind": "concept",
+      "summary": "e2e probe node",
+      "source": "e2e103",
+      "confidence": 0.5,
+      "access_count": 133,
+      "created_at": 1789412352.1689117,
+      "updated_at": 1789416507.8509839,
+      "tags": [],
+      "metadata": {},
+      "offline_only": true
+    },
+    {
+      "node_id": "n_ba9c736f19",
+      "label": "probe",
+      "kind": "concept",
+      "summary": "e2e probe node",
+      "source": "e2e103",
+      "confidence": 0.5,
+      "access_count": 133,
+      "created_at": 1789412352.1689117,
+      "updated_at": 1789416507.8509839,
+      "tags": [],
+      "metadata": {},
+      "offline_only": true
+    },
+    {
+      "node_id": "n_545ea53846",
+      "label": "node",
+      "kind": "concept",
+      "summary": "e2e probe node",
+      "source": "e2e103",
+      "confidence": 0.5,
+      "access_count": 133,
+      "created_at": 1789412352.1689117,
+      "updated_at": 1789416507.8509839,
+      "tags": [],
+      "metadata": {},
+      "offline_only": true
+    },
+    {
+      "node_id": "n_04f8996da7",
+      "label": "User",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 113,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_b221d9dbb0",
+      "label": "Hola",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 83,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_44ceae1acc",
+      "label": "Estoy",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 21,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789616187.7063456,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_6d7c0eb420",
+      "label": "AURA",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 113,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_e676b5103a",
+      "label": "soy",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 17,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789616187.7063456,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_04a92cab51",
+      "label": "modo",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 18,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789616187.7063456,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_25bf8e1a23",
+      "label": "local",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 39,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789616187.7063456,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_b3aa33b34e",
+      "label": "este",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 16,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789616187.7063456,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_70f4f3d5e8",
+      "label": "momento",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 16,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789616187.7063456,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_c57b7501cd",
+      "label": "que",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 20,
+      "created_at": 1789502137.5795982,
+      "updated_at": 1789616187.7063456,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_8a806cc0f0",
+      "label": "ayudo",
+      "kind": "session",
+      "summary": "session-session-: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 16,
+      "created_at": 1789502137.5805988,
+      "updated_at": 1789616187.7063456,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-a08fa206",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_035615dcf1",
+      "label": "Puedo",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 88,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_966400e91c",
+      "label": "interesa",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 4,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_bb4eb4cc81",
+      "label": "aprender",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 9,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_bc020a35b7",
+      "label": "machine",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789508021.971381,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_edd95740e3",
+      "label": "learning",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 4,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_5db3a62806",
+      "label": "mensaje",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 21,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_0db9df7d8e",
+      "label": "pero",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 21,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_0298385632",
+      "label": "motor",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 21,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2d98c0c559",
+      "label": "esta",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 22,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_bef2411504",
+      "label": "disponible",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 21,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_3b8f8507bb",
+      "label": "ejecutar",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 21,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_3052c67e04",
+      "label": "comandos",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 23,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_cd6d6837ba",
+      "label": "directos",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 21,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_6b5fc3d47c",
+      "label": "busca",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 10,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_4b5e57f6eb",
+      "label": "web",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 12,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_9a4e7b1798",
+      "label": "abre",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 10,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_247a8174ec",
+      "label": "archivo",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 10,
+      "created_at": 1789505484.0394964,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e408ab97",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_11a4a60b51",
+      "label": "Python",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 8,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_655e786674",
+      "label": "Prueba",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789505492.3963592,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_be4f4c8d27",
+      "label": "aprendo",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 5,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_cccc68c792",
+      "label": "sin",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_8cce676e2f",
+      "label": "modelo",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789505492.3963592,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_487b91042c",
+      "label": "LLM",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789505492.3963592,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_d7f7fe8fa8",
+      "label": "activo",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789505492.3963592,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_3cf0b34ecd",
+      "label": "ayudarte",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 67,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_1143da2bc5",
+      "label": "con",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 5,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_70502ff6bb",
+      "label": "sistema",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 13,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789588009.6552901,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_468c3d6468",
+      "label": "busquedas",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789505492.3963592,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_3340292fcf",
+      "label": "archivos",
+      "kind": "session",
+      "summary": "session-session-: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista los archivos del escritorio'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 11,
+      "created_at": 1789505488.2658036,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-02434f4a",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_4e1a583afa",
+      "label": "Basado",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 77,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_ad24be21f1",
+      "label": "Necesitas",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 79,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_03398d87f7",
+      "label": "conversaciones",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 77,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_692d151238",
+      "label": "previas",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 77,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_d0f213cabc",
+      "label": "similitud",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 77,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2d52b371c7",
+      "label": "recomiendo",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 66,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_70c5adabfb",
+      "label": "explorar",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 66,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_b7505a8df3",
+      "label": "ese",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 66,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_7c0485361d",
+      "label": "tema",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 66,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_86a59e0fda",
+      "label": "mas",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 66,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_4c733765f4",
+      "label": "ayuda",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 66,
+      "created_at": 1789505660.723064,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-39d66fe4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_f53c9158ce",
+      "label": "Comienza",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_63ce48ec8e",
+      "label": "Entornos",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2ee55ac3f5",
+      "label": "Desarrolla",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_c5dd46ea75",
+      "label": "Utiliza",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_1cc4089350",
+      "label": "anterior",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2cd0f4308f",
+      "label": "decir",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_a1453f380f",
+      "label": "para",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 4,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789508716.5966246,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_02193f74d2",
+      "label": "sugiero",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_96ef4ea0fe",
+      "label": "comenzar",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_02d5d0522a",
+      "label": "las",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_98979371e0",
+      "label": "bases",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789507867.302804,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_cb6e53541e",
+      "label": "los",
+      "kind": "session",
+      "summary": "session-session-: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comienza con los conceptos básicos de le",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789507867.302804,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-2ce11a67",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_bdae5d555c",
+      "label": "Claro",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.971381,
+      "updated_at": 1789508021.971381,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_0cec8d4b3d",
+      "label": "Entiendo",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.971381,
+      "updated_at": 1789508021.971381,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_dcaa8e5ecb",
+      "label": "Machine Learning",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.971381,
+      "updated_at": 1789508021.971381,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_3ea6bc47a6",
+      "label": "Por",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789508021.971381,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_df5e481305",
+      "label": "interesado",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.971381,
+      "updated_at": 1789508021.971381,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_24aa517bc5",
+      "label": "compartir",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.972896,
+      "updated_at": 1789508021.972896,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_c7c4c73ce2",
+      "label": "detalles",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.972896,
+      "updated_at": 1789508021.972896,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_6919d6353a",
+      "label": "sobre",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 3,
+      "created_at": 1789508021.972896,
+      "updated_at": 1789517423.936299,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_fd984bad36",
+      "label": "ejemplo",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.972896,
+      "updated_at": 1789508021.972896,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_94afb91ac3",
+      "label": "sientes",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.972896,
+      "updated_at": 1789508021.972896,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_0c31a1a9e5",
+      "label": "respecto",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.972896,
+      "updated_at": 1789508021.972896,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_d418227f7d",
+      "label": "desarrollo",
+      "kind": "session",
+      "summary": "session-session-: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo te sientes con respecto a la programación y el de",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508021.972896,
+      "updated_at": 1789508021.972896,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-5867dad4",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_ea3dc747f1",
+      "label": "Como",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_161f0e5ed4",
+      "label": "una",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_1322e2745e",
+      "label": "inteligencia",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_4d2971726b",
+      "label": "artificial",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_34f2bd9e1e",
+      "label": "tengo",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_14e95809b4",
+      "label": "experiencias",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_4d83ff296a",
+      "label": "personales",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_a717afcbbb",
+      "label": "habilidades",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_9fc073e6d2",
+      "label": "embargo",
+      "kind": "session",
+      "summary": "session-session-: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, puedo proporcionarte guías y recursos ",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508048.3885994,
+      "updated_at": 1789508048.3885994,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-87744a0f",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_b5f19f4af8",
+      "label": "supuesto",
+      "kind": "session",
+      "summary": "session-session-: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conversación actual)",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508068.1899214,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-43434ea1",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_f0e948db59",
+      "label": "ser",
+      "kind": "session",
+      "summary": "session-session-: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conversación actual)",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508068.1899214,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-43434ea1",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2c5e8d8e3a",
+      "label": "educativo",
+      "kind": "session",
+      "summary": "session-session-: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conversación actual)",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508068.1899214,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-43434ea1",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_e103bf13e6",
+      "label": "tipo",
+      "kind": "session",
+      "summary": "session-session-: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conversación actual)",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508068.1899214,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-43434ea1",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_78f505e66b",
+      "label": "quieres",
+      "kind": "session",
+      "summary": "session-session-: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conversación actual)",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508068.1899214,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-43434ea1",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_89bdc1db28",
+      "label": "obtener",
+      "kind": "session",
+      "summary": "session-session-: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conversación actual)",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508068.1899214,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-43434ea1",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_e5c6fde869",
+      "label": "actual",
+      "kind": "session",
+      "summary": "session-session-: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conversación actual)",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508068.1899214,
+      "updated_at": 1789508068.1899214,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-43434ea1",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_7b6d1ec7db",
+      "label": "Entendido",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_fb79a0a30e",
+      "label": "Inteligencia Artificial",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_fdc3cfbafa",
+      "label": "Lenguajes",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_4e30ea25cd",
+      "label": "Hay",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_ae4863bdae",
+      "label": "Pandas",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2b15fcd19d",
+      "label": "Matplotlib",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_9ad6116f94",
+      "label": "Modelos",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_651bbcf6ee",
+      "label": "Predicciones",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_dfd48507e8",
+      "label": "Algoritmos",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_718e397851",
+      "label": "Pruebas",
+      "kind": "session",
+      "summary": "session-session-: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ciencia de la computación que se enfoc",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508132.8759637,
+      "updated_at": 1789508132.8759637,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-e77f2162",
+        "tags": [
+          "session",
+          "consulta"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_b40f9b6bd6",
+      "label": "hoy",
+      "kind": "session",
+      "summary": "session-session-: ¡Hola! ¿Cómo puedo ayudarte hoy?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 64,
+      "created_at": 1789508615.852512,
+      "updated_at": 1789675159.383194,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-6030a0a3",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_8a4b84ae26",
+      "label": "necesites",
+      "kind": "session",
+      "summary": "session-session-: ¡Hola! Estoy aquí para ayudarte en lo que necesites. ¿En qué puedo asistirte hoy?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508716.5966246,
+      "updated_at": 1789508716.5966246,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-4aa7b2fb",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_a720e1e28a",
+      "label": "asistirte",
+      "kind": "session",
+      "summary": "session-session-: ¡Hola! Estoy aquí para ayudarte en lo que necesites. ¿En qué puedo asistirte hoy?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789508716.5966246,
+      "updated_at": 1789508716.5966246,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-4aa7b2fb",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_4f10e4054b",
+      "label": "alegra",
+      "kind": "session",
+      "summary": "session-session-: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789517423.935298,
+      "updated_at": 1789517423.935298,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-35568a2c",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_e4c3c15369",
+      "label": "saber",
+      "kind": "session",
+      "summary": "session-session-: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789517423.935298,
+      "updated_at": 1789517423.935298,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-35568a2c",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2a72ffe487",
+      "label": "decirme",
+      "kind": "session",
+      "summary": "session-session-: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789517423.935298,
+      "updated_at": 1789517423.935298,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-35568a2c",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2f63f1edd8",
+      "label": "algo",
+      "kind": "session",
+      "summary": "session-session-: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 1,
+      "created_at": 1789517423.936299,
+      "updated_at": 1789517423.936299,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-35568a2c",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_0296c43c24",
+      "label": "lista",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 9,
+      "created_at": 1789517538.9227126,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-3ba18e80",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_4a84e284ca",
+      "label": "escribe",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 9,
+      "created_at": 1789517538.9227126,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-3ba18e80",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_42a8399c5f",
+      "label": "ejecuta",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 2,
+      "created_at": 1789517538.9227126,
+      "updated_at": 1789517580.2202706,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-3ba18e80",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_2e7f8e8c72",
+      "label": "estado",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca\". Te recomiendo e",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 11,
+      "created_at": 1789517543.0759182,
+      "updated_at": 1789588009.6552901,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-34ced123",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_75e3090289",
+      "label": "del",
+      "kind": "session",
+      "summary": "session-session-: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca\". Te recomiendo e",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 11,
+      "created_at": 1789517543.0759182,
+      "updated_at": 1789588009.6552901,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-34ced123",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    },
+    {
+      "node_id": "n_9f86d08188",
+      "label": "test",
+      "kind": "session",
+      "summary": "session-session-: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "source": "unified_orchestrator",
+      "confidence": 0.5,
+      "access_count": 7,
+      "created_at": 1789614575.8480582,
+      "updated_at": 1789616130.805512,
+      "tags": [],
+      "metadata": {
+        "session_id": "session-c5fdd110",
+        "tags": [
+          "session",
+          "conversacion"
+        ]
+      },
+      "offline_only": true
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "e_25716b9b0e",
+      "src": "n_6d8749c4fe",
+      "dst": "n_ba9c736f19",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "e2e probe node",
+      "created_at": 1789412352.1689117,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_36e354214c",
+      "src": "n_ba9c736f19",
+      "dst": "n_545ea53846",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "e2e probe node",
+      "created_at": 1789412352.1689117,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9caffe07b2",
+      "src": "n_04f8996da7",
+      "dst": "n_b221d9dbb0",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5795982,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6a0c9eab4f",
+      "src": "n_b221d9dbb0",
+      "dst": "n_44ceae1acc",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5795982,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_97cc4fa7f7",
+      "src": "n_44ceae1acc",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5795982,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0efb840825",
+      "src": "n_6d7c0eb420",
+      "dst": "n_e676b5103a",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5795982,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9db0bd2e00",
+      "src": "n_e676b5103a",
+      "dst": "n_04a92cab51",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5795982,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_48c7f73c20",
+      "src": "n_04a92cab51",
+      "dst": "n_25bf8e1a23",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5795982,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7300742c05",
+      "src": "n_25bf8e1a23",
+      "dst": "n_b3aa33b34e",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5795982,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_19fdd2cf9f",
+      "src": "n_b3aa33b34e",
+      "dst": "n_70f4f3d5e8",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5795982,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_f7fe4d49fe",
+      "src": "n_70f4f3d5e8",
+      "dst": "n_c57b7501cd",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5805988,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9d5ac23ff0",
+      "src": "n_c57b7501cd",
+      "dst": "n_8a806cc0f0",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Hola AURA\nAURA: Hola, soy AURA. Estoy en modo local en este momento. ¿En que te ayudo?",
+      "created_at": 1789502137.5805988,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_2a32ec1601",
+      "src": "n_04f8996da7",
+      "dst": "n_035615dcf1",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_46ab949370",
+      "src": "n_035615dcf1",
+      "dst": "n_966400e91c",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_44d447af5a",
+      "src": "n_966400e91c",
+      "dst": "n_bb4eb4cc81",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_dd044d54f4",
+      "src": "n_bb4eb4cc81",
+      "dst": "n_bc020a35b7",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0a623ed609",
+      "src": "n_bc020a35b7",
+      "dst": "n_edd95740e3",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c0c4600c09",
+      "src": "n_edd95740e3",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_780c7cdd33",
+      "src": "n_6d7c0eb420",
+      "dst": "n_5db3a62806",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_8404002953",
+      "src": "n_5db3a62806",
+      "dst": "n_0db9df7d8e",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_597f604706",
+      "src": "n_0db9df7d8e",
+      "dst": "n_0298385632",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_f63a0d2cff",
+      "src": "n_0298385632",
+      "dst": "n_25bf8e1a23",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1d8cbbf794",
+      "src": "n_25bf8e1a23",
+      "dst": "n_2d98c0c559",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bd31f9fc82",
+      "src": "n_2d98c0c559",
+      "dst": "n_bef2411504",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_cd92ffa566",
+      "src": "n_bef2411504",
+      "dst": "n_3b8f8507bb",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_62accfc247",
+      "src": "n_3b8f8507bb",
+      "dst": "n_3052c67e04",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_e4093069ef",
+      "src": "n_3052c67e04",
+      "dst": "n_cd6d6837ba",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_ee89c59487",
+      "src": "n_cd6d6837ba",
+      "dst": "n_6b5fc3d47c",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7a25d77e70",
+      "src": "n_6b5fc3d47c",
+      "dst": "n_4b5e57f6eb",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_16d1d9fb1d",
+      "src": "n_4b5e57f6eb",
+      "dst": "n_9a4e7b1798",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6e36ebb976",
+      "src": "n_9a4e7b1798",
+      "dst": "n_247a8174ec",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'e",
+      "created_at": 1789505484.0394964,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_92e1b6f92b",
+      "src": "n_04f8996da7",
+      "dst": "n_11a4a60b51",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_16479a4738",
+      "src": "n_11a4a60b51",
+      "dst": "n_44ceae1acc",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_ab152c4cd3",
+      "src": "n_44ceae1acc",
+      "dst": "n_035615dcf1",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_fd264f249c",
+      "src": "n_035615dcf1",
+      "dst": "n_655e786674",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_42baba34c4",
+      "src": "n_655e786674",
+      "dst": "n_be4f4c8d27",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_71b3e83036",
+      "src": "n_be4f4c8d27",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7279dea925",
+      "src": "n_6d7c0eb420",
+      "dst": "n_04a92cab51",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_ac1b039326",
+      "src": "n_25bf8e1a23",
+      "dst": "n_cccc68c792",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0efd422bc1",
+      "src": "n_cccc68c792",
+      "dst": "n_8cce676e2f",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_436563e409",
+      "src": "n_8cce676e2f",
+      "dst": "n_487b91042c",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0f30f543c0",
+      "src": "n_487b91042c",
+      "dst": "n_d7f7fe8fa8",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_e17de30341",
+      "src": "n_d7f7fe8fa8",
+      "dst": "n_3cf0b34ecd",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bc96eb1954",
+      "src": "n_3cf0b34ecd",
+      "dst": "n_1143da2bc5",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1525017717",
+      "src": "n_1143da2bc5",
+      "dst": "n_3052c67e04",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_4e0973a1fe",
+      "src": "n_3052c67e04",
+      "dst": "n_70502ff6bb",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_a0b505bd50",
+      "src": "n_70502ff6bb",
+      "dst": "n_468c3d6468",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_91f49a7bbc",
+      "src": "n_468c3d6468",
+      "dst": "n_4b5e57f6eb",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b6144f6ae7",
+      "src": "n_4b5e57f6eb",
+      "dst": "n_3340292fcf",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista lo",
+      "created_at": 1789505488.2658036,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b10d015f6f",
+      "src": "n_04f8996da7",
+      "dst": "n_44ceae1acc",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista ",
+      "created_at": 1789505492.3963592,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_323d73baf7",
+      "src": "n_655e786674",
+      "dst": "n_11a4a60b51",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista ",
+      "created_at": 1789505492.3963592,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_a790a833e3",
+      "src": "n_11a4a60b51",
+      "dst": "n_bb4eb4cc81",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista ",
+      "created_at": 1789505492.3963592,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_2f669dedf6",
+      "src": "n_bb4eb4cc81",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 0.7,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Estoy en modo local sin modelo LLM activo. Puedo ayudarte con comandos de sistema, busquedas web, archivos y mas. Prueba: 'busca informacion sobre Python' o 'lista ",
+      "created_at": 1789505492.3963592,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_097a8978dd",
+      "src": "n_04f8996da7",
+      "dst": "n_4e1a583afa",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_903573434f",
+      "src": "n_4e1a583afa",
+      "dst": "n_ad24be21f1",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_23e43b93df",
+      "src": "n_ad24be21f1",
+      "dst": "n_966400e91c",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_3a34d60164",
+      "src": "n_966400e91c",
+      "dst": "n_bb4eb4cc81",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_02f795a63d",
+      "src": "n_bb4eb4cc81",
+      "dst": "n_bc020a35b7",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_08861bbf5a",
+      "src": "n_bc020a35b7",
+      "dst": "n_edd95740e3",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_f17a0922ed",
+      "src": "n_edd95740e3",
+      "dst": "n_6d7c0eb420",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bc1b5cb5c1",
+      "src": "n_6d7c0eb420",
+      "dst": "n_03398d87f7",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b5581cd5ad",
+      "src": "n_03398d87f7",
+      "dst": "n_692d151238",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_77b8419271",
+      "src": "n_692d151238",
+      "dst": "n_d0f213cabc",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c4f92e51cc",
+      "src": "n_d0f213cabc",
+      "dst": "n_2d52b371c7",
+      "relation": "depends_on",
+      "weight": 0.6,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c485d13ce5",
+      "src": "n_2d52b371c7",
+      "dst": "n_70c5adabfb",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_4ce66261c3",
+      "src": "n_70c5adabfb",
+      "dst": "n_b7505a8df3",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_ff1454c65f",
+      "src": "n_b7505a8df3",
+      "dst": "n_7c0485361d",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_59fbfdf8a1",
+      "src": "n_7c0485361d",
+      "dst": "n_86a59e0fda",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_475374e906",
+      "src": "n_86a59e0fda",
+      "dst": "n_4c733765f4",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"Me interesa aprender machine learning\". Te recomiendo explorar ese tema. ¿Necesitas mas ",
+      "created_at": 1789505660.723064,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1f144f3553",
+      "src": "n_04f8996da7",
+      "dst": "n_11a4a60b51",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505664.837611,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_d4e9e18762",
+      "src": "n_11a4a60b51",
+      "dst": "n_4e1a583afa",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505664.837611,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_2010a97e49",
+      "src": "n_ad24be21f1",
+      "dst": "n_be4f4c8d27",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505664.837611,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_f028918b31",
+      "src": "n_be4f4c8d27",
+      "dst": "n_6d7c0eb420",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Basado en conversaciones previas (similitud 1.00), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505664.837611,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6e13efecf5",
+      "src": "n_4e1a583afa",
+      "dst": "n_11a4a60b51",
+      "relation": "depends_on",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basado en conversaciones previas (similitud 0.58), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505668.9539053,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_abd1a6accc",
+      "src": "n_11a4a60b51",
+      "dst": "n_ad24be21f1",
+      "relation": "depends_on",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basado en conversaciones previas (similitud 0.58), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505668.9539053,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_991510aebe",
+      "src": "n_ad24be21f1",
+      "dst": "n_bb4eb4cc81",
+      "relation": "depends_on",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basado en conversaciones previas (similitud 0.58), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505668.9539053,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c32ecb3380",
+      "src": "n_bb4eb4cc81",
+      "dst": "n_6d7c0eb420",
+      "relation": "depends_on",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basado en conversaciones previas (similitud 0.58), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505668.9539053,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_21c36986aa",
+      "src": "n_d0f213cabc",
+      "dst": "n_be4f4c8d27",
+      "relation": "depends_on",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basado en conversaciones previas (similitud 0.58), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505668.9539053,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_20cf0dc815",
+      "src": "n_be4f4c8d27",
+      "dst": "n_2d52b371c7",
+      "relation": "depends_on",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basado en conversaciones previas (similitud 0.58), encontré: \"¿Cómo aprendo Python?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789505668.9539053,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_e198f406f3",
+      "src": "n_11a4a60b51",
+      "dst": "n_f53c9158ce",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b5553fa292",
+      "src": "n_f53c9158ce",
+      "dst": "n_63ce48ec8e",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_645a448b37",
+      "src": "n_63ce48ec8e",
+      "dst": "n_2ee55ac3f5",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9fa6f13164",
+      "src": "n_2ee55ac3f5",
+      "dst": "n_c5dd46ea75",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_274f3b448e",
+      "src": "n_c5dd46ea75",
+      "dst": "n_44ceae1acc",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1ce80d1a8a",
+      "src": "n_44ceae1acc",
+      "dst": "n_bb4eb4cc81",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b4812e2f15",
+      "src": "n_6d7c0eb420",
+      "dst": "n_1cc4089350",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b2832efdab",
+      "src": "n_1cc4089350",
+      "dst": "n_035615dcf1",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7c3c661991",
+      "src": "n_035615dcf1",
+      "dst": "n_2cd0f4308f",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1d35c27c59",
+      "src": "n_2cd0f4308f",
+      "dst": "n_c57b7501cd",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_528ead6477",
+      "src": "n_c57b7501cd",
+      "dst": "n_a1453f380f",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_575453f1c3",
+      "src": "n_a1453f380f",
+      "dst": "n_02193f74d2",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7c251bc1a7",
+      "src": "n_02193f74d2",
+      "dst": "n_96ef4ea0fe",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_cb1d406843",
+      "src": "n_96ef4ea0fe",
+      "dst": "n_1143da2bc5",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_05b8c54162",
+      "src": "n_1143da2bc5",
+      "dst": "n_02d5d0522a",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_d6d75f00b1",
+      "src": "n_02d5d0522a",
+      "dst": "n_98979371e0",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_33b3c6d333",
+      "src": "n_98979371e0",
+      "dst": "n_cb6e53541e",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Basándome en la conversación anterior, puedo decir que para aprender Python, te sugiero comenzar con las bases básicas:\n\n1. **Introducción a la programación**: Comi",
+      "created_at": 1789507867.302804,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_8855ff1da3",
+      "src": "n_04f8996da7",
+      "dst": "n_bdae5d555c",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.971381,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_d374e34b18",
+      "src": "n_bdae5d555c",
+      "dst": "n_0cec8d4b3d",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.971381,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_db692a82a0",
+      "src": "n_0cec8d4b3d",
+      "dst": "n_dcaa8e5ecb",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.971381,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0958d9a8d3",
+      "src": "n_dcaa8e5ecb",
+      "dst": "n_3ea6bc47a6",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.971381,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_dc7fc2e787",
+      "src": "n_3ea6bc47a6",
+      "dst": "n_966400e91c",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.971381,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_11af082389",
+      "src": "n_6d7c0eb420",
+      "dst": "n_c57b7501cd",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.971381,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bf356cbf9b",
+      "src": "n_c57b7501cd",
+      "dst": "n_df5e481305",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0100264abd",
+      "src": "n_df5e481305",
+      "dst": "n_24aa517bc5",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bdc0a7ccce",
+      "src": "n_24aa517bc5",
+      "dst": "n_c7c4c73ce2",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bc7e36ae8d",
+      "src": "n_c7c4c73ce2",
+      "dst": "n_6919d6353a",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_516aa1e06b",
+      "src": "n_6919d6353a",
+      "dst": "n_fd984bad36",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c43402c166",
+      "src": "n_fd984bad36",
+      "dst": "n_94afb91ac3",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_a5603a51b4",
+      "src": "n_94afb91ac3",
+      "dst": "n_1143da2bc5",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_940d647760",
+      "src": "n_1143da2bc5",
+      "dst": "n_0c31a1a9e5",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bda49b718f",
+      "src": "n_0c31a1a9e5",
+      "dst": "n_d418227f7d",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Me interesa aprender machine learning\nAURA: ¡Claro! Entiendo que estás interesado en aprender Machine Learning. ¿Podrías compartir más detalles sobre qué te gustaría aprender? Por ejemplo, ¿cómo",
+      "created_at": 1789508021.972896,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_dd7a06cfb2",
+      "src": "n_11a4a60b51",
+      "dst": "n_b221d9dbb0",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_10d9047bdc",
+      "src": "n_44ceae1acc",
+      "dst": "n_ea3dc747f1",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_59cff8a86d",
+      "src": "n_ea3dc747f1",
+      "dst": "n_cccc68c792",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b9ebeaa683",
+      "src": "n_cccc68c792",
+      "dst": "n_be4f4c8d27",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1f2285a8a5",
+      "src": "n_6d7c0eb420",
+      "dst": "n_a1453f380f",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_399ae2b078",
+      "src": "n_a1453f380f",
+      "dst": "n_3cf0b34ecd",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_4c238672b9",
+      "src": "n_3cf0b34ecd",
+      "dst": "n_bb4eb4cc81",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_eb9a7d48d0",
+      "src": "n_bb4eb4cc81",
+      "dst": "n_e676b5103a",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1521201ba3",
+      "src": "n_e676b5103a",
+      "dst": "n_161f0e5ed4",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_e81c729aa0",
+      "src": "n_161f0e5ed4",
+      "dst": "n_1322e2745e",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9d86188c04",
+      "src": "n_1322e2745e",
+      "dst": "n_4d2971726b",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_266a0c421b",
+      "src": "n_4d2971726b",
+      "dst": "n_34f2bd9e1e",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0afe00e797",
+      "src": "n_34f2bd9e1e",
+      "dst": "n_14e95809b4",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9d428f91e2",
+      "src": "n_14e95809b4",
+      "dst": "n_4d83ff296a",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_4f5b17c2a2",
+      "src": "n_4d83ff296a",
+      "dst": "n_a717afcbbb",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_348592d4e2",
+      "src": "n_a717afcbbb",
+      "dst": "n_9fc073e6d2",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo aprendo Python?\nAURA: Hola! Estoy aquí para ayudarte a aprender Python. Como soy una inteligencia artificial, no tengo experiencias personales ni habilidades específicas. Sin embargo, pued",
+      "created_at": 1789508048.3885994,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_20753b7644",
+      "src": "n_04f8996da7",
+      "dst": "n_3ea6bc47a6",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7914417eb0",
+      "src": "n_966400e91c",
+      "dst": "n_1322e2745e",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_e04fcdd813",
+      "src": "n_4d2971726b",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_86a3c1e17b",
+      "src": "n_6d7c0eb420",
+      "dst": "n_b5f19f4af8",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_58bc31bd48",
+      "src": "n_b5f19f4af8",
+      "dst": "n_f0e948db59",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1b748871c4",
+      "src": "n_f0e948db59",
+      "dst": "n_2c5e8d8e3a",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1e8f42647b",
+      "src": "n_2c5e8d8e3a",
+      "dst": "n_e103bf13e6",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_67380bfafd",
+      "src": "n_e103bf13e6",
+      "dst": "n_78f505e66b",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_74fa5fd313",
+      "src": "n_78f505e66b",
+      "dst": "n_89bdc1db28",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_664923d2d9",
+      "src": "n_89bdc1db28",
+      "dst": "n_6919d6353a",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_cecfdc46b7",
+      "src": "n_6919d6353a",
+      "dst": "n_1143da2bc5",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_ec12511ea3",
+      "src": "n_1143da2bc5",
+      "dst": "n_e5c6fde869",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: También me interesa la inteligencia artificial\nAURA: ¡Por supuesto! Intentaré ser útil y educativo. ¿Qué tipo de información quieres obtener sobre inteligencia artificial?\n\n(continúa con la conv",
+      "created_at": 1789508068.1899214,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_451b99968e",
+      "src": "n_b221d9dbb0",
+      "dst": "n_7b6d1ec7db",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_a61e082552",
+      "src": "n_7b6d1ec7db",
+      "dst": "n_a1453f380f",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0b601fb8b7",
+      "src": "n_a1453f380f",
+      "dst": "n_fb79a0a30e",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_700d2c4664",
+      "src": "n_fb79a0a30e",
+      "dst": "n_2d98c0c559",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_a8f8cda395",
+      "src": "n_2d98c0c559",
+      "dst": "n_fdc3cfbafa",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_4ec0100c7d",
+      "src": "n_fdc3cfbafa",
+      "dst": "n_ad24be21f1",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_95aef9de50",
+      "src": "n_ad24be21f1",
+      "dst": "n_11a4a60b51",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b3ba97bf0e",
+      "src": "n_11a4a60b51",
+      "dst": "n_4e30ea25cd",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_85e8647535",
+      "src": "n_4e30ea25cd",
+      "dst": "n_ae4863bdae",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9fa2a5bbdc",
+      "src": "n_ae4863bdae",
+      "dst": "n_2b15fcd19d",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c0d20c4ac5",
+      "src": "n_2b15fcd19d",
+      "dst": "n_9ad6116f94",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_38e137171d",
+      "src": "n_9ad6116f94",
+      "dst": "n_651bbcf6ee",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_3618dcf558",
+      "src": "n_651bbcf6ee",
+      "dst": "n_dfd48507e8",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7549747e90",
+      "src": "n_dfd48507e8",
+      "dst": "n_edd95740e3",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_95f84b8f59",
+      "src": "n_edd95740e3",
+      "dst": "n_cb6e53541e",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_a99bc039b2",
+      "src": "n_cb6e53541e",
+      "dst": "n_718e397851",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_5c7116fdfc",
+      "src": "n_718e397851",
+      "dst": "n_bb4eb4cc81",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: ¿Cómo debería aprender?\nAURA: Hola! Entendido. Para aprender inteligencia artificial, primero debes entender algunos conceptos básicos:\n\n1. **Inteligencia Artificial**: Esta es una rama de la ci",
+      "created_at": 1789508132.8759637,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_3a048c7fe4",
+      "src": "n_b221d9dbb0",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?",
+      "created_at": 1789508615.852512,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_97dfd33ddf",
+      "src": "n_6d7c0eb420",
+      "dst": "n_035615dcf1",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?",
+      "created_at": 1789508615.852512,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_8a3d0a98d3",
+      "src": "n_035615dcf1",
+      "dst": "n_3cf0b34ecd",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?",
+      "created_at": 1789508615.852512,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9dfa9d5d23",
+      "src": "n_3cf0b34ecd",
+      "dst": "n_b40f9b6bd6",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?",
+      "created_at": 1789508615.852512,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6fb6c43406",
+      "src": "n_3cf0b34ecd",
+      "dst": "n_c57b7501cd",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! Estoy aquí para ayudarte en lo que necesites. ¿En qué puedo asistirte hoy?",
+      "created_at": 1789508716.5966246,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_f2ebeb2476",
+      "src": "n_c57b7501cd",
+      "dst": "n_8a4b84ae26",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! Estoy aquí para ayudarte en lo que necesites. ¿En qué puedo asistirte hoy?",
+      "created_at": 1789508716.5966246,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_4667514f7e",
+      "src": "n_8a4b84ae26",
+      "dst": "n_035615dcf1",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! Estoy aquí para ayudarte en lo que necesites. ¿En qué puedo asistirte hoy?",
+      "created_at": 1789508716.5966246,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_40526290f1",
+      "src": "n_035615dcf1",
+      "dst": "n_a720e1e28a",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! Estoy aquí para ayudarte en lo que necesites. ¿En qué puedo asistirte hoy?",
+      "created_at": 1789508716.5966246,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_f1621d85d4",
+      "src": "n_a720e1e28a",
+      "dst": "n_b40f9b6bd6",
+      "relation": "related_to",
+      "weight": 0.5,
+      "evidence": "User: Hola AURA\nAURA: ¡Hola! Estoy aquí para ayudarte en lo que necesites. ¿En qué puedo asistirte hoy?",
+      "created_at": 1789508716.5966246,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7717cd311f",
+      "src": "n_04f8996da7",
+      "dst": "n_b221d9dbb0",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.935298,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_ef5a8f010d",
+      "src": "n_b221d9dbb0",
+      "dst": "n_6d7c0eb420",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.935298,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_0d50b26866",
+      "src": "n_6d7c0eb420",
+      "dst": "n_4f10e4054b",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.935298,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_13f604453f",
+      "src": "n_4f10e4054b",
+      "dst": "n_e4c3c15369",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.935298,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_ff0a5bfdac",
+      "src": "n_e4c3c15369",
+      "dst": "n_c57b7501cd",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.935298,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_37f77379f4",
+      "src": "n_c57b7501cd",
+      "dst": "n_2a72ffe487",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.935298,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_dfbddcdc0f",
+      "src": "n_2a72ffe487",
+      "dst": "n_2f63f1edd8",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.936299,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_3a9a0645ff",
+      "src": "n_2f63f1edd8",
+      "dst": "n_6919d6353a",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.936299,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_67e16de3c7",
+      "src": "n_6919d6353a",
+      "dst": "n_ad24be21f1",
+      "relation": "depends_on",
+      "weight": 0.5,
+      "evidence": "User: Hola\nAURA: ¡Hola! Me alegra saber que estás aquí. ¿Podrías decirme algo sobre lo que necesitas?",
+      "created_at": 1789517423.936299,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_aad6c9ba2d",
+      "src": "n_b221d9dbb0",
+      "dst": "n_4e1a583afa",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Hola\nAURA: Basado en conversaciones previas (similitud 0.41), encontré: \"User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789517534.577244,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_a1fd1ba0a9",
+      "src": "n_ad24be21f1",
+      "dst": "n_6d7c0eb420",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Hola\nAURA: Basado en conversaciones previas (similitud 0.41), encontré: \"User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789517534.577244,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_d1250e1b74",
+      "src": "n_d0f213cabc",
+      "dst": "n_035615dcf1",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Hola\nAURA: Basado en conversaciones previas (similitud 0.41), encontré: \"User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789517534.577244,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_d16d726f52",
+      "src": "n_035615dcf1",
+      "dst": "n_3cf0b34ecd",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Hola\nAURA: Basado en conversaciones previas (similitud 0.41), encontré: \"User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789517534.577244,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_1f6f11ecdb",
+      "src": "n_3cf0b34ecd",
+      "dst": "n_b40f9b6bd6",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Hola\nAURA: Basado en conversaciones previas (similitud 0.41), encontré: \"User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789517534.577244,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c0ab59b74f",
+      "src": "n_b40f9b6bd6",
+      "dst": "n_2d52b371c7",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: Hola\nAURA: Basado en conversaciones previas (similitud 0.41), encontré: \"User: Hola AURA\nAURA: ¡Hola! ¿Cómo puedo ayudarte hoy?\". Te recomiendo explorar ese tema. ¿Necesitas mas ayuda?",
+      "created_at": 1789517534.577244,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_8a9a0a6bd3",
+      "src": "n_035615dcf1",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "created_at": 1789517538.9227126,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_f139aafc10",
+      "src": "n_247a8174ec",
+      "dst": "n_0296c43c24",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "created_at": 1789517538.9227126,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_09f09247fb",
+      "src": "n_0296c43c24",
+      "dst": "n_3340292fcf",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "created_at": 1789517538.9227126,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bd65cd1010",
+      "src": "n_3340292fcf",
+      "dst": "n_4a84e284ca",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "created_at": 1789517538.9227126,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_34b2ecb9be",
+      "src": "n_4a84e284ca",
+      "dst": "n_42a8399c5f",
+      "relation": "related_to",
+      "weight": 0.6,
+      "evidence": "User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "created_at": 1789517538.9227126,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_437eda6225",
+      "src": "n_4e1a583afa",
+      "dst": "n_035615dcf1",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0759182,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_54c1d7c811",
+      "src": "n_035615dcf1",
+      "dst": "n_ad24be21f1",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0759182,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_b4267aa9b8",
+      "src": "n_ad24be21f1",
+      "dst": "n_2e7f8e8c72",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0759182,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6feda4f40c",
+      "src": "n_2e7f8e8c72",
+      "dst": "n_75e3090289",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0759182,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_7384a01770",
+      "src": "n_75e3090289",
+      "dst": "n_70502ff6bb",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0759182,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_bd523175af",
+      "src": "n_70502ff6bb",
+      "dst": "n_6d7c0eb420",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0759182,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_66a2681f3b",
+      "src": "n_d0f213cabc",
+      "dst": "n_5db3a62806",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_9b8ccfa7ef",
+      "src": "n_5db3a62806",
+      "dst": "n_0db9df7d8e",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_2c8e550f67",
+      "src": "n_0db9df7d8e",
+      "dst": "n_0298385632",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6a301f79c9",
+      "src": "n_0298385632",
+      "dst": "n_25bf8e1a23",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_e04c5259c7",
+      "src": "n_25bf8e1a23",
+      "dst": "n_2d98c0c559",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_e653a26a78",
+      "src": "n_2d98c0c559",
+      "dst": "n_bef2411504",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6e4d1c024d",
+      "src": "n_bef2411504",
+      "dst": "n_3b8f8507bb",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_4c0c058ec3",
+      "src": "n_3b8f8507bb",
+      "dst": "n_3052c67e04",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c6b4b8113f",
+      "src": "n_3052c67e04",
+      "dst": "n_cd6d6837ba",
+      "relation": "depends_on",
+      "weight": 1.0,
+      "evidence": "User: estado del sistema\nAURA: Basado en conversaciones previas (similitud 0.46), encontré: \"User:    \nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos dir",
+      "created_at": 1789517543.0769203,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_c7491b54ae",
+      "src": "n_035615dcf1",
+      "dst": "n_9f86d08188",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: test\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "created_at": 1789614575.8480582,
+      "offline_only": true
+    },
+    {
+      "edge_id": "e_6ca9a7dd8a",
+      "src": "n_9f86d08188",
+      "dst": "n_6d7c0eb420",
+      "relation": "related_to",
+      "weight": 1.0,
+      "evidence": "User: test\nAURA: Recibí tu mensaje pero el motor de IA local no esta disponible. Puedo ejecutar comandos directos: 'busca web:', 'abre archivo:', 'lista archivos:', 'escribe archivo:', 'ejecuta:'.",
+      "created_at": 1789614575.8480582,
+      "offline_only": true
+    }
+  ],
+  "summaries": [],
+  "offline_only": true
+}

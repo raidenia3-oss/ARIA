@@ -1,0 +1,31 @@
+{
+  "last_reconcile": "2026-09-08T21:05:49-0500",
+  "reconcile_count": 2,
+  "docs": {
+    "w1/character/hero": {
+      "hash": "sha256:sd-new",
+      "updated_at": 500,
+      "version": 3,
+      "source": "sd"
+    },
+    "w1/chapter/01": {
+      "hash": "sha256:pc-new",
+      "updated_at": 400,
+      "version": 2,
+      "source": "pc"
+    },
+    "w1/canon/ev-9": {
+      "hash": "sha256:sd-new",
+      "updated_at": 700,
+      "version": 1,
+      "source": "sd"
+    }
+  },
+  "last_device": "ame_pixel",
+  "last_summary": {
+    "received": 3,
+    "rejected": 0,
+    "conflicts": 1,
+    "backups": 1
+  }
+}

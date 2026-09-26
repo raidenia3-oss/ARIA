@@ -1,0 +1,41 @@
+{
+  "appId": "com.aura.ame",
+  "appName": "AME",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": true,
+    "backgroundColor": "#0a0e27",
+    "webContentsDebuggingEnabled": false
+  },
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true,
+    "allowNavigation": [
+      "http://localhost:8000",
+      "http://10.0.0.0/8",
+      "http://172.16.0.0/12",
+      "http://192.168.0.0/16",
+      "http://100.64.0.0/10",
+      "http://*:*"
+    ]
+  },
+  "plugins": {
+    "Filesystem": {
+      "directory": "DOCUMENTS",
+      "scope": "ALL"
+    },
+    "Preferences": {
+      "group": "ame_vault"
+    },
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#0a0e27",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0a0e27"
+    }
+  }
+}

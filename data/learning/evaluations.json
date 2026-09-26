@@ -1,0 +1,18 @@
+[
+  {
+    "evaluation_id": "EVA-1789675117",
+    "source": "integration_test",
+    "score": 1.0,
+    "metrics": {
+      "breadth": 0.4,
+      "depth": 0.85,
+      "confidence": 0.9,
+      "completeness": 0.036,
+      "recency": 0.5
+    },
+    "suggestions": [
+      "Quality acceptable \u2014 maintain current strategy"
+    ],
+    "timestamp": 1789675117.7414284
+  }
+]

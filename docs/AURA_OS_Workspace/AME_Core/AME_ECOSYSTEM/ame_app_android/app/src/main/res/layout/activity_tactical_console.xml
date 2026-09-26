@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AURA Tactical Console — Cyberpunk Terminal -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0a0e17"
+    android:padding="12dp">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="◆ AURA TACTICAL CONSOLE ◆"
+        android:textColor="#00FF41"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:paddingBottom="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="System Diagnostics · Live Telemetry · Neural Link Status"
+        android:textColor="#484F58"
+        android:textSize="10sp"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:paddingBottom="12dp"/>
+
+    <!-- System Health Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#111827"
+        android:padding="12dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="┌─ SYSTEM HEALTH ─────────────────────┐"
+            android:textColor="#3B82F6"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/tvCpuBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CPU  ░░░░░░░░░░░░░░░░░░░░  0%"
+            android:textColor="#00FF41"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/tvRamBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RAM  ░░░░░░░░░░░░░░░░░░░░  0%"
+            android:textColor="#3B82F6"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/tvDiskBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DISK ░░░░░░░░░░░░░░░░░░░░  0%"
+            android:textColor="#FFD700"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="└────────────────────────────────────┘"
+            android:textColor="#3B82F6"
+            android:textSize="11sp"
+            android:fontFamily="monospace"/>
+    </LinearLayout>
+
+    <!-- Network Ports Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#111827"
+        android:padding="12dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="┌─ NETWORK PORTS ─────────────────────┐"
+            android:textColor="#FF6B6B"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/tvPortsStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Port 5000 (FastAPI)   [CHECKING...]"
+            android:textColor="#484F58"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="2dp"/>
+
+        <TextView
+            android:id="@+id/tvAdbStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Port 5555 (ADB)      [CHECKING...]"
+            android:textColor="#484F58"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="└────────────────────────────────────┘"
+            android:textColor="#FF6B6B"
+            android:textSize="11sp"
+            android:fontFamily="monospace"/>
+    </LinearLayout>
+
+    <!-- Live Console Log -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#111827"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="┌─ LIVE CONSOLE ──────────────────────┐"
+            android:textColor="#A855F7"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:paddingBottom="4dp"/>
+
+        <ScrollView
+            android:id="@+id/scrollConsole"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <TextView
+                android:id="@+id/tvConsole"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#00FF41"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:textIsSelectable="true"/>
+        </ScrollView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="└────────────────────────────────────┘"
+            android:textColor="#A855F7"
+            android:textSize="11sp"
+            android:fontFamily="monospace"/>
+    </LinearLayout>
+
+    <!-- Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="8dp">
+
+        <Button
+            android:id="@+id/btnRefreshTelemetry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="⟳ REFRESH"
+            android:textColor="#00FF41"
+            android:backgroundTint="#111827"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="4dp"/>
+
+        <Button
+            android:id="@+id/btnStartMonitor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="▶ MONITOR"
+            android:textColor="#3B82F6"
+            android:backgroundTint="#111827"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:layout_marginStart="4dp"/>
+    </LinearLayout>
+
+</LinearLayout>

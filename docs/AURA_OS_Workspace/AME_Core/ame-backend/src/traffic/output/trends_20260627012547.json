@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "generated_at": "2026-06-27T01:25:47.463195+00:00",
+    "source_count": 5,
+    "campaign": "ia_trending"
+  },
+  "trends": [
+    {
+      "id": "trend-1782523547-0",
+      "original_title": "AI in mathematics is forcing big questions",
+      "title": "🚀 AI in mathematics is forcing big questions [Revolucionario]",
+      "source_url": "https://spectrum.ieee.org/ai-in-mathematics",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=ai-in-mathematics-is-forcing-b",
+      "category": "open-source",
+      "generated_at": "2026-06-27T01:25:47.462194+00:00"
+    },
+    {
+      "id": "trend-1782523547-1",
+      "original_title": "Liva AI (YC S25) Is Hiring",
+      "title": "🚀 Liva AI (YC S25) Is Hiring [El futuro de la IA]",
+      "source_url": "https://www.ycombinator.com/companies/liva-ai/jobs/gvtc3Ep-founding-operations-lead",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=liva-ai-yc-s25-is-hiring-el-fu",
+      "category": "modelo",
+      "generated_at": "2026-06-27T01:25:47.462194+00:00"
+    },
+    {
+      "id": "trend-1782523547-2",
+      "original_title": "Besimple AI (YC P25) Is Hiring",
+      "title": "🔥 Increíble: Besimple AI (YC P25) Is Hiring",
+      "source_url": "https://www.ycombinator.com/companies/besimple-ai/jobs/yWfhhOR-strategic-projects-lead-audio-data",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=incre-ble-besimple-ai-yc-p25-i",
+      "category": "noticia",
+      "generated_at": "2026-06-27T01:25:47.462194+00:00"
+    },
+    {
+      "id": "trend-1782523547-3",
+      "original_title": "California becomes the first state to launch a tool to monitor and track artificial intelligence’s impacts on the workforce - California State Portal | CA.gov",
+      "title": "Acceso libre: California becomes the first state to launch a tool to monitor and track artificial intelligence’s impacts on the workforce - California State Portal | CA.gov",
+      "source_url": "https://news.google.com/rss/articles/CBMi7gFBVV95cUxObG9LTE4weVhnNzlSck5JZ0VHc1RUMnd3TUNXdmloMkF5bndLUHpaMUNKd1JseG5oOVVJWjRuZ3NiQXFrQlo5Tjd6aVFSckczOEd5R3R4NTJmSnVvcmxfUFN0LWlBeV9NczFVaUt0X1RfMjVrT29pMUpxNFh5c3NFVWNScVFuQndERFo5bnBOOW51RW5zTWd0bmVudE1NUXJaSzNURk40bWl3aWpJYVlxT3JwX3J3LVpFWWpOT25Qei1JVjFnS2c2amNTVUVOY2VmN3o5UDVEcGJycEJCNDkwZHE0eFJSZ1BJVXRqQUt3?oc=5",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=acceso-libre-california-become",
+      "category": "open-source",
+      "generated_at": "2026-06-27T01:25:47.462194+00:00"
+    },
+    {
+      "id": "trend-1782523547-4",
+      "original_title": "California's AI job tracker finds no early evidence of unemployment from AI - CBS News",
+      "title": "🚀 California's AI job tracker finds no early evidence of unemployment from AI - CBS News [Increíble]",
+      "source_url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQVGdTNURtaFVmNUlBcDVTVTNoSDVjSG9VN1VEQUhGQnNqbVRZei1vdTZEZWo3UVJSNy1wYVpLSVRPeDlLR3N1QW9fSFJmanNLLUFoV1ZFT25pelpCSy1WSU83U2x5eFJmVWRFUkcyLWZ3aE93MFl0SG1aZ1pJRnBwa0FQTFlWSHNjbE9XTjdUUW9BQUhCcEh5UUxyc2JkYXpZU2M0OQ?oc=5",
+      "landing_url": "https://aura-ia.vercel.app/recurso?utm_source=aura_traffic&utm_medium=rss&utm_campaign=ia_trending&utm_content=california-s-ai-job-tracker-fi",
+      "category": "noticia",
+      "generated_at": "2026-06-27T01:25:47.462194+00:00"
+    }
+  ]
+}

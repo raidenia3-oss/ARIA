@@ -1,0 +1,85 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/aura
+      - AURA_API_KEY=${AURA_API_KEY}
+      - REDIS_URL=redis://redis:6379/0
+      - AURA_LOCAL_MODEL_PATH=/app/models/qwen-0.5b
+      - HF_TOKEN=${HF_TOKEN:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - AURA_CORS_ORIGINS=${AURA_CORS_ORIGINS:-http://localhost:3000,http://frontend:3000,file://,null}
+    volumes:
+      - ./models:/app/models
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_AURA_BACKEND_URL=http://localhost:8000
+      - NEXT_PUBLIC_HF_SPACE_URL=${NEXT_PUBLIC_HF_SPACE_URL:-}
+      - HF_TOKEN=${HF_TOKEN:-}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  discord-bot:
+    build: ./services/discord-bot
+    ports:
+      - "8001:8000"
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_GUILD_ID=${DISCORD_GUILD_ID}
+      - DISCORD_NOTIFY_CHANNEL=${DISCORD_NOTIFY_CHANNEL:-ops}
+      - AURA_BACKEND_URL=http://backend:8000
+      - REDIS_URL=redis://redis:6379/0
+      - AURA_API_KEY=${AURA_API_KEY}
+    depends_on:
+      - redis
+      - backend
+    restart: unless-stopped
+
+  telegram-bot:
+    build: ./backend
+    command: ["python", "-c", "from telegram_bot import create_telegram_bot; bot = create_telegram_bot(); bot.run() if bot else print('TELEGRAM_BOT_TOKEN missing')"]
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - AURA_BACKEND_URL=http://backend:8000
+      - AURA_API_KEY=${AURA_API_KEY}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=aura
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+  postgres-data:

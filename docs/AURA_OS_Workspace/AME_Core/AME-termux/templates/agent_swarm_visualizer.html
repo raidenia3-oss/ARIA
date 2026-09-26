@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Agent Swarm Visualizer</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --warning-color: #FFC107;
+            --error-color: #F44336;
+            --success-color: #8BC34A;
+            --border-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #1e1e1e;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #8BC34A;
+        }
+
+        .status-text {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .visualizer-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .agents-visualization {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            min-height: 400px;
+        }
+
+        .agent-node {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+            border: 2px solid transparent;
+        }
+
+        .agent-node:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .agent-node.active {
+            animation: pulse 1.5s infinite;
+        }
+
+        .agent-node.orchestrating {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .agent-node.inactive {
+            opacity: 0.7;
+        }
+
+        .agent-node.active {
+            opacity: 1;
+        }
+
+        .agent-node.orchestrating {
+            opacity: 1;
+        }
+
+        .agent-color {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px 5px 0 0;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .agent-name {
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 3px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .agent-status {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #aaa;
+        }
+
+        .agent-task {
+            font-size: 0.6rem;
+            text-align: center;
+            color: #ccc;
+            margin-top: 3px;
+            max-height: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .activity-log {
+            height: 200px;
+            overflow-y: auto;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        .log-entry {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .log-timestamp {
+            font-size: 0.7rem;
+            color: #888;
+            min-width: 120px;
+        }
+
+        .log-agent {
+            font-weight: bold;
+            min-width: 80px;
+        }
+
+        .log-action {
+            flex: 1;
+        }
+
+        .log-status {
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .status-info { background-color: #4CAF50; color: white; }
+        .status-active { background-color: #2196F3; color: white; }
+        .status-orchestrating { background-color: #FFC107; color: #121212; }
+        .status-error { background-color: #F44336; color: white; }
+        .status-success { background-color: #8BC34A; color: white; }
+
+        .swarm-status {
+            text-align: center;
+            padding: 15px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .swarm-status.inactive {
+            color: #8BC34A;
+        }
+
+        .swarm-status.active {
+            color: #2196F3;
+        }
+
+        .swarm-status.orchestrating {
+            color: #FFC107;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .control-button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .control-button:hover {
+            background-color: #444;
+        }
+
+        .control-button.active {
+            background-color: #4CAF50;
+        }
+
+        .connection-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+        }
+
+        .connection-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #8BC34A;
+        }
+
+        .connection-text {
+            color: #aaa;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .visualizer-container {
+                flex-direction: column;
+            }
+
+            .agents-visualization {
+                min-height: 300px;
+            }
+
+            .activity-log {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AURA Agent Swarm Visualizer</h1>
+        <div class="status-indicator">
+            <div class="status-dot" id="swarm-status-dot"></div>
+            <span class="status-text" id="swarm-status-text">Enjambre: Inactivo</span>
+        </div>
+    </div>
+
+    <div class="visualizer-container">
+        <div class="agents-visualization" id="agents-visualization">
+            <!-- Nodos de agentes se añadirán dinámicamente con JavaScript -->
+        </div>
+
+        <div class="swarm-status" id="swarm-status">
+            Enjambre: Inactivo
+        </div>
+
+        <div class="activity-log" id="activity-log">
+            <!-- Registros de actividad se añadirán dinámicamente con JavaScript -->
+        </div>
+    </div>
+
+    <div class="connection-status">
+        <div class="connection-dot" id="connection-status-dot"></div>
+        <span class="connection-text" id="connection-status-text">Conectado al enjambre</span>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        // Configuración del visualizador
+        const config = {
+            agents: {
+                coder: {
+                    name: "Coder",
+                    color: "#4CAF50",
+                    activeColor: "#2196F3",
+                    orchestratingColor: "#FFC107",
+                    position: { x: 100, y: 100 }
+                },
+                researcher: {
+                    name: "Researcher",
+                    color: "#4CAF50",
+                    activeColor: "#2196F3",
+                    orchestratingColor: "#FFC107",
+                    position: { x: 300, y: 100 }
+                },
+                generalist: {
+                    name: "Generalist",
+                    color: "#4CAF50",
+                    activeColor: "#2196F3",
+                    orchestratingColor: "#FFC107",
+                    position: { x: 200, y: 250 }
+                }
+            },
+            socketUrl: "ws://localhost:5017/visualizer",
+            connectionStatus: {
+                dot: document.getElementById('connection-status-dot'),
+                text: document.getElementById('connection-status-text')
+            },
+            swarmStatus: {
+                dot: document.getElementById('swarm-status-dot'),
+                text: document.getElementById('swarm-status-text'),
+                element: document.getElementById('swarm-status')
+            },
+            activityLog: document.getElementById('activity-log'),
+            agentsVisualization: document.getElementById('agents-visualization')
+        };
+
+        // Estado actual del enjambre
+        let swarmState = {
+            agents: {},
+            activityLog: [],
+            swarmStatus: "inactive",
+            lastUpdated: null
+        };
+
+        // Conexión WebSocket
+        let socket = null;
+
+        // Inicializar la visualización
+        function initVisualization() {
+            // Crear nodos de agentes
+            for (const [agentId, agentConfig] of Object.entries(config.agents)) {
+                createAgentNode(agentId, agentConfig);
+            }
+
+            // Conectar al servidor WebSocket
+            connectToServer();
+        }
+
+        // Crear nodo de agente en el DOM
+        function createAgentNode(agentId, config) {
+            const node = document.createElement('div');
+            node.className = `agent-node inactive`;
+            node.id = `agent-node-${agentId}`;
+            node.style.left = `${config.position.x}px`;
+            node.style.top = `${config.position.y}px`;
+
+            // Color de fondo según el estado
+            const colorElement = document.createElement('div');
+            colorElement.className = 'agent-color';
+            colorElement.style.backgroundColor = config.color;
+
+            // Nombre del agente
+            const nameElement = document.createElement('div');
+            nameElement.className = 'agent-name';
+            nameElement.textContent = config.name;
+
+            // Estado del agente
+            const statusElement = document.createElement('div');
+            statusElement.className = 'agent-status';
+            statusElement.textContent = 'Inactivo';
+
+            // Tarea actual
+            const taskElement = document.createElement('div');
+            taskElement.className = 'agent-task';
+            taskElement.textContent = '';
+
+            // Añadir elementos al nodo
+            node.appendChild(colorElement);
+            node.appendChild(nameElement);
+            node.appendChild(statusElement);
+            node.appendChild(taskElement);
+
+            // Añadir al contenedor
+            config.agentsVisualization.appendChild(node);
+
+            // Guardar referencia para actualizar después
+            swarmState.agents[agentId] = {
+                element: node,
+                colorElement: colorElement,
+                statusElement: statusElement,
+                taskElement: taskElement,
+                config: config
+            };
+        }
+
+        // Conectar al servidor WebSocket
+        function connectToServer() {
+            socket = io(config.socketUrl);
+
+            socket.on('connect', () => {
+                updateConnectionStatus(true);
+                console.log('🔌 Conectado al servidor de visualización');
+            });
+
+            socket.on('disconnect', () => {
+                updateConnectionStatus(false);
+                console.log('🔌 Desconectado del servidor de visualización');
+            });
+
+            socket.on('agent_status_update', (data) => {
+                updateSwarmState(data);
+                updateVisualization();
+            });
+
+            socket.on('activity_log_update', (logEntry) => {
+                addActivityLogEntry(logEntry);
+            });
+
+            socket.on('connect_error', (err) => {
+                console.error('🔌 Error de conexión:', err.message);
+                updateConnectionStatus(false);
+            });
+        }
+
+        // Actualizar estado de conexión
+        function updateConnectionStatus(connected) {
+            if (connected) {
+                config.connectionStatus.dot.style.backgroundColor = '#8BC34A';
+                config.connectionStatus.text.textContent = 'Conectado al enjambre';
+            } else {
+                config.connectionStatus.dot.style.backgroundColor = '#F44336';
+                config.connectionStatus.text.textContent = 'Desconectado del enjambre';
+            }
+        }
+
+        // Actualizar estado del enjambre
+        function updateSwarmState(newState) {
+            swarmState = {
+                ...swarmState,
+                ...newState,
+                lastUpdated: new Date().toISOString()
+            };
+        }
+
+        // Actualizar visualización basada en el estado actual
+        function updateVisualization() {
+            // Actualizar estado del enjambre
+            updateSwarmStatus();
+
+            // Actualizar nodos de agentes
+            for (const [agentId, agentData] of Object.entries(swarmState.agents)) {
+                if (swarmState.agents[agentId]) {
+                    updateAgentNode(agentId, swarmState.agents[agentId]);
+                }
+            }
+        }
+
+        // Actualizar nodo de agente específico
+        function updateAgentNode(agentId, agentState) {
+            const agentConfig = config.agents[agentId];
+            const node = agentState.element;
+            const colorElement = agentState.colorElement;
+            const statusElement = agentState.statusElement;
+            const taskElement = agentState.taskElement;
+
+            // Determinar el estado visual
+            let statusClass = 'inactive';
+            let color = agentConfig.color;
+
+            if (agentState.status === 'orchestrating') {
+                statusClass = 'orchestrating';
+                color = agentConfig.orchestratingColor;
+            } else if (agentState.status === 'active') {
+                statusClass = 'active';
+                color = agentConfig.activeColor;
+            }
+
+            // Actualizar clase y color
+            node.className = `agent-node ${statusClass}`;
+            colorElement.style.backgroundColor = color;
+
+            // Actualizar estado y tarea
+            statusElement.textContent = agentState.status;
+            taskElement.textContent = agentState.task || 'Sin tarea asignada';
+        }
+
+        // Actualizar estado del enjambre
+        function updateSwarmStatus() {
+            const status = swarmState.swarmStatus || 'inactive';
+            let statusClass = 'inactive';
+            let color = '#8BC34A';
+
+            if (status === 'orchestrating') {
+                statusClass = 'orchestrating';
+                color = '#FFC107';
+            } else if (status === 'active') {
+                statusClass = 'active';
+                color = '#2196F3';
+            }
+
+            // Actualizar el elemento de estado
+            config.swarmStatus.element.className = `swarm-status ${statusClass}`;
+            config.swarmStatus.element.textContent = `Enjambre: ${status}`;
+            config.swarmStatus.dot.style.backgroundColor = color;
+
+            // Actualizar el texto de estado en el header
+            config.swarmStatus.text.textContent = `Enjambre: ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+        }
+
+        // Añadir entrada al log de actividad
+        function addActivityLogEntry(entry) {
+            const logEntryElement = document.createElement('div');
+            logEntryElement.className = 'log-entry';
+
+            // Timestamp
+            const timestampElement = document.createElement('div');
+            timestampElement.className = 'log-timestamp';
+            timestampElement.textContent = new Date(entry.timestamp).toLocaleString();
+
+            // Agente
+            const agentElement = document.createElement('div');
+            agentElement.className = 'log-agent';
+            agentElement.textContent = entry.agent;
+
+            // Acción
+            const actionElement = document.createElement('div');
+            actionElement.className = 'log-action';
+            actionElement.textContent = entry.action;
+
+            // Estado
+            const statusElement = document.createElement('div');
+            statusElement.className = `log-status status-${entry.status}`;
+            statusElement.textContent = entry.status;
+
+            // Detalles
+            if (entry.details) {
+                const detailsElement = document.createElement('div');
+                detailsElement.className = 'log-details';
+                detailsElement.textContent = entry.details;
+                logEntryElement.appendChild(detailsElement);
+            }
+
+            // Añadir elementos al log
+            logEntryElement.appendChild(timestampElement);
+            logEntryElement.appendChild(agentElement);
+            logEntryElement.appendChild(actionElement);
+            logEntryElement.appendChild(statusElement);
+
+            // Añadir al contenedor de logs
+            config.activityLog.insertBefore(logEntryElement, config.activityLog.firstChild);
+
+            // Limitar a 50 entradas
+            if (config.activityLog.children.length > 50) {
+                config.activityLog.removeChild(config.activityLog.lastChild);
+            }
+
+            // Desplazar hacia arriba
+            config.activityLog.scrollTop = 0;
+        }
+
+        // Iniciar la visualización cuando la página esté cargada
+        window.addEventListener('DOMContentLoaded', initVisualization);
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+# ── AURA_Core — GitIgnore específico ──
+
+# Virtual environment
+venv/
+env/
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+
+# Logs de Ollama y respuestas
+aura_respuestas.txt
+aura_notas.txt
+*.log
+
+# Config local (credenciales, IPs)
+*.local.json
+!.env.example
+
+# Archivos temporales
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Blobs / Binarios grandes
+blobs/
+*.pyd
+*.so
+*.dll
+*.exe
+*.bin

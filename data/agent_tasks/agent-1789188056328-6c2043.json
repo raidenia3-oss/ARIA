@@ -1,0 +1,15 @@
+{
+  "task_id": "agent-1789188056328-6c2043",
+  "objective": "tarea A",
+  "context": {},
+  "status": "pending",
+  "plan": [],
+  "steps": [],
+  "result": null,
+  "error": null,
+  "max_iterations": 3,
+  "created_at": 1789188056.328605,
+  "started_at": null,
+  "completed_at": null,
+  "metadata": {}
+}

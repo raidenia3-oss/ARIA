@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARIA — Asistente Visual</title>
+<style>
+#aria-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  user-select: none;
+  font-family: 'Courier New', monospace;
+}
+#aria-core {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #1a2332, #0f172a);
+  border-radius: 50%;
+  box-shadow: 0 0 50px rgba(56, 189, 248, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+#aria-core:hover {
+  box-shadow: 0 0 80px rgba(56, 189, 248, 0.8);
+}
+#aria-info {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #38bdf8;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 0 0 10px #38bdf8;
+  letter-spacing: 4px;
+  pointer-events: none;
+}
+#aria-status {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #38bdf8;
+  font-size: 12px;
+  opacity: 0.7;
+  pointer-events: none;
+  text-align: center;
+  width: 80%;
+}
+#aria-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+#aria-chat {
+  display: none;
+  position: absolute;
+  bottom: 320px;
+  right: 0;
+  width: 400px;
+  height: 500px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.15), 0 8px 32px rgba(0,0,0,0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+#aria-chat.visible {
+  display: flex;
+}
+#aria-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.aria-message {
+  padding: 10px 12px;
+  border-radius: 10px;
+  line-height: 1.4;
+  font-size: 13px;
+  animation: fadeIn 0.3s ease;
+  word-wrap: break-word;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.aria-message.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+}
+.aria-message.aria {
+  align-self: flex-start;
+  background: rgba(56,189,248,0.1);
+  border: 1px solid rgba(56,189,248,0.3);
+  color: #e2e8f0;
+}
+.aria-message.system {
+  align-self: center;
+  background: rgba(148,163,184,0.08);
+  color: rgba(226,232,240,0.5);
+  font-size: 11px;
+  padding: 6px 10px;
+  border: none;
+}
+#aria-input-area {
+  padding: 12px;
+  border-top: 1px solid rgba(56,189,248,0.15);
+  display: flex;
+  gap: 8px;
+  background: rgba(10,14,39,0.5);
+}
+#aria-input {
+  flex: 1;
+  padding: 10px;
+  background: rgba(15,23,42,0.7);
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+}
+#aria-input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56,189,248,0.2);
+}
+#aria-send {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #38bdf8, #a855f7);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+}
+#aria-send:hover { transform: scale(1.05); }
+#aria-controls {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: flex;
+  gap: 4px;
+}
+.aria-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(56,189,248,0.3);
+  background: rgba(15,23,42,0.9);
+  color: #38bdf8;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.aria-btn:hover { background: rgba(56,189,248,0.15); }
+</style>
+</head>
+<body>
+
+<div id="aria-container">
+  <div id="aria-core">
+    <div id="aria-info">ARIA</div>
+    <div id="aria-status">Inicializando...</div>
+    <canvas id="aria-canvas"></canvas>
+    <div id="aria-controls">
+      <span class="aria-btn" id="aria-mute" title="Mute">🔇</span>
+      <span class="aria-btn" id="aria-minimize" title="Minimize">➖</span>
+    </div>
+  </div>
+  <div id="aria-chat">
+    <div id="aria-messages">
+      <div class="aria-message system">ARIA inicializada. Observando tu actividad...</div>
+    </div>
+    <div id="aria-input-area">
+      <input id="aria-input" type="text" placeholder="Habla con ARIA...">
+      <button id="aria-send">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="aria_core.js"></script>
+<script>
+const aria = new AriaCore('aria-canvas', {
+  width: 300, height: 300, particleCount: 3000, audioEnabled: false,
+});
+aria.init();
+
+document.getElementById('aria-core').addEventListener('click', () => {
+  document.getElementById('aria-chat').classList.toggle('visible');
+});
+
+document.getElementById('aria-minimize').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('aria-chat').classList.remove('visible');
+});
+
+document.getElementById('aria-mute').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const btn = e.target;
+  btn.textContent = btn.textContent === '🔇' ? '🔊' : '🔇';
+});
+
+const ws = new WebSocket('ws://localhost:8000/api/aria/observe');
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  const status = document.getElementById('aria-status');
+  if (data.status) status.textContent = data.status;
+  if (data.activity === 'typing') aria.setState('thinking');
+  else if (data.activity === 'idle') aria.setState('idle');
+  else aria.setState('learning');
+};
+
+async function sendAriaMsg() {
+  const input = document.getElementById('aria-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const messages = document.getElementById('aria-messages');
+  const userDiv = document.createElement('div');
+  userDiv.className = 'aria-message user';
+  userDiv.textContent = msg;
+  messages.appendChild(userDiv);
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+  aria.setState('thinking');
+  try {
+    const res = await fetch('http://localhost:8000/api/aria/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg }),
+    });
+    const data = await res.json();
+    const ariaDiv = document.createElement('div');
+    ariaDiv.className = 'aria-message aria';
+    ariaDiv.textContent = data.response || '...';
+    messages.appendChild(ariaDiv);
+    aria.respond(data.response || '', 2500);
+    aria.setState('speaking');
+    setTimeout(() => aria.setState('idle'), 2500);
+  } catch(e) {
+    const errDiv = document.createElement('div');
+    errDiv.className = 'aria-message aria';
+    errDiv.textContent = 'Error de conexión';
+    messages.appendChild(errDiv);
+  }
+  messages.scrollTop = messages.scrollHeight;
+}
+
+document.getElementById('aria-send').addEventListener('click', sendAriaMsg);
+document.getElementById('aria-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') sendAriaMsg();
+});
+
+aria.setState('idle');
+setTimeout(() => {
+  document.getElementById('aria-status').textContent = 'Aprendiendo de tus acciones';
+  aria.setState('learning');
+}, 3000);
+</script>
+</body>
+</html>

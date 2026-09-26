@@ -1,0 +1,13 @@
+{
+  "dataset_id": "711ca475a0eb",
+  "name": "rest_ds",
+  "description": "",
+  "total_entries": 3,
+  "splits": {
+    "train": 2,
+    "validation": 0,
+    "test": 1
+  },
+  "quality_threshold": 0.0,
+  "created_at": "2026-09-11T21:42:07.684078+00:00"
+}

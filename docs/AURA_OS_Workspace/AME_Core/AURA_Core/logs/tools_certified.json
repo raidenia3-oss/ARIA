@@ -1,0 +1,6 @@
+{
+  "api_tool_calling_stable": true,
+  "websocket_bridge_9090_functional": false,
+  "ollama_fallback_ready": false,
+  "workspace_error_noise_reduced": true
+}

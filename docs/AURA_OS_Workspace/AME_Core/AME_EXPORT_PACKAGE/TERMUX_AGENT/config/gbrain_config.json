@@ -1,0 +1,119 @@
+{
+  "version": "1.0.0",
+  "description": "Configuración del motor GBrain para integración híbrida Obsidian+GBrain en AURA/AME",
+
+  "embedding_model": "all-MiniLM-L6-v2",
+  "embedding_model_path": null,
+
+  "chunking": {
+    "chunk_size": 500,
+    "chunk_overlap": 100,
+    "max_chunks_per_file": 100
+  },
+
+  "similarity": {
+    "threshold": 0.75,
+    "similarity_metric": "cosine",
+    "vector_dimension": 384
+  },
+
+  "graph": {
+    "similarity_threshold": 0.75,
+    "relationship_types": [
+      "relacion_tecnica",
+      "ejemplo_definicion",
+      "relacion_fuerte",
+      "relacion_debil",
+      "relacion_general"
+    ],
+    "max_relationships_per_node": 20
+  },
+
+  "dream_cycle": {
+    "interval_seconds": 3600,
+    "repair_threshold": 0.8,
+    "optimization_interval_seconds": 86400,
+    "max_runtime_seconds": 3600,
+    "check_interval_seconds": 60,
+    "log_level": "INFO"
+  },
+
+  "database": {
+    "vector_db_path": "04_Memory_Index/vectors.db",
+    "graph_db_path": "04_Memory_Index/graph.db",
+    "index_path": "04_Memory_Index/index.json",
+    "metadata_path": "04_Memory_Index/metadata.json",
+    "max_vectors": 10000,
+    "max_nodes": 5000,
+    "max_edges": 20000
+  },
+
+  "performance": {
+    "batch_size": 32,
+    "parallel_processing": true,
+    "cache_size_mb": 512
+  },
+
+  "security": {
+    "encryption_enabled": false,
+    "embedding_encryption": false,
+    "metadata_encryption": false
+  },
+
+  "integration": {
+    "server_endpoint": "/v1/knowledge/search",
+    "context_size": 1024,
+    "max_context_chunks": 5,
+    "context_weight": 0.7
+  },
+
+  "maintenance": {
+    "auto_repair": true,
+    "auto_optimize": true,
+    "auto_vacuum": true,
+    "vacuum_threshold_mb": 100
+  },
+
+  "logging": {
+    "level": "INFO",
+    "log_file": "04_Memory_Index/logs/gbrain.log",
+    "max_log_files": 7,
+    "log_retention_days": 30
+  },
+
+  "metadata_fields": [
+    "title",
+    "path",
+    "created",
+    "modified",
+    "word_count",
+    "file_id",
+    "chunk_id",
+    "chunk_index"
+  ],
+
+  "dependencies": {
+    "required_packages": [
+      "sentence-transformers",
+      "networkx",
+      "markdown",
+      "numpy",
+      "scikit-learn"
+    ],
+    "optional_packages": ["sqlite3", "pysqlite3"]
+  },
+
+  "compatibility": {
+    "obsidian_version": ">=1.0.0",
+    "python_version": ">=3.8",
+    "minimum_disk_space_mb": 500
+  },
+
+  "notes": [
+    "El modelo de embeddings 'all-MiniLM-L6-v2' es el recomendado para equilibrio entre calidad y rendimiento.",
+    "La configuración de chunking está optimizada para documentos técnicos de tamaño medio.",
+    "El umbral de similitud puede ajustarse según la precisión requerida vs. rendimiento.",
+    "Para producción, se recomienda habilitar la optimización automática de bases de datos.",
+    "El ciclo de sueño se ejecuta cada hora por defecto para mantener la integridad de la base de conocimiento."
+  ]
+}

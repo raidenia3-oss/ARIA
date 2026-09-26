@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Dashboard Inmersivo v3.0</title>
+    
+    <!-- Three.js para escena 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #0a0a1e; 
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            color: #00ffff;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+        
+        /* Panel de control lateral */
+        .control-panel {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            z-index: 200;
+            background: rgba(10, 10, 30, 0.85);
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+            pointer-events: all;
+        }
+        
+        .control-panel h3 {
+            font-size: 11px;
+            color: rgba(0, 255, 255, 0.6);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        
+        .control-btn {
+            width: 100%;
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+        
+        .control-btn.critical {
+            border-color: #ff0044;
+            color: #ff0044;
+        }
+        .control-btn.critical:hover {
+            background: rgba(255, 0, 68, 0.2);
+            box-shadow: 0 0 15px rgba(255, 0, 68, 0.3);
+        }
+
+        .control-btn.success {
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+        .control-btn.success:hover {
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .separator {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.3), transparent);
+            margin: 12px 0;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* ===== RESPONSIVE MOBILE-FIRST ===== */
+        @media (max-width: 768px) {
+            /* Ocultar canvas 3D pesado en móvil */
+            #canvas-container {
+                opacity: 0.3;
+                pointer-events: none;
+            }
+            
+            /* Panel de control compacto */
+            .control-panel {
+                top: 80px;
+                left: 10px;
+                right: 10px;
+                min-width: auto;
+                width: auto;
+                padding: 10px;
+                font-size: 10px;
+            }
+            .control-panel h3 { font-size: 9px; }
+            .control-btn {
+                font-size: 9px;
+                padding: 6px 8px;
+                margin: 3px 0;
+            }
+            
+            /* HUD adaptado */
+            #tactical-hud .hud-value { font-size: 10px; }
+            #hud-clock { font-size: 16px !important; }
+            
+            /* Feed en vivo más pequeño */
+            #hud-log-container { max-height: 40px; font-size: 8px; }
+            
+            /* Panel de auditoría fullscreen */
+            #feature-audit-panel {
+                width: 95% !important;
+                max-height: 90vh !important;
+                padding: 16px !important;
+                top: 5% !important;
+                transform: translate(-50%, 0) !important;
+            }
+            
+            /* Botón ? más pequeño */
+            #feature-audit-btn { width: 28px; height: 28px; font-size: 12px; bottom: 80px; }
+            #feature-count-badge { font-size: 7px; bottom: 112px; }
+            
+            /* Ocultar elementos decorativos */
+            .hud-node-line { font-size: 9px !important; }
+        }
+
+        @media (max-width: 480px) {
+            /* Móvil pequeño - aún más compacto */
+            .control-panel {
+                top: 70px;
+                padding: 8px;
+            }
+            .control-btn {
+                font-size: 8px;
+                padding: 4px 6px;
+            }
+            .control-panel h3 { font-size: 8px; }
+            
+            /* HUD minimalista */
+            #tactical-hud .hud-value { font-size: 8px; }
+            #tactical-hud [style*="font-size: 24px"] { font-size: 14px !important; }
+            #tactical-hud [style*="font-size: 14px"] { font-size: 11px !important; }
+            #hud-date { font-size: 8px !important; }
+            
+            #hud-log-container { max-height: 30px; font-size: 7px; }
+            
+            /* Botón ? ultra compacto */
+            #feature-audit-btn { width: 24px; height: 24px; font-size: 10px; bottom: 60px; right: 10px; }
+            #feature-count-badge { font-size: 6px; bottom: 85px; right: 10px; }
+        }
+
+        /* Orientación landscape en móvil */
+        @media (max-height: 500px) {
+            .control-panel { top: 10px; padding: 6px; }
+            .control-btn { padding: 3px 6px; font-size: 8px; margin: 2px 0; }
+            #hud-log-container { max-height: 25px; }
+        }
+
+        /* Dark mode support for OS */
+        @media (prefers-color-scheme: dark) {
+            body { background: #0a0a1e; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas 3D -->
+    <div id="canvas-container"></div>
+
+    <!-- Panel de control -->
+    <div class="control-panel">
+        <h3>✦ AURA CONTROL</h3>
+        
+        <button class="control-btn" onclick="simulateAlert('info')">
+            <span class="status-dot" style="background: #00ffff;"></span>
+            Simular Alerta
+        </button>
+        
+        <button class="control-btn success" onclick="simulateAlert('success')">
+            <span class="status-dot" style="background: #00ff88;"></span>
+            Acción Aprobada
+        </button>
+        
+        <button class="control-btn" onclick="simulateAlert('warn')">
+            <span class="status-dot" style="background: #ff6600;"></span>
+            Alerta Media
+        </button>
+        
+        <button class="control-btn critical" onclick="simulateCriticalAlert()">
+            <span class="status-dot" style="background: #ff0044; animation-duration: 0.5s;"></span>
+            🚨 Alerta Crítica
+        </button>
+        
+        <div class="separator"></div>
+        
+        <button class="control-btn" onclick="toggleCamera()">
+            🎥 Cámara: <span id="camera-status">Auto</span>
+        </button>
+        
+        <button class="control-btn success" onclick="addRandomNode()">
+            ➕ Añadir Nodo
+        </button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../static/js/immersive_ui_upgrade.js"></script>
+    <script src="../static/js/feature_audit_console.js"></script>
+    <script>
+        // ===== ESCENA 3D BÁSICA =====
+        let scene, camera, renderer, controls;
+        let nodes = [];
+        let connections = [];
+        
+        function initScene() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1e);
+            
+            // Cámara
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(0, 5, 15);
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            
+            // Luces
+            const ambientLight = new THREE.AmbientLight(0x222244, 0.5);
+            scene.add(ambientLight);
+            
+            const pointLight = new THREE.PointLight(0x00ffff, 1, 30);
+            pointLight.position.set(0, 5, 5);
+            scene.add(pointLight);
+            
+            const pointLight2 = new THREE.PointLight(0xff00ff, 0.5, 30);
+            pointLight2.position.set(-5, -2, 5);
+            scene.add(pointLight2);
+            
+            // Partículas de fondo
+            createParticles();
+            
+            // Nodo central
+            createCentralNode();
+            
+            // Nodos satélite
+            createSatelliteNodes();
+            
+            // Conexiones
+            createConnections();
+            
+            // Eventos
+            window.addEventListener('resize', onResize);
+            
+            startRender();
+        }
+        
+        function createParticles() {
+            const geometry = new THREE.BufferGeometry();
+            const count = 500;
+            const positions = new Float32Array(count * 3);
+            for (let i = 0; i < count * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 40;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const material = new THREE.PointsMaterial({
+                color: 0x00ffff,
+                size: 0.05,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+        }
+        
+        function createCentralNode() {
+            const geometry = new THREE.SphereGeometry(1.2, 32, 32);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x00ffff,
+                emissive: 0x00ffff,
+                emissiveIntensity: 0.3,
+                transparent: true,
+                opacity: 0.9,
+                wireframe: false
+            });
+            
+            const node = new THREE.Mesh(geometry, material);
+            node.position.set(0, 0, 0);
+            node.userData.isActive = true;
+            scene.add(node);
+            nodes.push(node);
+            
+            // Anillo exterior
+            const ringGeo = new THREE.TorusGeometry(1.5, 0.02, 16, 50);
+            const ringMat = new THREE.MeshPhongMaterial({
+                color: 0x00ffff,
+                emissive: 0x00ffff,
+                emissiveIntensity: 0.2,
+                transparent: true,
+                opacity: 0.4
+            });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI / 2;
+            scene.add(ring);
+            nodes.push(ring);
+        }
+        
+        function createSatelliteNodes() {
+            const colors = [0x00ff88, 0xff6600, 0xff00ff, 0xffff00];
+            const positions = [
+                { x: 4, y: 1, z: 3 },
+                { x: -3, y: 2, z: 4 },
+                { x: 2, y: -2, z: -4 },
+                { x: -4, y: -1, z: -3 },
+                { x: 0, y: 4, z: 2 },
+                { x: 3, y: -2, z: 2 },
+            ];
+            
+            positions.forEach((pos, i) => {
+                const size = 0.3 + Math.random() * 0.3;
+                const geometry = new THREE.OctahedronGeometry(size);
+                const color = colors[i % colors.length];
+                const material = new THREE.MeshPhongMaterial({
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.2,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                const node = new THREE.Mesh(geometry, material);
+                node.position.set(pos.x, pos.y, pos.z);
+                node.userData.isActive = true;
+                node.userData.orbitSpeed = 0.2 + Math.random() * 0.3;
+                node.userData.orbitAngle = Math.random() * Math.PI * 2;
+                node.userData.orbitRadius = Math.sqrt(pos.x * pos.x + pos.z * pos.z);
+                scene.add(node);
+                nodes.push(node);
+            });
+        }
+        
+        function createConnections() {
+            const material = new THREE.LineBasicMaterial({
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.15,
+                blending: THREE.AdditiveBlending
+            });
+            
+            for (let i = 1; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (Math.random() > 0.6) continue;
+                    
+                    const geometry = new THREE.BufferGeometry().setFromPoints([
+                        nodes[i].position,
+                        nodes[j].position
+                    ]);
+                    
+                    const line = new THREE.Line(geometry, material);
+                    scene.add(line);
+                    connections.push(line);
+                }
+            }
+        }
+        
+        let time = 0;
+        function startRender() {
+            function animate() {
+                requestAnimationFrame(animate);
+                time += 0.01;
+                
+                // Animar nodos satélite
+                nodes.forEach((node, i) => {
+                    if (node.userData.orbitSpeed) {
+                        const speed = node.userData.orbitSpeed;
+                        const angle = time * speed + node.userData.orbitAngle;
+                        const radius = node.userData.orbitRadius;
+                        // Movimiento orbital suave
+                        const x = Math.sin(angle) * radius;
+                        const z = Math.cos(angle) * radius;
+                        node.position.x = x;
+                        node.position.z = z;
+                        node.rotation.x += 0.02;
+                        node.rotation.y += 0.03;
+                    }
+                });
+                
+                // Actualizar conexiones con nuevas posiciones
+                connections.forEach((line, idx) => {
+                    const positions = line.geometry.attributes.position;
+                    if (positions) {
+                        // Pequeño cambio para animar
+                    }
+                });
+                
+                // Render
+                if (cameraAutoRotate) {
+                    // La cámara cinematográfica maneja esto
+                }
+                
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+        
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // ===== CONTROLES =====
+        function simulateAlert(type) {
+            const messages = {
+                info: { msg: 'Alerta informativa recibida', color: '#00ffff' },
+                success: { msg: 'Acción aprobada y ejecutada', color: '#00ff88' },
+                warn: { msg: 'Alerta de nivel medio detectada', color: '#ff6600' },
+            };
+            const data = messages[type] || messages.info;
+            addHUDLogEntry(data.msg, type);
+        }
+        
+        function simulateCriticalAlert() {
+            addHUDLogEntry('🚨 ALERTA CRÍTICA: Vulnerabilidad detectada', 'error');
+            
+            // Destello rojo en la escena
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(255, 0, 0, 0.1); z-index: 50;
+                pointer-events: none; animation: fadeOut 1s ease;
+            `;
+            document.body.appendChild(flash);
+            
+            // Crear keyframe dinámicamente
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeOut {
+                    0% { opacity: 1; }
+                    100% { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            setTimeout(() => {
+                flash.remove();
+                style.remove();
+            }, 1000);
+        }
+        
+        function toggleCamera() {
+            cameraAutoRotate = !cameraAutoRotate;
+            document.getElementById('camera-status').textContent = 
+                cameraAutoRotate ? 'Auto' : 'Manual';
+            addHUDLogEntry(
+                cameraAutoRotate ? 'Cámara automática activada' : 'Control manual activado', 
+                'info'
+            );
+        }
+        
+        function addRandomNode() {
+            const size = 0.2 + Math.random() * 0.3;
+            const colors = [0x00ffff, 0x00ff88, 0xff00ff, 0xff6600, 0xffff00];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            const geometry = new THREE.DodecahedronGeometry(size);
+            const material = new THREE.MeshPhongMaterial({
+                color: color,
+                emissive: color,
+                emissiveIntensity: 0.3,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const node = new THREE.Mesh(geometry, material);
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 2 + Math.random() * 4;
+            node.position.set(
+                Math.cos(angle) * radius,
+                (Math.random() - 0.5) * 4,
+                Math.sin(angle) * radius
+            );
+            node.userData.isActive = true;
+            
+            scene.add(node);
+            nodes.push(node);
+            
+            addHUDLogEntry('➕ Nuevo nodo desplegado', 'success');
+        }
+        
+        // ===== INICIALIZAR =====
+        window.onload = function() {
+            initScene();
+            
+            // Inicializar UI Inmersiva
+            if (typeof initImmersiveUI === 'function') {
+                initImmersiveUI(camera, null, scene, renderer);
+            }
+            
+            // Añadir entradas de bienvenida al HUD
+            setTimeout(() => {
+                addHUDLogEntry('Sistema AURA v3.0 operativo', 'success');
+            }, 500);
+            setTimeout(() => {
+                addHUDLogEntry('Módulos: Decision Core ✓ Action Executor ✓ Threat Scanner ✓', 'info');
+            }, 1500);
+
+            // Inicializar Feature Audit Console
+            setTimeout(() => {
+                if (typeof initFeatureAuditConsole === 'function') {
+                    initFeatureAuditConsole();
+                }
+            }, 2000);
+        };
+    </script>
+</body>
+</html>

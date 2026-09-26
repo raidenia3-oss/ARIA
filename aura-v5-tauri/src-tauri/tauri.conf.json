@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "ARIA OS",
+  "version": "5.0.0",
+  "identifier": "com.aria.os",
+  "build": {
+    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "ARIA OS v5.0",
+        "width": 1400,
+        "height": 900,
+        "resizable": true,
+        "fullscreen": false,
+        "focus": true,
+        "decorations": false,
+        "transparent": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "externalBin": [],
+    "resources": ["../ARIA_APP/**/*"],
+    "icon": ["icons/icon.ico", "icons/icon.icns", "icons/icon.png"],
+    "windows": {
+      "digestAlgorithm": "sha256"
+    }
+  },
+  "plugins": {
+    "global-shortcut": {
+      "shortcuts": {
+        "Ctrl+Space": "toggle-orb"
+      }
+    },
+    "shell": {
+      "allowlist": ["python", "cmd", "powershell"]
+    },
+    "fs": {
+      "allowlist": ["$APPDATA/*", "$HOME/*"]
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "profile": {
+    "generated_at": "2026-05-29T03:14:19.206552",
+    "profile_version": 1,
+    "total_decisions_analyzed": 8,
+    "approval_rate": 50.0,
+    "auto_mute_types": [
+      {
+        "type": "security_news",
+        "rejected_count": 3,
+        "reason": "Rechazada 3 veces (umbral: 3)"
+      }
+    ],
+    "boosted_types": [
+      {
+        "type": "phishing",
+        "approved_count": 3,
+        "priority_boost": 1.5,
+        "reason": "Aprobada 3 veces (umbral: 3)"
+      }
+    ],
+    "patterns": {
+      "approved": {
+        "phishing": 3
+      },
+      "rejected": {
+        "security_news": 3
+      },
+      "auto": {
+        "info_log": 2
+      },
+      "by_type": {
+        "security_news": {
+          "approved": 0,
+          "rejected": 3,
+          "auto": 0
+        },
+        "phishing": {
+          "approved": 3,
+          "rejected": 0,
+          "auto": 0
+        },
+        "info_log": {
+          "approved": 0,
+          "rejected": 0,
+          "auto": 2
+        }
+      },
+      "by_threat_level": {
+        "1": {
+          "approved": 0,
+          "rejected": 0,
+          "auto": 2
+        },
+        "2": {
+          "approved": 0,
+          "rejected": 3,
+          "auto": 0
+        },
+        "6": {
+          "approved": 3,
+          "rejected": 0,
+          "auto": 0
+        }
+      },
+      "by_source": {
+        "test_simulation": {
+          "approved": 3,
+          "rejected": 3,
+          "auto": 0
+        }
+      },
+      "daily": {
+        "2026-05-29": {
+          "approved": 3,
+          "rejected": 3,
+          "auto": 2
+        }
+      },
+      "total_by_level": {
+        "INFO": 0,
+        "APPROVED": 3,
+        "REJECTED": 3,
+        "AUTO": 2,
+        "WARN": 0
+      },
+      "total_decisions": 8
+    },
+    "threat_preferences": {
+      "2": {
+        "approval_rate": 0.0,
+        "total": 3,
+        "approved": 0,
+        "rejected": 3
+      },
+      "6": {
+        "approval_rate": 100.0,
+        "total": 3,
+        "approved": 3,
+        "rejected": 0
+      }
+    },
+    "learning_rules": {
+      "auto_mute_count": 3,
+      "boost_priority_count": 3,
+      "max_history_days": 30,
+      "profile_version": 1
+    }
+  },
+  "adjustments": {
+    "auto_mute": {
+      "security_news": true
+    },
+    "priority_boost": {
+      "phishing": 1.5
+    },
+    "ghost_mode_threshold": 4
+  },
+  "generated_at": "2026-05-29T03:14:19.206552"
+}

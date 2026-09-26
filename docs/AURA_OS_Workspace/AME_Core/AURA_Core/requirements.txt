@@ -1,0 +1,6 @@
+fastapi>=0.111.0
+uvicorn>=0.29.0
+requests>=2.31.0
+PyQt6>=6.6.1
+PyQt6-WebEngine>=6.6.0
+apscheduler>=3.10.4

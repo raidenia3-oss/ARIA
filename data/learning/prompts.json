@@ -1,0 +1,14 @@
+{
+  "population": [
+    {
+      "genome_id": "PG-1789675117",
+      "template": "Investigate the subject with focus on key dimensions. Provide structured analysis.",
+      "fitness": 0.0,
+      "generation": 0,
+      "uses": 0,
+      "successes": 0,
+      "task_type": "research",
+      "created_at": 1789675117.7187855
+    }
+  ]
+}

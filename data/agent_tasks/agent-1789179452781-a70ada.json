@@ -1,0 +1,54 @@
+{
+  "task_id": "agent-1789179452781-a70ada",
+  "objective": "explorar directorio actual",
+  "context": {},
+  "status": "cancelled",
+  "plan": [
+    {
+      "step_id": "s1",
+      "name": "Explorar contexto de trabajo",
+      "tool": "list_dir",
+      "params": {
+        "path": "."
+      },
+      "parallel_group": null
+    },
+    {
+      "step_id": "s2",
+      "name": "Ejecutar diagnóstico local",
+      "tool": "shell",
+      "params": {
+        "command": "echo aura-agent-check",
+        "timeout": 10
+      },
+      "parallel_group": "p1"
+    },
+    {
+      "step_id": "s3",
+      "name": "Leer estado del sistema",
+      "tool": "os",
+      "params": {
+        "kind": "status"
+      },
+      "parallel_group": "p1"
+    },
+    {
+      "step_id": "s4",
+      "name": "Consolidar resultado en informe",
+      "tool": "write_file",
+      "params": {
+        "path": "agent_runs/informe.md",
+        "content": "explorar directorio actual"
+      },
+      "parallel_group": null
+    }
+  ],
+  "steps": [],
+  "result": null,
+  "error": "cancelada por el operador",
+  "max_iterations": 5,
+  "created_at": 1789179452.781031,
+  "started_at": null,
+  "completed_at": 1789179452.7945683,
+  "metadata": {}
+}

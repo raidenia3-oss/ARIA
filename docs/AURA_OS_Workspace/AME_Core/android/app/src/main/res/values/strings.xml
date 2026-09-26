@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AME</string>
+    <string name="title_activity_main">AME</string>
+    <string name="package_name">com.arquitecto.ame</string>
+    <string name="custom_url_scheme">com.arquitecto.ame</string>
+</resources>

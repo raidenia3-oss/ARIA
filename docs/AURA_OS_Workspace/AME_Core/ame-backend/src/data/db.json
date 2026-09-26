@@ -1,0 +1,20 @@
+{
+  "bots": [
+    {"id": "bot-1", "name": "Roller Miner", "status": "Idle"},
+    {"id": "bot-2", "name": "Survey Harvester", "status": "Running"},
+    {"id": "bot-3", "name": "OSINT Recon", "status": "Blocked"}
+  ],
+  "balance": {"total_balance": 1247.53, "currency": "USD"},
+  "stats": {
+    "total_tasks": 342,
+    "successful_tasks": 318,
+    "failed_tasks": 24
+  },
+  "logs": [
+    {"ts": "2025-06-27T10:23:00Z", "level": "ERROR", "message": "Conexion con proxy 45.67.89.10:8080 perdida"},
+    {"ts": "2025-06-27T10:22:15Z", "level": "WARN", "message": "Rate limit alcanzado en fuente HuggingFace"},
+    {"ts": "2025-06-27T10:20:30Z", "level": "CRITICAL", "message": "Navegador sin respuesta, reinicio forzado"},
+    {"ts": "2025-06-27T10:18:45Z", "level": "WARN", "message": "Pool de proxies reducido a 3"},
+    {"ts": "2025-06-27T10:15:00Z", "level": "ERROR", "message": "Timeout en tarea de scraping: example.com"}
+  ]
+}

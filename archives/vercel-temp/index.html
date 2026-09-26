@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA — Optimizador de Prompts IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+        }
+        .card-3d {
+            perspective: 800px;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+        .card-3d:hover {
+            transform: rotateY(6deg) rotateX(4deg) scale(1.02);
+        }
+        .glow-text {
+            text-shadow: 0 0 20px rgba(120,119,198,0.6), 0 0 40px rgba(120,119,198,0.3);
+        }
+    </style>
+</head>
+<body class="text-gray-100 font-sans antialiased">
+
+    <!-- Hero -->
+    <header class="flex flex-col items-center justify-center py-20 px-4 text-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold glow-text mb-4">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-300">AURA</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-300 max-w-xl glass px-6 py-4 rounded-2xl">
+            Optimiza tus prompts con IA. Gratis, instantáneo y sin registro.
+        </p>
+    </header>
+
+    <!-- Tool -->
+    <main class="max-w-3xl mx-auto px-4 pb-20" aria-label="Optimizador de Prompts">
+        <div class="glass rounded-2xl p-6 md:p-8 card-3d">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2">Generador de Prompt Maestro</h2>
+            <p class="text-gray-300 text-sm mb-6">Escribe una idea simple y obtén un prompt listo para cualquier modelo de IA.</p>
+
+            <label for="prompt-input" class="block text-xs text-gray-400 mb-2">Tu idea</label>
+            <textarea id="prompt-input" rows="4" class="w-full rounded-xl bg-black/30 border border-white/10 p-3 text-sm text-gray-100 outline-none" placeholder="Ej: crear un plan de contenido para redes sociales sobre IA..."></textarea>
+
+            <div class="mt-4 flex flex-wrap items-center gap-3">
+                <button id="prompt-generate-btn" type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-600/70 hover:bg-cyan-500/80 transition text-sm font-semibold">
+                    Generar Prompt
+                </button>
+                <span id="prompt-timer" class="text-xs text-gray-400" aria-live="polite"></span>
+            </div>
+
+            <div id="prompt-output" class="hidden mt-6">
+                <label class="block text-xs text-gray-400 mb-2">Prompt optimizado</label>
+                <pre id="prompt-result" class="whitespace-pre-wrap rounded-xl bg-black/30 border border-white/10 p-4 text-sm text-gray-100"></pre>
+            </div>
+
+            <!-- ADSTERRA BANNER -->
+            <div id="adsterra-banner" class="mt-8 glass rounded-xl p-4 text-center text-xs text-gray-400">
+                Espacio publicitario Adsterra — Banner
+            </div>
+        </div>
+    </main>
+
+    <!-- ADSTERRA POPUNDER -->
+    <div id="adsterra-popunder" class="hidden"></div>
+
+    <script>
+        (function () {
+            'use strict';
+            function optimizePrompt(raw) {
+                const trimmed = (raw || '').trim();
+                if (!trimmed) return '';
+                const templates = [
+                    `Actúa como experto senior en el tema: "${trimmed}".\nProporciona una respuesta estructurada en 3 partes: (1) resumen claro, (2) pasos accionables, (3) precauciones importantes.`,
+                    `Eres un consultor especializado en "${trimmed}".\nNecesito un análisis breve con: contexto, 2 alternativas de solución y una recomendación final.`,
+                    `Como profesor experto en "${trimmed}", explica el concepto como si yo fuera un principiante. Incluye un ejemplo práctico y una métrica de validación.`
+                ];
+                return templates[Math.floor(Math.random() * templates.length)];
+            }
+            function init() {
+                const input = document.getElementById('prompt-input');
+                const btn = document.getElementById('prompt-generate-btn');
+                const output = document.getElementById('prompt-output');
+                const pre = document.getElementById('prompt-result');
+                if (!input || !btn || !output || !pre) return;
+                btn.addEventListener('click', function () {
+                    const raw = input.value;
+                    if (!raw) {
+                        pre.textContent = 'Escribe una idea primero para crear tu Prompt Maestro.';
+                        output.classList.remove('hidden');
+                        return;
+                    }
+                    btn.disabled = true;
+                    pre.textContent = 'Optimizando tu prompt...';
+                    output.classList.remove('hidden');
+                    setTimeout(function () {
+                        pre.textContent = optimizePrompt(raw);
+                        btn.disabled = false;
+                    }, 3000);
+                });
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+            else init();
+        })();
+    </script>
+</body>
+</html>

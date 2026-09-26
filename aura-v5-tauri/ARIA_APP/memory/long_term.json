@@ -1,0 +1,61 @@
+[
+  {
+    "id": "7038188214656635600",
+    "timestamp": "2026-08-31T01:45:09.889793Z",
+    "content": "ARIA Fase 1 completada con exito",
+    "meta": {
+      "type": "fact",
+      "phase": 1
+    }
+  },
+  {
+    "id": "4908567461547641021",
+    "timestamp": "2026-08-31T01:53:30.396979Z",
+    "content": "Test Fase 5",
+    "meta": {
+      "type": "fact"
+    }
+  },
+  {
+    "id": "743436187702598902",
+    "timestamp": "2026-08-31T01:54:18.113690Z",
+    "content": "End-to-end test OK",
+    "meta": {
+      "type": "fact"
+    }
+  },
+  {
+    "id": "3028462861245533524",
+    "timestamp": "2026-08-31T20:47:46.757360Z",
+    "content": "ARIA v2.0 FASES 1-6 OK",
+    "meta": {
+      "type": "fact",
+      "phase": 6
+    }
+  },
+  {
+    "id": "8065044234816792420",
+    "timestamp": "2026-08-31T20:51:51.318960Z",
+    "content": "ARIA v2.0 FASES 1-6 OK",
+    "meta": {
+      "type": "fact",
+      "phase": 6
+    }
+  },
+  {
+    "id": "3622715218955659643",
+    "timestamp": "2026-08-31T20:57:24.654746Z",
+    "content": "Full system test complete",
+    "meta": {
+      "type": "test"
+    }
+  },
+  {
+    "id": "4014331793944403738",
+    "timestamp": "2026-08-31T21:02:57.287500Z",
+    "content": "Full system test complete",
+    "meta": {
+      "type": "test"
+    }
+  }
+]

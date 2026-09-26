@@ -1,0 +1,253 @@
+[gd_scene load_steps=6 format=3 uid="uid://main_scene"]
+
+[ext_resource type="Script" path="res://scripts/main/main_loop.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/dashboard/dashboard_manager.gd" id="2_dashboard"]
+[ext_resource type="Script" path="res://scripts/ui/narrative_panel.gd" id="3_narrative"]
+[ext_resource type="PackedScene" path="res://scenes/ui/ChatUI.tscn" id="2_chat"]
+[ext_resource type="PackedScene" path="res://scenes/ui/RadarUI.tscn" id="3_radar"]
+[ext_resource type="PackedScene" path="res://scenes/ui/EarthquakeUI.tscn" id="4_eq"]
+[ext_resource type="Script" path="res://scripts/ui/gesture_particle_system.gd" id="6_particles"]
+[ext_resource type="PackedScene" path="res://scenes/3d/ParticleWorld.tscn" id="5_particles"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="AuraClient" type="AuraClient" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 10, 0)
+light_color = Color(0.9, 0.95, 1.0, 1.0)
+light_energy = 0.8
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5)
+fov = 75.0
+
+[node name="World3D" type="Node3D" parent="."]
+
+[node name="ParticleWorld" parent="World3D" instance=ExtResource("5_particles")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ChatUI" parent="CanvasLayer" instance=ExtResource("2_chat")]
+
+[node name="RadarUI" parent="CanvasLayer" instance=ExtResource("3_radar")]
+visible = false
+
+[node name="EarthquakeUI" parent="CanvasLayer" instance=ExtResource("4_eq")]
+visible = false
+
+[node name="GestureParticleSystem" type="Node2D" parent="CanvasLayer"]
+script = ExtResource("6_particles")
+z_index = 100
+
+[node name="Fist" type="GPUParticles2D" parent="CanvasLayer/GestureParticleSystem"]
+position = Vector2(640, 360)
+amount = 50
+one_shot = true
+explosiveness = 0.8
+
+[node name="Index" type="GPUParticles2D" parent="CanvasLayer/GestureParticleSystem"]
+position = Vector2(640, 360)
+amount = 50
+one_shot = true
+explosiveness = 0.8
+
+[node name="Peace" type="GPUParticles2D" parent="CanvasLayer/GestureParticleSystem"]
+position = Vector2(640, 360)
+amount = 60
+one_shot = true
+explosiveness = 0.8
+
+[node name="OpenHand" type="GPUParticles2D" parent="CanvasLayer/GestureParticleSystem"]
+position = Vector2(640, 360)
+amount = 80
+one_shot = true
+explosiveness = 0.8
+
+[node name="Swipe" type="GPUParticles2D" parent="CanvasLayer/GestureParticleSystem"]
+position = Vector2(640, 360)
+amount = 40
+one_shot = true
+explosiveness = 0.8
+
+[node name="Heart" type="GPUParticles2D" parent="CanvasLayer/GestureParticleSystem"]
+position = Vector2(640, 360)
+amount = 60
+one_shot = true
+explosiveness = 0.8
+
+[node name="NexusHUD" type="PanelContainer" parent="CanvasLayer"]
+anchor_left = 0.7
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.3
+offset_left = 0.0
+offset_top = 0.0
+offset_right = -20.0
+offset_bottom = 160.0
+
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/NexusHUD"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = -20.0
+offset_bottom = 160.0
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/NexusHUD/Margin"]
+
+[node name="IntelPanel" type="PanelContainer" parent="CanvasLayer/NexusHUD/Margin/VBox"]
+offset_right = 300.0
+offset_bottom = 60.0
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/NexusHUD/Margin/VBox/IntelPanel"]
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 292.0
+offset_bottom = 56.0
+
+[node name="GestureLabel" type="Label" parent="CanvasLayer/NexusHUD/Margin/VBox/IntelPanel/VBox"]
+offset_right = 284.0
+offset_bottom = 20.0
+text = "GESTURE: idle"
+
+[node name="ConfLabel" type="Label" parent="CanvasLayer/NexusHUD/Margin/VBox/IntelPanel/VBox"]
+offset_top = 20.0
+offset_right = 284.0
+offset_bottom = 40.0
+text = "CONF: 0%"
+
+[node name="AudioPanel" type="PanelContainer" parent="CanvasLayer/NexusHUD/Margin/VBox"]
+offset_top = 60.0
+offset_right = 300.0
+offset_bottom = 120.0
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/NexusHUD/Margin/VBox/AudioPanel"]
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 292.0
+offset_bottom = 56.0
+
+[node name="FreqLabel" type="Label" parent="CanvasLayer/NexusHUD/Margin/VBox/AudioPanel/VBox"]
+offset_right = 284.0
+offset_bottom = 20.0
+text = "FREQUENCY: -- Hz"
+
+[node name="LevelLabel" type="Label" parent="CanvasLayer/NexusHUD/Margin/VBox/AudioPanel/VBox"]
+offset_top = 20.0
+offset_right = 284.0
+offset_bottom = 40.0
+text = "LEVEL: -∞ dB"
+
+[node name="SystemPanel" type="PanelContainer" parent="CanvasLayer/NexusHUD/Margin/VBox"]
+offset_top = 120.0
+offset_right = 300.0
+offset_bottom = 200.0
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel"]
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 292.0
+offset_bottom = 80.0
+
+[node name="CPURow" type="HBoxContainer" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox"]
+offset_right = 284.0
+offset_bottom = 20.0
+
+[node name="CPU" type="ProgressBar" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox/CPURow"]
+offset_right = 200.0
+offset_bottom = 18.0
+value = 50.0
+
+[node name="Label" type="Label" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox/CPURow"]
+offset_left = 204.0
+offset_right = 284.0
+offset_bottom = 18.0
+text = "CPU: 0%"
+horizontal_alignment = 2
+
+[node name="RAMRow" type="HBoxContainer" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox"]
+offset_top = 20.0
+offset_right = 284.0
+offset_bottom = 40.0
+
+[node name="RAM" type="ProgressBar" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox/RAMRow"]
+offset_right = 200.0
+offset_bottom = 18.0
+value = 50.0
+
+[node name="Label" type="Label" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox/RAMRow"]
+offset_left = 204.0
+offset_right = 284.0
+offset_bottom = 18.0
+text = "RAM: 0%"
+horizontal_alignment = 2
+
+[node name="DISKRow" type="HBoxContainer" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox"]
+offset_top = 40.0
+offset_right = 284.0
+offset_bottom = 60.0
+
+[node name="DISK" type="ProgressBar" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox/DISKRow"]
+offset_right = 200.0
+offset_bottom = 18.0
+value = 50.0
+
+[node name="Label" type="Label" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox/DISKRow"]
+offset_left = 204.0
+offset_right = 284.0
+offset_bottom = 18.0
+text = "DISK: 0%"
+horizontal_alignment = 2
+
+[node name="NetRow" type="HBoxContainer" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox"]
+offset_top = 60.0
+offset_right = 284.0
+offset_bottom = 80.0
+
+[node name="Label" type="Label" parent="CanvasLayer/NexusHUD/Margin/VBox/SystemPanel/VBox/NetRow"]
+offset_right = 284.0
+offset_bottom = 18.0
+text = "NET: --"
+
+[node name="ModeButtons" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 10.0
+offset_top = 300.0
+offset_right = 130.0
+offset_bottom = 420.0
+
+[node name="BtnChat" type="Button" parent="CanvasLayer/ModeButtons"]
+text = "💬 Chat"
+offset_right = 120.0
+offset_bottom = 30.0
+
+[node name="BtnRadar" type="Button" parent="CanvasLayer/ModeButtons"]
+offset_top = 32.0
+text = "📡 Radar"
+offset_right = 120.0
+offset_bottom = 62.0
+
+[node name="BtnEq" type="Button" parent="CanvasLayer/ModeButtons"]
+offset_top = 64.0
+text = "🌋 Sismos"
+offset_right = 120.0
+offset_bottom = 94.0
+
+[node name="Dashboard" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_dashboard")
+
+[node name="NarrativePanel" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_narrative")

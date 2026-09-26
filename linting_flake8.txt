@@ -1,0 +1,2762 @@
+AURA_APP/backend\agent\core.py:8:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\agent\core.py:83:5: C901 'ReactLoop._plan' is too complex (14)
+    def _plan(self, user_message: str, system_prompt: str) -> List[str]:
+    ^
+AURA_APP/backend\agent\core.py:141:5: C901 'ReactLoop._synthesize' is too complex (20)
+    def _synthesize(self, state: ReActState, system_prompt: str) -> str:
+    ^
+AURA_APP/backend\agent\rag_agent.py:12:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\agent\rag_agent.py:15:1: F401 'backend.core.event_bus.CoreEvent' imported but unused
+from backend.core.event_bus import CoreEvent, EventType, get_event_bus
+^
+AURA_APP/backend\agent\rag_agent.py:15:1: F401 'backend.core.event_bus.EventType' imported but unused
+from backend.core.event_bus import CoreEvent, EventType, get_event_bus
+^
+AURA_APP/backend\agent\social_research_agent.py:13:1: F401 'backend.video_analyzer.VideoAnalysisResult' imported but unused
+from backend.video_analyzer import VideoAnalysisResult
+^
+AURA_APP/backend\agent\social_research_agent.py:39:5: C901 'SocialResearchAgent.deep_research' is too complex (11)
+    def deep_research(
+    ^
+AURA_APP/backend\agent\writer_agent.py:12:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, Optional
+^
+AURA_APP/backend\agents\kilo_bridge.py:2:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\agents\kilo_bridge.py:3:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\api\compat.py:6:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\api\compat.py:60:1: E402 module level import not at top of file
+import time as _time
+^
+AURA_APP/backend\api\compat.py:143:9: F841 local variable 'temperature' is assigned to but never used
+        temperature = body.get("temperature", 0.7)
+        ^
+AURA_APP/backend\api\compat.py:144:9: F841 local variable 'max_tokens' is assigned to but never used
+        max_tokens = body.get("max_tokens", 1024)
+        ^
+AURA_APP/backend\api\core_routes.py:23:1: F401 'backend.core.EventType' imported but unused
+from backend.core import (
+^
+AURA_APP/backend\api\core_routes.py:67:1: C901 'core_process' is too complex (16)
+async def core_process(req: ProcessRequest) -> Dict[str, Any]:
+^
+AURA_APP/backend\api\core_routes.py:326:1: C901 'core_events' is too complex (12)
+async def core_events(event_type: str = "") -> Dict[str, Any]:
+^
+AURA_APP/backend\app.py:3:1: F401 'fastapi.Request' imported but unused
+from fastapi import FastAPI, Request, HTTPException, WebSocket, WebSocketDisconnect
+^
+AURA_APP/backend\app.py:7:1: F401 'subprocess' imported but unused
+import os, sys, time, subprocess, json, random, string, asyncio
+^
+AURA_APP/backend\app.py:7:1: F401 'random' imported but unused
+import os, sys, time, subprocess, json, random, string, asyncio
+^
+AURA_APP/backend\app.py:7:1: F401 'string' imported but unused
+import os, sys, time, subprocess, json, random, string, asyncio
+^
+AURA_APP/backend\app.py:7:10: E401 multiple imports on one line
+import os, sys, time, subprocess, json, random, string, asyncio
+         ^
+AURA_APP/backend\app.py:61:1: E402 module level import not at top of file
+from backend.agent.core import ReactLoop
+^
+AURA_APP/backend\app.py:62:1: E402 module level import not at top of file
+from backend.skills.registry import SkillRegistry
+^
+AURA_APP/backend\app.py:63:1: E402 module level import not at top of file
+from backend.memory.working import WorkingMemory
+^
+AURA_APP/backend\app.py:64:1: E402 module level import not at top of file
+from backend.memory.short_term import ShortTermMemory
+^
+AURA_APP/backend\app.py:65:1: E402 module level import not at top of file
+from backend.memory.long_term import LongTermMemory
+^
+AURA_APP/backend\app.py:66:1: E402 module level import not at top of file
+from backend.voice.pipeline import STTPipeline, TTSPipeline, WakeWordDetector
+^
+AURA_APP/backend\app.py:69:1: E402 module level import not at top of file
+from backend.daemon.cross_device_sync import CrossDeviceSync
+^
+AURA_APP/backend\app.py:70:1: E402 module level import not at top of file
+from backend.daemon.daemon_orchestrator import DaemonOrchestrator
+^
+AURA_APP/backend\app.py:76:1: E402 module level import not at top of file
+from backend.vision.screen import ScreenIntelligence
+^
+AURA_APP/backend\app.py:77:1: E402 module level import not at top of file
+from backend.proactive.engine import ProactiveSystem
+^
+AURA_APP/backend\app.py:78:1: E402 module level import not at top of file
+from backend.evolution.engine import SkillEvolution
+^
+AURA_APP/backend\app.py:79:1: E402 module level import not at top of file
+from backend.learning.compound import CompoundLearning
+^
+AURA_APP/backend\app.py:80:1: E402 module level import not at top of file
+from backend.api.compat import router as openai_router
+^
+AURA_APP/backend\app.py:81:1: E402 module level import not at top of file
+from backend.plugins import plugin_manager
+^
+AURA_APP/backend\app.py:82:1: E402 module level import not at top of file
+from backend.automation import automation_engine
+^
+AURA_APP/backend\app.py:83:1: E402 module level import not at top of file
+from backend.automation.models import AutomationRuleModel
+^
+AURA_APP/backend\app.py:84:1: E402 module level import not at top of file
+from backend.automation import scheduler_router, enable_autostart
+^
+AURA_APP/backend\app.py:85:1: E402 module level import not at top of file
+from backend.knowledge.router import router as knowledge_router
+^
+AURA_APP/backend\app.py:86:1: E402 module level import not at top of file
+from backend.agents.kilo_bridge import kilo_bridge, KiloTask
+^
+AURA_APP/backend\app.py:87:1: E402 module level import not at top of file
+from backend.video_analyzer.pipeline import VideoAnalysisPipeline
+^
+AURA_APP/backend\app.py:88:1: E402 module level import not at top of file
+from backend.social_research.collector import SocialCollector
+^
+AURA_APP/backend\app.py:89:1: E402 module level import not at top of file
+from backend.social_research.transcriber import WhisperTranscriber
+^
+AURA_APP/backend\app.py:90:1: E402 module level import not at top of file
+from backend.social_research.analyzer import VideoAnalyzer
+^
+AURA_APP/backend\app.py:91:1: E402 module level import not at top of file
+from backend.social_research.classifier import ContentClassifier, ImportanceScore, ContentProfile
+^
+AURA_APP/backend\app.py:92:1: F401 'backend.social_research.memory_bridge.SavedContent' imported but unused
+from backend.social_research.memory_bridge import MemoryBridge, SavedContent
+^
+AURA_APP/backend\app.py:92:1: E402 module level import not at top of file
+from backend.social_research.memory_bridge import MemoryBridge, SavedContent
+^
+AURA_APP/backend\app.py:93:1: E402 module level import not at top of file
+from backend.agent.social_research_agent import SocialResearchAgent
+^
+AURA_APP/backend\app.py:94:1: E402 module level import not at top of file
+from backend.swarm.swarm_routes import router as swarm_router
+^
+AURA_APP/backend\app.py:95:1: E402 module level import not at top of file
+from backend.security.zk_routes import router as zk_router
+^
+AURA_APP/backend\app.py:96:1: E402 module level import not at top of file
+from backend.daemon.sync_routes import router as daemon_sync_router
+^
+AURA_APP/backend\app.py:97:1: E402 module level import not at top of file
+from backend.planner.planner_routes import router as planner_router
+^
+AURA_APP/backend\app.py:98:1: E402 module level import not at top of file
+from backend.evolution.patcher import router as evolution_router
+^
+AURA_APP/backend\app.py:99:1: E402 module level import not at top of file
+from backend.resilience.self_healing import router as self_healing_router
+^
+AURA_APP/backend\app.py:100:1: E402 module level import not at top of file
+from backend.api.core_routes import router as core_router
+^
+AURA_APP/backend\app.py:264:1: E402 module level import not at top of file
+from fastapi import APIRouter
+^
+AURA_APP/backend\app.py:266:1: F811 redefinition of unused 'daemon_sync_router' from line 96
+daemon_sync_router = APIRouter()
+^
+AURA_APP/backend\aria_brain\__init__.py:2:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\aria_brain\creativity_engine.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_brain\creativity_engine.py:3:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\aria_brain\creativity_engine.py:41:18: F821 undefined name 'blend'
+        key = f"{blend}:{domain}"
+                 ^
+AURA_APP/backend\aria_brain\decision_making.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_brain\decision_making.py:2:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\aria_brain\decision_making.py:2:1: F401 'typing.Tuple' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\aria_brain\emotion_simulation.py:2:1: F401 'random' imported but unused
+import random
+^
+AURA_APP/backend\aria_brain\emotion_simulation.py:3:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\aria_brain\explanation_generator.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_brain\explanation_generator.py:9:5: C901 'ExplanationGenerator.explain_decision' is too complex (11)
+    async def explain_decision(
+    ^
+AURA_APP/backend\aria_brain\learning_system.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_brain\learning_system.py:2:1: F401 'random' imported but unused
+import random
+^
+AURA_APP/backend\aria_brain\learning_system.py:3:1: F401 'typing.Tuple' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\aria_brain\memoria_sistema.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_brain\reasoning_engine.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_brain\reasoning_engine.py:2:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\aria_content_engine.py:6:1: F401 'time' imported but unused
+import time
+^
+AURA_APP/backend\aria_content_engine.py:8:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+AURA_APP/backend\aria_content_engine.py:9:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\aria_content_engine.py:63:5: C901 'AriaContentEngine.suggest_content' is too complex (12)
+    async def suggest_content(self, user_context: dict) -> Dict[str, Any]:
+    ^
+AURA_APP/backend\aria_content_engine.py:135:13: F541 f-string is missing placeholders
+            f"Buscar aliados en la aldea cercana",
+            ^
+AURA_APP/backend\aria_content_engine.py:136:13: F541 f-string is missing placeholders
+            f"Investigar el objeto misterioso que apareció",
+            ^
+AURA_APP/backend\aria_content_engine.py:137:13: F541 f-string is missing placeholders
+            f"Retirarse y planificar una estrategia diferente",
+            ^
+AURA_APP/backend\aria_engine.py:6:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\aria_engine.py:7:1: F401 're' imported but unused
+import re
+^
+AURA_APP/backend\aria_engine.py:9:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_integration.py:7:1: F401 'time' imported but unused
+import time
+^
+AURA_APP/backend\aria_integration.py:8:1: F401 'uuid' imported but unused
+import uuid
+^
+AURA_APP/backend\aria_integration.py:37:5: F401 'psutil' imported but unused
+    import psutil
+    ^
+AURA_APP/backend\aria_integration.py:44:5: F401 'win32gui' imported but unused
+    import win32gui
+    ^
+AURA_APP/backend\aria_integration.py:189:5: C901 'AriaIntegration.websocket_handler' is too complex (18)
+    async def websocket_handler(self, websocket: Any) -> None:
+    ^
+AURA_APP/backend\aria_integration.py:222:21: F841 local variable 'content_type' is assigned to but never used
+                    content_type = msg.get("content_type", "story")
+                    ^
+AURA_APP/backend\aria_observer_v2.py:5:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_observer_v2.py:11:1: F401 'threading' imported but unused
+import threading
+^
+AURA_APP/backend\aria_observer_v2.py:12:1: F401 'datetime.datetime' imported but unused
+from datetime import datetime
+^
+AURA_APP/backend\aria_observer_v2.py:14:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\aria_observer_v2.py:14:1: F401 'typing.Tuple' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\aria_observer_v2.py:19:5: F401 'psutil' imported but unused
+    import psutil
+    ^
+AURA_APP/backend\aria_observer_v2.py:26:5: F401 'win32gui' imported but unused
+    import win32gui
+    ^
+AURA_APP/backend\aria_observer_v2.py:258:9: F841 local variable 'title' is assigned to but never used
+        title = (context.get("window_title") or "").lower()
+        ^
+AURA_APP/backend\aria_suggestion_engine.py:5:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\aria_suggestion_engine.py:7:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\atria_engine.py:18:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\atria_engine.py:360:9: F841 local variable 'max_steps' is assigned to but never used
+        max_steps = task.metadata.get("max_steps", 20) if task else 20
+        ^
+AURA_APP/backend\atria_engine.py:505:5: C901 'AtriaAgenticEngine._tool_security_scan' is too complex (12)
+    def _tool_security_scan(self, args: Dict[str, Any]) -> str:
+    ^
+AURA_APP/backend\atria_provider.py:38:5: C901 'AtriaDawnProvider.chat' is too complex (12)
+    def chat(
+    ^
+AURA_APP/backend\atria_provider.py:125:5: C901 'AtriaDawnProvider.chat_stream' is too complex (16)
+    def chat_stream(
+    ^
+AURA_APP/backend\automation\engine.py:4:1: F401 'typing.List' imported but unused
+from typing import Dict, List, Optional
+^
+AURA_APP/backend\automation\engine.py:200:5: C901 'AutomationEngine._execute_action' is too complex (21)
+    async def _execute_action(self, action: Action) -> None:
+    ^
+AURA_APP/backend\automation\models.py:3:1: F401 'datetime.datetime' imported but unused
+from datetime import datetime
+^
+AURA_APP/backend\automation\scheduler.py:5:1: F401 'inspect' imported but unused
+import inspect
+^
+AURA_APP/backend\automation\scheduler.py:6:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\automation\scheduler.py:10:1: F401 're' imported but unused
+import re
+^
+AURA_APP/backend\automation\scheduler.py:11:1: F401 'secrets' imported but unused
+import secrets
+^
+AURA_APP/backend\automation\scheduler.py:14:1: F401 'dataclasses.dataclass' imported but unused
+from dataclasses import dataclass, field
+^
+AURA_APP/backend\automation\scheduler.py:14:1: F401 'dataclasses.field' imported but unused
+from dataclasses import dataclass, field
+^
+AURA_APP/backend\automation\scheduler.py:16:1: F401 'enum.Enum' imported but unused
+from enum import Enum
+^
+AURA_APP/backend\automation\scheduler.py:17:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+AURA_APP/backend\automation\scheduler.py:18:1: F401 'typing.Callable' imported but unused
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+^
+AURA_APP/backend\automation\scheduler.py:18:1: F401 'typing.Union' imported but unused
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+^
+AURA_APP/backend\automation\scheduler.py:52:1: C901 '_parse_field' is too complex (14)
+def _parse_field(expr: str, lo: int, hi: int) -> set:
+^
+AURA_APP/backend\automation\scheduler.py:225:9: F811 redefinition of unused 'inspect' from line 5
+        import inspect
+        ^
+AURA_APP/backend\automation\scheduler.py:435:5: C901 'TaskSchedulerEngine.tick_once' is too complex (11)
+    def tick_once(self):
+    ^
+AURA_APP/backend\automation\scheduler.py:547:1: E402 module level import not at top of file
+from fastapi import APIRouter, HTTPException
+^
+AURA_APP/backend\automation\scheduler.py:548:1: E402 module level import not at top of file
+from pydantic import BaseModel, Field
+^
+AURA_APP/backend\automation\scheduler_routes.py:20:1: F401 'backend.automation.scheduler.reset_scheduler' imported but unused
+from backend.automation.scheduler import (
+^
+AURA_APP/backend\connectors\base.py:2:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\connectors\discord_connector.py:30:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\connectors\github_connector.py:4:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\connectors\github_connector.py:29:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\connectors\google_apis_connector.py:2:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\connectors\google_apis_connector.py:45:5: C901 'GoogleApisConnector._request_google' is too complex (11)
+    async def _request_google(
+    ^
+AURA_APP/backend\connectors\google_apis_connector.py:126:13: F841 local variable 'body' is assigned to but never used
+            body = {"values": values}
+            ^
+AURA_APP/backend\connectors\huggingface_connector.py:38:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\connectors\notion_connector.py:33:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\connectors\slack_connector.py:30:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\connectors\stable_diffusion_connector.py:36:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\connectors\stripe_connector.py:32:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\connectors\stripe_connector.py:63:27: E401 multiple imports on one line
+            import hashlib, hmac
+                          ^
+AURA_APP/backend\connectors\supabase_connector.py:33:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\connectors\twitter_api_connector.py:33:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\core\code_generator.py:18:1: F401 'backend.core.event_bus.CoreEvent' imported but unused
+from backend.core.event_bus import CoreEvent, EventType, get_event_bus
+^
+AURA_APP/backend\core\orchestrator.py:17:1: F401 'typing.Tuple' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\core\orchestrator.py:20:1: F401 'backend.core.models.EventStatus' imported but unused
+from backend.core.models import Decision, DecisionStep, EventStatus
+^
+AURA_APP/backend\core\security.py:11:15: E401 multiple imports on one line
+import hashlib, hmac, json, logging, os, time
+              ^
+AURA_APP/backend\core\unified_orchestrator.py:13:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\core\unified_orchestrator.py:144:5: C901 'UnifiedOrchestrator.process' is too complex (20)
+    async def process(
+    ^
+AURA_APP/backend\core\unified_orchestrator.py:422:5: C901 'UnifiedOrchestrator._generate_response' is too complex (12)
+    async def _generate_response(
+    ^
+AURA_APP/backend\core\ws_routes.py:22:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\core\ws_routes.py:26:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\core\ws_routes.py:32:1: F401 'backend.core.event_bus.EventBus' imported but unused
+from backend.core.event_bus import CoreEvent, EventBus, EventType, get_event_bus
+^
+AURA_APP/backend\core\ws_routes.py:118:1: C901 'websocket_events' is too complex (16)
+async def websocket_events(websocket: WebSocket) -> None:
+^
+AURA_APP/backend\evolution\engine.py:6:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\generation\content_generator.py:6:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\generation\content_generator.py:278:17: F541 f-string is missing placeholders
+                f"No puede crear materia del vacío",
+                ^
+AURA_APP/backend\generation\content_generator.py:279:17: F541 f-string is missing placeholders
+                f"Cada hechizo consume algo: mana, memoria o vida",
+                ^
+AURA_APP/backend\learning\compound.py:6:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\memory\long_term.py:9:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+AURA_APP/backend\memory\memory_manager.py:18:1: F401 'datetime.timedelta' imported but unused
+from datetime import datetime, timedelta
+^
+AURA_APP/backend\memory\short_term.py:9:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+AURA_APP/backend\memory\working.py:5:1: F401 'time' imported but unused
+import time
+^
+AURA_APP/backend\memory\working.py:6:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\memory\working.py:6:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\ml\dataset_builder.py:6:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\ml\dataset_builder.py:7:1: F401 'random' imported but unused
+import random
+^
+AURA_APP/backend\ml\dataset_builder.py:8:1: F401 'time' imported but unused
+import time
+^
+AURA_APP/backend\ml\dataset_builder.py:9:1: F401 'dataclasses.field' imported but unused
+from dataclasses import dataclass, field
+^
+AURA_APP/backend\ml\dataset_builder.py:11:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\ml\dataset_builder.py:324:5: C901 'DatasetBuilder.validate_dataset' is too complex (11)
+    async def validate_dataset(self) -> Dict[str, Any]:
+    ^
+AURA_APP/backend\ml\lora_trainer.py:6:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\mobile\ame_client.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\monitoring\audio_analyzer.py:14:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\monitoring\audio_analyzer.py:16:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\monitoring\audio_analyzer.py:20:1: F401 'dataclasses.field' imported but unused
+from dataclasses import dataclass, field
+^
+AURA_APP/backend\monitoring\audio_analyzer.py:32:5: F401 'numpy as np' imported but unused
+    import numpy as np
+    ^
+AURA_APP/backend\monitoring\audio_analyzer.py:39:5: F401 'vosk' imported but unused
+    import vosk
+    ^
+AURA_APP/backend\monitoring\audio_analyzer.py:46:5: F401 'faster_whisper.WhisperModel' imported but unused
+    from faster_whisper import WhisperModel
+    ^
+AURA_APP/backend\monitoring\audio_analyzer.py:53:5: F401 'wave' imported but unused
+    import wave
+    ^
+AURA_APP/backend\monitoring\audio_analyzer.py:60:5: F401 'PIL.Image' imported but unused
+    from PIL import Image
+    ^
+AURA_APP/backend\monitoring\audio_analyzer.py:349:9: F811 redefinition of unused 'asyncio' from line 16
+        import asyncio
+        ^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:11:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:15:1: F401 'time' imported but unused
+import time
+^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:17:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:18:1: F401 'typing.Any' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:18:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:18:1: F401 'typing.Tuple' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:49:5: F401 'wave' imported but unused
+    import wave
+    ^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:56:5: F401 'win32gui' imported but unused
+    import win32gui
+    ^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:114:1: C901 'detect_audio_advanced' is too complex (11)
+async def detect_audio_advanced(
+^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:186:1: C901 'speech_recognition_streaming' is too complex (17)
+async def speech_recognition_streaming(
+^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:249:17: F841 local variable 'samples' is assigned to but never used
+                samples = struct.unpack(f"<{len(audio_buffer)//2}h", audio_buffer)
+                ^
+AURA_APP/backend\monitoring\audio_analyzer_pro.py:283:1: C901 'music_analysis' is too complex (12)
+async def music_analysis(
+^
+AURA_APP/backend\monitoring\background_learning.py:21:1: F401 'dataclasses.field' imported but unused
+from dataclasses import dataclass, field
+^
+AURA_APP/backend\monitoring\background_learning.py:23:1: F401 'typing.Tuple' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\monitoring\background_learning.py:107:5: C901 'BackgroundLearningDaemon.__init__' is too complex (13)
+    def __init__(self, db_path: str = None):
+    ^
+AURA_APP/backend\monitoring\background_learning_pro.py:13:1: F401 'math' imported but unused
+import math
+^
+AURA_APP/backend\monitoring\background_learning_pro.py:14:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\monitoring\background_learning_pro.py:15:1: F401 'random' imported but unused
+import random
+^
+AURA_APP/backend\monitoring\background_learning_pro.py:16:1: F401 're' imported but unused
+import re
+^
+AURA_APP/backend\monitoring\background_learning_pro.py:24:5: F401 'numpy as np' imported but unused
+    import numpy as np
+    ^
+AURA_APP/backend\monitoring\background_learning_pro.py:105:5: C901 'BackgroundLearningDaemon.continuous_optimization' is too complex (13)
+    async def continuous_optimization(self) -> Dict[str, Any]:
+    ^
+AURA_APP/backend\monitoring\background_learning_pro.py:161:5: C901 'BackgroundLearningDaemon.pattern_mining' is too complex (15)
+    async def pattern_mining(self) -> List[DiscoveredPattern]:
+    ^
+AURA_APP/backend\monitoring\background_learning_pro.py:253:5: C901 'BackgroundLearningDaemon.predictive_model' is too complex (12)
+    async def predictive_model(self) -> List[MarkovPrediction]:
+    ^
+AURA_APP/backend\monitoring\contextual_engine.py:13:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\monitoring\contextual_engine.py:14:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\monitoring\contextual_engine.py:15:1: F401 're' imported but unused
+import re
+^
+AURA_APP/backend\monitoring\contextual_engine.py:18:1: F401 'typing.Tuple' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\monitoring\contextual_engine.py:76:5: C901 'ContextualUnderstandingEngine.__init__' is too complex (13)
+    def __init__(self):
+    ^
+AURA_APP/backend\monitoring\contextual_engine.py:106:5: C901 'ContextualUnderstandingEngine.understand_current_state' is too complex (11)
+    async def understand_current_state(self) -> ContextState:
+    ^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:12:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:13:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:14:1: F401 're' imported but unused
+import re
+^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:17:1: F401 'typing.Tuple' imported but unused
+from typing import Any, Dict, List, Optional, Tuple
+^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:20:5: F401 'numpy as np' imported but unused
+    import numpy as np
+    ^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:156:5: C901 'ContextualEngineAdvanced.understand_current_state_advanced' is too complex (17)
+    async def understand_current_state_advanced(self) -> ContextState:
+    ^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:314:5: C901 'ContextualEngineAdvanced.proactive_suggestions' is too complex (13)
+    async def proactive_suggestions(self, count: int = 5) -> List[ProactiveSuggestion]:
+    ^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:325:9: F841 local variable 'app' is assigned to but never used
+        app = state.context.get("active_app", "").lower()
+        ^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:398:5: C901 'ContextualEngineAdvanced.emotional_tone_detection' is too complex (25)
+    async def emotional_tone_detection(
+    ^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:414:9: F841 local variable 'search_count' is assigned to but never used
+        search_count = getattr(self, "_search_count", 0)
+        ^
+AURA_APP/backend\monitoring\contextual_engine_pro.py:432:9: F841 local variable 'scene_type' is assigned to but never used
+        scene_type = semantic.get("scene_type", "unknown") if semantic else "unknown"
+        ^
+AURA_APP/backend\monitoring\screen_analyzer.py:15:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\monitoring\screen_analyzer.py:21:1: F401 'datetime.datetime' imported but unused
+from datetime import datetime
+^
+AURA_APP/backend\monitoring\screen_analyzer.py:30:5: F401 'sounddevice as sd' imported but unused
+    import sounddevice as sd
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:37:5: F401 'win32ui' imported but unused
+    import win32gui, win32ui, win32con
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:37:5: F401 'win32con' imported but unused
+    import win32gui, win32ui, win32con
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:37:20: E401 multiple imports on one line
+    import win32gui, win32ui, win32con
+                   ^
+AURA_APP/backend\monitoring\screen_analyzer.py:44:5: F401 'win32api' imported but unused
+    import win32api
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:51:5: F401 'faster_whisper.WhisperModel' imported but unused
+    from faster_whisper import WhisperModel
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:58:5: F401 'vosk' imported but unused
+    import vosk
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:65:5: F401 'cv2' imported but unused
+    import cv2
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:79:5: F401 'easyocr' imported but unused
+    import easyocr
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:158:5: C901 'ScreenAnalyzer.capture_screen' is too complex (11)
+    async def capture_screen(self) -> ScreenCapture:
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:223:5: C901 'ScreenAnalyzer.extract_text_ocr' is too complex (11)
+    async def extract_text_ocr(self, image: Image.Image = None) -> str:
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:271:5: C901 'ScreenAnalyzer.analyze_ui_elements' is too complex (14)
+    async def analyze_ui_elements(self, image: Image.Image = None) -> Dict[str, Any]:
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:374:5: C901 'ScreenAnalyzer.semantic_understanding' is too complex (13)
+    async def semantic_understanding(self, ocr_text: str = "", active_app: str = "") -> str:
+    ^
+AURA_APP/backend\monitoring\screen_analyzer.py:413:9: F841 local variable 'confidence' is assigned to but never used
+        confidence = min(0.3 + len(understanding_parts) * 0.2, 1.0)
+        ^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:12:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:13:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:14:1: F401 'math' imported but unused
+import math
+^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:15:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:19:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:46:5: F401 'win32ui' imported but unused
+    import win32gui, win32ui, win32con, win32api
+    ^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:46:5: F401 'win32con' imported but unused
+    import win32gui, win32ui, win32con, win32api
+    ^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:46:5: F401 'win32api' imported but unused
+    import win32gui, win32ui, win32con, win32api
+    ^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:46:20: E401 multiple imports on one line
+    import win32gui, win32ui, win32con, win32api
+                   ^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:78:1: C901 'capture_screen_optimized' is too complex (17)
+async def capture_screen_optimized(
+^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:138:1: C901 'extract_text_ocr_advanced' is too complex (11)
+async def extract_text_ocr_advanced(
+^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:312:1: C901 'detect_visual_changes_fast' is too complex (15)
+async def detect_visual_changes_fast(
+^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:354:23: F821 undefined name '_calc_diff_regions'
+            regions = _calc_diff_regions(diff, sensitivity) if changed else []
+                      ^
+AURA_APP/backend\monitoring\screen_analyzer_pro.py:426:1: C901 'semantic_understanding_advanced' is too complex (27)
+async def semantic_understanding_advanced(
+^
+AURA_APP/backend\observability\_config.py:7:16: F821 undefined name 'json'
+        _raw = json.load(f)
+               ^
+AURA_APP/backend\observability\_config.py:26:5: F401 'json' imported but unused
+    import json
+    ^
+AURA_APP/backend\observability\distributed_tracing.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\observability\distributed_tracing.py:14:9: F841 local variable 'span_id' is assigned to but never used
+        span_id = str(uuid.uuid4())
+        ^
+AURA_APP/backend\observability\logging_system.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\observability\metrics_collector.py:36:74: F841 local variable 'resp' is assigned to but never used
+            with urllib.request.urlopen(req, timeout=info["timeout"]) as resp:
+                                                                         ^
+AURA_APP/backend\ollama_preload.py:8:1: F401 'threading' imported but unused
+import threading
+^
+AURA_APP/backend\ollama_preload.py:59:11: F541 f-string is missing placeholders
+    print(f"[Ollama] Chat warmup...")
+          ^
+AURA_APP/backend\plugins\manager.py:4:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\proactive\engine.py:6:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\proactive\engine.py:9:1: F401 'datetime.timedelta' imported but unused
+from datetime import datetime, timedelta
+^
+AURA_APP/backend\resilience\circuit_breaker.py:2:1: F401 'time' imported but unused
+import time
+^
+AURA_APP/backend\resilience\circuit_breaker.py:3:1: F401 'typing.Optional' imported but unused
+from typing import Any, Optional
+^
+AURA_APP/backend\resilience\circuit_breaker.py:28:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\resilience\fallback_mechanism.py:2:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\resilience\fallback_mechanism.py:3:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\resilience\fallback_mechanism.py:29:9: F841 local variable 'exc' is assigned to but never used
+        except Exception as exc:
+        ^
+AURA_APP/backend\resilience\fallback_mechanism.py:68:26: F821 undefined name 'random'
+                delay += random.uniform(0, delay * 0.1)
+                         ^
+AURA_APP/backend\resilience\graceful_degradation.py:1:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\resilience\health_check.py:5:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\resilience\health_check.py:5:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\resilience\health_check.py:34:74: F841 local variable 'resp' is assigned to but never used
+            with urllib.request.urlopen(req, timeout=info["timeout"]) as resp:
+                                                                         ^
+AURA_APP/backend\security\privacy_filter.py:18:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\security\privacy_filter.py:31:30: F821 undefined name 'Tuple'
+    SENSITIVE_PATTERNS: List[Tuple[str, str, str]] = [
+                             ^
+AURA_APP/backend\security\privacy_filter.py:115:47: F541 f-string is missing placeholders
+                result_text = re.sub(pattern, f"\\1=[REDACTED]", result_text)
+                                              ^
+AURA_APP/backend\security\privacy_filter.py:158:61: F821 undefined name 'Tuple'
+    def _extract_text_fields(self, data, prefix="") -> List[Tuple[str, str]]:
+                                                            ^
+AURA_APP/backend\skills\files\list.py:2:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List
+^
+AURA_APP/backend\skills\files\read.py:1:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\skills\registry.py:5:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\skills\registry.py:44:5: F811 redefinition of unused '_f' from line 43
+    from backend.skills.system.time import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:45:5: F811 redefinition of unused '_f' from line 44
+    from backend.skills.system.ping import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:46:5: F811 redefinition of unused '_f' from line 45
+    from backend.skills.system.scan import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:47:5: F811 redefinition of unused '_f' from line 46
+    from backend.skills.system.whois import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:48:5: F811 redefinition of unused '_f' from line 47
+    from backend.skills.system.open import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:49:5: F811 redefinition of unused '_f' from line 48
+    from backend.skills.system.volume import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:50:5: F811 redefinition of unused '_f' from line 49
+    from backend.skills.system.screenshot import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:51:5: F811 redefinition of unused '_f' from line 50
+    from backend.skills.system.memory import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:52:5: F811 redefinition of unused '_f' from line 51
+    from backend.skills.system.lock import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:53:5: F811 redefinition of unused '_f' from line 52
+    from backend.skills.system.apps import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:54:5: F811 redefinition of unused '_f' from line 53
+    from backend.skills.web.search import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:55:5: F811 redefinition of unused '_f' from line 54
+    from backend.skills.web.weather import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:56:5: F811 redefinition of unused '_f' from line 55
+    from backend.skills.files.list import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:57:5: F811 redefinition of unused '_f' from line 56
+    from backend.skills.files.write import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:58:5: F811 redefinition of unused '_f' from line 57
+    from backend.skills.files.read import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:58:5: F401 'backend.skills.files.read.run as _f' imported but unused
+    from backend.skills.files.read import run as _f
+    ^
+AURA_APP/backend\skills\registry.py:65:9: F401 'backend.social_research.collector.SocialCollector' imported but unused
+        from backend.social_research.collector import SocialCollector
+        ^
+AURA_APP/backend\skills\registry.py:66:9: F401 'backend.social_research.transcriber.WhisperTranscriber' imported but unused
+        from backend.social_research.transcriber import WhisperTranscriber
+        ^
+AURA_APP/backend\skills\registry.py:67:9: F401 'backend.social_research.analyzer.VideoAnalyzer' imported but unused
+        from backend.social_research.analyzer import VideoAnalyzer
+        ^
+AURA_APP/backend\skills\registry.py:68:9: F401 'backend.social_research.classifier.ContentClassifier' imported but unused
+        from backend.social_research.classifier import ContentClassifier
+        ^
+AURA_APP/backend\skills\registry.py:69:9: F401 'backend.social_research.memory_bridge.MemoryBridge' imported but unused
+        from backend.social_research.memory_bridge import MemoryBridge
+        ^
+AURA_APP/backend\skills\registry.py:106:13: F401 'backend.aria_brain.AriaBrain' imported but unused
+            from backend.aria_brain import AriaBrain
+            ^
+AURA_APP/backend\skills\registry.py:110:13: F841 local variable '_brain_loaded' is assigned to but never used
+            _brain_loaded = False
+            ^
+AURA_APP/backend\skills\registry.py:112:13: F401 'backend.connectors.notion_connector' imported but unused
+            from backend.connectors import notion_connector, slack_connector, google_apis_connector
+            ^
+AURA_APP/backend\skills\registry.py:112:13: F401 'backend.connectors.slack_connector' imported but unused
+            from backend.connectors import notion_connector, slack_connector, google_apis_connector
+            ^
+AURA_APP/backend\skills\registry.py:112:13: F401 'backend.connectors.google_apis_connector' imported but unused
+            from backend.connectors import notion_connector, slack_connector, google_apis_connector
+            ^
+AURA_APP/backend\skills\registry.py:113:13: F401 'backend.connectors.discord_connector' imported but unused
+            from backend.connectors import (
+            ^
+AURA_APP/backend\skills\registry.py:113:13: F401 'backend.connectors.twitter_api_connector' imported but unused
+            from backend.connectors import (
+            ^
+AURA_APP/backend\skills\registry.py:113:13: F401 'backend.connectors.supabase_connector' imported but unused
+            from backend.connectors import (
+            ^
+AURA_APP/backend\skills\registry.py:118:13: F401 'backend.connectors.stripe_connector' imported but unused
+            from backend.connectors import stripe_connector, stable_diffusion_connector
+            ^
+AURA_APP/backend\skills\registry.py:118:13: F401 'backend.connectors.stable_diffusion_connector' imported but unused
+            from backend.connectors import stripe_connector, stable_diffusion_connector
+            ^
+AURA_APP/backend\skills\registry.py:119:13: F401 'backend.connectors.github_connector' imported but unused
+            from backend.connectors import github_connector, huggingface_connector
+            ^
+AURA_APP/backend\skills\registry.py:119:13: F401 'backend.connectors.huggingface_connector' imported but unused
+            from backend.connectors import github_connector, huggingface_connector
+            ^
+AURA_APP/backend\skills\registry.py:123:13: F841 local variable '_connectors_loaded' is assigned to but never used
+            _connectors_loaded = False
+            ^
+AURA_APP/backend\skills\registry.py:197:13: F401 'backend.social_research.routes.router as social_router' imported but unused
+            from backend.social_research.routes import router as social_router
+            ^
+AURA_APP/backend\skills\registry.py:198:13: F401 'backend.social_research.collector.VideoMetadata' imported but unused
+            from backend.social_research.collector import SocialCollector, VideoMetadata
+            ^
+AURA_APP/backend\skills\registry.py:208:13: F841 local variable 'memory' is assigned to but never used
+            memory = MemoryBridge()
+            ^
+AURA_APP/backend\skills\system\apps.py:1:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\skills\system\apps.py:4:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List
+^
+AURA_APP/backend\skills\system\lock.py:1:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\skills\system\open.py:1:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\skills\system\time.py:1:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\skills\web\search.py:4:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List
+^
+AURA_APP/backend\social_research\analyzer.py:5:1: F401 'numpy as np' imported but unused
+import numpy as np
+^
+AURA_APP/backend\social_research\analyzer.py:58:13: F841 local variable 'img' is assigned to but never used
+            img = Image.open(image_path)
+            ^
+AURA_APP/backend\social_research\analyzer.py:89:9: F841 local variable 'e' is assigned to but never used
+        except Exception as e:
+        ^
+AURA_APP/backend\social_research\analyzer.py:326:9: F401 're' imported but unused
+        import re
+        ^
+AURA_APP/backend\social_research\classifier.py:2:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+AURA_APP/backend\social_research\classifier.py:57:5: C901 'ContentClassifier.classify_importance' is too complex (20)
+    def classify_importance(
+    ^
+AURA_APP/backend\social_research\collector.py:2:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\social_research\collector.py:14:1: F401 'numpy as np' imported but unused
+import numpy as np
+^
+AURA_APP/backend\social_research\collector.py:91:9: F841 local variable 'outtmpl' is assigned to but never used
+        outtmpl = str(self.videos_dir / "%(id)s.%(ext)s")
+        ^
+AURA_APP/backend\social_research\collector.py:208:9: F841 local variable 'total_frames' is assigned to but never used
+        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        ^
+AURA_APP/backend\social_research\memory_bridge.py:7:1: F401 'backend.social_research.classifier.ImportanceScore' imported but unused
+from backend.social_research.classifier import ContentProfile, ImportanceScore
+^
+AURA_APP/backend\social_research\memory_bridge.py:50:9: F841 local variable 'e' is assigned to but never used
+        except Exception as e:
+        ^
+AURA_APP/backend\social_research\memory_bridge.py:101:5: C901 'MemoryBridge.search_library' is too complex (11)
+    def search_library(self, query: str, top_k: int = 10) -> List[SavedContent]:
+    ^
+AURA_APP/backend\social_research\routes.py:1:1: F401 'datetime.datetime' imported but unused
+from datetime import datetime
+^
+AURA_APP/backend\social_research\routes.py:7:1: F401 'backend.social_research.collector.VideoMetadata' imported but unused
+from backend.social_research.collector import SocialCollector, VideoMetadata
+^
+AURA_APP/backend\social_research\routes.py:8:1: F401 'backend.social_research.transcriber.TranscriptionResult' imported but unused
+from backend.social_research.transcriber import WhisperTranscriber, TranscriptionResult
+^
+AURA_APP/backend\social_research\routes.py:9:1: F401 'backend.social_research.analyzer.FullAnalysis' imported but unused
+from backend.social_research.analyzer import VideoAnalyzer, FullAnalysis, ContentTopic
+^
+AURA_APP/backend\social_research\routes.py:9:1: F401 'backend.social_research.analyzer.ContentTopic' imported but unused
+from backend.social_research.analyzer import VideoAnalyzer, FullAnalysis, ContentTopic
+^
+AURA_APP/backend\social_research\routes.py:11:1: F401 'backend.social_research.memory_bridge.SavedContent' imported but unused
+from backend.social_research.memory_bridge import MemoryBridge, SavedContent
+^
+AURA_APP/backend\social_research\routes.py:347:1: E402 module level import not at top of file
+import time
+^
+AURA_APP/backend\social_research\transcriber.py:3:1: F401 'typing.Any' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\social_research\transcriber.py:3:1: F401 'typing.Dict' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\social_research\transcriber.py:5:1: F401 'numpy as np' imported but unused
+import numpy as np
+^
+AURA_APP/backend\social_research\transcriber.py:49:40: F821 undefined name 'model_size'
+            self._model = WhisperModel(model_size, device=device, compute_type=compute_type)
+                                       ^
+AURA_APP/backend\system\invisible_mode.py:11:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\system\invisible_mode.py:12:1: F401 'os' imported but unused
+import os
+^
+AURA_APP/backend\system\invisible_mode.py:15:1: F401 'dataclasses.field' imported but unused
+from dataclasses import dataclass, field
+^
+AURA_APP/backend\system\invisible_mode.py:16:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\system\invisible_mode.py:33:5: F401 'win32api' imported but unused
+    import win32gui, win32con, win32api
+    ^
+AURA_APP/backend\system\invisible_mode.py:33:20: E401 multiple imports on one line
+    import win32gui, win32con, win32api
+                   ^
+AURA_APP/backend\system\invisible_mode.py:242:13: F841 local variable 'hinstance' is assigned to but never used
+            hinstance = ctypes.windll.kernel32.GetModuleHandleW(None)
+            ^
+AURA_APP/backend\system\invisible_mode.py:244:13: F841 local variable 'VK_MENU' is assigned to but never used
+            VK_MENU = 0x12
+            ^
+AURA_APP/backend\system_integration.py:11:1: F401 'sys' imported but unused
+import sys
+^
+AURA_APP/backend\system_integration.py:13:1: F401 'time' imported but unused
+import time
+^
+AURA_APP/backend\system_integration.py:15:1: F401 'struct' imported but unused
+import struct
+^
+AURA_APP/backend\system_integration.py:18:1: F401 'dataclasses.dataclass' imported but unused
+from dataclasses import dataclass, field
+^
+AURA_APP/backend\system_integration.py:18:1: F401 'dataclasses.field' imported but unused
+from dataclasses import dataclass, field
+^
+AURA_APP/backend\system_integration.py:19:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\system_integration.py:22:5: F401 'win32ui' imported but unused
+    import win32gui, win32ui, win32con, win32api
+    ^
+AURA_APP/backend\system_integration.py:22:5: F401 'win32api' imported but unused
+    import win32gui, win32ui, win32con, win32api
+    ^
+AURA_APP/backend\system_integration.py:22:20: E401 multiple imports on one line
+    import win32gui, win32ui, win32con, win32api
+                   ^
+AURA_APP/backend\system_integration.py:29:5: F401 'ctypes.wintypes' imported but unused
+    import ctypes.wintypes
+    ^
+AURA_APP/backend\system_integration.py:36:5: F401 'PIL' imported but unused
+    import PIL
+    ^
+AURA_APP/backend\system_integration.py:43:5: F401 'numpy as np' imported but unused
+    import numpy as np
+    ^
+AURA_APP/backend\tests\test_great_sage.py:5:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\tests\test_great_sage.py:6:1: F401 'time' imported but unused
+import time
+^
+AURA_APP/backend\tests\test_phase_g.py:10:1: F401 'threading' imported but unused
+import threading
+^
+AURA_APP/backend\tests\test_phase_g.py:169:13: F401 'AURA_APP.backend.aria_integration.AriaIntegration' imported but unused
+            from AURA_APP.backend.aria_integration import AriaIntegration
+            ^
+AURA_APP/backend\training\continuous_learning.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\training\continuous_learning.py:2:1: F401 'random' imported but unused
+import random
+^
+AURA_APP/backend\training\continuous_learning.py:3:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\training\dataset_manager.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\training\evaluation_metrics.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\training\evaluation_metrics.py:2:1: F401 'math' imported but unused
+import math
+^
+AURA_APP/backend\training\fine_tuning_pipeline.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\training\fine_tuning_pipeline.py:2:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\training\fine_tuning_pipeline.py:4:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+AURA_APP/backend\training\model_versioning.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\training\model_versioning.py:76:33: F841 local variable 'current_id' is assigned to but never used
+            await self.rollback(current_id := current["version_id"])
+                                ^
+AURA_APP/backend\video_analyzer\__init__.py:5:1: F401 'backend.social_research.collector.VideoMetadata' imported but unused
+from backend.social_research.collector import SocialCollector, VideoMetadata
+^
+AURA_APP/backend\video_analyzer\__init__.py:6:1: F401 'backend.social_research.transcriber.TranscriptionResult' imported but unused
+from backend.social_research.transcriber import WhisperTranscriber, TranscriptionResult
+^
+AURA_APP/backend\video_analyzer\__init__.py:7:1: F401 'backend.social_research.analyzer.FullAnalysis' imported but unused
+from backend.social_research.analyzer import VideoAnalyzer, FullAnalysis
+^
+AURA_APP/backend\video_analyzer\__init__.py:8:1: F401 'backend.social_research.classifier.ImportanceScore' imported but unused
+from backend.social_research.classifier import ContentClassifier, ImportanceScore
+^
+AURA_APP/backend\video_analyzer\__init__.py:9:1: F401 'backend.social_research.memory_bridge.SavedContent' imported but unused
+from backend.social_research.memory_bridge import MemoryBridge, SavedContent
+^
+AURA_APP/backend\video_analyzer\__init__.py:160:9: F401 'asyncio' imported but unused
+        import asyncio
+        ^
+AURA_APP/backend\video_analyzer\pipeline.py:4:1: F401 'json' imported but unused
+import json
+^
+AURA_APP/backend\video_analyzer\pipeline.py:6:1: F401 'backend.social_research.collector.VideoMetadata' imported but unused
+from backend.social_research.collector import SocialCollector, VideoMetadata
+^
+AURA_APP/backend\video_analyzer\pipeline.py:7:1: F401 'backend.social_research.transcriber.TranscriptionResult' imported but unused
+from backend.social_research.transcriber import WhisperTranscriber, TranscriptionResult
+^
+AURA_APP/backend\video_analyzer\pipeline.py:8:1: F401 'backend.social_research.analyzer.FullAnalysis' imported but unused
+from backend.social_research.analyzer import VideoAnalyzer, FullAnalysis
+^
+AURA_APP/backend\video_analyzer\pipeline.py:9:1: F401 'backend.social_research.classifier.ImportanceScore' imported but unused
+from backend.social_research.classifier import ContentClassifier, ImportanceScore
+^
+AURA_APP/backend\voice\pipeline.py:5:1: F401 'asyncio' imported but unused
+import asyncio
+^
+AURA_APP/backend\voice\pipeline.py:11:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+AURA_APP/backend\voice\pipeline.py:111:13: F811 redefinition of unused 'asyncio' from line 5
+            import asyncio
+            ^
+AURA_APP/backend\voice\pipeline.py:127:13: F401 'sounddevice as sd' imported but unused
+            import sounddevice as sd  # type: ignore
+            ^
+AURA_APP/frontend\aria_observer.py:10:1: F401 'datetime.datetime' imported but unused
+from datetime import datetime
+^
+AURA_APP/frontend\aria_observer.py:235:5: C901 'AriaObserver._get_open_files_impl' is too complex (11)
+    def _get_open_files_impl(self) -> List[Dict[str, str]]:
+    ^
+tests\cloud\run_integration.py:8:1: E402 module level import not at top of file
+from backend.cloud.firebase_manager import FirebaseSync
+^
+tests\cloud\run_integration.py:30:1: E402 module level import not at top of file
+from backend.cloud.offline_queue import OfflineQueue
+^
+tests\cloud\run_integration.py:51:1: E402 module level import not at top of file
+from backend.daemon.aura_daemon_cloud import aura_daemon_cloud
+^
+tests\cloud\run_integration.py:59:1: E402 module level import not at top of file
+from backend.migration.migrate_to_cloud import MigrationManager
+^
+tests\cloud\test_cloud_routes.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\cloud\test_cloud_routes.py:3:1: F401 'os' imported but unused
+import os
+^
+tests\cloud\test_cloud_routes.py:4:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\cloud\test_cloud_routes.py:5:1: F401 'json' imported but unused
+import json
+^
+tests\cloud\test_cloud_routes.py:9:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\cloud\test_cloud_routes.py:10:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\cloud\test_cloud_routes.py:14:1: E402 module level import not at top of file
+from backend.api.cloud_routes import router as cloud_router
+^
+tests\cloud\test_cloud_sync.py:4:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\cloud\test_v1_2.py:1:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\cloud\test_v1_2.py:12:1: E402 module level import not at top of file
+from backend.bots.whatsapp_bot import WhatsAppBot, get_whatsapp_bot
+^
+tests\cloud\test_v1_2.py:39:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\cloud\test_v1_2.py:40:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\cloud\test_v1_2.py:41:1: E402 module level import not at top of file
+from backend.api.whatsapp_routes import router as whatsapp_router
+^
+tests\e2e_full_suite.py:17:1: F401 'threading' imported but unused
+import threading
+^
+tests\e2e_full_suite.py:18:1: F401 'subprocess' imported but unused
+import subprocess
+^
+tests\e2e_full_suite.py:21:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, Optional
+^
+tests\generate_verification_report.py:9:1: F401 'json' imported but unused
+import json
+^
+tests\generate_verification_report.py:12:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\generate_verification_report.py:113:5: C901 'VerificationReport.run_section_tests' is too complex (11)
+    async def run_section_tests(self) -> None:
+    ^
+tests\integration\test_backend_api.py:8:1: F401 'os' imported but unused
+import os
+^
+tests\integration\test_backend_api.py:8:1: E402 module level import not at top of file
+import os
+^
+tests\integration\test_backend_api.py:9:1: E402 module level import not at top of file
+import pytest
+^
+tests\integration\test_backend_api.py:10:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\integration\test_backend_api.py:12:1: E402 module level import not at top of file
+from backend.main import app
+^
+tests\load\locustfile.py:3:1: F401 'json' imported but unused
+import json
+^
+tests\load\locustfile.py:4:1: F401 'base64' imported but unused
+import base64
+^
+tests\load\locustfile.py:5:1: F401 'time' imported but unused
+import time
+^
+tests\performance_benchmark.py:6:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\performance_benchmark.py:17:1: E402 module level import not at top of file
+import pytest
+^
+tests\performance_benchmark.py:74:9: F401 'backend.agents.agent_code_reviewer.CodeReviewerAgent' imported but unused
+        from backend.agents.agent_code_reviewer import CodeReviewerAgent
+        ^
+tests\performance_benchmark.py:75:9: F401 'backend.agents.agent_business_analyst.BusinessAnalystAgent' imported but unused
+        from backend.agents.agent_business_analyst import BusinessAnalystAgent
+        ^
+tests\performance_benchmark.py:76:9: F401 'backend.agents.agent_researcher.ResearcherAgent' imported but unused
+        from backend.agents.agent_researcher import ResearcherAgent
+        ^
+tests\performance_benchmark.py:77:9: F401 'backend.agents.agent_video_analyzer.VideoAnalyzerAgent' imported but unused
+        from backend.agents.agent_video_analyzer import VideoAnalyzerAgent
+        ^
+tests\performance_benchmark.py:78:9: F401 'backend.agents.agent_language_tutor.LanguageTutorAgent' imported but unused
+        from backend.agents.agent_language_tutor import LanguageTutorAgent
+        ^
+tests\performance_benchmark.py:104:9: F841 local variable 'e' is assigned to but never used
+        except Exception as e:
+        ^
+tests\performance_benchmark.py:233:9: F841 local variable 'status' is assigned to but never used
+        status = daemon.get_status()
+        ^
+tests\test_agent_scheduler.py:15:1: F401 'os' imported but unused
+import os
+^
+tests\test_agent_scheduler.py:210:9: F841 local variable 'mock_ws' is assigned to but never used
+        mock_ws = mock.MagicMock()
+        ^
+tests\test_ame_sync.py:9:1: F401 'time' imported but unused
+import time
+^
+tests\test_ame_sync.py:13:1: F401 'backend.integrations.ame_sync_manager.get_ame_sync' imported but unused
+from backend.integrations.ame_sync_manager import AMESyncManager, get_ame_sync
+^
+tests\test_ame_sync.py:13:1: E402 module level import not at top of file
+from backend.integrations.ame_sync_manager import AMESyncManager, get_ame_sync
+^
+tests\test_ame_sync.py:14:1: F401 'backend.api.ame_sync_routes.router as ame_router' imported but unused
+from backend.api.ame_sync_routes import router as ame_router
+^
+tests\test_ame_sync.py:14:1: E402 module level import not at top of file
+from backend.api.ame_sync_routes import router as ame_router
+^
+tests\test_ame_sync.py:15:1: E402 module level import not at top of file
+from backend.daemon.aura_daemon import get_daemon
+^
+tests\test_ame_sync.py:16:1: F401 'mobile_client.ame_sync_receiver.get_ame_receiver' imported but unused
+from mobile_client.ame_sync_receiver import AMESyncReceiver, get_ame_receiver
+^
+tests\test_ame_sync.py:16:1: E402 module level import not at top of file
+from mobile_client.ame_sync_receiver import AMESyncReceiver, get_ame_receiver
+^
+tests\test_audio_transcribe.py:17:1: F401 'json' imported but unused
+import json
+^
+tests\test_audio_transcribe.py:18:1: F401 'os' imported but unused
+import os
+^
+tests\test_audio_transcribe.py:23:1: F401 'backend.audio.transcriber.UnsupportedAudioFormat' imported but unused
+from backend.audio.transcriber import (
+^
+tests\test_audio_transcribe.py:23:1: F401 'backend.audio.transcriber.get_transcriber' imported but unused
+from backend.audio.transcriber import (
+^
+tests\test_aura_ecosystem_e2e.py:15:1: F401 'json' imported but unused
+import json
+^
+tests\test_aura_ecosystem_e2e.py:16:1: F401 'os' imported but unused
+import os
+^
+tests\test_aura_ecosystem_e2e.py:17:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_aura_ecosystem_e2e.py:18:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+tests\test_aura_ecosystem_e2e.py:20:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_aura_ecosystem_e2e.py:23:1: F401 'backend.security.crypto.derive_key' imported but unused
+from backend.security.crypto import EncryptedStore, derive_key, encrypt_json
+^
+tests\test_aura_ecosystem_e2e.py:23:1: F401 'backend.security.crypto.encrypt_json' imported but unused
+from backend.security.crypto import EncryptedStore, derive_key, encrypt_json
+^
+tests\test_aura_ecosystem_e2e.py:121:5: F811 redefinition of unused 'Path' from line 18
+    from pathlib import Path
+    ^
+tests\test_aura_master_launcher.py:15:1: F401 'time' imported but unused
+import time
+^
+tests\test_automation_capture.py:20:5: F841 local variable 'task' is assigned to but never used
+    task = task_manager.create_task.__self__ and task_manager
+    ^
+tests\test_automation_capture.py:21:5: F841 local variable 'task_id' is assigned to but never used
+    task_id = task_manager.tasks  # use in-memory
+    ^
+tests\test_automation_execution.py:10:1: F401 'backend.task_models.TaskStep' imported but unused
+from backend.task_models import TaskStatus, TaskStep
+^
+tests\test_backup_snapshot.py:13:1: F401 'io' imported but unused
+import io
+^
+tests\test_backup_snapshot.py:21:1: F401 'backend.backup.snapshot.LocalSnapshotEngine' imported but unused
+from backend.backup.snapshot import (
+^
+tests\test_block100.py:7:1: F401 'backend.core.aura_master_runtime.LIFECYCLE_STATES' imported but unused
+from backend.core.aura_master_runtime import (
+^
+tests\test_block102.py:11:1: F401 'backend.ai.federated.get_engine' imported but unused
+from backend.ai.federated import (
+^
+tests\test_block102.py:94:5: F841 local variable 'res' is assigned to but never used
+    res = agg.submit_update(rid, req["node_id"], req["ciphertext_b64"], req["hmac_sha256"])
+    ^
+tests\test_block103.py:9:1: F401 'backend.testing.engine.get_matrix' imported but unused
+from backend.testing.engine import (
+^
+tests\test_block103.py:36:5: F401 'backend.testing.stress.get_stress' imported but unused
+    from backend.testing.stress import get_stress, safe_max_agents
+    ^
+tests\test_block51.py:11:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\test_block51.py:12:1: F401 'os' imported but unused
+import os
+^
+tests\test_block51.py:14:1: F401 'unittest.mock.MagicMock' imported but unused
+from unittest.mock import Mock, AsyncMock, patch, MagicMock, PropertyMock
+^
+tests\test_block51.py:14:1: F401 'unittest.mock.PropertyMock' imported but unused
+from unittest.mock import Mock, AsyncMock, patch, MagicMock, PropertyMock
+^
+tests\test_block51.py:125:9: F401 'backend.local_ai_bridge.ModelConfig' imported but unused
+        from backend.local_ai_bridge import LocalAIBridge, ModelConfig, ModelProfile
+        ^
+tests\test_block51.py:125:9: F401 'backend.local_ai_bridge.ModelProfile' imported but unused
+        from backend.local_ai_bridge import LocalAIBridge, ModelConfig, ModelProfile
+        ^
+tests\test_block52.py:13:1: F401 'io' imported but unused
+import io
+^
+tests\test_block52.py:15:1: F401 'unittest.mock.AsyncMock' imported but unused
+from unittest.mock import Mock, AsyncMock, patch, MagicMock, PropertyMock
+^
+tests\test_block52.py:15:1: F401 'unittest.mock.MagicMock' imported but unused
+from unittest.mock import Mock, AsyncMock, patch, MagicMock, PropertyMock
+^
+tests\test_block52.py:15:1: F401 'unittest.mock.PropertyMock' imported but unused
+from unittest.mock import Mock, AsyncMock, patch, MagicMock, PropertyMock
+^
+tests\test_block52.py:17:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_block52.py:351:9: F811 redefinition of unused 'MagicMock' from line 15
+        from unittest.mock import MagicMock
+        ^
+tests\test_block53.py:27:1: F401 'backend.automation.os_controller.OSController' imported but unused
+from backend.automation.os_controller import (
+^
+tests\test_block53.py:142:5: F811 redefinition of unused 'OSController' from line 27
+    from backend.automation.os_controller import OSController
+    ^
+tests\test_block53.py:162:9: F841 local variable 'action' is assigned to but never used
+        action = OSAction(action_type=OSActionType.RUN_COMMAND, command="git status")
+        ^
+tests\test_block54.py:4:1: F401 'json' imported but unused
+import json
+^
+tests\test_block54.py:6:1: F401 'unittest.mock.AsyncMock' imported but unused
+from unittest.mock import AsyncMock, MagicMock, patch
+^
+tests\test_block54.py:6:1: F401 'unittest.mock.patch' imported but unused
+from unittest.mock import AsyncMock, MagicMock, patch
+^
+tests\test_block54.py:7:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+tests\test_block54.py:9:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block55.py:3:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block55.py:6:1: F401 'backend.agents.orchestrator.ToolResult' imported but unused
+from backend.agents.orchestrator import (
+^
+tests\test_block55.py:6:1: F401 'backend.agents.orchestrator.vibe_orchestrator' imported but unused
+from backend.agents.orchestrator import (
+^
+tests\test_block55.py:6:1: F401 'backend.agents.orchestrator.reset_orchestrator' imported but unused
+from backend.agents.orchestrator import (
+^
+tests\test_block55.py:129:5: F401 'os' imported but unused
+    import os, json, tempfile
+    ^
+tests\test_block55.py:129:5: F401 'json' imported but unused
+    import os, json, tempfile
+    ^
+tests\test_block55.py:129:14: E401 multiple imports on one line
+    import os, json, tempfile
+             ^
+tests\test_block56.py:13:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\test_block56.py:19:1: F401 'backend.main.app' imported but unused
+from backend.main import app
+^
+tests\test_block56.py:20:1: F401 'backend.agents.tools_registry.ToolEntry' imported but unused
+from backend.agents.tools_registry import (
+^
+tests\test_block56.py:20:1: F401 'backend.agents.tools_registry.get_tools_registry' imported but unused
+from backend.agents.tools_registry import (
+^
+tests\test_block56.py:80:5: E731 do not assign a lambda expression, use a def
+    schema = lambda props, req: {"type": "object", "properties": props, "required": req}
+    ^
+tests\test_block56.py:225:5: F811 redefinition of unused 'app' from line 19
+    from backend.main import app
+    ^
+tests\test_block57.py:18:1: F401 'fastapi.FastAPI' imported but unused
+from fastapi import FastAPI
+^
+tests\test_block57.py:21:1: F401 'backend.agent.memory_store.get_agent_memory' imported but unused
+from backend.agent.memory_store import (
+^
+tests\test_block57.py:179:9: F811 redefinition of unused 'FastAPI' from line 18
+        from fastapi import FastAPI
+        ^
+tests\test_block58.py:19:1: F401 'backend.agent.sandbox.get_sandbox_runner' imported but unused
+from backend.agent.sandbox import (
+^
+tests\test_block59.py:15:1: F401 'os' imported but unused
+import os
+^
+tests\test_block59.py:16:1: F401 'signal' imported but unused
+import signal
+^
+tests\test_block59.py:17:1: F401 'subprocess' imported but unused
+import subprocess
+^
+tests\test_block59.py:18:1: F401 'sys' imported but unused
+import sys
+^
+tests\test_block59.py:19:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_block59.py:20:1: F401 'time' imported but unused
+import time
+^
+tests\test_block59.py:22:1: F401 'typing.Any' imported but unused
+from typing import Any, Dict
+^
+tests\test_block59.py:22:1: F401 'typing.Dict' imported but unused
+from typing import Any, Dict
+^
+tests\test_block60.py:5:1: F401 'json' imported but unused
+import json
+^
+tests\test_block60.py:6:1: F401 'os' imported but unused
+import os
+^
+tests\test_block60.py:7:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_block60.py:13:1: F401 'backend.agent.evolution.DatasetSplit' imported but unused
+from backend.agent.evolution import (
+^
+tests\test_block60.py:13:1: F401 'backend.agent.evolution.LoRAScheduler' imported but unused
+from backend.agent.evolution import (
+^
+tests\test_block60.py:13:1: F401 'backend.agent.evolution.PatchRecord' imported but unused
+from backend.agent.evolution import (
+^
+tests\test_block60.py:13:1: F401 'backend.agent.evolution.PatchStatus' imported but unused
+from backend.agent.evolution import (
+^
+tests\test_block60.py:13:1: F401 'backend.agent.evolution.get_evolution_engine' imported but unused
+from backend.agent.evolution import (
+^
+tests\test_block61.py:13:1: F401 'typing.Any' imported but unused
+from typing import Any, Dict
+^
+tests\test_block61.py:13:1: F401 'typing.Dict' imported but unused
+from typing import Any, Dict
+^
+tests\test_block61.py:16:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block62.py:4:1: F401 'time' imported but unused
+import time
+^
+tests\test_block63.py:3:1: F401 'time' imported but unused
+import time
+^
+tests\test_block63.py:7:1: F401 'backend.agent.deep_research.Finding' imported but unused
+from backend.agent.deep_research import (
+^
+tests\test_block65.py:3:1: F401 'time' imported but unused
+import time
+^
+tests\test_block65.py:5:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block65.py:7:1: F401 'backend.vision.tracker.MatchMode' imported but unused
+from backend.vision.tracker import (
+^
+tests\test_block65_kilo.py:19:1: F401 'backend.vision.tracker.MatchMode' imported but unused
+from backend.vision.tracker import (
+^
+tests\test_block66.py:5:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block66.py:7:1: F401 'backend.automation.watchdog.ProcessHealth' imported but unused
+from backend.automation.watchdog import (
+^
+tests\test_block66.py:7:1: F401 'backend.automation.watchdog.WatchdogEvent' imported but unused
+from backend.automation.watchdog import (
+^
+tests\test_block67.py:6:1: F401 'backend.automation.scheduler.TaskPersistence' imported but unused
+from backend.automation.scheduler import (
+^
+tests\test_block68.py:4:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_block68.py:8:1: F401 'backend.security.vault.VaultManager' imported but unused
+from backend.security.vault import (
+^
+tests\test_block70.py:6:1: F401 'backend.evolution.patcher.AuditFinding' imported but unused
+from backend.evolution.patcher import (
+^
+tests\test_block70.py:6:1: F401 'backend.evolution.patcher.CodeAuditor' imported but unused
+from backend.evolution.patcher import (
+^
+tests\test_block70.py:6:1: F401 'backend.evolution.patcher.SandboxTester' imported but unused
+from backend.evolution.patcher import (
+^
+tests\test_block70.py:107:5: F841 local variable 'p2' is assigned to but never used
+    p2 = engine.propose_manual(
+    ^
+tests\test_block70_kilo.py:9:1: F401 'backend.evolution.patcher.PatchType' imported but unused
+from backend.evolution.patcher import (
+^
+tests\test_block71.py:8:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block71.py:8:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block71.py:9:1: E402 module level import not at top of file
+from backend.telemetry.governor import (
+^
+tests\test_block71.py:20:1: F401 'backend.telemetry.models.SensorStatus' imported but unused
+from backend.telemetry.models import HardwareSnapshot, SensorStatus
+^
+tests\test_block71.py:20:1: E402 module level import not at top of file
+from backend.telemetry.models import HardwareSnapshot, SensorStatus
+^
+tests\test_block71_kilo.py:3:11: E401 multiple imports on one line
+import sys, os
+          ^
+tests\test_block71_kilo.py:7:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block71_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block71_kilo.py:9:1: E402 module level import not at top of file
+from backend.main import app
+^
+tests\test_block71_kilo.py:10:1: F401 'backend.telemetry.governor.GovernorEngine' imported but unused
+from backend.telemetry.governor import (
+^
+tests\test_block71_kilo.py:10:1: F401 'backend.telemetry.governor.GovernorThresholds' imported but unused
+from backend.telemetry.governor import (
+^
+tests\test_block71_kilo.py:10:1: F401 'backend.telemetry.governor.WorkloadItem' imported but unused
+from backend.telemetry.governor import (
+^
+tests\test_block71_kilo.py:10:1: E402 module level import not at top of file
+from backend.telemetry.governor import (
+^
+tests\test_block72.py:3:11: E401 multiple imports on one line
+import sys, os, tempfile, shutil
+          ^
+tests\test_block72.py:7:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block72.py:7:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block72.py:8:1: E402 module level import not at top of file
+import numpy as np
+^
+tests\test_block72.py:9:1: E402 module level import not at top of file
+from backend.knowledge.rag import (
+^
+tests\test_block72.py:17:1: E402 module level import not at top of file
+from backend.knowledge.models import (
+^
+tests\test_block73.py:9:1: F401 'json' imported but unused
+import json
+^
+tests\test_block73.py:10:1: F401 'os' imported but unused
+import os
+^
+tests\test_block73.py:11:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_block73.py:12:1: F401 'time' imported but unused
+import time
+^
+tests\test_block73.py:13:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+tests\test_block73.py:17:1: F401 'backend.desktop.window_manager.DesktopWindowManager' imported but unused
+from backend.desktop.window_manager import (
+^
+tests\test_block73.py:125:9: F841 local variable 'l2' is assigned to but never used
+        l2 = engine.create_layout("B", [{"title_substring": "y"}])
+        ^
+tests\test_block73_kilo.py:94:50: E741 ambiguous variable name 'l'
+        assert any(l["name"] == "TestLayout" for l in body["layouts"])
+                                                 ^
+tests\test_block74.py:6:1: F401 'base64' imported but unused
+import base64
+^
+tests\test_block74.py:7:1: F401 'io' imported but unused
+import io
+^
+tests\test_block74.py:8:1: F401 'wave' imported but unused
+import wave
+^
+tests\test_block74.py:9:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+tests\test_block75.py:5:1: F401 'os' imported but unused
+import os
+^
+tests\test_block75.py:9:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block75.py:17:5: F401 'backend.desktop.overlay.OverlayState' imported but unused
+    from backend.desktop.overlay import (
+    ^
+tests\test_block75.py:17:5: F401 'backend.desktop.overlay.OverlayBridge' imported but unused
+    from backend.desktop.overlay import (
+    ^
+tests\test_block75.py:17:5: F401 'backend.desktop.overlay.get_overlay_bridge' imported but unused
+    from backend.desktop.overlay import (
+    ^
+tests\test_block75.py:17:5: F401 'backend.desktop.overlay.reset_overlay_bridge' imported but unused
+    from backend.desktop.overlay import (
+    ^
+tests\test_block75.py:96:5: F401 'backend.desktop.overlay.OverlayBridge' imported but unused
+    from backend.desktop.overlay import OverlayBridge, OverlayMode
+    ^
+tests\test_block75.py:96:5: F401 'backend.desktop.overlay.OverlayMode' imported but unused
+    from backend.desktop.overlay import OverlayBridge, OverlayMode
+    ^
+tests\test_block75.py:116:5: F401 'backend.desktop.hotkeys.VK_SPACE' imported but unused
+    from backend.desktop.hotkeys import HotkeyBinding, MOD_SHIFT, VK_F1, VK_ESCAPE, VK_SPACE
+    ^
+tests\test_block75.py:219:1: F811 redefinition of unused 'test_bridge_toggle_dnd' from line 95
+def test_bridge_toggle_dnd():
+^
+tests\test_block75_kilo.py:5:1: F401 'os' imported but unused
+import os
+^
+tests\test_block75_kilo.py:7:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_block76.py:5:1: F401 'os' imported but unused
+import os
+^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.SecurityScope' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.PatternScanner' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.StateInjector' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.WatchpointManager' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.encode_value' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.decode_value' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.encode_string' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.get_memory_inspector' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:17:5: F401 'backend.automation.memory_injector.reset_memory_inspector' imported but unused
+    from backend.automation.memory_injector import (
+    ^
+tests\test_block76.py:105:5: F401 'backend.automation.memory_injector.MemoryRegion' imported but unused
+    from backend.automation.memory_injector import MemoryRegion
+    ^
+tests\test_block76_kilo.py:5:1: F401 'os' imported but unused
+import os
+^
+tests\test_block77.py:8:1: E402 module level import not at top of file
+import tempfile
+^
+tests\test_block77.py:9:1: F401 'shutil' imported but unused
+import shutil
+^
+tests\test_block77.py:9:1: E402 module level import not at top of file
+import shutil
+^
+tests\test_block77.py:11:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block77.py:12:1: E402 module level import not at top of file
+from backend.sandbox.executor import (
+^
+tests\test_block77_kilo.py:8:1: E402 module level import not at top of file
+import tempfile
+^
+tests\test_block77_kilo.py:10:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block77_kilo.py:11:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block77_kilo.py:12:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block77_kilo.py:14:1: E402 module level import not at top of file
+from backend.sandbox.executor import (
+^
+tests\test_block77_kilo.py:19:1: E402 module level import not at top of file
+from backend.sandbox.router import router
+^
+tests\test_block78.py:5:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block79.py:8:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block79.py:9:1: F401 'backend.master_control.master.GlobalEvent' imported but unused
+from backend.master_control.master import (
+^
+tests\test_block79.py:9:1: E402 module level import not at top of file
+from backend.master_control.master import (
+^
+tests\test_block79_kilo.py:8:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block79_kilo.py:9:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block79_kilo.py:10:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block79_kilo.py:12:1: E402 module level import not at top of file
+from backend.master_control.master import get_master_orchestrator, reset_master_orchestrator
+^
+tests\test_block79_kilo.py:13:1: E402 module level import not at top of file
+from backend.master_control.master_routes import router
+^
+tests\test_block80.py:8:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block80.py:9:1: E402 module level import not at top of file
+from backend.daemon.bootstrapper import (
+^
+tests\test_block80_kilo.py:5:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_block80_kilo.py:9:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block80_kilo.py:10:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block80_kilo.py:11:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block80_kilo.py:13:1: E402 module level import not at top of file
+from backend.daemon.bootstrapper import (
+^
+tests\test_block80_kilo.py:20:1: E402 module level import not at top of file
+from backend.daemon.daemon_routes import router
+^
+tests\test_block81.py:8:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block81.py:9:1: E402 module level import not at top of file
+from backend.diagnostics.omni import (
+^
+tests\test_block81_kilo.py:8:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block81_kilo.py:9:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block81_kilo.py:10:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block81_kilo.py:12:1: E402 module level import not at top of file
+from backend.diagnostics.omni import (
+^
+tests\test_block81_kilo.py:19:1: E402 module level import not at top of file
+from backend.diagnostics.omni_routes import router
+^
+tests\test_block82.py:13:1: E402 module level import not at top of file
+import threading
+^
+tests\test_block82.py:14:1: E402 module level import not at top of file
+import time
+^
+tests\test_block82.py:16:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block82.py:18:1: E402 module level import not at top of file
+from backend.runner.ecosystem import (
+^
+tests\test_block82.py:23:1: E402 module level import not at top of file
+from backend.runner.orchestrator import (
+^
+tests\test_block82.py:28:1: E402 module level import not at top of file
+from backend.runner.handlers import build_default_handlers
+^
+tests\test_block82_kilo.py:8:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block82_kilo.py:9:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block82_kilo.py:10:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block82_kilo.py:12:1: E402 module level import not at top of file
+from backend.runner.orchestrator import get_ecosystem_orchestrator, reset_ecosystem_orchestrator
+^
+tests\test_block82_kilo.py:13:1: E402 module level import not at top of file
+from backend.runner.ecosystem import EcosystemRunner
+^
+tests\test_block82_kilo.py:14:1: E402 module level import not at top of file
+from backend.runner.runner_routes import router
+^
+tests\test_block83_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block83_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block83_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block83_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block83_kilo.py:9:1: E402 module level import not at top of file
+from backend.fusion.fusion_routes import router
+^
+tests\test_block83_kilo.py:10:1: E402 module level import not at top of file
+from backend.fusion.sensory import reset_fusion_engine
+^
+tests\test_block84_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block84_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block84_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block84_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block84_kilo.py:9:1: E402 module level import not at top of file
+from backend.predictive.predictive_routes import router
+^
+tests\test_block84_kilo.py:10:1: F401 'backend.predictive.intent.get_predictive_engine' imported but unused
+from backend.predictive.intent import get_predictive_engine, reset_predictive_engine
+^
+tests\test_block84_kilo.py:10:1: E402 module level import not at top of file
+from backend.predictive.intent import get_predictive_engine, reset_predictive_engine
+^
+tests\test_block84_kilo.py:11:1: E402 module level import not at top of file
+from backend.fusion.sensory import get_fusion_engine, reset_fusion_engine
+^
+tests\test_block85.py:3:1: F401 'os' imported but unused
+import os
+^
+tests\test_block85.py:73:5: F841 local variable 'p' is assigned to but never used
+    p = tmp_path_not_used = None
+    ^
+tests\test_block85.py:73:9: F841 local variable 'tmp_path_not_used' is assigned to but never used
+    p = tmp_path_not_used = None
+        ^
+tests\test_block85_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block85_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block85_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block85_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block85_kilo.py:9:1: E402 module level import not at top of file
+from backend.recovery.recovery_routes import router
+^
+tests\test_block85_kilo.py:10:1: E402 module level import not at top of file
+from backend.recovery.snapshot import reset_recovery_engine
+^
+tests\test_block85_kilo.py:45:5: E741 ambiguous variable name 'l'
+    l = client.get("/api/recovery/snapshots")
+    ^
+tests\test_block86.py:59:5: E731 do not assign a lambda expression, use a def
+    mk = lambda n: fmt.synthesize(
+    ^
+tests\test_block86_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block86_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block86_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block86_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block86_kilo.py:9:1: E402 module level import not at top of file
+from backend.edge_ai.finetune_routes import router
+^
+tests\test_block86_kilo.py:10:1: E402 module level import not at top of file
+from backend.edge_ai.engine import reset_edge_trainer
+^
+tests\test_block87_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block87_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block87_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block87_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block87_kilo.py:9:1: E402 module level import not at top of file
+from backend.security.mitigation_routes import router
+^
+tests\test_block87_kilo.py:10:1: E402 module level import not at top of file
+from backend.security.mitigation import reset_defense_engine
+^
+tests\test_block88_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block88_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block88_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block88_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block88_kilo.py:9:1: E402 module level import not at top of file
+from backend.memory.cognitive_routes import router
+^
+tests\test_block88_kilo.py:10:1: E402 module level import not at top of file
+from backend.memory.cognitive_graph import reset_cognitive_graph
+^
+tests\test_block89_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block89_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block89_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block89_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block89_kilo.py:9:1: E402 module level import not at top of file
+from backend.mesh_consensus.consensus_routes import router
+^
+tests\test_block89_kilo.py:10:1: E402 module level import not at top of file
+from backend.mesh_consensus import reset_consensus_engine
+^
+tests\test_block90_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block90_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block90_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block90_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block90_kilo.py:9:1: E402 module level import not at top of file
+from backend.security.identity_routes import router
+^
+tests\test_block90_kilo.py:10:1: E402 module level import not at top of file
+from backend.security.identity_engine import reset_identity_engine
+^
+tests\test_block90_kilo.py:74:22: F541 f-string is missing placeholders
+    rv = client.post(f"/api/security/identity/ephemeral/revoke", params={"node_id": nid})
+                     ^
+tests\test_block91.py:4:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block91_integration.py:8:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block91_integration.py:9:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block91_integration.py:11:1: E402 module level import not at top of file
+from backend.refactoring.engine import (
+^
+tests\test_block91_integration.py:17:1: E402 module level import not at top of file
+from backend.refactoring.integration import (
+^
+tests\test_block91_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block91_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block91_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block91_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block91_kilo.py:9:1: E402 module level import not at top of file
+from backend.evolution.patcher import router, reset_engine
+^
+tests\test_block91_ws.py:7:1: F401 'backend.refactoring.engine.get_engine' imported but unused
+from backend.refactoring.engine import router, get_engine, reset_engine
+^
+tests\test_block92.py:3:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block92_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block92_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block92_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block92_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block92_kilo.py:9:1: E402 module level import not at top of file
+from backend.planner.planner_routes import router, reset_planner
+^
+tests\test_block93.py:3:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_block93.py:11:1: F401 'backend.swarm.models.RoleType' imported but unused
+from backend.swarm.models import RoleType
+^
+tests\test_block93_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block93_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block93_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block93_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block93_kilo.py:9:1: E402 module level import not at top of file
+from backend.swarm.swarm_routes import router, reset_swarm_engine
+^
+tests\test_block94.py:12:1: F401 'hashlib' imported but unused
+import hashlib
+^
+tests\test_block94.py:13:1: F401 'os' imported but unused
+import os
+^
+tests\test_block94.py:14:1: F401 'time' imported but unused
+import time
+^
+tests\test_block94.py:18:1: F401 'backend.security.zk_audit.ZKAuditEngine' imported but unused
+from backend.security.zk_audit import (
+^
+tests\test_block94_kilo.py:8:1: F401 'json' imported but unused
+import json
+^
+tests\test_block95.py:5:1: F401 'backend.daemon.cross_device.DaemonSyncEngine' imported but unused
+from backend.daemon.cross_device import (
+^
+tests\test_block95.py:85:5: F841 local variable 'snap' is assigned to but never used
+    snap = e.synchronizer.create_snapshot({"k": "v"})
+    ^
+tests\test_block95_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block95_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block95_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block95_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block95_kilo.py:9:1: E402 module level import not at top of file
+from backend.daemon.sync_routes import router, reset_sync_engine
+^
+tests\test_block96.py:5:1: F401 'backend.resilience.self_healing.RemediationAction' imported but unused
+from backend.resilience.self_healing import (
+^
+tests\test_block96.py:70:5: F841 local variable 'f' is assigned to but never used
+    f = e.inject_fault("cpu_saturation", detail="x")
+    ^
+tests\test_block96_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block96_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block96_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block96_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block96_kilo.py:9:1: E402 module level import not at top of file
+from backend.resilience.healing_routes import router, reset_self_healing_engine
+^
+tests\test_block97_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block97_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block97_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block97_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block97_kilo.py:9:1: E402 module level import not at top of file
+from backend.hud.omni_routes import router, reset_omni_engine
+^
+tests\test_block98_kilo.py:3:10: E401 multiple imports on one line
+import os, sys
+         ^
+tests\test_block98_kilo.py:6:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_block98_kilo.py:7:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_block98_kilo.py:8:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_block98_kilo.py:9:1: E402 module level import not at top of file
+from backend.core.sovereign_bootstrapper import router, reset_sovereign_bootstrapper
+^
+tests\test_bloque18.py:7:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_bloque18.py:11:1: E402 module level import not at top of file
+from backend import discord_diagnostics as dd
+^
+tests\test_bloque20.py:8:1: F401 'unittest.mock' imported but unused
+from unittest import mock
+^
+tests\test_bloque20.py:15:1: E402 module level import not at top of file
+from backend.device_auth import DeviceAuthManager
+^
+tests\test_bloque20.py:72:9: F841 local variable 'reg' is assigned to but never used
+        reg = auth.register_device("dev2", "Phone")
+        ^
+tests\test_bloque20.py:80:9: F841 local variable 'reg' is assigned to but never used
+        reg = auth.register_device("dev3", "Phone")
+        ^
+tests\test_bloque20.py:91:9: F841 local variable 'reg' is assigned to but never used
+        reg = auth.register_device("dev4", "Phone")
+        ^
+tests\test_bloque20.py:99:9: F841 local variable 'reg' is assigned to but never used
+        reg = auth.register_device("dev5", "Phone")
+        ^
+tests\test_bloque20.py:278:9: F841 local variable 'token' is assigned to but never used
+        token = reg.json()["token"]
+        ^
+tests\test_bloque20.py:452:9: F401 'backend.device_auth.DeviceAuthManager' imported but unused
+        from backend.device_auth import DeviceAuthManager
+        ^
+tests\test_browser_tasks.py:67:9: F841 local variable 'old_task' is assigned to but never used
+        old_task = btm.create("old-1", "open_url", "https://example.com")
+        ^
+tests\test_comprehensive.py:6:1: F401 'ast' imported but unused
+import ast
+^
+tests\test_comprehensive.py:11:1: F401 'unittest.mock.MagicMock' imported but unused
+from unittest.mock import MagicMock, patch
+^
+tests\test_comprehensive.py:11:1: F401 'unittest.mock.patch' imported but unused
+from unittest.mock import MagicMock, patch
+^
+tests\test_comprehensive.py:39:1: C901 '_make_app' is too complex (24)
+def _make_app():
+^
+tests\test_comprehensive.py:41:5: F401 'fastapi.Request' imported but unused
+    from fastapi import FastAPI, Request, HTTPException
+    ^
+tests\test_comprehensive.py:41:5: F401 'fastapi.HTTPException' imported but unused
+    from fastapi import FastAPI, Request, HTTPException
+    ^
+tests\test_comprehensive.py:167:1: E402 module level import not at top of file
+import importlib.util as _ilu_wm
+^
+tests\test_comprehensive.py:888:9: F841 local variable 'result' is assigned to but never used
+        result = await agent.generate("Fanfic about adventure")
+        ^
+tests\test_comprehensive.py:897:9: F841 local variable 'result' is assigned to but never used
+        result = await agent.review_code(code)
+        ^
+tests\test_comprehensive.py:906:9: F841 local variable 'items' is assigned to but never used
+        items = await marketplace_manager.list_content()
+        ^
+tests\test_comprehensive.py:930:13: F841 local variable 'result' is assigned to but never used
+            result = attempt_mission_v2(missions[0], skill=5)
+            ^
+tests\test_comprehensive.py:938:9: F841 local variable 'result' is assigned to but never used
+        result = await agent.search_academic("speed test")
+        ^
+tests\test_comprehensive.py:987:9: F841 local variable 'result' is assigned to but never used
+        result = await orch.execute_decision(decision, session_id="perf")
+        ^
+tests\test_comprehensive.py:1227:9: F841 local variable 'rule_id' is assigned to but never used
+        rule_id = await automation_engine.schedule_task("every 9am", "send_newsletter")
+        ^
+tests\test_core.py:7:1: F401 'os' imported but unused
+import os
+^
+tests\test_core.py:11:1: F401 'importlib.util' imported but unused
+import importlib.util
+^
+tests\test_core.py:47:9: F401 'AURA_Core.event_manager' imported but unused
+        import AURA_Core.event_manager
+        ^
+tests\test_core.py:57:9: F401 'scripts.health_check' imported but unused
+        from scripts import (
+        ^
+tests\test_core.py:57:9: F401 'scripts.test_ame_connection' imported but unused
+        from scripts import (
+        ^
+tests\test_core.py:57:9: F401 'scripts.version_manager' imported but unused
+        from scripts import (
+        ^
+tests\test_core.py:57:9: F401 'scripts.auto_updater' imported but unused
+        from scripts import (
+        ^
+tests\test_core.py:57:9: F401 'scripts.ame_updater' imported but unused
+        from scripts import (
+        ^
+tests\test_core.py:73:9: F401 'AURA_Core.nodes.NOD_ROLLERCOIN_BOT.initialize_browser' imported but unused
+        from AURA_Core.nodes.NOD_ROLLERCOIN_BOT import initialize_browser
+        ^
+tests\test_core.py:126:9: F401 'scripts.health_check.check_python_deps' imported but unused
+        from scripts.health_check import check_python_deps, check_eventbus, check_godot_bridge
+        ^
+tests\test_core.py:126:9: F401 'scripts.health_check.check_eventbus' imported but unused
+        from scripts.health_check import check_python_deps, check_eventbus, check_godot_bridge
+        ^
+tests\test_core.py:126:9: F401 'scripts.health_check.check_godot_bridge' imported but unused
+        from scripts.health_check import check_python_deps, check_eventbus, check_godot_bridge
+        ^
+tests\test_core.py:136:9: F401 'scripts.version_manager.get_changelog' imported but unused
+        from scripts.version_manager import load_versions, bump_version, get_changelog
+        ^
+tests\test_diagnostics_health.py:13:1: F401 'unittest.mock.patch' imported but unused
+from unittest.mock import patch
+^
+tests\test_diagnostics_health.py:15:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_discord_diagnostics.py:11:1: F401 'os' imported but unused
+import os
+^
+tests\test_dream_distill.py:8:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_dream_distill.py:14:1: E402 module level import not at top of file
+from AURA_Core.dream_and_distill import run_dream, run_distill
+^
+tests\test_dream_distill.py:25:1: E402 module level import not at top of file
+import json
+^
+tests\test_e2e.py:163:13: F841 local variable 'data' is assigned to but never used
+            data = response.json()
+            ^
+tests\test_e2e.py:164:19: F541 f-string is missing placeholders
+            print(f"✅ Provider stats available")
+                  ^
+tests\test_e2e_backend.py:6:1: F401 'time' imported but unused
+import time
+^
+tests\test_e2e_integration.py:13:1: F401 'os' imported but unused
+import os
+^
+tests\test_e2e_integration.py:20:1: F401 'typing.Any' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\test_e2e_integration.py:20:1: F401 'typing.Dict' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\test_e2e_integration.py:20:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\test_ecosystem_e2e.py:21:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\test_ecosystem_e2e.py:22:1: F401 'json' imported but unused
+import json
+^
+tests\test_ecosystem_e2e.py:147:5: F811 redefinition of unused 'asyncio' from line 21
+    import asyncio
+    ^
+tests\test_export_compiler.py:15:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_export_compiler.py:23:1: F401 'backend.export.compiler.ChapterExportData' imported but unused
+from backend.export.compiler import (
+^
+tests\test_export_compiler.py:23:1: F401 'backend.export.compiler.ExportMetadata' imported but unused
+from backend.export.compiler import (
+^
+tests\test_export_compiler.py:23:1: F401 'backend.export.compiler.get_export_engine' imported but unused
+from backend.export.compiler import (
+^
+tests\test_gazetteer.py:19:1: F401 'backend.story_memory.gazetteer.GazetteerEngine' imported but unused
+from backend.story_memory.gazetteer import (
+^
+tests\test_gazetteer.py:250:9: E741 ambiguous variable name 'l'
+        l = client.get("/api/story/rest_codex/codex")
+        ^
+tests\test_graph_manager.py:30:1: F401 'backend.story_memory.canon_tracker.CanonTracker' imported but unused
+from backend.story_memory.canon_tracker import CanonTracker
+^
+tests\test_jan_adapter.py:12:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_jan_adapter.py:14:1: F401 'backend.ai_router.ProviderConfig' imported but unused
+from backend.ai_router import AIRouter, ProviderConfig
+^
+tests\test_jan_adapter.py:59:5: F841 local variable 'jan' is assigned to but never used
+    jan = next(p for p in router._providers if p.name == "jan")
+    ^
+tests\test_literary_versioning.py:14:1: F401 'os' imported but unused
+import os
+^
+tests\test_literary_versioning.py:15:1: F401 'shutil' imported but unused
+import shutil
+^
+tests\test_literary_versioning.py:16:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_literary_versioning.py:17:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+tests\test_literary_versioning.py:21:1: F401 'backend.story_memory.versioning.LiterarySnapshotEngine' imported but unused
+from backend.story_memory.versioning import (
+^
+tests\test_literary_versioning.py:170:1: E402 module level import not at top of file
+from fastapi.testclient import TestClient
+^
+tests\test_literary_versioning.py:171:1: E402 module level import not at top of file
+from fastapi import FastAPI
+^
+tests\test_literary_versioning.py:172:1: E402 module level import not at top of file
+from backend.story_routes import router as story_router
+^
+tests\test_mdns_discovery.py:18:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_media_manager.py:22:1: F401 'backend.media.manager.MediaManager' imported but unused
+from backend.media.manager import (
+^
+tests\test_media_manager.py:200:5: F401 'backend.media.routes as mr' imported but unused
+    from backend.media import routes as mr
+    ^
+tests\test_mobile_endpoints.py:13:1: F401 'json' imported but unused
+import json
+^
+tests\test_mobile_endpoints.py:14:1: F401 'os' imported but unused
+import os
+^
+tests\test_mobile_endpoints.py:15:1: F401 'typing.Any' imported but unused
+from typing import Any
+^
+tests\test_mobile_story_context.py:14:1: F401 'backend.story_memory.story_storage.StoryStorage' imported but unused
+from backend.story_memory.story_storage import StoryStorage
+^
+tests\test_mobile_story_context.py:15:1: F401 'backend.story_memory.character_bible.CharacterBible' imported but unused
+from backend.story_memory.character_bible import CharacterBible
+^
+tests\test_omniroute.py:12:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\test_omniroute.py:13:1: F401 'httpx' imported but unused
+import httpx
+^
+tests\test_p2p_sync.py:14:1: F401 'json' imported but unused
+import json
+^
+tests\test_p2p_sync.py:16:1: F401 'tempfile' imported but unused
+import tempfile
+^
+tests\test_p2p_sync.py:21:1: F401 'fastapi.websockets.WebSocketDisconnect' imported but unused
+from fastapi.websockets import WebSocketDisconnect
+^
+tests\test_p2p_sync.py:23:1: F401 'backend.sync.engine.P2PSyncEngine' imported but unused
+from backend.sync.engine import (
+^
+tests\test_p2p_sync.py:90:5: F401 'tempfile' imported but unused
+    import tempfile
+    ^
+tests\test_p2p_sync.py:90:5: F811 redefinition of unused 'tempfile' from line 16
+    import tempfile
+    ^
+tests\test_p2p_sync.py:177:5: F841 local variable 'pc_version' is assigned to but never used
+    pc_version = engine._load_current_version("w1", "character", "hero")
+    ^
+tests\test_p2p_sync.py:216:5: F841 local variable 'pc_version' is assigned to but never used
+    pc_version = engine._load_current_version("w1", "character", "hero")
+    ^
+tests\test_p2p_sync.py:261:5: F841 local variable 'pc_version' is assigned to but never used
+    pc_version = engine._load_current_version("w1", "character", "hero")
+    ^
+tests\test_p2p_sync.py:448:5: F841 local variable 'pc_version' is assigned to but never used
+    pc_version = engine._load_current_version("w1", "character", "hero")
+    ^
+tests\test_phase_d.py:9:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\test_phase_d.py:13:1: F401 'dataclasses.dataclass' imported but unused
+from dataclasses import dataclass, field
+^
+tests\test_phase_d.py:13:1: F401 'dataclasses.field' imported but unused
+from dataclasses import dataclass, field
+^
+tests\test_phase_d.py:14:1: F401 'typing.Any' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\test_phase_d.py:14:1: F401 'typing.Dict' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\test_phase_d.py:14:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\test_phase_d.py:14:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\test_post100_mission.py:3:1: F401 'pytest' imported but unused
+import pytest
+^
+tests\test_prod_health.py:41:23: F541 f-string is missing placeholders
+                print(f">>> WARN: respuesta inesperada (no 200).")
+                      ^
+tests\test_prod_health.py:52:11: F541 f-string is missing placeholders
+    print(f">>> Ctrl+C para detener.")
+          ^
+tests\test_providers.py:11:1: F401 'json' imported but unused
+import json
+^
+tests\test_revenue.py:6:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\test_revenue.py:7:1: F401 'time' imported but unused
+import time
+^
+tests\test_revenue.py:8:1: F401 'datetime.datetime' imported but unused
+from datetime import datetime
+^
+tests\test_revenue.py:12:1: F401 'backend.core.get_event_bus' imported but unused
+from backend.core import get_event_bus, reset_event_bus
+^
+tests\test_sandbox_challenge.py:59:1: E402 module level import not at top of file
+from ame_backend.src.services.ai_engine import AIEngine
+^
+tests\test_sandbox_challenge.py:60:1: E402 module level import not at top of file
+from ame_backend.src.tools.multi_model_router import MultiModelRouter
+^
+tests\test_sandbox_challenge.py:61:1: E402 module level import not at top of file
+from ame_backend.src.tools.rocket_bridge import RocketChatBridge
+^
+tests\test_story_memory.py:17:1: F401 'os' imported but unused
+import os
+^
+tests\test_story_memory.py:20:1: F401 'pathlib.Path' imported but unused
+from pathlib import Path
+^
+tests\test_termux_agent_tasks.py:7:1: E402 module level import not at top of file
+import pytest
+^
+tests\test_termux_agent_tasks.py:14:1: E402 module level import not at top of file
+from AME_EXPORT_PACKAGE.TERMUX_AGENT import server as termux_server
+^
+tests\test_tts_generator.py:13:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\test_tts_generator.py:19:1: F401 'backend.audio.tts_generator.TTSGenerator' imported but unused
+from backend.audio.tts_generator import (
+^
+tests\test_tts_generator.py:158:5: F401 'backend.audio.tts_routes as tr' imported but unused
+    from backend.audio import tts_routes as tr
+    ^
+tests\test_vault_backup.py:14:1: F401 'threading' imported but unused
+import threading
+^
+tests\verify_content_generation.py:8:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\verify_content_generation.py:13:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_content_generation.py:120:21: F841 local variable 'has_personality' is assigned to but never used
+                    has_personality = bool(personality)
+                    ^
+tests\verify_dashboard.py:8:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\verify_dashboard.py:13:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_dashboard.py:119:13: F811 redefinition of unused 'asyncio' from line 8
+            import asyncio
+            ^
+tests\verify_dashboard.py:130:21: F841 local variable 'msg' is assigned to but never used
+                    msg = await asyncio.wait_for(ws.recv(), timeout=5)
+                    ^
+tests\verify_fallback_chain.py:8:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\verify_fallback_chain.py:13:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_full_flow.py:13:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_full_flow.py:61:5: C901 'FullFlowVerifier.test_complete_user_journey' is too complex (25)
+    async def test_complete_user_journey(self) -> FlowResult:
+    ^
+tests\verify_full_flow.py:154:5: C901 'FullFlowVerifier.test_websocket_real_time' is too complex (12)
+    async def test_websocket_real_time(self) -> FlowResult:
+    ^
+tests\verify_full_flow.py:160:13: F841 local variable 'ws_url' is assigned to but never used
+            ws_url = None
+            ^
+tests\verify_full_flow.py:183:21: F841 local variable 'msg' is assigned to but never used
+                    msg = await asyncio.wait_for(ws.recv(), timeout=5)
+                    ^
+tests\verify_great_sage.py:13:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_great_sage.py:104:17: F841 local variable 'start' is assigned to but never used
+                start = asyncio.get_event_loop().time()
+                ^
+tests\verify_observer.py:13:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_persistence.py:8:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\verify_persistence.py:13:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_persistence.py:65:13: F841 local variable 'learn_resp' is assigned to but never used
+            learn_resp = await self._http_post(
+            ^
+tests\verify_phase_i.py:15:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\verify_phase_i.py:19:1: F401 'time' imported but unused
+import time
+^
+tests\verify_phase_i.py:21:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_phase_i.py:185:13: F841 local variable 'has_confidence' is assigned to but never used
+            has_confidence = state.confidence >= 0.0
+            ^
+tests\verify_phase_i.py:187:13: F841 local variable 'has_suggestions' is assigned to but never used
+            has_suggestions = isinstance(state.suggestions, list)
+            ^
+tests\verify_suggestion_engine.py:8:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\verify_suggestion_engine.py:13:1: F401 'typing.Optional' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_suggestion_engine.py:61:5: C901 'SuggestionEngineVerifier.test_suggestions_generate' is too complex (11)
+    async def test_suggestions_generate(self) -> SuggestionResult:
+    ^
+tests\verify_suggestion_engine.py:168:49: F541 f-string is missing placeholders
+            accept_resp = await self._http_post(f"/api/aria/g7/suggestions/accept", {"id": sid})
+                                                ^
+tests\verify_suggestion_engine.py:212:49: F541 f-string is missing placeholders
+            reject_resp = await self._http_post(f"/api/aria/g7/suggestions/reject", {"id": sid})
+                                                ^
+tests\verify_ui_extreme.py:17:1: F401 'asyncio' imported but unused
+import asyncio
+^
+tests\verify_ui_extreme.py:18:1: F401 'json' imported but unused
+import json
+^
+tests\verify_ui_extreme.py:19:1: F401 'os' imported but unused
+import os
+^
+tests\verify_ui_extreme.py:21:1: F401 'time' imported but unused
+import time
+^
+tests\verify_ui_extreme.py:24:1: F401 'typing.List' imported but unused
+from typing import Any, Dict, List, Optional
+^
+tests\verify_visual_core.py:9:1: F401 'json' imported but unused
+import json
+^
+tests\verify_visual_core.py:40:13: F401 'playwright.async_api.async_playwright' imported but unused
+            from playwright.async_api import async_playwright
+            ^
+tests\verify_visual_core.py:111:29: F841 local variable 'is_in_viewport' is assigned to but never used
+                            is_in_viewport = has_cyan
+                            ^
+tests\verify_visual_core.py:168:29: F401 'PIL.Image' imported but unused
+                            from PIL import Image
+                            ^
+tests\verify_visual_core.py:169:29: F401 'io' imported but unused
+                            import io
+                            ^
+tests\verify_visual_core.py:205:5: C901 'VisualCoreVerifier.test_breathing_animation' is too complex (15)
+    async def test_breathing_animation(self) -> VisualResult:
+    ^
+tests\verify_visual_core.py:368:29: F841 local variable 'visible' is assigned to but never used
+                            visible = await input_el.is_visible()
+                            ^
+tests\verify_visual_core.py:370:29: F841 local variable 'focusable' is assigned to but never used
+                            focusable = True
+                            ^
+48    C901 'ReactLoop._plan' is too complex (14)
+25    E401 multiple imports on one line
+199   E402 module level import not at top of file
+2     E731 do not assign a lambda expression, use a def
+3     E741 ambiguous variable name 'l'
+513   F401 'typing.Optional' imported but unused
+13    F541 f-string is missing placeholders
+28    F811 redefinition of unused 'daemon_sync_router' from line 96
+7     F821 undefined name 'blend'
+79    F841 local variable 'temperature' is assigned to but never used
+917

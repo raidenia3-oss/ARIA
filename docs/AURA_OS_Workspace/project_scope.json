@@ -1,0 +1,12 @@
+{
+    "rules": [
+        "Estilo visual: Carmesí",
+        "Sin dependencias circulares",
+        "Puerto: 8765",
+        "No generar archivos innecesarios ni scripts extra",
+        "Máximo 1 archivo nuevo por tarea unless se especifica lo contrario",
+        "No inventar APIs externas sin confirmar",
+        "Sin passwords硬code (usar .env)",
+        "Sin consola basura en producción"
+    ]
+}

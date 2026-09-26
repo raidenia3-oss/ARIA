@@ -1,0 +1,14 @@
+requests
+scikit-learn
+playwright
+sentence-transformers
+torch
+transformers
+huggingface-hub
+numpy
+scipy
+joblib
+networkx
+mpmath
+fastapi
+uvicorn

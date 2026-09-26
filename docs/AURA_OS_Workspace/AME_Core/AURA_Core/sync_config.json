@@ -1,0 +1,59 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el servicio de sincronización en tiempo real AURA/AME",
+    "local_dev_dir": "AURA_Core",
+    "remote_app_dir": "/data/data/com.termux/files/home/AME_Core",
+    "watch_dirs": [
+        "AURA_Core",
+        "AME_Core"
+    ],
+    "ssh_host": "localhost",
+    "ssh_port": 8022,
+    "ssh_user": "user",
+    "ignored_dirs": [
+        ".git",
+        "node_modules",
+        "__pycache__",
+        ".venv",
+        ".env",
+        ".vscode",
+        "dist",
+        "build",
+        "logs",
+        "spec",
+        "AURA-Desktop",
+        ".idea",
+        ".DS_Store",
+        "venv",
+        "env",
+        "__pycache__",
+        "*.egg-info"
+    ],
+    "excluded_extensions": [
+        ".log",
+        ".pyc",
+        ".pyo",
+        ".pyd",
+        ".exe",
+        ".dll",
+        ".so",
+        ".min.js",
+        ".min.css",
+        ".db",
+        ".sqlite",
+        ".sqlite3",
+        ".lock",
+        ".swp",
+        ".swo"
+    ],
+    "sync_interval": 60,
+    "log_file": "sync_service.log",
+    "max_retries": 3,
+    "retry_delay": 5,
+    "verbose": true,
+    "metadata": {
+        "last_sync": null,
+        "total_files_synced": 0,
+        "last_successful_sync": null
+    }
+}

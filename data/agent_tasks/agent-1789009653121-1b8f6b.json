@@ -1,0 +1,15 @@
+{
+  "task_id": "agent-1789009653121-1b8f6b",
+  "objective": "explorar directorio actual",
+  "context": {},
+  "status": "pending",
+  "plan": [],
+  "steps": [],
+  "result": null,
+  "error": null,
+  "max_iterations": 5,
+  "created_at": 1789009653.1225019,
+  "started_at": null,
+  "completed_at": null,
+  "metadata": {}
+}

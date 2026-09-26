@@ -1,0 +1,5 @@
+{
+  "base_model": "Qwen/Qwen2.5-1.5B",
+  "fine_tuning_method": "LoRA",
+  "quantization": "4-bit"
+}

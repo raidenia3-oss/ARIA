@@ -1,0 +1,129 @@
+{
+    "name": "aura-sentinel-agent",
+    "displayName": "AURA Sentinel Agent",
+    "description": "Agente autónomo de código sin restricciones y sistema de respaldo (Watcher) que supervisa a otros agentes como Cline para intervenir cuando se quedan sin tokens o se detienen.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/raidenia3-oss/AURA-server.01.git"
+    },
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Machine Learning",
+        "Other"
+    ],
+    "activationEvents": [
+        "onView:auraSentinelPanel",
+        "onStartupFinished"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "aura-sentinel",
+                    "title": "AURA Sentinel",
+                    "icon": "resources/icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "aura-sentinel": [
+                {
+                    "type": "webview",
+                    "id": "auraSentinelPanel",
+                    "name": "Sentinel Agent"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "auraSentinel.activate",
+                "title": "Activar Sentinel Agent",
+                "category": "AURA Sentinel"
+            },
+            {
+                "command": "auraSentinel.openPanel",
+                "title": "Abrir Panel Sentinel",
+                "category": "AURA Sentinel"
+            },
+            {
+                "command": "auraSentinel.toggleWatcher",
+                "title": "Activar/Desactivar Watcher de Cline",
+                "category": "AURA Sentinel"
+            },
+            {
+                "command": "auraSentinel.runLocalModel",
+                "title": "Ejecutar Modelo Local (LM Studio)",
+                "category": "AURA Sentinel"
+            }
+        ],
+        "configuration": {
+            "title": "AURA Sentinel",
+            "properties": {
+                "auraSentinel.lmStudioUrl": {
+                    "type": "string",
+                    "default": "http://localhost:1234/v1",
+                    "description": "URL del endpoint de LM Studio u Ollama"
+                },
+                "auraSentinel.modelName": {
+                    "type": "string",
+                    "default": "gemma-2-2b-it",
+                    "description": "Nombre del modelo local a utilizar"
+                },
+                "auraSentinel.watcherEnabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Habilita el monitor automático de Cline"
+                },
+                "auraSentinel.watcherTimeout": {
+                    "type": "number",
+                    "default": 300,
+                    "description": "Tiempo límite en segundos sin actividad de Cline antes de intervenir"
+                },
+                "auraSentinel.browserUserDataDir": {
+                    "type": "string",
+                    "default": "${userHome}/.vscode/aura-sentinel-browser",
+                    "description": "Directorio de datos persistentes del navegador automatizado"
+                },
+                "auraSentinel.headless": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Ejecutar navegador en modo headless"
+                }
+            }
+        },
+        "keybindings": [
+            {
+                "command": "auraSentinel.openPanel",
+                "key": "ctrl+shift+s",
+                "mac": "cmd+shift+s"
+            },
+            {
+                "command": "auraSentinel.toggleWatcher",
+                "key": "ctrl+shift+w",
+                "mac": "cmd+shift+w"
+            }
+        ]
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "watch": "tsc -w -p ./",
+        "package": "vsce package"
+    },
+    "dependencies": {
+        "openai": "^4.20.0",
+        "puppeteer": "^21.6.0",
+        "puppeteer-extra": "^3.3.6",
+        "puppeteer-extra-plugin-stealth": "^2.11.2"
+    },
+    "devDependencies": {
+        "@types/node": "^25.9.3",
+        "@types/vscode": "^1.85.0",
+        "typescript": "^5.3.3",
+        "vsce": "^2.15.0"
+    }
+}

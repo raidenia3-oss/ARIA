@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { margin: 0; padding: 12px; font-family: 'Courier New', monospace; background: #0a0c10; color: #e6e9f0; width: 400px; }
+    h1 { font-size: 12px; margin: 0 0 8px; color: #7c4dff; }
+    label { font-size: 11px; display: block; margin: 6px 0 2px; }
+    input { width: 100%; padding: 4px; font-size: 11px; background: #080408; color: #e6e9f0; border: 1px solid rgba(124,77,255,0.4); border-radius: 4px; box-sizing: border-box; }
+    button { padding: 6px 12px; margin-top: 10px; font-size: 11px; border: 1px solid rgba(124,77,255,0.4); border-radius: 4px; background: rgba(124,77,255,0.1); color: #e6e9f0; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Sitios permitidos</h1>
+  <p style="font-size:10px;opacity:0.6;">URL completa o patrón de host. Una por línea.</p>
+  <div id="sitesList"></div>
+  <label>Nueva URL</label>
+  <input id="newSite" type="text" placeholder="https://ejemplo.com" />
+  <button id="add">Añadir</button>
+  <script>
+    const list = document.getElementById("sitesList");
+    const input = document.getElementById("newSite");
+    chrome.storage.local.get(["allowedSites"], (data) => {
+      const sites = data.allowedSites || [];
+      list.innerHTML = sites.map(s => `<div style="font-size:10px;padding:2px">${s}</div>`).join("");
+    });
+    document.getElementById("add").addEventListener("click", () => {
+      const url = input.value.trim();
+      if (!url) return;
+      chrome.storage.local.get(["allowedSites"], (data) => {
+        const sites = [...(data.allowedSites || []), url];
+        chrome.storage.local.set({ allowedSites: sites }, () => {
+          list.innerHTML = sites.map(s => `<div style="font-size:10px;padding:2px">${s}</div>`).join("");
+          input.value = "";
+        });
+      });
+    });
+  </script>
+</body>
+</html>

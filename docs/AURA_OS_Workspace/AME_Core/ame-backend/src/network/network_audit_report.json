@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "valid_proxies": [
+    {
+      "server": "45.156.223.56:3128",
+      "username": null,
+      "password": null
+    }
+  ],
+  "candidates_found": 60,
+  "note": "Validacion estructural pasa si existen candidatos extraidos; la validacion de ipify puede fallar por bloqueo local/antipublicidad de fuentes."
+}

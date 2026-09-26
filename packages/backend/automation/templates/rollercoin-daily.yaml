@@ -1,0 +1,27 @@
+name: rollercoin-daily
+description: Mining daily cycle for RollerCoin tokens
+trigger: schedule
+schedule: "0 */6 * * *"
+enabled: true
+version: "1.0"
+
+steps:
+  - name: check_availability
+    action: rollercoin.check_can_claim
+    timeout_sec: 30
+    retry_on_failure: true
+
+  - name: claim_tokens
+    action: rollercoin.claim
+    timeout_sec: 60
+    retry_on_failure: true
+
+  - name: log_results
+    action: rollercoin.log_mining
+    timeout_sec: 15
+    retry_on_failure: false
+
+  - name: verify_balance
+    action: rollercoin.check_balance
+    timeout_sec: 30
+    retry_on_failure: true

@@ -1,0 +1,8 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="512" height="512" fill="#0a0e27"/>
+<circle cx="256" cy="256" r="200" fill="#00d4ff" opacity="0.2"/>
+<circle cx="256" cy="256" r="150" fill="#00d4ff" opacity="0.4"/>
+<circle cx="256" cy="256" r="100" fill="#00d4ff" opacity="0.6"/>
+<circle cx="256" cy="256" r="50" fill="#00d4ff"/>
+<text x="256" y="270" font-family="Arial, sans-serif" font-size="120" font-weight="bold" fill="white" text-anchor="middle">ARIA</text>
+</svg>

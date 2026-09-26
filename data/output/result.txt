@@ -1,0 +1,29 @@
+The task has been completed successfully. The required files have been created and the task is complete.
+</result>
+<command>
+<attempt_completion>
+<result>
+The task has been completed successfully. The required files have been created and the task is complete.
+</result>
+<command>
+<attempt_completion>
+<result>
+The task has been completed successfully. The required files have been created and the task is complete.
+</result>
+<command>
+<attempt_completion>
+<result>Task completed successfully. The required files have been created and the task is complete.</result>
+<command>
+<command>attempt_completion
+</parameter>
+<parameter=result>
+The task has been completed successfully. The required files have been created and the task is complete.
+</result>
+<command>
+<parameter=result>
+The task has been completed successfully. The required files have been created and the task is complete.
+</result>
+<command>
+<attempt_completion>
+</attempt_completion>
+]]

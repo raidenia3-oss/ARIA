@@ -1,0 +1,41 @@
+{
+    "mcpServers": {
+        "brave-search": {
+            "command": "npx",
+            "args": ["-y", "@anthropic/brave-search-mcp"],
+            "env": {
+                "BRAVE_API_KEY": "TU_BRAVE_API_KEY_AQUI"
+            }
+        },
+        "github": {
+            "command": "npx",
+            "args": ["-y", "@anthropic/github-mcp"],
+            "env": {
+                "GITHUB_TOKEN": "TU_GITHUB_TOKEN_AQUI"
+            }
+        },
+        "git-mcp": {
+            "command": "node",
+            "args": ["C:\\Users\\User\\OneDrive\\Documentos\\Cline\\MCP\\git-mcp\\build\\index.js"],
+            "env": {
+                "GIT_ALLOWED_DIR": "C:\\Users\\User\\OneDrive\\Documentos\\Cline"
+            }
+        },
+        "filesystem-mcp": {
+            "command": "node",
+            "args": [
+                "C:\\Users\\User\\OneDrive\\Documentos\\Cline\\MCP\\filesystem-mcp\\build\\index.js"
+            ]
+        },
+        "hf-space-mcp": {
+            "command": "node",
+            "args": [
+                "C:\\Users\\User\\OneDrive\\Documentos\\Cline\\MCP\\hf-space-mcp\\build\\index.js"
+            ],
+            "env": {
+                "HF_SPACE_REPO": "C:\\Users\\User\\OneDrive\\Documentos\\Cline",
+                "HF_TOKEN": ""
+            }
+        }
+    }
+}

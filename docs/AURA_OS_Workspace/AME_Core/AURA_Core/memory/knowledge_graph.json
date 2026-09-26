@@ -1,0 +1,107 @@
+{
+  "nodes": {
+    "Usuario": {
+      "id": "Usuario",
+      "label": "Usuario",
+      "type": "entidad",
+      "attrs": {
+        "rol": "owner"
+      }
+    },
+    "AME_Mobile": {
+      "id": "AME_Mobile",
+      "label": "AME_Móvil",
+      "type": "servicio",
+      "attrs": {
+        "plataforma": "Android"
+      }
+    },
+    "RollerCoin_Bot": {
+      "id": "RollerCoin_Bot",
+      "label": "RollerCoin Bot",
+      "type": "servicio",
+      "attrs": {
+        "stack": "Python"
+      }
+    },
+    "Godot_RPG": {
+      "id": "Godot_RPG",
+      "label": "Juego Godot",
+      "type": "servicio",
+      "attrs": {
+        "motor": "Godot"
+      }
+    },
+    "JARVIS_HUD": {
+      "id": "JARVIS_HUD",
+      "label": "JARVIS HUD",
+      "type": "visualizador",
+      "attrs": {
+        "tipo": "HUD"
+      }
+    },
+    "Metricas_Rendimiento": {
+      "id": "Metricas_Rendimiento",
+      "label": "Métricas Rendimiento",
+      "type": "dato",
+      "attrs": {}
+    },
+    "Telemetria": {
+      "id": "Telemetria",
+      "label": "Telemetría",
+      "type": "dato",
+      "attrs": {}
+    }
+  },
+  "edges": {
+    "Usuario->AME_Mobile::UTILIZA": {
+      "id": "Usuario->AME_Mobile::UTILIZA",
+      "src": "Usuario",
+      "dst": "AME_Mobile",
+      "rel": "UTILIZA",
+      "attrs": {}
+    },
+    "Usuario->RollerCoin_Bot::EJECUTA": {
+      "id": "Usuario->RollerCoin_Bot::EJECUTA",
+      "src": "Usuario",
+      "dst": "RollerCoin_Bot",
+      "rel": "EJECUTA",
+      "attrs": {}
+    },
+    "Usuario->Godot_RPG::JUEGA_A": {
+      "id": "Usuario->Godot_RPG::JUEGA_A",
+      "src": "Usuario",
+      "dst": "Godot_RPG",
+      "rel": "JUEGA_A",
+      "attrs": {}
+    },
+    "AME_Mobile->Telemetria::ALIMENTA_DE_DATOS": {
+      "id": "AME_Mobile->Telemetria::ALIMENTA_DE_DATOS",
+      "src": "AME_Mobile",
+      "dst": "Telemetria",
+      "rel": "ALIMENTA_DE_DATOS",
+      "attrs": {}
+    },
+    "RollerCoin_Bot->Metricas_Rendimiento::PRODUCE": {
+      "id": "RollerCoin_Bot->Metricas_Rendimiento::PRODUCE",
+      "src": "RollerCoin_Bot",
+      "dst": "Metricas_Rendimiento",
+      "rel": "PRODUCE",
+      "attrs": {}
+    },
+    "Metricas_Rendimiento->JARVIS_HUD::VISUALIZADO_EN": {
+      "id": "Metricas_Rendimiento->JARVIS_HUD::VISUALIZADO_EN",
+      "src": "Metricas_Rendimiento",
+      "dst": "JARVIS_HUD",
+      "rel": "VISUALIZADO_EN",
+      "attrs": {}
+    },
+    "Telemetria->JARVIS_HUD::MONITOREA": {
+      "id": "Telemetria->JARVIS_HUD::MONITOREA",
+      "src": "Telemetria",
+      "dst": "JARVIS_HUD",
+      "rel": "MONITOREA",
+      "attrs": {}
+    }
+  }
+}

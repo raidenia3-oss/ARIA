@@ -1,0 +1,15 @@
+{
+  "state": {
+    "status": "running",
+    "pid": 31348,
+    "last_started": 1789528880.9555285,
+    "last_stopped": 0.0,
+    "restart_count": 0,
+    "signals": [
+      {
+        "kind": "started",
+        "ts": 1789528880.9555285
+      }
+    ]
+  }
+}

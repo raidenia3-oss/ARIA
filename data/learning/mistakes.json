@@ -1,0 +1,128 @@
+[
+  {
+    "mistake_id": "MIST-1789672778161-0",
+    "error_type": "integration_test",
+    "error_message": "test error",
+    "context": {},
+    "stack": [
+      {
+        "type": "integration_test",
+        "message": "test error",
+        "time": 1789672778.1615891
+      }
+    ],
+    "severity": "medium",
+    "learned": false,
+    "times_repeated": 1,
+    "first_seen": "2026-09-17T14:19:38.161589",
+    "last_seen": "2026-09-17T14:19:38.161589"
+  },
+  {
+    "mistake_id": "MIST-1789672934664-1",
+    "error_type": "integration_test",
+    "error_message": "test error",
+    "context": {},
+    "stack": [
+      {
+        "type": "integration_test",
+        "message": "test error",
+        "time": 1789672934.6644032
+      }
+    ],
+    "severity": "medium",
+    "learned": false,
+    "times_repeated": 1,
+    "first_seen": "2026-09-17T14:22:14.664403",
+    "last_seen": "2026-09-17T14:22:14.664403"
+  },
+  {
+    "mistake_id": "MIST-1789674530959-2",
+    "error_type": "integration_test",
+    "error_message": "test error",
+    "context": {},
+    "stack": [
+      {
+        "type": "integration_test",
+        "message": "test error",
+        "time": 1789674530.959713
+      }
+    ],
+    "severity": "medium",
+    "learned": false,
+    "times_repeated": 1,
+    "first_seen": "2026-09-17T14:48:50.959713",
+    "last_seen": "2026-09-17T14:48:50.959713"
+  },
+  {
+    "mistake_id": "MIST-1789674688677-3",
+    "error_type": "integration_test",
+    "error_message": "test error",
+    "context": {},
+    "stack": [
+      {
+        "type": "integration_test",
+        "message": "test error",
+        "time": 1789674688.6779404
+      }
+    ],
+    "severity": "medium",
+    "learned": false,
+    "times_repeated": 1,
+    "first_seen": "2026-09-17T14:51:28.677940",
+    "last_seen": "2026-09-17T14:51:28.677940"
+  },
+  {
+    "mistake_id": "MIST-1789674843795-4",
+    "error_type": "integration_test",
+    "error_message": "test error",
+    "context": {},
+    "stack": [
+      {
+        "type": "integration_test",
+        "message": "test error",
+        "time": 1789674843.795729
+      }
+    ],
+    "severity": "medium",
+    "learned": false,
+    "times_repeated": 1,
+    "first_seen": "2026-09-17T14:54:03.795729",
+    "last_seen": "2026-09-17T14:54:03.795729"
+  },
+  {
+    "mistake_id": "MIST-1789675073206-5",
+    "error_type": "integration_test",
+    "error_message": "test error",
+    "context": {},
+    "stack": [
+      {
+        "type": "integration_test",
+        "message": "test error",
+        "time": 1789675073.2067196
+      }
+    ],
+    "severity": "medium",
+    "learned": false,
+    "times_repeated": 1,
+    "first_seen": "2026-09-17T14:57:53.206720",
+    "last_seen": "2026-09-17T14:57:53.206720"
+  },
+  {
+    "mistake_id": "MIST-1789675117742-6",
+    "error_type": "integration_test",
+    "error_message": "test error",
+    "context": {},
+    "stack": [
+      {
+        "type": "integration_test",
+        "message": "test error",
+        "time": 1789675117.7424302
+      }
+    ],
+    "severity": "medium",
+    "learned": false,
+    "times_repeated": 1,
+    "first_seen": "2026-09-17T14:58:37.742430",
+    "last_seen": "2026-09-17T14:58:37.742430"
+  }
+]

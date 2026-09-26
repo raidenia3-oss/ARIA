@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AME AURA - Contenido Compartido</title>
+        <link rel="manifest" href="/static/manifest.json" />
+        <link rel="stylesheet" href="/static/css/style.css" />
+        <style>
+            body {
+                font-family: "Roboto Mono", monospace;
+                background-color: #080408;
+                color: #f0f0f8;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                overflow: hidden;
+            }
+            .container {
+                text-align: center;
+                padding: 20px;
+                max-width: 600px;
+                width: 90%;
+            }
+            .spinner {
+                font-size: 48px;
+                margin-bottom: 20px;
+                animation: spin 1s linear infinite;
+                color: #dc143c;
+            }
+            .message {
+                color: #48ffce;
+                letter-spacing: 2px;
+                font-size: 1.2em;
+                margin-bottom: 20px;
+            }
+            .shared-preview {
+                background-color: #16213e;
+                padding: 15px;
+                border-radius: 8px;
+                margin-top: 20px;
+                text-align: left;
+                max-height: 200px;
+                overflow-y: auto;
+                word-break: break-all;
+            }
+            .shared-preview img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin-bottom: 10px;
+                border-radius: 4px;
+            }
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="spinner">⚡</div>
+            <div class="message" id="status-message">PROCESANDO CONTENIDO COMPARTIDO...</div>
+            <div id="shared-content-preview" class="shared-preview" style="display: none">
+                <strong>Contenido recibido:</strong>
+                <pre id="raw-content"></pre>
+                <img id="shared-image-preview" alt="Shared Image" style="display: none" />
+                <button id="analyze-image-btn" style="display: none">Analizar Imagen con IA</button>
+            </div>
+        </div>
+
+        <script>
+            const HF_URL = "https://raiden456-slut.hf.space/v1/chat/completions"; // URL de tu HF Space
+
+            document.addEventListener("DOMContentLoaded", async () => {
+                const statusMessage = document.getElementById("status-message");
+                const previewDiv = document.getElementById("shared-content-preview");
+                const rawContentPre = document.getElementById("raw-content");
+                const sharedImagePreview = document.getElementById("shared-image-preview");
+                const analyzeImageBtn = document.getElementById("analyze-image-btn");
+
+                let sharedData = null;
+
+                // Función para leer los datos compartidos del Service Worker
+                async function getSharedData() {
+                    return new Promise((resolve) => {
+                        if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+                            const messageChannel = new MessageChannel();
+                            messageChannel.port1.onmessage = (event) => {
+                                if (event.data.type === "SHARE_DATA") {
+                                    resolve(event.data.payload);
+                                }
+                            };
+                            navigator.serviceWorker.controller.postMessage(
+                                { type: "GET_SHARE_DATA" },
+                                [messageChannel.port2],
+                            );
+                        } else {
+                            // Fallback si el Service Worker no está activo (ej. primera visita)
+                            console.warn(
+                                "Service Worker no activo o no controlador. Intentando leer de localStorage.",
+                            );
+                            const pendingShare = localStorage.getItem("pending_share_target");
+                            if (pendingShare) {
+                                localStorage.removeItem("pending_share_target");
+                                resolve(JSON.parse(pendingShare));
+                            } else {
+                                resolve(null);
+                            }
+                        }
+                    });
+                }
+
+                sharedData = await getSharedData();
+
+                if (sharedData) {
+                    previewDiv.style.display = "block";
+                    rawContentPre.textContent = JSON.stringify(sharedData, null, 2);
+
+                    if (sharedData.file) {
+                        // Si es un archivo, intentar mostrar como imagen si es posible
+                        if (sharedData.file.startsWith("data:image/")) {
+                            sharedImagePreview.src = sharedData.file;
+                            sharedImagePreview.style.display = "block";
+                            analyzeImageBtn.style.display = "block";
+
+                            analyzeImageBtn.onclick = () => {
+                                handleSharedContent(sharedData, true);
+                            };
+                        } else {
+                            statusMessage.textContent = "Archivo recibido. Procesando...";
+                            handleSharedContent(sharedData);
+                        }
+                    } else {
+                        statusMessage.textContent = "Contenido recibido. Procesando...";
+                        handleSharedContent(sharedData);
+                    }
+                } else {
+                    statusMessage.textContent =
+                        "No hay contenido compartido pendiente. Redirigiendo...";
+                    setTimeout(() => (window.location.href = "/"), 2000);
+                }
+            });
+
+            async function handleSharedContent(data, analyzeImage = false) {
+                const { title, text, url, file } = data;
+                let prompt = [];
+
+                if (title) prompt.push(`Título: ${title}`);
+                if (text) prompt.push(`Texto: ${text}`);
+                if (url) prompt.push(`URL: ${url}`);
+
+                // Si es imagen y se pide analizar
+                if (analyzeImage && file && file.startsWith("data:image/")) {
+                    prompt.push(
+                        "Imagen recibida. Por favor, describe esta imagen en detalle y extrae cualquier información relevante.",
+                    );
+                    // Aquí podrías enviar la imagen base64 directamente al LLM si soporta visión
+                    // Por simplicidad, solo mandamos el prompt de texto por ahora
+                } else if (file) {
+                    // Si es otro tipo de archivo, notificar o intentar resumen básico
+                    prompt.push(
+                        `Archivo recibido: ${file.substring(0, 100)}... (no es una imagen o no se pidió análisis)`,
+                    );
+                }
+
+                const finalPrompt = prompt.filter(Boolean).join("\n");
+
+                if (!finalPrompt) {
+                    console.log("No hay prompt para enviar al LLM. Redirigiendo al chat.");
+                    localStorage.setItem(
+                        "pending_share",
+                        JSON.stringify({
+                            original: data,
+                            analysis: "Contenido compartido recibido.",
+                            timestamp: Date.now(),
+                        }),
+                    );
+                    window.location.href = "/dashboard.html"; // Redirigir al dashboard/chat principal
+                    return;
+                }
+
+                document.getElementById("status-message").textContent = "Analizando con IA...";
+
+                try {
+                    const response = await fetch(HF_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            messages: [
+                                {
+                                    role: "system",
+                                    content:
+                                        "Eres AME. Analiza el contenido compartido y da un resumen útil en español.",
+                                },
+                                { role: "user", content: `Analiza esto:\n${finalPrompt}` },
+                            ],
+                            max_tokens: 500,
+                        }),
+                    });
+                    const responseData = await response.json();
+                    const reply =
+                        responseData.choices?.[0]?.message?.content ||
+                        "No se pudo generar un análisis.";
+
+                    localStorage.setItem(
+                        "pending_share",
+                        JSON.stringify({
+                            original: data,
+                            analysis: reply,
+                            timestamp: Date.now(),
+                        }),
+                    );
+
+                    window.location.href = "/dashboard.html"; // Redirigir al chat/dashboard
+                } catch (e) {
+                    console.error("Error procesando contenido compartido con HF Space:", e);
+                    localStorage.setItem(
+                        "pending_share",
+                        JSON.stringify({
+                            original: data,
+                            analysis: `Error al conectar con la IA: ${e.message || "Desconocido"}`,
+                            timestamp: Date.now(),
+                        }),
+                    );
+                    window.location.href = "/dashboard.html"; // Redirigir incluso con error
+                }
+            }
+
+            // Registrar Service Worker si no está ya registrado
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker
+                    .register("/static/sw.js")
+                    .then((registration) => {
+                        console.log(
+                            "Service Worker registrado desde share-target:",
+                            registration.scope,
+                        );
+                    })
+                    .catch((error) => {
+                        console.log("Error al registrar Service Worker desde share-target:", error);
+                    });
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "cpu": 8.3,
+  "memory": 86.8,
+  "disk": 78.5,
+  "requests_per_sec": 55,
+  "revenue_per_hour": 0.25,
+  "active_agents": 2,
+  "daemon_tasks": 7,
+  "uptime": "15h 53m",
+  "platform": "Windows",
+  "python": "3.11.7"
+}

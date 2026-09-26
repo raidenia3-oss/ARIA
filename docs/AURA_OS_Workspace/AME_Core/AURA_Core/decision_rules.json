@@ -1,0 +1,247 @@
+{
+    "threat_rules": [
+        {
+            "name": "amenaza_alta_critica",
+            "condition": {
+                "type": "Amenaza",
+                "severity": ["Alta", "Crítica"]
+            },
+            "actions": [
+                {
+                    "type": "Bloquear_IP",
+                    "target": "metadata.ip"
+                },
+                {
+                    "type": "Notificar",
+                    "channel": "security_team",
+                    "message": "🚨 AMENAZA CRÍTICA DETECTADA: {{title}} (Severidad: {{severity}}). Origen: {{metadata.ip}}",
+                    "priority": "high"
+                },
+                {
+                    "type": "Actualizar_Estado",
+                    "node": "security",
+                    "status": "critical_threat"
+                },
+                {
+                    "type": "Registrar_Evento",
+                    "event": "critical_threat_detected",
+                    "details": "Alerta: {{title}}\nDescripción: {{description}}\nOrigen: {{metadata.ip}}\nDetalles: {{details}}"
+                }
+            ]
+        },
+        {
+            "name": "scan_de_red",
+            "condition": {
+                "type": "Scan",
+                "severity": ["Media", "Alta"]
+            },
+            "actions": [
+                {
+                    "type": "Notificar",
+                    "channel": "security_team",
+                    "message": "⚠️ ESCANEO DE RED DETECTADO: {{title}} desde {{metadata.ip}}. Tipo: {{details.scan_type.value}}"
+                },
+                {
+                    "type": "Registrar_Evento",
+                    "event": "network_scan_detected",
+                    "details": {
+                        "scan_type": "{{details.scan_type.value}}",
+                        "targets": "{{details.targets.value}}",
+                        "options": "{{details.scan_type.options}}",
+                        "source_ip": "{{metadata.ip}}",
+                        "timestamp": "{{timestamp}}"
+                    }
+                },
+                {
+                    "type": "Actualizar_Estado",
+                    "node": "network_monitoring",
+                    "status": "scan_detected"
+                }
+            ]
+        },
+        {
+            "name": "phishing_campaign",
+            "condition": {
+                "type": "Phishing"
+            },
+            "actions": [
+                {
+                    "type": "Notificar",
+                    "channel": "security_team",
+                    "message": "🎣 POSIBLE CAMPAÑA DE PHISHING: {{title}}. URL sospechosa: {{details.url.value}}"
+                },
+                {
+                    "type": "Notificar",
+                    "channel": "users",
+                    "message": "⚠️ ADVERTENCIA: Se ha detectado un posible intento de phishing. No haga clic en enlaces sospechosos.",
+                    "priority": "medium"
+                },
+                {
+                    "type": "Guardar_en_Obsidian",
+                    "node": "phishing_campaigns",
+                    "title": "🎣 Phishing: {{title}}",
+                    "details": {
+                        "url": "{{details.url.value}}",
+                        "descripcion": "{{description}}",
+                        "fuente": "{{source}}",
+                        "severidad": "{{severity}}",
+                        "detalles": "{{details}}",
+                        "timestamp": "{{timestamp}}"
+                    }
+                },
+                {
+                    "type": "Crear_Nuevo_Nodo",
+                    "type": "threat_intel",
+                    "data": {
+                        "type": "phishing",
+                        "title": "{{title}}",
+                        "url": "{{details.url.value}}",
+                        "description": "{{description}}",
+                        "source": "{{source}}",
+                        "severity": "{{severity}}",
+                        "timestamp": "{{timestamp}}"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "hallazgo_osint",
+            "condition": {
+                "type": "OSINT_Found"
+            },
+            "actions": [
+                {
+                    "type": "Guardar_en_Obsidian",
+                    "node": "osint_findings",
+                    "title": "🔍 Hallazgo OSINT: {{title}}",
+                    "details": {
+                        "descripcion": "{{description}}",
+                        "fuente": "{{source}}",
+                        "tipo": "{{type}}",
+                        "detalles": "{{details}}",
+                        "timestamp": "{{timestamp}}",
+                        "nodos_afectados": "{{affected_nodes}}"
+                    }
+                },
+                {
+                    "type": "Crear_Nuevo_Nodo",
+                    "type": "osint",
+                    "data": {
+                        "title": "{{title}}",
+                        "description": "{{description}}",
+                        "source": "{{source}}",
+                        "type": "{{type}}",
+                        "details": "{{details}}",
+                        "affected_nodes": "{{affected_nodes}}",
+                        "timestamp": "{{timestamp}}",
+                        "severity": "{{severity}}"
+                    }
+                },
+                {
+                    "type": "Notificar",
+                    "channel": "research_team",
+                    "message": "🔍 NUEVO HALLAZGO OSINT: {{title}}. Fuente: {{source}}. Tipo: {{type}}"
+                },
+                {
+                    "type": "Actualizar_Estado",
+                    "node": "osint_research",
+                    "status": "new_finding"
+                }
+            ]
+        },
+        {
+            "name": "amenaza_critica_general",
+            "condition": {
+                "severity": "Crítica"
+            },
+            "actions": [
+                {
+                    "type": "Notificar",
+                    "channel": "all",
+                    "message": "🚨 ALERTA CRÍTICA: {{title}} (Severidad: {{severity}}). Origen: {{source}}",
+                    "priority": "high"
+                },
+                {
+                    "type": "Notificar",
+                    "channel": "security_team",
+                    "message": "🚨 ALERTA CRÍTICA REQUERIDA: {{title}}. Por favor, revise inmediatamente.",
+                    "priority": "high"
+                },
+                {
+                    "type": "Actualizar_Estado",
+                    "node": "security",
+                    "status": "critical_threat"
+                },
+                {
+                    "type": "Actualizar_Estado",
+                    "node": "system_health",
+                    "status": "critical_alert"
+                }
+            ]
+        },
+        {
+            "name": "amenaza_alta_general",
+            "condition": {
+                "severity": "Alta"
+            },
+            "actions": [
+                {
+                    "type": "Notificar",
+                    "channel": "security_team",
+                    "message": "⚠️ ALERTA ALTA: {{title}} (Severidad: {{severity}}). Origen: {{source}}",
+                    "priority": "medium"
+                },
+                {
+                    "type": "Actualizar_Estado",
+                    "node": "security",
+                    "status": "high_threat"
+                }
+            ]
+        },
+        {
+            "name": "amenaza_media_general",
+            "condition": {
+                "severity": "Media"
+            },
+            "actions": [
+                {
+                    "type": "Notificar",
+                    "channel": "security_team",
+                    "message": "ℹ️ ALERTA MEDIA: {{title}} (Severidad: {{severity}}). Origen: {{source}}",
+                    "priority": "low"
+                },
+                {
+                    "type": "Registrar_Evento",
+                    "event": "medium_threat_detected",
+                    "details": {
+                        "title": "{{title}}",
+                        "description": "{{description}}",
+                        "source": "{{source}}",
+                        "severity": "{{severity}}",
+                        "timestamp": "{{timestamp}}"
+                    }
+                }
+            ]
+        }
+    ],
+    "default_actions": [
+        {
+            "type": "Registrar_Evento",
+            "event": "alert_processed",
+            "details": {
+                "alert_id": "{{id}}",
+                "alert_type": "{{type}}",
+                "severity": "{{severity}}",
+                "title": "{{title}}",
+                "timestamp": "{{timestamp}}",
+                "status": "processed",
+                "actions_taken": "{{actions_taken}}"
+            }
+        },
+        {
+            "type": "Actualizar_Estado",
+            "node": "system_monitoring",
+            "status": "alert_processed"
+        }
+    ]
+}

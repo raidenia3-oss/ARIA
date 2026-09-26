@@ -1,0 +1,108 @@
+============================================================
+AURA MULTI-LANGUAGE EXPANSION — AGENT PROMPT
+============================================================
+
+## Context
+AURA is expanding beyond Python/TypeScript. Telegram and Termux are being removed.
+Discord is now the primary interaction channel.
+
+## Current State
+- Repo scaffolded under: services/, interfaces/, tools/, docker/
+- Discord bot skeleton: services/discord-bot/
+- Gesture control: interfaces/gesture-control/
+- Voice commands: interfaces/voice-commands/
+- DSL compiler: tools/dsl-compiler/
+- Docker Compose: docker/docker-compose.multi.yml
+
+## Your Mission
+Advance the Discord bot from skeleton to production-ready, and prepare the ground for the next phases.
+
+## Tasks (in order)
+
+### 1. Complete Discord Bot (services/discord-bot/)
+- Connect to Discord using discordrb 3.4+
+- Implement slash commands:
+  - /status → call AURA_BACKEND_URL/api/status
+  - /logs → call AURA_BACKEND_URL/api/logs?service=X&lines=Y
+  - /restart → call AURA_BACKEND_URL/api/restart
+  - /deploy → call AURA_BACKEND_URL/api/deploy
+  - /esoteric → return esoteric code challenge
+  - /rules → list/evaluate rules from Redis
+- Add event listeners: ready, message_create, voice_state_update
+- Publish events to Redis (aura:events)
+- Add error handling and reconnection
+- Add unit tests in spec/
+
+### 2. Docker & Local Run
+- Verify Dockerfile works
+- Ensure docker-compose up discord-bot works
+- Add docker-compose.override.yml for local dev
+- Update README with exact setup steps
+
+### 3. Backend API Stubs (if missing)
+Check if these exist, if not create minimal stubs:
+- GET /api/status
+- GET /api/logs
+- POST /api/restart
+- POST /api/deploy
+
+Location: backend/main.py or backend/app/api/*/route.py style
+
+### 4. Test Everything
+- Ruby tests: bundle exec rspec
+- Python tests: pytest tests/unit/
+- Docker Compose starts without errors
+- Integration test: start Redis + bot + simulate slash command
+
+### 5. Documentation
+- Update docs/multilanguage-structure.md
+- Add services/discord-bot/CHANGELOG.md
+- Ensure all READMEs have accurate setup instructions
+
+## Constraints
+- Do NOT modify packages/frontend/, packages/backend/, packages/hf-space/ unless absolutely necessary
+- Keep all new code in services/, interfaces/, tools/
+- Use existing patterns from the codebase
+- All tests must pass before finishing
+- Do not hardcode secrets; use environment variables
+
+## Deliverables
+1. Working Discord bot connected to a real server
+2. All 6 slash commands functional
+3. Redis event publishing working
+4. Docker Compose stack running
+5. Tests passing (Ruby + Python)
+6. Updated documentation
+
+## Discord Developer Portal Checklist
+- [ ] Bot created at https://discord.com/developers/applications
+- [ ] Token copied to .env.local
+- [ ] Client ID copied to .env.local
+- [ ] Guild ID copied to .env.local
+- [ ] Bot invited with bot + applications.commands scopes
+- [ ] Message Content Intent enabled
+
+## Verification Commands
+# Terminal 1: Redis
+docker run -d -p 6379:6379 redis:7-alpine
+
+# Terminal 2: Backend (if not running)
+cd packages/backend
+uvicorn main:app --reload
+
+# Terminal 3: Discord bot
+cd services/discord-bot
+ruby bot.rb
+
+# Terminal 4: Tests
+pytest tests/unit/
+cd services/discord-bot && bundle exec rspec
+
+## Next Phase Preview
+- Gesture control integration with Discord
+- DSL compiler for Ruby rules
+- Esoteric lab playground
+- Training engine in Rust
+
+Start now. Prioritize Task 1 (bot connection) and Task 3 (backend stubs).
+============================================================

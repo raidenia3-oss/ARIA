@@ -1,0 +1,73 @@
+# ARIA v4.0 CI/CD Pipeline
+name: ARIA v4.0 CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install linting tools
+        run: pip install black flake8 mypy
+      - name: Black format check
+        run: black --check .
+      - name: Flake8 lint
+        run: flake8 . --max-line-length=120 --extend-ignore=E501,E731
+      - name: Mypy type check
+        run: mypy AURA_APP/ --ignore-missing-imports
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio pytest-cov
+      - name: Run tests
+        run: pytest AURA_APP/tests/ -v --cov=AURA_APP --cov-report=xml --asyncio-mode=auto
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+
+  build:
+    runs-on: windows-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PyInstaller
+        run: pip install PyInstaller
+      - name: Build executable
+        run: |
+          pyinstaller --onefile --windowed --name "ARIA OS v4.0" ^
+            --add-data "AURA_APP/frontend;frontend" ^
+            --hidden-import AURA_APP.backend.logic.aria_logic_engine ^
+            --hidden-import AURA_APP.backend.logic.aria_adaptive_engine ^
+            --hidden-import AURA_APP.backend.expansion.usb_intelligence ^
+            --hidden-import AURA_APP.backend.integration.headroom_optimizer ^
+            --hidden-import AURA_APP.backend.integration.claude_context_bridge ^
+            --hidden-import AURA_APP.backend.integration.agent_skills_loader ^
+            --hidden-import AURA_APP.backend.integration.agency_agents_builder ^
+            --hidden-import AURA_APP.backend.integration.skill_recorder_bridge ^
+            AURA_APP/aria_main.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ARIA-OS-v4.0
+          path: dist/ARIA\ OS\ v4.0.exe

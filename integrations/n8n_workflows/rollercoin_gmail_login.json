@@ -1,0 +1,102 @@
+{
+    "name": "RollerCoin Gmail Login",
+    "nodes": [
+        {
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "parameters": {
+                "path": "rollercoin-login",
+                "responseMode": "onReceived"
+            },
+            "position": [250, 300]
+        },
+        {
+            "name": "Wait for Email",
+            "type": "n8n-nodes-base.wait",
+            "parameters": {
+                "amount": 15,
+                "unit": "seconds"
+            },
+            "position": [450, 300]
+        },
+        {
+            "name": "Read Gmail",
+            "type": "n8n-nodes-base.gmail",
+            "typeVersion": 2,
+            "parameters": {
+                "operation": "getAll",
+                "filters": {
+                    "from": "noreply@rollercoin.com",
+                    "readStatus": "unread"
+                },
+                "limit": 1
+            },
+            "position": [650, 300]
+        },
+        {
+            "name": "Extract Code",
+            "type": "n8n-nodes-base.code",
+            "parameters": {
+                "jsCode": "const body = $input.first().json.snippet || ''; const match = body.match(/\\b(\\d{6})\\b/); return [{ code: match ? match[1] : null }];"
+            },
+            "position": [850, 300]
+        },
+        {
+            "name": "Send to AURA",
+            "type": "n8n-nodes-base.httpRequest",
+            "parameters": {
+                "method": "POST",
+                "url": "http://192.168.3.10:8765",
+                "body": "{\"node\":\"N8N\",\"event\":\"RC_LOGIN_CODE\",\"payload\":{\"code\":\"{{$json.code}}\"}}",
+                "contentType": "application/json"
+            },
+            "position": [1050, 300]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Wait for Email",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait for Email": {
+            "main": [
+                [
+                    {
+                        "node": "Read Gmail",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Read Gmail": {
+            "main": [
+                [
+                    {
+                        "node": "Extract Code",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Extract Code": {
+            "main": [
+                [
+                    {
+                        "node": "Send to AURA",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    }
+}

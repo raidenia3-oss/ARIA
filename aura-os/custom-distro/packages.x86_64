@@ -1,0 +1,166 @@
+# AURA OS Custom Distro - Paquetes base
+# Hacking + AI + Gaming
+
+# Base del sistema
+base
+base-devel
+linux
+linux-firmware
+linux-headers
+efibootmgr
+grub
+os-prober
+ntfs-3g
+networkmanager
+openssh
+git
+vim
+nano
+curl
+wget
+sudo
+
+# Sonido y video
+pipewire
+pipewire-pulse
+pipewire-alsa
+pavucontrol
+alsa-utils
+
+# Wayland / Hyprland
+hyprland
+hyprlock
+hyprpaper
+hyprcursor
+hyprwayland-protocols
+wayland
+wayland-protocols
+waybar
+wofi
+dunst
+kitty
+qt5-wayland
+qt6-wayland
+xorg-xwayland
+polkit
+gnome-keyring
+qt5ct
+qt6ct
+
+# Fuentes
+noto-fonts
+noto-fonts-emoji
+ttf-dejavu
+ttf-liberation
+
+# Desarrollo
+python
+python-pip
+python-virtualenv
+nodejs
+npm
+go
+rust
+docker
+
+# Base de datos y servicios
+postgresql
+redis
+avahi
+
+# Herramientas de red
+nmap
+nikto
+sqlmap
+john
+hydra
+hashcat
+netcat
+tcpdump
+wireshark-cli
+tor
+proxychains-ng
+whois
+dnsutils
+net-tools
+iptables-nft
+
+# Web y scraping
+curl
+wget
+gobuster
+dirbuster
+ffuf
+nikto
+
+# Ofuscacion y evasion
+shellnoob
+donut
+veil
+python-obfuscator
+
+# Movilidad y wireless
+aircrack-ng
+reaver
+wifite2
+kismet
+
+# Explotacion
+metasploit
+exploitdb
+searchsploit
+
+# Forense
+autopsy
+sleuthkit
+volatility
+
+# Reverse engineering
+ghidra
+radare2
+rizin
+gdb
+
+# Password cracking
+hashcat
+john
+hydra
+medusa
+
+# Herramientas de navegador
+firefox
+torbrowser-launcher
+
+# Gaming (ligero)
+steam
+lutris
+wine-staging
+winetricks
+gamemode
+
+# Drivers
+ mesa
+ vulkan-icd-loader
+ lib32-mesa
+ lib32-vulkan-icd-loader
+ nvidia-utils
+ nvidia-dkms
+ amd-ucode
+ intel-ucode
+
+# Utilidades
+htop
+btop
+neofetch
+fastfetch
+ranger
+ncdu
+bleachbit
+veracrypt
+keepassxc
+
+# AI/ML (ligero)
+ python-pytorch-cpu
+ python-tensorflow-cpu
+ python-transformers
+ ollama

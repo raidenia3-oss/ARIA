@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#FF00E5FF</color>
+    <color name="primaryDark">#FF1A1A2E</color>
+    <color name="accent">#FF00E5FF</color>
+    <color name="background">#FF121221</color>
+    <color name="inputBackground">#FF1A1A2E</color>
+    <color name="textPrimary">#FFFFFFFF</color>
+    <color name="textSecondary">#FFB0B0B0</color>
+    <color name="textMuted">#FF888888</color>
+    <color name="cardBackground">#FF1E1E35</color>
+    <color name="ic_launcher_background">#FF2A2A3E</color>
+    <color name="colorPrimary">#FF00E5FF</color>
+    <color name="colorPrimaryDark">#FF1A1A2E</color>
+    <color name="colorAccent">#FF00E5FF</color>
+    <color name="surface">#FF1E1E35</color>
+    <color name="borderColor">#FF333355</color>
+    <color name="accentGreen">#FF00E676</color>
+    <color name="accentRed">#FFE63940</color>
+    <color name="warning">#FFF57C00</color>
+</resources>

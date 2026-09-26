@@ -1,0 +1,147 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el gatekeeper de seguridad AURA",
+    "node_id": "mobile_node_001",
+    "db_path": "/data/data/com.termux/files/home/aura_intel.db",
+    "ssh_host": "localhost",
+    "ssh_port": 8022,
+    "ssh_user": "user",
+    "ssh_test_command": "echo 'SSH_TEST_SUCCESS'",
+    "min_battery_percent": 30,
+    "min_disk_space_mb": 100,
+    "standby_mode_script": "/data/data/com.termux/files/home/enter_standby.sh",
+    "aura_server_url": "http://localhost:3000/api/alerts",
+    "aura_auth_token": "aura_gatekeeper_token_123",
+    "command_timeout": 30,
+    "alert_timeout": 10,
+    "health_check_interval": 60,
+    "error_retry_delay": 60,
+    "standby_delay": 30,
+    "log_file": "/data/data/com.termux/files/home/gatekeeper.log",
+    "enable_ssh_validation": true,
+    "enable_battery_check": true,
+    "enable_disk_check": true,
+    "require_all_validations": true,
+    "block_on_failure": true,
+    "send_alerts_to_aura": true,
+    "register_standby_alerts": true,
+    "battery_warning_threshold": 20,
+    "disk_space_warning_threshold": 50,
+    "max_concurrent_validations": 3,
+    "validation_timeout": 15,
+    "ssh_retry_attempts": 3,
+    "ssh_retry_delay": 5,
+    "critical_battery_level": 10,
+    "critical_disk_space_mb": 20,
+    "allowed_module_paths": [
+        "/data/data/com.termux/files/home/.aura/",
+        "/data/data/com.termux/files/usr/lib/python3.10/site-packages/"
+    ],
+    "blocked_module_patterns": [
+        "exploit",
+        "rootkit",
+        "malware",
+        "backdoor",
+        "payload"
+    ],
+    "module_execution_timeout": 3600,
+    "module_memory_limit_mb": 512,
+    "module_cpu_limit_percent": 70,
+    "enable_module_sandboxing": true,
+    "sandbox_user": "nobody",
+    "sandbox_group": "nogroup",
+    "enable_network_restrictions": true,
+    "allowed_network_interfaces": ["lo", "wlan0", "eth0"],
+    "blocked_network_ports": [22, 3389, 8080],
+    "enable_telemetry": true,
+    "telemetry_interval": 3600,
+    "telemetry_endpoint": "http://localhost:3000/api/telemetry",
+    "enable_module_logging": true,
+    "module_log_retention_days": 7,
+    "enable_security_audit": true,
+    "audit_log_retention_days": 30,
+    "security_policies": {
+        "battery": {
+            "min_level": 30,
+            "warning_level": 20,
+            "critical_level": 10
+        },
+        "disk_space": {
+            "min_level_mb": 100,
+            "warning_level_mb": 50,
+            "critical_level_mb": 20
+        },
+        "ssh_connection": {
+            "required": true,
+            "retry_attempts": 3,
+            "timeout": 10
+        },
+        "network": {
+            "restrict_outbound": true,
+            "allowed_interfaces": ["lo", "wlan0"],
+            "blocked_ports": [22, 3389, 8080]
+        },
+        "execution": {
+            "timeout_seconds": 3600,
+            "memory_limit_mb": 512,
+            "cpu_limit_percent": 70,
+            "sandboxing_enabled": true
+        }
+    },
+    "alert_notification_endpoints": [
+        {
+            "type": "dashboard",
+            "url": "http://localhost:3000/api/alerts",
+            "auth_token": "aura_dashboard_token_123"
+        },
+        {
+            "type": "email",
+            "email": "security@aura-system.com",
+            "subject_prefix": "[AURA] Security Alert: "
+        },
+        {
+            "type": "slack",
+            "webhook_url": "https://hooks.slack.com/services/XXX/YYY/ZZZ",
+            "channel": "#security-alerts"
+        }
+    ],
+    "standby_mode_actions": [
+        {
+            "action": "stop_all_modules",
+            "description": "Detener todos los módulos en ejecución"
+        },
+        {
+            "action": "disable_network",
+            "description": "Deshabilitar interfaces de red no esenciales"
+        },
+        {
+            "action": "log_security_event",
+            "description": "Registrar evento de seguridad en los logs"
+        },
+        {
+            "action": "notify_operator",
+            "description": "Notificar al operador del sistema"
+        }
+    ],
+    "recovery_procedures": {
+        "low_battery": {
+            "actions": ["disable_non_essential_modules", "reduce_screen_brightness"],
+            "priority": "high"
+        },
+        "unreliable_ssh": {
+            "actions": ["retry_connection", "switch_to_local_mode"],
+            "priority": "medium"
+        },
+        "insufficient_disk_space": {
+            "actions": ["clean_temp_files", "disable_logging"],
+            "priority": "high"
+        }
+    },
+    "last_validation_timestamp": "2026-06-02T00:00:00Z",
+    "validation_history": [],
+    "security_compliance": {
+        "last_audit": "2026-06-02T00:00:00Z",
+        "compliant": true,
+        "issues": []
+    }
+}

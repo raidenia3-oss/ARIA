@@ -1,0 +1,53 @@
+{
+  "templates": [
+    {
+      "template_id": "pipe",
+      "name": "Pipeline",
+      "description": "Workflow: Pipeline",
+      "trigger": "manual",
+      "steps": [
+        {
+          "action": "step1"
+        }
+      ],
+      "schedule": null,
+      "enabled": true,
+      "version": "1.0",
+      "run_count": 1
+    },
+    {
+      "template_id": "stor",
+      "name": "Storage",
+      "description": "Workflow: Storage",
+      "trigger": "manual",
+      "steps": [
+        {
+          "action": "backup"
+        }
+      ],
+      "schedule": null,
+      "enabled": true,
+      "version": "1.0",
+      "run_count": 0
+    }
+  ],
+  "executions": [
+    {
+      "execution_id": "EXE-1789675106",
+      "template_id": "pipe",
+      "status": "completed",
+      "started_at": 1789675106.8351898,
+      "completed_at": 1789675106.8351898,
+      "results": [
+        {
+          "action": "step1",
+          "status": "ok",
+          "duration_ms": 0,
+          "result": "Action step1 completed",
+          "context": {}
+        }
+      ],
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "task_id": "agent-1789009811072-ea7d0e",
+  "objective": "explorar directorio actual",
+  "context": {},
+  "status": "cancelled",
+  "plan": [],
+  "steps": [],
+  "result": null,
+  "error": "cancelada por el operador",
+  "max_iterations": 5,
+  "created_at": 1789009811.073334,
+  "started_at": null,
+  "completed_at": 1789009811.081846,
+  "metadata": {}
+}

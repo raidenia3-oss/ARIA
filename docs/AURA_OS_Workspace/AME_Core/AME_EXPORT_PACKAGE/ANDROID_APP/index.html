@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AME Tactical Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tactical_dashboard.css">
+    <link rel="stylesheet" href="css/osint_intelligence.css">
+    <script src="js/secureStorage.js"></script>
+    <script src="js/authInterceptor.js"></script>
+    <script src="js/wsAuthInterceptor.js"></script>
+    <script src="js/biometricAuth.js"></script>
+    <script src="js/telemetry_dashboard.js"></script>
+    <script src="js/action_queue_manager.js"></script>
+    <script src="js/voice_command.js"></script>
+    <script src="js/background_notifications.js"></script>
+    <script src="js/ghost_mode_toggle.js"></script>
+    <script src="js/radar_module.js"></script>
+    <script src="js/sentinel_module.js"></script>
+    <script src="js/osint_intelligence.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        body {
+            font-family: 'Roboto Mono', monospace;
+        }
+        /* Ajuste para el manejo del teclado virtual */
+        .keyboard-safe-container {
+            height: calc(100vh - var(--header-height) - var(--bottom-bar-height) - 80px);
+            overflow-y: auto;
+            padding-bottom: var(--bottom-bar-height);
+        }
+    </style>
+</head>
+<body class="theme-stealth">
+    <div id="app" class="full-viewport">
+        <header>
+            <div class="header-content">
+                <h1>AME Tactical</h1>
+                <div id="user-info">
+                    <span id="user-name">Operador: [ID]</span>
+                    <button id="logout-btn" class="btn btn-secondary">Logout</button>
+                </div>
+                <!-- Botón de Solar Boost -->
+                <button id="solar-boost-btn" class="theme-toggle-btn">☀️</button>
+            </div>
+        </header>
+
+        <!-- Sección de Telemetría -->
+        <div class="telemetry-section">
+            <div class="telemetry-title">Telemetría de Campo</div>
+            <div class="telemetry-grid">
+                <!-- Estado de Enlace AURA -->
+                <div class="telemetry-card">
+                    <div class="icon">🔄</div>
+                    <h3>Enlace AURA</h3>
+                    <div class="status-indicator" id="aura-connection-status">EN LÍNEA</div>
+                </div>
+
+                <!-- Radar Activo -->
+                <div class="telemetry-card">
+                    <div class="icon">📶</div>
+                    <h3>Radar Activo</h3>
+                    <div class="status-indicator">Buscando...</div>
+                </div>
+
+                <!-- Nivel Acústico -->
+                <div class="telemetry-card">
+                    <div class="icon">🎤</div>
+                    <h3>Nivel Acústico</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="audio-level-fill"></div>
+                    </div>
+                    <div class="status-indicator" id="audio-level-value">0 dB</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="keyboard-safe-container">
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h2>Radar WiFi</h2>
+                    <p>Escanear redes cercanas</p>
+                    <button id="start-radar-scan" class="btn btn-primary">Iniciar Escaneo</button>
+                    <div id="radar-results" class="scrollable-content">
+                        <p>Resultados del escaneo aparecerán aquí...</p>
+                    </div>
+                </div>
+                <div class="dashboard-card">
+                    <h2>Vigilancia Acústica</h2>
+                    <p>Modo Centinela</p>
+                    <div class="sentinel-controls">
+                        <div class="input-group">
+                            <label for="sentinel-threshold">Umbral (dB)</label>
+                            <input type="number" id="sentinel-threshold" placeholder="70" min="0" max="100" value="70" class="btn btn-secondary">
+                        </div>
+                        <button id="start-sentinel-mode" class="btn btn-primary">Activar</button>
+                        <button id="stop-sentinel-mode" class="btn btn-secondary">Detener</button>
+                    </div>
+                    <div id="sentinel-status" class="status-indicator">Estado: Inactivo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra Inferior Fija -->
+        <div class="bottom-bar">
+            <input type="text" class="bottom-bar-input" id="message-input" placeholder="Escribe un comando o mensaje..." autocomplete="off" />
+            <div class="bottom-bar-actions">
+                <button class="bottom-bar-btn bottom-bar-btn-attach">📎</button>
+                <button class="bottom-bar-btn bottom-bar-btn-mic">🎤</button>
+                <button class="bottom-bar-btn bottom-bar-btn-send">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulación de datos de telemetría
+            function updateTelemetry() {
+                const connectionStatus = document.getElementById('aura-connection-status');
+                connectionStatus.textContent = "EN LÍNEA";
+                connectionStatus.style.color = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+
+                const audioLevelFill = document.getElementById('audio-level-fill');
+                const audioLevelValue = document.getElementById('audio-level-value');
+                const randomLevel = Math.floor(Math.random() * 30);
+                audioLevelFill.style.width = `${randomLevel}%`;
+                audioLevelValue.textContent = `${randomLevel} dB`;
+            }
+
+            setInterval(updateTelemetry, 2000);
+
+            // Radar Module
+            const startRadarScanBtn = document.getElementById('start-radar-scan');
+            const radarResultsDiv = document.getElementById('radar-results');
+
+            startRadarScanBtn.addEventListener('click', function() {
+                startRadarScan();
+            });
+
+            // Sentinel Module
+            const startSentinelBtn = document.getElementById('start-sentinel-mode');
+            const stopSentinelBtn = document.getElementById('stop-sentinel-mode');
+            const sentinelThresholdInput = document.getElementById('sentinel-threshold');
+            const sentinelStatusDiv = document.getElementById('sentinel-status');
+
+            startSentinelBtn.addEventListener('click', function() {
+                const threshold = parseInt(sentinelThresholdInput.value) || 70;
+                startSentinelMode(threshold);
+                sentinelStatusDiv.textContent = `Estado: Activo (Umbral: ${threshold} dB)`;
+            });
+
+            stopSentinelBtn.addEventListener('click', function() {
+                stopSentinelMode();
+                sentinelStatusDiv.textContent = 'Estado: Inactivo';
+            });
+
+            // Manejo de la barra inferior
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.querySelector('.bottom-bar-btn-send');
+            const micButton = document.querySelector('.bottom-bar-btn-mic');
+
+            sendButton.addEventListener('click', function() {
+                const message = messageInput.value.trim();
+                if (message) {
+                    console.log('Mensaje enviado:', message);
+                    messageInput.value = '';
+                }
+            });
+
+            micButton.addEventListener('click', function() {
+                console.log('Activar micrófono para comandos de voz');
+            });
+
+            // Manejo del teclado virtual para evitar que la barra inferior quede oculta
+            messageInput.addEventListener('focus', function() {
+                document.body.style.paddingBottom = '150px';
+            });
+
+            messageInput.addEventListener('blur', function() {
+                document.body.style.paddingBottom = '70px';
+            });
+
+            // Motor de adaptación lumínica
+            function applyTheme(theme) {
+                document.documentElement.className = theme;
+                localStorage.setItem('theme', theme);
+                console.log(`Tema aplicado: ${theme}`);
+            }
+
+            // Detección automática del tema del sistema
+            function detectSystemTheme() {
+                const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDarkScheme) {
+                    applyTheme('theme-stealth');
+                } else {
+                    applyTheme('theme-solar');
+                }
+            }
+
+            // Botón de Solar Boost
+            const solarBoostBtn = document.getElementById('solar-boost-btn');
+            solarBoostBtn.addEventListener('click', function() {
+                applyTheme('theme-solar');
+                console.log('Modo Solar forzado (Solar Boost)');
+            });
+
+            // Inicializar el tema
+            detectSystemTheme();
+
+            // Escuchar cambios en el tema del sistema
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (e.matches) {
+                    applyTheme('theme-stealth');
+                } else {
+                    applyTheme('theme-solar');
+                }
+            });
+
+            // Verificar tema guardado en localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            }
+        });
+    </script>
+</body>
+</html>

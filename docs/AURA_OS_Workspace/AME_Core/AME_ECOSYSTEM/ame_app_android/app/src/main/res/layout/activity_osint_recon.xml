@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OSINT Recon Suite"
+            android:textColor="@color/accent"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Inteligencia de Fuentes Abiertas - AURA Core"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:paddingBottom="8dp" />
+
+        <!-- Connection status -->
+        <TextView
+            android:id="@+id/tvConnectionStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Inicializando..."
+            android:textColor="@color/textMuted"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:paddingBottom="8dp" />
+
+        <!-- Target input -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/TacticalInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Introducir Objetivo"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTarget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textColor="@color/textPrimary"
+                android:maxLines="1"
+                android:hint="Email, username, dominio o IP" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Target type spinner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo: "
+                android:textColor="@color/textSecondary"
+                android:textSize="14sp"
+                android:layout_marginEnd="8dp" />
+
+            <Spinner
+                android:id="@+id/spinnerTargetType"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/spinner_background"
+                android:popupBackground="@color/surface" />
+        </LinearLayout>
+
+        <!-- Scan button -->
+        <Button
+            android:id="@+id/btnScan"
+            style="@style/TacticalButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="ESCANEAR OBJETIVO"
+            android:textSize="15sp"
+            android:textAllCaps="true"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Progress -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/tvScanStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/accent"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Quick action buttons row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/btnDorks"
+                style="@style/TacticalButtonOutline"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="Google Dorks"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnFramework"
+                style="@style/TacticalButtonOutline"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="Framework"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/borderColor"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Results section header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RESULTADOS"
+            style="@style/SectionTitle"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvResultsMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textMuted"
+            android:textSize="11sp"
+            android:visibility="gone" />
+
+        <!-- Results container -->
+        <LinearLayout
+            android:id="@+id/layoutResults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp" />
+
+        <!-- Dorks section (hidden by default) -->
+        <LinearLayout
+            android:id="@+id/layoutDorks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GENERADOR DE GOOGLE DORKS"
+                style="@style/SectionTitle" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/TacticalInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Termino a buscar"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDorkTerm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textColor="@color/textPrimary"
+                    android:hint="Ej: password, confidential, admin" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TacticalInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:hint="Tipo archivo">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDorkFileType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:textColor="@color/textPrimary"
+                        android:hint="pdf, doc, xls, sql..." />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/TacticalInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:hint="Sitio (opcional)">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDorkSite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:textColor="@color/textPrimary"
+                        android:hint="example.com" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnGenerateDork"
+                style="@style/TacticalButton"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="GENERAR DORK"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvDorkResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/accentGreen"
+                android:textSize="13sp"
+                android:padding="8dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- Framework section (hidden by default) -->
+        <LinearLayout
+            android:id="@+id/layoutFramework"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OSINT FRAMEWORK"
+                style="@style/SectionTitle" />
+
+            <TextView
+                android:id="@+id/tvFrameworkContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textPrimary"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

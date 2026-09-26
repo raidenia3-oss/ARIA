@@ -1,0 +1,13 @@
+{
+  "dataset_id": "c5cd623928a5",
+  "name": "lora_rest",
+  "description": "",
+  "total_entries": 3,
+  "splits": {
+    "train": 2,
+    "validation": 0,
+    "test": 1
+  },
+  "quality_threshold": 0.0,
+  "created_at": "2026-09-11T21:42:07.825563+00:00"
+}

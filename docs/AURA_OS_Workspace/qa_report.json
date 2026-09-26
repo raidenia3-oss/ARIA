@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-06-27T01:16:34.846666+00:00",
+  "modules": {
+    "env_vars": {
+      "status": "SKIP",
+      "detail": "Localhost detected; Railway variables omitted"
+    },
+    "api_status": {
+      "status": "PASS",
+      "detail": "http://localhost:8000/status -> HTTP 200"
+    },
+    "api_balance": {
+      "status": "PASS",
+      "detail": "http://localhost:8000/balance -> HTTP 200"
+    },
+    "api_activity": {
+      "status": "PASS",
+      "detail": "http://localhost:8000/activity -> HTTP 200"
+    },
+    "telegram_probe": {
+      "status": "SKIP",
+      "detail": "Localhost detected; Telegram tokens omitted"
+    },
+    "playwright_installed": {
+      "status": "PASS",
+      "detail": ""
+    },
+    "antibot_methods": {
+      "status": "PASS",
+      "detail": "inject, mask, webgl, canvas, plugins, permissions"
+    },
+    "infiltrator_methods": {
+      "status": "PASS",
+      "detail": "start, stop, smart_navigate, smart_click, smart_type, rotate_user_agent, extract_context"
+    },
+    "heal_setup": {
+      "status": "PASS",
+      "detail": "Daemon instantiated and stale worker injected"
+    },
+    "self_healing": {
+      "status": "PASS",
+      "detail": "stop=1 start=1"
+    }
+  },
+  "elapsed_s": 7.291
+}

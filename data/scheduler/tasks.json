@@ -1,0 +1,23 @@
+[
+  {
+    "task_id": "t1",
+    "name": "n",
+    "kind": "k",
+    "trigger": "interval",
+    "cron": "",
+    "interval_seconds": 60.0,
+    "priority": 5,
+    "overlap_policy": "skip",
+    "resources": [],
+    "enabled": true,
+    "status": "idle",
+    "next_run": 1789173642.2422578,
+    "last_run": null,
+    "run_count": 0,
+    "error_count": 0,
+    "last_error": "",
+    "last_result": null,
+    "metadata": {},
+    "created_at": 1789173582.2407885
+  }
+]

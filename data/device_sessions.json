@@ -1,0 +1,86 @@
+{
+  "proc-auth-dev": {
+    "device_id": "proc-auth-dev",
+    "token_hash": "4b5de570fc8cfac58067df71c49630228021ef30dc912f1fc2c74284b8ce7f9c",
+    "issued_at": 1789353179.205883,
+    "expires_at": 1789356779.205883,
+    "last_used": 1789353179.205883,
+    "permissions": [
+      "chat",
+      "execute"
+    ],
+    "status": "revoked",
+    "device_name": "Phone",
+    "approved": true
+  },
+  "pairing_temp": {
+    "device_id": "pairing_temp",
+    "token_hash": "2dad30889c794de40375256c24683f6ab612790398081dbeb7358a77a73091a3",
+    "issued_at": 1789353716.6739848,
+    "expires_at": 1789357316.6739848,
+    "last_used": 1789353716.6739848,
+    "permissions": [
+      "chat",
+      "execute"
+    ],
+    "status": "pending",
+    "device_name": "AME Pairing Temp",
+    "approved": false
+  },
+  "ame_test_1": {
+    "device_id": "ame_test_1",
+    "token_hash": "64864f04c9bf0f7d7288b6d2da93cd894ffda1e6b5e70b8d175c58b34f073a0f",
+    "issued_at": 1789353717.0433354,
+    "expires_at": 1789357317.0433354,
+    "last_used": 1789353717.0433354,
+    "permissions": [
+      "chat",
+      "execute"
+    ],
+    "status": "active",
+    "device_name": "AME Test",
+    "approved": true
+  },
+  "ame_single_1": {
+    "device_id": "ame_single_1",
+    "token_hash": "bbbc2f33c7789e8d1c075db112f21b43617481c5eae11f0587f0cc9e334ac8b2",
+    "issued_at": 1789353717.083373,
+    "expires_at": 1789357317.083373,
+    "last_used": 1789353717.083373,
+    "permissions": [
+      "chat",
+      "execute"
+    ],
+    "status": "active",
+    "device_name": "AME Test",
+    "approved": true
+  },
+  "ame_new": {
+    "device_id": "ame_new",
+    "token_hash": "20e87c6dc0efeb5536a8ad3ba99a34c2c24dfe2771e64377f34cd1310670b24c",
+    "issued_at": 1789353717.18497,
+    "expires_at": 1789357317.18497,
+    "last_used": 1789353717.18497,
+    "permissions": [
+      "chat",
+      "execute"
+    ],
+    "status": "active",
+    "device_name": "AME Mobile",
+    "approved": true
+  },
+  "ame_story_1": {
+    "device_id": "ame_story_1",
+    "token_hash": "2652840eb84f13f7baf2ed306381489bbda568c93420e978281bf8a00570c54d",
+    "issued_at": 1789353717.2306242,
+    "expires_at": 1789357317.2306242,
+    "last_used": 1789353717.2306242,
+    "permissions": [
+      "chat",
+      "execute"
+    ],
+    "status": "active",
+    "device_name": "AME Test",
+    "approved": true
+  }
+}

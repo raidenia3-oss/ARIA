@@ -1,0 +1,46 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./aura.db
+      - AURA_API_KEY=${AURA_API_KEY:-test-key}
+      - REDIS_URL=redis://redis:6379/0
+      - HF_TOKEN=${HF_TOKEN:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - LOCAL_LFM_BASE_URL=${LOCAL_LFM_BASE_URL:-http://localhost:11434}
+      - LOCAL_LFM_MODEL=${LOCAL_LFM_MODEL:-llama3.2:3b}
+      - NEXT_PUBLIC_HF_SPACE_URL=${NEXT_PUBLIC_HF_SPACE_URL:-}
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-}
+      - AURA_CORS_ORIGINS=${AURA_CORS_ORIGINS:-http://localhost:3000,http://frontend:3000}
+    volumes:
+      - ./backend/aura.db:/app/aura.db
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_AURA_BACKEND_URL=http://localhost:8000
+      - NEXT_PUBLIC_HF_SPACE_URL=${NEXT_PUBLIC_HF_SPACE_URL:-}
+      - HF_TOKEN=${HF_TOKEN:-}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  redis-data:

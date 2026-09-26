@@ -1,0 +1,26 @@
+# ── AME_Core — GitIgnore específico ──
+
+# Termux / sync temporals
+downloads_sync/
+sync_*/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Logs locales del servidor AME
+log_*.txt
+*.log
+
+# Archivos temporales de Terminal/SSH
+*.swp
+*.swo
+*~
+
+# Railway / Vercel (despliegues cloud)
+railway.json
+vercel.json
+
+# Config local del celular (no compartir)
+*/local_config.json

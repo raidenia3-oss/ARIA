@@ -1,0 +1,98 @@
+# =============================================
+# AURA - Docker Compose Producción
+# =============================================
+version: "3.9"
+
+services:
+    # Backend API (Python/FastAPI)
+    aura-backend:
+        build:
+            context: .
+            dockerfile: config/backend.Dockerfile
+        container_name: aura_backend
+        restart: unless-stopped
+        ports:
+            - "8000:8000"
+        env_file:
+            - .env
+        environment:
+            - PYTHONUNBUFFERED=1
+            - REDIS_URL=redis://aura-redis:6379/0
+        volumes:
+            # Persistencia de vectores ChromaDB y DBs
+            - aura_vector_db:/app/vector_db
+            - aura_sqlite_db:/app/sqlite
+            - ./logs:/app/logs
+        depends_on:
+            redis:
+                condition: service_healthy
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "python",
+                    "-c",
+                    "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
+                ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+        networks:
+            - aura-network
+
+    # Frontend Web (Nginx sirve build de React)
+    aura-frontend:
+        build:
+            context: .
+            dockerfile: config/frontend.Dockerfile
+        container_name: aura_frontend
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        depends_on:
+            aura-backend:
+                condition: service_healthy
+        healthcheck:
+            test: ["CMD", "wget", "-qO-", "http://localhost:80/"]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+        networks:
+            - aura-network
+
+    # Redis (cache LRU/colas/rate-limit)
+    redis:
+        image: redis:7-alpine
+        container_name: aura_redis
+        restart: unless-stopped
+        command: >
+            redis-server
+            --maxmemory 256mb
+            --maxmemory-policy allkeys-lru
+            --save 60 1
+            --appendonly no
+        volumes:
+            - aura_redis_data:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+        networks:
+            - aura-network
+
+# Volúmenes persistentes
+volumes:
+    aura_vector_db:
+        driver: local
+    aura_sqlite_db:
+        driver: local
+    aura_redis_data:
+        driver: local
+
+# Red privada interna
+networks:
+    aura-network:
+        driver: bridge

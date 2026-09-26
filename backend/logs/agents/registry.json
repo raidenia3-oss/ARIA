@@ -1,0 +1,143 @@
+{
+  "agents": {
+    "agent-e6afa4dd5bcb": {
+      "agent_id": "agent-e6afa4dd5bcb",
+      "name": "summarizer-agent",
+      "type": "plugin",
+      "description": "Resumen de textos en modo abstracto, extractivo o bullets",
+      "status": "active",
+      "created_at": 1789618718.1969464,
+      "commands": [
+        "summarize",
+        "summarize_url",
+        "extract_key_points"
+      ],
+      "capabilities": [
+        "summarization",
+        "text_analysis",
+        "extraction"
+      ],
+      "revenue": 0.0,
+      "request_count": 0
+    },
+    "agent-44dccaed352d": {
+      "agent_id": "agent-44dccaed352d",
+      "name": "qa-agent",
+      "type": "plugin",
+      "description": "Responde preguntas con base de conocimiento y confidence score",
+      "status": "active",
+      "created_at": 1789618718.2044606,
+      "commands": [
+        "ask",
+        "batch_qa",
+        "evaluate_answer"
+      ],
+      "capabilities": [
+        "question_answering",
+        "knowledge_retrieval",
+        "confidence_scoring"
+      ],
+      "revenue": 0.0,
+      "request_count": 0
+    },
+    "agent-e9500ccb953b": {
+      "agent_id": "agent-e9500ccb953b",
+      "name": "translator-agent",
+      "type": "plugin",
+      "description": "Traductor multiidioma con preservación de contexto cultural",
+      "status": "active",
+      "created_at": 1789675188.1873498,
+      "commands": [
+        "translate",
+        "detect_language",
+        "batch_translate"
+      ],
+      "capabilities": [
+        "translation",
+        "language_detection",
+        "cultural_context"
+      ],
+      "revenue": 0.0,
+      "request_count": 0
+    }
+  },
+  "configs": {
+    "agent-e6afa4dd5bcb": {
+      "name": "summarizer-agent",
+      "type": "plugin",
+      "description": "Resumen de textos en modo abstracto, extractivo o bullets",
+      "commands": [
+        "summarize",
+        "summarize_url",
+        "extract_key_points"
+      ],
+      "capabilities": [
+        "summarization",
+        "text_analysis",
+        "extraction"
+      ],
+      "settings": {
+        "quality_target": 0.9,
+        "speed_target": 3000
+      },
+      "registered_at": 1789618718.1969464
+    },
+    "agent-44dccaed352d": {
+      "name": "qa-agent",
+      "type": "plugin",
+      "description": "Responde preguntas con base de conocimiento y confidence score",
+      "commands": [
+        "ask",
+        "batch_qa",
+        "evaluate_answer"
+      ],
+      "capabilities": [
+        "question_answering",
+        "knowledge_retrieval",
+        "confidence_scoring"
+      ],
+      "settings": {
+        "quality_target": 0.88,
+        "speed_target": 1500
+      },
+      "registered_at": 1789618718.2044606
+    },
+    "agent-e9500ccb953b": {
+      "name": "translator-agent",
+      "type": "plugin",
+      "description": "Traductor multiidioma con preservación de contexto cultural",
+      "commands": [
+        "translate",
+        "detect_language",
+        "batch_translate"
+      ],
+      "capabilities": [
+        "translation",
+        "language_detection",
+        "cultural_context"
+      ],
+      "settings": {
+        "quality_target": 0.92,
+        "speed_target": 2000
+      },
+      "registered_at": 1789675188.1873498
+    }
+  },
+  "endpoints": {
+    "agent-e6afa4dd5bcb": [
+      "/api/agent/agent-e6afa4dd5bcb",
+      "/ws/agent/agent-e6afa4dd5bcb",
+      "/v1/agents/summarizer-agent"
+    ],
+    "agent-44dccaed352d": [
+      "/api/agent/agent-44dccaed352d",
+      "/ws/agent/agent-44dccaed352d",
+      "/v1/agents/qa-agent"
+    ],
+    "agent-e9500ccb953b": [
+      "/api/agent/agent-e9500ccb953b",
+      "/ws/agent/agent-e9500ccb953b",
+      "/v1/agents/translator-agent"
+    ]
+  }
+}

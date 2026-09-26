@@ -1,0 +1,49 @@
+[package]
+name = "aria-os-tauri"
+version = "5.0.0"
+description = "ARIA OS - Advanced Unified Response Agent"
+authors = ["Daniel Raiden"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "2.0", features = ["default"] }
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.11", features = ["json"] }
+
+# Local LLM inference - minimal for now
+candle-core = { version = "0.8", features = ["cuda", "metal"] }
+candle-nn = "0.8"
+candle-transformers = "0.8"
+hf-hub = "0.4"
+tokenizers = "0.15"
+safetensors = "0.5"
+
+# Whisper.cpp for STT
+whisper-rs = "0.5"
+
+# Piper TTS - using piper-rs
+piper-rs = "0.1"
+
+# Tauri plugins
+tauri-plugin-global-shortcut = "2.0"
+tauri-plugin-shell = "2.0"
+tauri-plugin-opener = "2.0"
+tauri-plugin-fs = "2.0"
+tauri-plugin-dialog = "2.0"
+tauri-plugin-clipboard-manager = "2.0"
+
+[profile.release]
+panic = "abort"
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[features]
+default = []
+cuda = ["candle-core/cuda"]
+metal = ["candle-core/metal"]

@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aura
+  labels:
+    app: aura-backend
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: aura-backend
+  template:
+    metadata:
+      labels:
+        app: aura-backend
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - aura-backend
+                topologyKey: kubernetes.io/hostname
+
+      containers:
+      - name: aura-backend
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        ports:
+        - name: http
+          containerPort: 8000
+          protocol: TCP
+
+        env:
+        {{- toYaml .Values.env | nindent 8 }}
+
+        envFrom:
+        {{- toYaml .Values.envFrom | nindent 8 }}
+
+        resources:
+        {{- toYaml .Values.resources | nindent 10 }}
+
+        livenessProbe:
+        {{- toYaml .Values.livenessProbe | nindent 10 }}
+
+        readinessProbe:
+        {{- toYaml .Values.readinessProbe | nindent 10 }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aura
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: aura-backend
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: http
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: aura-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: aura
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}

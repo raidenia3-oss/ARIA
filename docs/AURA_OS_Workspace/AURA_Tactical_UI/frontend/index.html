@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA Control Center</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;background:#080408;font-family:'Courier New',monospace;color:#F0F0F8}
+#canvas-container{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1}
+#hud{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+.corner-info{position:absolute;padding:16px;background:rgba(8,4,8,0.7);border:1px solid rgba(220,20,60,0.3);backdrop-filter:blur(4px);font-size:12px;line-height:1.6;max-width:260px}
+#stats-ram{top:16px;left:16px}
+#stats-vram{top:16px;right:16px}
+#model-info{bottom:16px;left:16px}
+.label{color:#FFD700;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;border-bottom:1px solid rgba(220,20,60,0.4);padding-bottom:4px}
+.value{color:#F0F0F8;font-size:14px;font-weight:bold}
+.active-model{color:#DC143C;text-shadow:0 0 10px rgba(220,20,60,0.8)}
+.bar-container{width:100%;height:4px;background:rgba(240,240,248,0.1);margin-top:6px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,#DC143C,#FFD700);transition:width 0.3s ease;box-shadow:0 0 8px rgba(220,20,60,0.6)}
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div id="hud">
+<div class="corner-info" id="stats-ram">
+<div class="label">System Memory</div>
+<div class="value"><span id="ram-used">0</span> / <span id="ram-total">32</span> GB</div>
+<div class="bar-container"><div class="bar-fill" id="ram-bar" style="width:0%"></div></div>
+</div>
+<div class="corner-info" id="stats-vram">
+<div class="label">GPU Memory</div>
+<div class="value"><span id="vram-used">0</span> / <span id="vram-total">12</span> GB</div>
+<div class="bar-container"><div class="bar-fill" id="vram-bar" style="width:0%"></div></div>
+</div>
+<div class="corner-info" id="model-info">
+<div class="label">Active Model</div>
+<div class="value active-model" id="model-name">Loading...</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
+</parameter>
+<task_progress>
+- [ ] Crear frontend/index.html con canvas Three.js
+- [ ] Crear frontend/app.js con escena 3D, cubos, indicadores y WebSocket
+- [ ] Verificar backend /api/swap-model y WS
+</parameter>
+</write_to_file>

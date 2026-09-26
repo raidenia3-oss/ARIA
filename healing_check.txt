@@ -1,0 +1,10 @@
+HEALING PATHS:
+/api/resilience/healing/actions
+/api/resilience/healing/faults
+/api/resilience/healing/faults/inject
+/api/resilience/healing/remediate
+/api/resilience/healing/reset
+/api/resilience/healing/scan
+/api/resilience/healing/status
+/api/resilience/healing/thresholds
+TOTAL PATHS: 817

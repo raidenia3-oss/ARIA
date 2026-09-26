@@ -1,0 +1,11 @@
+{
+    "fly_token":  "",
+    "backend_cloud_url":  "",
+    "setup_completed":  false,
+    "discord_token":  "",
+    "discord_client_id":  "",
+    "discord_guild_id":  "",
+    "created_at":  "2026-08-13 17:28:00",
+    "bot_deployed":  false,
+    "backend_deployed":  false
+}

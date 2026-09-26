@@ -1,0 +1,53 @@
+[
+  {
+    "type": "info",
+    "message": "🟢 Sistema AURA operativo",
+    "source": "system"
+  },
+  {
+    "type": "info",
+    "message": "🟡 Monitor de amenazas activo",
+    "source": "system"
+  },
+  {
+    "type": "info",
+    "message": "🔵 VOID memory sincronizada",
+    "source": "system"
+  },
+  {
+    "type": "test",
+    "message": "Test alert from test suite",
+    "timestamp": "2026-05-25T23:00:55",
+    "source": "test_source"
+  },
+  {
+    "type": "warning",
+    "message": "🎯 Nuevo objetivo añadido: test.local [domain]",
+    "timestamp": "2026-05-25T23:00:55",
+    "source": "system"
+  },
+  {
+    "type": "warning",
+    "message": "📡 PRESENCIA DETECTADA — CSI Perturbation: 54.0% | SNR: 23.3dB",
+    "timestamp": "2026-05-25T23:00:55",
+    "source": "wifi_radar"
+  },
+  {
+    "type": "test",
+    "message": "Test alert from test suite",
+    "timestamp": "2026-05-25T23:01:36",
+    "source": "test_source"
+  },
+  {
+    "type": "warning",
+    "message": "🎯 Nuevo objetivo añadido: test.local [domain]",
+    "timestamp": "2026-05-25T23:01:36",
+    "source": "system"
+  },
+  {
+    "type": "warning",
+    "message": "📡 PRESENCIA DETECTADA — CSI Perturbation: 46.1% | SNR: 21.6dB",
+    "timestamp": "2026-05-25T23:01:37",
+    "source": "wifi_radar"
+  }
+]

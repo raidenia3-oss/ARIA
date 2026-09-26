@@ -1,0 +1,29 @@
+name: "content-moderator"
+version: "1.0.0"
+author: "AURA"
+description: "Modera contenido detectando spam, hate speech y NSFW"
+
+commands:
+  - name: "moderate"
+    params: ["text", "severity_threshold"]
+    async: true
+  - name: "classify_severity"
+    params: ["text"]
+    async: false
+  - name: "suggest_fix"
+    params: ["text", "category"]
+    async: false
+
+dependencies:
+  - "openai>=1.0.0"
+  - "cv2>=4.0.0"
+
+capabilities:
+  - "content_moderation"
+  - "spam_detection"
+  - "hate_speech_detection"
+  - "nsfw_detection"
+
+settings:
+  quality_target: 0.95
+  speed_target: 500

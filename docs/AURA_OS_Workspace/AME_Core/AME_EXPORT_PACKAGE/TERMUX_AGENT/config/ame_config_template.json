@@ -1,0 +1,16 @@
+{
+  "node_id": "ame-mobile-01",
+  "node_role": "osint-recon",
+  "aura_pc_url": "ws://192.168.1.100:8765",
+  "aura_pc_http": "http://192.168.1.100:5000",
+  "telemetry_port": 9900,
+  "scan_interval_sec": 30,
+  "discord_webhook": "",
+  "ssh_port": 8022,
+  "api_key": "",
+  "modules": {
+    "osint_username": true,
+    "osint_reputation": true,
+    "wifi_telemetry": true
+  }
+}

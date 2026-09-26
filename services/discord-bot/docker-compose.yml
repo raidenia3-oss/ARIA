@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  discord-bot:
+    build: .
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+      - DISCORD_GUILD_ID=${DISCORD_GUILD_ID}
+      - DISCORD_NOTIFY_CHANNEL=${DISCORD_NOTIFY_CHANNEL:-ops}
+      - AURA_BACKEND_URL=${AURA_BACKEND_URL:-http://backend:8000}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - AURA_API_KEY=${AURA_API_KEY}
+    depends_on:
+      - redis
+    restart: unless-stopped
+    command: ["bundle", "exec", "ruby", "bot.rb"]
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+volumes:
+  redis-data:

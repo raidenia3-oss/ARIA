@@ -1,0 +1,53 @@
+# ═══════════════════════════════════════════════
+# channels.yaml — AURA Channel Dispatcher
+# Configuración de canales de notificación
+# ═══════════════════════════════════════════════
+
+version: "1.0"
+active_channels: ["discord", "whatsapp"]  # Canales habilitados
+
+# ─── DISCORD WEBHOOK ───
+discord:
+  enabled: true
+  webhook_url: "https://discord.com/api/webhooks/AQUI_VA_TU_WEBHOOK_ID/AQUI_VA_TU_WEBHOOK_TOKEN"
+  username: "AURA Notification Bridge"
+  avatar_url: ""
+  
+  # Prioridades: qué tipo de eventos van a Discord
+  routes:
+    - event_types: ["daily_summary", "task_completed", "node_joined", "system_error"]
+      severity: ["info", "medium"]
+      format: "embed"
+    - event_types: ["*"]
+      severity: ["high", "critical"]
+      format: "embed"
+
+# ─── WHATSAPP (CallMeBot API) ───
+whatsapp:
+  enabled: true
+  # Formato: https://api.callmebot.com/whatsapp.php?phone=XXXXXXXXX&text=MENSAJE&apikey=AAAAA
+  phone: "AQUI_VA_TU_NUMERO"       # Con código de país, ej: 51999888777
+  api_key: "AQUI_VA_TU_APIKEY"      # API Key de CallMeBot
+  api_base: "https://api.callmebot.com/whatsapp.php"
+  
+  # Solo eventos CRÍTICOS y de ALTA prioridad van por WhatsApp
+  routes:
+    - event_types: ["intrusion_detected", "node_disconnected"]
+      severity: ["critical", "high"]
+      format: "text"
+    - event_types: ["threat_blocked"]
+      severity: ["critical"]
+      format: "text"
+
+# ─── Rate Limiting Global ───
+rate_limit:
+  max_per_hour: 30
+  max_per_day: 200
+
+# ─── Colores para Discord Embeds ───
+discord_colors:
+  critical: 0xDC143C    # Rojo crítico
+  high: 0xFF4500         # Naranja alto
+  medium: 0xFFA500       # Amarillo medio
+  info: 0x3498DB         # Azul informativo
+  success: 0x2ECC71      # Verde éxito

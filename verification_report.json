@@ -1,0 +1,218 @@
+{
+  "summary": {
+    "timestamp": "2026-09-19T23:03:19.775708",
+    "total_tests": 37,
+    "passed": 12,
+    "failed": 20,
+    "warnings": 5,
+    "success_rate": "32.4%"
+  },
+  "results": [
+    {
+      "test": "Server running",
+      "status": "\u2705 PASS",
+      "latency_ms": 2085.995
+    },
+    {
+      "test": "Endpoint: Health check",
+      "endpoint": "/health",
+      "status": "\u2705 PASS",
+      "latency_ms": 2328.23
+    },
+    {
+      "test": "Endpoint: System status",
+      "endpoint": "/api/system/status",
+      "status": "\u2705 PASS",
+      "latency_ms": 2139.065
+    },
+    {
+      "test": "Endpoint: ARIA health",
+      "endpoint": "/api/aria/health",
+      "status": "\u2705 PASS",
+      "latency_ms": 2043.234
+    },
+    {
+      "test": "Endpoint: User profile",
+      "endpoint": "/api/aria/profile",
+      "status": "\u2705 PASS",
+      "latency_ms": 2051.8900000000003
+    },
+    {
+      "test": "Endpoint: Skills registry",
+      "endpoint": "/api/skills",
+      "status": "\u2705 PASS",
+      "latency_ms": 2333.222
+    },
+    {
+      "test": "Endpoint: Recent memory",
+      "endpoint": "/api/memory/recent",
+      "status": "\u2705 PASS",
+      "latency_ms": 2041.592
+    },
+    {
+      "test": "Endpoint: Ollama status",
+      "endpoint": "/api/ai/ollama",
+      "status": "\u2705 PASS",
+      "latency_ms": 6121.347
+    },
+    {
+      "test": "Endpoint: Plugins",
+      "endpoint": "/api/plugins",
+      "status": "\u2705 PASS",
+      "latency_ms": 2284.045
+    },
+    {
+      "test": "Endpoint: Learning rules",
+      "endpoint": "/api/learning/rules",
+      "status": "\u2705 PASS",
+      "latency_ms": 2040.993
+    },
+    {
+      "test": "Chat endpoint",
+      "status": "\u274c FAIL",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)",
+      "latency_ms": "N/A"
+    },
+    {
+      "test": "Ollama connection",
+      "status": "\u274c FAIL",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=5)"
+    },
+    {
+      "test": "Database (memory JSON)",
+      "status": "\u2705 PASS",
+      "path": "C:\\Users\\User\\Downloads\\AURA\\AURA_APP\\memory",
+      "note": "Using JSON memory store"
+    },
+    {
+      "test": "Import: AURA_APP.backend.app",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.aria_engine",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.aria_observer_v2",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.aria_suggestion_engine",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.aria_integration",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.generation.content_generator",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.ml.lora_trainer",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.connectors.base",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.aria_brain",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.training.fine_tuning_pipeline",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.resilience.circuit_breaker",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Import: AURA_APP.backend.observability.metrics_collector",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "AriaEngine instantiation",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "AriaBrain instantiation",
+      "status": "\u274c FAIL",
+      "error": "No module named 'AURA_APP'"
+    },
+    {
+      "test": "Response time: /health",
+      "status": "\u26a0\ufe0f SLOW (2720ms > 100ms)",
+      "latency_ms": 2720.059633255005,
+      "threshold_ms": 100
+    },
+    {
+      "test": "Response time: /api/system/status",
+      "status": "\u26a0\ufe0f SLOW (2452ms > 200ms)",
+      "latency_ms": 2451.6563415527344,
+      "threshold_ms": 200
+    },
+    {
+      "test": "Response time: /api/aria/health",
+      "status": "\u26a0\ufe0f SLOW (2856ms > 200ms)",
+      "latency_ms": 2856.2874794006348,
+      "threshold_ms": 200
+    },
+    {
+      "test": "Response time: /api/skills",
+      "status": "\u26a0\ufe0f SLOW (2279ms > 300ms)",
+      "latency_ms": 2279.4253826141357,
+      "threshold_ms": 300
+    },
+    {
+      "test": "Response time: /api/memory/recent",
+      "status": "\u26a0\ufe0f SLOW (2826ms > 500ms)",
+      "latency_ms": 2826.1823654174805,
+      "threshold_ms": 500
+    },
+    {
+      "test": "Memory usage",
+      "status": "\u2705 PASS",
+      "memory_mb": 0,
+      "threshold_mb": 2000
+    },
+    {
+      "test": "Chat quality: greeting",
+      "message": "Hola",
+      "status": "\u274c FAIL",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)"
+    },
+    {
+      "test": "Chat quality: time_query",
+      "message": "\u00bfQu\u00e9 hora es?",
+      "status": "\u274c FAIL",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)"
+    },
+    {
+      "test": "Chat quality: system_command",
+      "message": "Abre notepad",
+      "status": "\u274c FAIL",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)"
+    },
+    {
+      "test": "Chat quality: creative",
+      "message": "Cu\u00e9ntame un chiste",
+      "status": "\u274c FAIL",
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=60)"
+    }
+  ]
+}

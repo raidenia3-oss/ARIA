@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - '11434:11434'
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:11434/api/tags']
+      interval: 30s
+    networks:
+      - nomad-net
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - '6333:6333'
+      - '6334:6334'
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:6333/healthz']
+      interval: 30s
+    networks:
+      - nomad-net
+
+  kiwix:
+    image: kiwix/kiwix-serve:latest
+    ports:
+      - '8080:8080'
+    volumes:
+      - kiwix_data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/']
+      interval: 30s
+    networks:
+      - nomad-net
+
+  kolibri:
+    image: learningequality/kolibri:latest
+    ports:
+      - '8008:8008'
+    volumes:
+      - kolibri_data:/kolibri
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8008/']
+      interval: 30s
+    networks:
+      - nomad-net
+
+  protomaps:
+    image: protomaps/protomaps:latest
+    ports:
+      - '8100:8080'
+    volumes:
+      - protomaps_data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/']
+      interval: 30s
+    networks:
+      - nomad-net
+
+  cyberchef:
+    image: gchq/cyberchef:latest
+    ports:
+      - '8010:8080'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/']
+      interval: 30s
+    networks:
+      - nomad-net
+
+networks:
+  nomad-net:
+    driver: bridge
+
+volumes:
+  ollama_data:
+  qdrant_data:
+  kiwix_data:
+  kolibri_data:
+  protomaps_data:

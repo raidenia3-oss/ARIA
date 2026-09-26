@@ -1,0 +1,5 @@
+🛑 EMERGENCY LOCK ACTIVATED
+📅 Timestamp: 2026-05-27T14:39:39.086765
+🔴 Estado: CIRCUIT BREAKER — NO REINICIAR
+📝 Archivo: AME_Core/servidor_ame.py
+🛠️ Solución: Revisar 'proposed_upgrades.json' y 'emergency_bypass.txt'

@@ -1,0 +1,1313 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AURA // CYBER-HUD v5.0</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@300;400;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            /* ═══════════════════════════════════════════════════════════
+   AURA CYBERPUNK HUD v5.0 — Paleta Obsidian + Neón
+   ═══════════════════════════════════════════════════════════ */
+
+            :root {
+                --bg-primary: #000000;
+                --bg-secondary: #0d1117;
+                --bg-panel: rgba(13, 17, 23, 0.85);
+                --cyan: #00f0ff;
+                --cyan-dim: rgba(0, 240, 255, 0.15);
+                --magenta: #ff00e6;
+                --magenta-dim: rgba(255, 0, 230, 0.12);
+                --red: #ff003c;
+                --red-dim: rgba(255, 0, 60, 0.12);
+                --green: #00ff88;
+                --green-dim: rgba(0, 255, 136, 0.1);
+                --text-primary: #e6f1ff;
+                --text-base: var(--text-primary);
+                --text-dim: rgba(230, 241, 255, 0.5);
+                --text-cyan: #00f0ff;
+                --border-cyan: rgba(0, 240, 255, 0.25);
+                --border-magenta: rgba(255, 0, 230, 0.2);
+                --border-light: rgba(255, 255, 255, 0.08);
+                --font-display: "Share Tech Mono", monospace;
+                --font-mono: "JetBrains Mono", monospace;
+                --accent-amber: #ffbf00;
+                --accent-green-phosphor: #39ff14;
+                --accent-gradient-start: #00f0ff;
+                --accent-gradient-end: #4b0082;
+                --accent-online: #39ff14;
+                --accent-critical: #ff4500;
+                --glow-color-1: rgba(0, 240, 255, 0.25);
+                --glow-color-2: rgba(255, 0, 230, 0.2);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: var(--bg-primary);
+                color: var(--text-base);
+                font-family: var(--font-mono);
+                height: 100vh;
+                overflow: hidden;
+                position: relative;
+            }
+
+            /* ─── FONDO HEXAGONAL ─── */
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image:
+                    radial-gradient(circle at 25% 25%, var(--glow-color-1) 0%, transparent 50%),
+                    radial-gradient(circle at 75% 75%, var(--glow-color-2) 0%, transparent 50%),
+                    repeating-linear-gradient(
+                        0deg,
+                        transparent,
+                        transparent 2px,
+                        rgba(30, 30, 40, 0.05) 2px,
+                        rgba(30, 30, 40, 0.05) 3px
+                    ),
+                    repeating-linear-gradient(
+                        90deg,
+                        transparent,
+                        transparent 2px,
+                        rgba(30, 30, 40, 0.05) 2px,
+                        rgba(30, 30, 40, 0.05) 3px
+                    );
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            /* ─── SCANLINES ─── */
+            .scanlines {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.08) 2px,
+                    rgba(0, 0, 0, 0.08) 4px
+                );
+                pointer-events: none;
+                z-index: 9999;
+                animation: scanline-move 8s linear infinite;
+            }
+
+            @keyframes scanline-move {
+                0% {
+                    transform: translateY(0);
+                }
+                100% {
+                    transform: translateY(100vh);
+                }
+            }
+
+            /* ─── SCAN BAR ─── */
+            .scanbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(
+                    90deg,
+                    transparent 0%,
+                    var(--glow-color-1) 30%,
+                    var(--accent-gradient-start) 50%,
+                    var(--glow-color-1) 70%,
+                    transparent 100%
+                );
+                box-shadow: 0 0 20px var(--glow-color-1);
+                z-index: 9998;
+                animation: scanbar 4s ease-in-out infinite;
+                opacity: 0.6;
+            }
+
+            @keyframes scanbar {
+                0% {
+                    top: 0;
+                    opacity: 0.3;
+                }
+                50% {
+                    opacity: 0.8;
+                }
+                100% {
+                    top: 100%;
+                    opacity: 0.3;
+                }
+            }
+
+            /* ─── DASHBOARD LAYOUT ─── */
+            .dashboard {
+                position: relative;
+                z-index: 1;
+                display: grid;
+                grid-template-columns: 280px 1fr 280px;
+                grid-template-rows: 60px 1fr 100px;
+                gap: 12px;
+                padding: 12px;
+                height: 100vh;
+                min-width: 1200px;
+            }
+
+            /* ─── TOP BAR ─── */
+            .top-bar {
+                grid-column: 1 / -1;
+                grid-row: 1;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 24px;
+                background: var(--bg-panel);
+                border: 1px solid var(--border-light);
+                border-radius: 8px;
+                position: relative;
+                clip-path: polygon(
+                    15px 0,
+                    100% 0,
+                    100% calc(100% - 15px),
+                    calc(100% - 15px) 100%,
+                    0 100%,
+                    0 15px
+                );
+            }
+
+            .top-bar::before {
+                content: "";
+                position: absolute;
+                top: 0px; /* Ajustado */
+                left: 14px; /* Ajustado */
+                width: 4px; /* Más grande */
+                height: 4px; /* Más grande */
+                background: var(--accent-amber);
+                box-shadow: 0 0 12px var(--accent-amber);
+            }
+
+            .system-title {
+                font-family: var(--font-display);
+                font-size: 14px;
+                letter-spacing: 6px;
+                color: var(--accent-amber);
+                text-transform: uppercase;
+                text-shadow: 0 0 20px rgba(255, 191, 0, 0.5);
+            }
+
+            .system-title .blink {
+                animation: blink 1.2s step-end infinite;
+            }
+
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
+
+            .top-stats {
+                display: flex;
+                gap: 30px;
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+
+            .top-stat {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .top-stat .label {
+                color: var(--text-dim);
+                text-transform: uppercase;
+            }
+
+            .top-stat .value {
+                color: var(--accent-green-phosphor);
+                font-weight: 700;
+            }
+
+            /* ─── SIDEBAR LEFT ─── */
+            .sidebar-left {
+                grid-column: 1;
+                grid-row: 2;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                overflow: hidden;
+            }
+
+            .panel {
+                background: var(--bg-panel);
+                border: 1px solid var(--border-light);
+                padding: 16px;
+                position: relative;
+                overflow: hidden;
+                backdrop-filter: blur(8px); /* Blur más intenso para efecto glassmorphism */
+                background: rgba(13, 17, 23, 0.6); /* Fondo ligeramente más transparente */
+                border-radius: 8px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+                clip-path: polygon(
+                    15px 0,
+                    100% 0,
+                    100% calc(100% - 15px),
+                    calc(100% - 15px) 100%,
+                    0 100%,
+                    0 15px
+                );
+            }
+
+            .panel::before {
+                content: "";
+                position: absolute;
+                top: 0px;
+                left: 14px;
+                width: 4px;
+                height: 4px;
+                background: var(--accent-amber);
+                box-shadow: 0 0 10px var(--accent-amber);
+            }
+
+            .panel::after {
+                content: "";
+                position: absolute;
+                bottom: 14px;
+                right: 0px;
+                width: 4px;
+                height: 4px;
+                background: var(--accent-green-phosphor);
+                box-shadow: 0 0 10px var(--accent-green-phosphor);
+            }
+
+            .panel-title {
+                font-family: var(--font-display);
+                font-size: 10px;
+                letter-spacing: 3px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--border-light);
+            }
+
+            /* ─── TELEMETRY PANEL ─── */
+            .telemetry-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 6px 0;
+                font-size: 11px;
+                border-bottom: 1px solid rgba(0, 240, 255, 0.05);
+            }
+
+            .telemetry-item .t-label {
+                color: var(--text-dim);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .telemetry-item .t-value {
+                color: var(--accent-amber);
+                font-weight: 700;
+                font-family: var(--font-display);
+            }
+
+            /* ─── PROGRESS BARS ─── */
+            .progress-group {
+                margin: 8px 0;
+            }
+
+            .progress-header {
+                display: flex;
+                justify-content: space-between;
+                font-size: 10px;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .progress-header .p-label {
+                color: var(--text-dim);
+            }
+            .progress-header .p-value {
+                color: var(--accent-green-phosphor);
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 8px; /* Un poco más grueso */
+                background: rgba(30, 30, 40, 0.5); /* Fondo oscuro semitransparente */
+                position: relative;
+                overflow: hidden;
+                border-radius: 2px;
+            }
+
+            .progress-bar .fill {
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    var(--accent-gradient-start),
+                    var(--accent-gradient-end)
+                );
+                transition: width 1s ease;
+                box-shadow:
+                    0 0 15px var(--glow-color-1),
+                    0 0 25px var(--glow-color-2); /* Brillo más sofisticado */
+                animation: progress-pulse 2s ease-in-out infinite;
+                border-radius: 2px;
+            }
+
+            @keyframes progress-pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.7;
+                }
+            }
+
+            .progress-bar .fill.green {
+                background: linear-gradient(
+                    90deg,
+                    var(--accent-online),
+                    var(--accent-green-phosphor)
+                );
+                box-shadow: 0 0 15px var(--accent-online);
+            }
+
+            .progress-bar .fill.red {
+                background: linear-gradient(90deg, var(--accent-critical), #ff4500);
+                box-shadow: 0 0 15px var(--accent-critical);
+            }
+
+            /* ─── CENTER CORE ─── */
+            .center-core {
+                grid-column: 2;
+                grid-row: 2;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* ─── NÚCLEO / CORAZÓN DE IA ─── */
+            .orb-container {
+                position: relative;
+                width: 340px;
+                height: 340px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .orb-ring {
+                position: absolute;
+                border-radius: 50%;
+                border: 1px solid transparent;
+            }
+
+            .orb-ring.r1 {
+                width: 340px;
+                height: 340px;
+                border-color: rgba(0, 240, 255, 0.12);
+                animation: spin-slow 20s linear infinite;
+            }
+
+            .orb-ring.r2 {
+                width: 290px;
+                height: 290px;
+                border-top: 2px solid rgba(0, 240, 255, 0.3);
+                border-bottom: 2px solid rgba(255, 0, 230, 0.3);
+                animation: spin-med 15s linear infinite reverse;
+                box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+            }
+
+            .orb-ring.r3 {
+                width: 240px;
+                height: 240px;
+                border-left: 1px solid rgba(0, 240, 255, 0.2);
+                border-right: 1px solid rgba(255, 0, 230, 0.2);
+                animation: spin-fast 10s linear infinite;
+            }
+
+            .orb-ring.r4 {
+                width: 180px;
+                height: 180px;
+                border: 1px dashed rgba(0, 240, 255, 0.15);
+                animation: spin-slow 25s linear infinite reverse;
+            }
+
+            .orb-ring.r5 {
+                width: 120px;
+                height: 120px;
+                border-top: 3px solid rgba(0, 240, 255, 0.4);
+                border-bottom: 3px solid rgba(255, 0, 230, 0.4);
+                animation: spin-fast 8s linear infinite;
+                box-shadow:
+                    0 0 60px rgba(0, 240, 255, 0.15),
+                    0 0 120px rgba(255, 0, 230, 0.08);
+            }
+
+            .orb-core {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle at 35% 35%,
+                    var(--accent-gradient-start),
+                    var(--accent-gradient-end),
+                    var(--bg-secondary)
+                );
+                box-shadow:
+                    0 0 40px var(--glow-color-1),
+                    0 0 80px var(--glow-color-2),
+                    0 0 120px rgba(74, 0, 255, 0.1);
+                animation: pulse-core 3s ease-in-out infinite;
+                z-index: 10;
+            }
+
+            @keyframes pulse-core {
+                0%,
+                100% {
+                    transform: scale(1);
+                    box-shadow:
+                        0 0 40px rgba(0, 240, 255, 0.4),
+                        0 0 80px rgba(0, 240, 255, 0.2);
+                }
+                50% {
+                    transform: scale(1.08);
+                    box-shadow:
+                        0 0 60px rgba(0, 240, 255, 0.6),
+                        0 0 120px rgba(0, 240, 255, 0.3);
+                }
+            }
+
+            @keyframes spin-slow {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            @keyframes spin-med {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            @keyframes spin-fast {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* ─── STATUS TEXT BELOW ORB ─── */
+            .orb-status {
+                text-align: center;
+                margin-top: 20px;
+                z-index: 5;
+            }
+
+            .orb-status .ai-name {
+                font-family: var(--font-display);
+                font-size: 28px;
+                letter-spacing: 8px;
+                color: var(--text-cyan);
+                text-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+                text-transform: uppercase;
+            }
+
+            .orb-status .ai-sub {
+                font-size: 11px;
+                letter-spacing: 4px;
+                color: var(--text-dim);
+                margin-top: 6px;
+                text-transform: uppercase;
+            }
+
+            .orb-status .ai-sub .status-dot {
+                display: inline-block;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--green);
+                box-shadow: 0 0 10px var(--green);
+                margin-right: 6px;
+                animation: blink 1.5s step-end infinite;
+            }
+
+            /* ─── SIDEBAR RIGHT ─── */
+            .sidebar-right {
+                grid-column: 3;
+                grid-row: 2;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            /* ─── AGENT STATUS ─── */
+            .agent-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .agent-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 12px;
+                background: rgba(0, 240, 255, 0.03);
+                border: 1px solid rgba(0, 240, 255, 0.08);
+                font-size: 11px;
+                transition: all 0.3s;
+            }
+
+            .agent-item:hover {
+                background: rgba(0, 240, 255, 0.06);
+                border-color: rgba(0, 240, 255, 0.2);
+            }
+
+            .agent-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+            }
+
+            .agent-icon.cyan {
+                background: var(--cyan-dim);
+                color: var(--cyan);
+            }
+            .agent-icon.magenta {
+                background: var(--magenta-dim);
+                color: var(--magenta);
+            }
+            .agent-icon.green {
+                background: var(--green-dim);
+                color: var(--green);
+            }
+            .agent-icon.red {
+                background: var(--red-dim);
+                color: var(--red);
+            }
+
+            .agent-info {
+                flex: 1;
+            }
+
+            .agent-info .a-name {
+                color: var(--text-primary);
+                font-family: var(--font-display);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .agent-info .a-status {
+                font-size: 9px;
+                color: var(--text-dim);
+                text-transform: uppercase;
+            }
+
+            .agent-pulse {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                animation: blink 1.5s step-end infinite;
+            }
+
+            .agent-pulse.online {
+                background: var(--green);
+                box-shadow: 0 0 8px var(--green);
+            }
+            .agent-pulse.idle {
+                background: var(--text-dim);
+            }
+            .agent-pulse.busy {
+                background: var(--cyan);
+                box-shadow: 0 0 8px var(--cyan);
+                animation-duration: 0.5s;
+            }
+
+            /* ─── LOG PANEL ─── */
+            .log-panel {
+                flex: 1;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .log-content {
+                flex: 1;
+                overflow-y: auto;
+                font-size: 10px;
+                color: var(--text-dim);
+                font-family: var(--font-mono);
+                line-height: 1.8;
+            }
+
+            .log-content::-webkit-scrollbar {
+                width: 2px;
+            }
+            .log-content::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .log-content::-webkit-scrollbar-thumb {
+                background: var(--cyan-dim);
+            }
+
+            .log-entry {
+                padding: 1px 0;
+                display: flex;
+                gap: 8px;
+            }
+
+            .log-entry .log-time {
+                color: rgba(0, 240, 255, 0.4);
+                min-width: 55px;
+            }
+            .log-entry .log-msg {
+                color: var(--text-dim);
+            }
+            .log-entry .log-msg.warn {
+                color: #ffaa00;
+            }
+            .log-entry .log-msg.error {
+                color: var(--red);
+            }
+            .log-entry .log-msg.ok {
+                color: var(--green);
+            }
+
+            /* ─── BOTTOM BAR ─── */
+            .bottom-bar {
+                grid-column: 1 / -1;
+                grid-row: 3;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 24px;
+                background: var(--bg-panel);
+                border: 1px solid var(--border-cyan);
+                position: relative;
+                clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+                gap: 20px;
+            }
+
+            .bottom-bar::before {
+                content: "";
+                position: absolute;
+                top: 19px;
+                right: -1px;
+                width: 3px;
+                height: 3px;
+                background: var(--cyan);
+                box-shadow: 0 0 10px var(--cyan);
+            }
+
+            .bottom-metrics {
+                display: flex;
+                gap: 30px;
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .bottom-metrics .bm-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .bottom-metrics .bm-label {
+                color: var(--text-dim);
+            }
+            .bottom-metrics .bm-value {
+                color: var(--cyan);
+                font-weight: 700;
+                font-family: var(--font-display);
+            }
+
+            .bottom-progress {
+                flex: 1;
+                max-width: 300px;
+            }
+
+            .bottom-progress .bp-header {
+                display: flex;
+                justify-content: space-between;
+                font-size: 9px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: var(--text-dim);
+                margin-bottom: 4px;
+            }
+
+            .bottom-progress .bp-bar {
+                width: 100%;
+                height: 4px;
+                background: rgba(0, 240, 255, 0.08);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .bottom-progress .bp-fill {
+                height: 100%;
+                background: linear-gradient(90deg, var(--magenta), var(--cyan));
+                animation: progress-pulse 3s ease-in-out infinite;
+            }
+
+            /* ─── MODAL CONNECTOR STATUS ─── */
+            .connector-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                margin-top: 8px;
+            }
+
+            .connector-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 8px;
+                font-size: 9px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                background: rgba(0, 240, 255, 0.02);
+                border: 1px solid rgba(0, 240, 255, 0.06);
+            }
+
+            .connector-item .c-dot {
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+            }
+
+            .c-dot.online {
+                background: var(--green);
+                box-shadow: 0 0 6px var(--green);
+            }
+            .c-dot.offline {
+                background: var(--red);
+                box-shadow: 0 0 6px var(--red);
+            }
+            .c-dot.degraded {
+                background: #ffaa00;
+                box-shadow: 0 0 6px #ffaa00;
+            }
+
+            /* ─── MISC ─── */
+            .glow-cyan {
+                text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            }
+            .glow-magenta {
+                text-shadow: 0 0 10px rgba(255, 0, 230, 0.3);
+            }
+            .mt-8 {
+                margin-top: 8px;
+            }
+            .flex-1 {
+                flex: 1;
+            }
+
+            /* ─── RESPONSIVE ─── */
+            @media (max-width: 1400px) {
+                .dashboard {
+                    grid-template-columns: 240px 1fr 240px;
+                    gap: 10px;
+                    padding: 10px;
+                }
+                .orb-container {
+                    width: 280px;
+                    height: 280px;
+                }
+                .orb-ring.r1 {
+                    width: 280px;
+                    height: 280px;
+                }
+                .orb-ring.r2 {
+                    width: 240px;
+                    height: 240px;
+                }
+                .orb-ring.r3 {
+                    width: 200px;
+                    height: 200px;
+                }
+                .orb-ring.r4 {
+                    width: 150px;
+                    height: 150px;
+                }
+                .orb-ring.r5 {
+                    width: 100px;
+                    height: 100px;
+                }
+                .orb-core {
+                    width: 50px;
+                    height: 50px;
+                }
+            }
+
+            @media (max-width: 1100px) {
+                .dashboard {
+                    grid-template-columns: 1fr;
+                    grid-template-rows: 50px auto auto 80px;
+                }
+                .sidebar-left {
+                    grid-column: 1;
+                    grid-row: 2;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                .sidebar-left .panel {
+                    flex: 1;
+                    min-width: 200px;
+                }
+                .center-core {
+                    grid-column: 1;
+                    grid-row: 3;
+                }
+                .sidebar-right {
+                    grid-column: 1;
+                    grid-row: 4;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                .sidebar-right .panel {
+                    flex: 1;
+                    min-width: 200px;
+                }
+                .orb-container {
+                    width: 220px;
+                    height: 220px;
+                }
+                .orb-ring.r1 {
+                    width: 220px;
+                    height: 220px;
+                }
+                .orb-ring.r2 {
+                    width: 190px;
+                    height: 190px;
+                }
+                .orb-ring.r3 {
+                    width: 160px;
+                    height: 160px;
+                }
+                .orb-ring.r4 {
+                    width: 120px;
+                    height: 120px;
+                }
+                .orb-ring.r5 {
+                    width: 80px;
+                    height: 80px;
+                }
+                .orb-core {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Scanlines overlay -->
+        <div class="scanlines"></div>
+        <div class="scanbar"></div>
+
+        <!-- ═══ DASHBOARD ═══ -->
+        <div class="dashboard" id="app">
+            <!-- ═══ TOP BAR ═══ -->
+            <header class="top-bar">
+                <div class="system-title">
+                    <span class="blink">⟁</span> AURA // CYBER-HUD <span class="blink">⟁</span>
+                </div>
+                <div class="top-stats">
+                    <div class="top-stat">
+                        <span class="label">System</span>
+                        <span class="value" id="sysStatus">ACTIVATED</span>
+                    </div>
+                    <div class="top-stat">
+                        <span class="label">Uptime</span>
+                        <span class="value" id="uptimeDisplay">00:00:00</span>
+                    </div>
+                    <div class="top-stat">
+                        <span class="label">Agents</span>
+                        <span class="value" id="agentCount">5</span>
+                    </div>
+                    <div class="top-stat">
+                        <span class="label">AI Provider</span>
+                        <span class="value" id="aiProvider">OpenRouter</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ═══ SIDEBAR LEFT ═══ -->
+            <aside class="sidebar-left">
+                <!-- TELEMETRY -->
+                <div class="panel">
+                    <div class="panel-title">⏣ Telemetry</div>
+                    <div class="telemetry-item">
+                        <span class="t-label">CPU Load</span>
+                        <span class="t-value" id="cpuValue">0%</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="t-label">RAM Usage</span>
+                        <span class="t-value" id="ramValue">0%</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="t-label">Network I/O</span>
+                        <span class="t-value" id="netValue">0 Mbps</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="t-label">Disk I/O</span>
+                        <span class="t-value" id="diskValue">0%</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="t-label">Temp</span>
+                        <span class="t-value" id="tempValue">42°C</span>
+                    </div>
+                </div>
+
+                <!-- SYSTEM LOAD -->
+                <div class="panel flex-1">
+                    <div class="panel-title">⏣ System Load</div>
+                    <div class="progress-group">
+                        <div class="progress-header">
+                            <span class="p-label">CPU Core 0</span>
+                            <span class="p-value" id="cpu0Val">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="fill" id="cpu0Bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-group">
+                        <div class="progress-header">
+                            <span class="p-label">CPU Core 1</span>
+                            <span class="p-value" id="cpu1Val">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="fill" id="cpu1Bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-group">
+                        <div class="progress-header">
+                            <span class="p-label">Memory</span>
+                            <span class="p-value" id="memVal">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="fill green" id="memBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="progress-group">
+                        <div class="progress-header">
+                            <span class="p-label">Network</span>
+                            <span class="p-value" id="netLoadVal">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="fill red" id="netBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ═══ CENTER CORE ═══ -->
+            <main class="center-core">
+                <div class="orb-container">
+                    <div class="orb-ring r1"></div>
+                    <div class="orb-ring r2"></div>
+                    <div class="orb-ring r3"></div>
+                    <div class="orb-ring r4"></div>
+                    <div class="orb-ring r5"></div>
+                    <div class="orb-core"></div>
+                </div>
+
+                <div class="orb-status">
+                    <div class="ai-name">AURA</div>
+                    <div class="ai-sub">
+                        <span class="status-dot"></span>
+                        Artificial Unified Reactive Architecture
+                    </div>
+                    <div class="connector-grid" style="margin-top: 16px; max-width: 320px">
+                        <div class="connector-item">
+                            <span class="c-dot online"></span> OpenRouter
+                        </div>
+                        <div class="connector-item"><span class="c-dot online"></span> Gemini</div>
+                        <div class="connector-item">
+                            <span class="c-dot online"></span> LM Studio
+                        </div>
+                        <div class="connector-item"><span class="c-dot online"></span> MobSF</div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ═══ SIDEBAR RIGHT ═══ -->
+            <aside class="sidebar-right">
+                <!-- AGENTS -->
+                <div class="panel">
+                    <div class="panel-title">⏣ Agent Swarm</div>
+                    <div class="agent-list">
+                        <div class="agent-item">
+                            <div class="agent-icon cyan">⛭</div>
+                            <div class="agent-info">
+                                <div class="a-name">Odysseus</div>
+                                <div class="a-status">Workspace · Active</div>
+                            </div>
+                            <span class="agent-pulse online"></span>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-icon magenta">◈</div>
+                            <div class="agent-info">
+                                <div class="a-name">Rollercoin Bot</div>
+                                <div class="a-status">Automation · Idle</div>
+                            </div>
+                            <span class="agent-pulse idle"></span>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-icon green">⌘</div>
+                            <div class="agent-info">
+                                <div class="a-name">Claude Code</div>
+                                <div class="a-status">CLI Agent · Ready</div>
+                            </div>
+                            <span class="agent-pulse busy"></span>
+                        </div>
+                        <div class="agent-item">
+                            <div class="agent-icon red">⚔</div>
+                            <div class="agent-info">
+                                <div class="a-name">MobSF</div>
+                                <div class="a-status">Security · Online</div>
+                            </div>
+                            <span class="agent-pulse online"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOG CONSOLE -->
+                <div class="panel log-panel">
+                    <div class="panel-title">⏣ Event Log</div>
+                    <div class="log-content" id="logConsole">
+                        <div class="log-entry">
+                            <span class="log-time">[10:42]</span
+                            ><span class="log-msg ok">SYSTEM INITIALIZED</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[10:42]</span
+                            ><span class="log-msg ok">AI ENGINE LOADED</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[10:43]</span
+                            ><span class="log-msg">Connecting to OpenRouter...</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[10:43]</span
+                            ><span class="log-msg ok">OpenRouter API ready</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[10:44]</span
+                            ><span class="log-msg">MobSF health check...</span>
+                        </div>
+                        <div class="log-entry">
+                            <span class="log-time">[10:44]</span
+                            ><span class="log-msg ok">MobSF responding on :8000</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ═══ BOTTOM BAR ═══ -->
+            <footer class="bottom-bar">
+                <div class="bottom-metrics">
+                    <div class="bm-item">
+                        <span class="bm-label">Requests</span>
+                        <span class="bm-value" id="reqCount">1,247</span>
+                    </div>
+                    <div class="bm-item">
+                        <span class="bm-label">Tokens</span>
+                        <span class="bm-value" id="tokenCount">892K</span>
+                    </div>
+                    <div class="bm-item">
+                        <span class="bm-label">Latency</span>
+                        <span class="bm-value" id="latencyVal">24ms</span>
+                    </div>
+                    <div class="bm-item">
+                        <span class="bm-label">Errors</span>
+                        <span class="bm-value" id="errorCount" style="color: var(--red)">0</span>
+                    </div>
+                </div>
+                <div class="bottom-progress">
+                    <div class="bp-header">
+                        <span>MISSION PROGRESS</span>
+                        <span id="missionPct">73%</span>
+                    </div>
+                    <div class="bp-bar">
+                        <div class="bp-fill" id="missionBar" style="width: 73%"></div>
+                    </div>
+                </div>
+                <div class="bottom-metrics">
+                    <div class="bm-item">
+                        <span class="bm-label">Fallback</span>
+                        <span class="bm-value" style="color: var(--green)">Ready</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- ═══ JAVASCRIPT — ANIMACIONES Y SIMULACIÓN DE TELEMETRÍA ═══ -->
+        <script>
+            (function () {
+                "use strict";
+
+                // ─── Util ───
+                const $ = (id) => document.getElementById(id);
+                const rand = (min, max) => Math.random() * (max - min) + min;
+                const randInt = (min, max) => Math.floor(rand(min, max));
+
+                // ─── Uptime ───
+                let startTime = Date.now();
+                function updateUptime() {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const h = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+                    const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
+                    const s = String(elapsed % 60).padStart(2, "0");
+                    $("uptimeDisplay").textContent = `${h}:${m}:${s}`;
+                }
+                setInterval(updateUptime, 1000);
+
+                // ─── Telemetry simulation ───
+                function updateTelemetry() {
+                    const cpu = randInt(12, 78);
+                    const ram = randInt(35, 82);
+                    const cpu0 = randInt(5, 65);
+                    const cpu1 = randInt(8, 70);
+                    const net = randInt(10, 55);
+                    const disk = randInt(20, 45);
+                    const temp = randInt(38, 61);
+
+                    $("cpuValue").textContent = cpu + "%";
+                    $("ramValue").textContent = ram + "%";
+                    $("netValue").textContent = rand(0.5, 12).toFixed(1) + " Mbps";
+                    $("diskValue").textContent = disk + "%";
+                    $("tempValue").textContent = temp + "°C";
+
+                    $("cpu0Val").textContent = cpu0 + "%";
+                    $("cpu0Bar").style.width = cpu0 + "%";
+                    $("cpu1Val").textContent = cpu1 + "%";
+                    $("cpu1Bar").style.width = cpu1 + "%";
+                    $("memVal").textContent = ram + "%";
+                    $("memBar").style.width = ram + "%";
+                    $("netLoadVal").textContent = net + "%";
+                    $("netBar").style.width = net + "%";
+                }
+                setInterval(updateTelemetry, 2000);
+                updateTelemetry();
+
+                // ─── Misión progress ───
+                function updateMission() {
+                    const pct = randInt(65, 89);
+                    $("missionPct").textContent = pct + "%";
+                    $("missionBar").style.width = pct + "%";
+                }
+                setInterval(updateMission, 5000);
+
+                // ─── Log generator ───
+                const logConsole = $("logConsole");
+                const logMessages = [
+                    { msg: "Heartbeat signal OK", cls: "ok" },
+                    { msg: "Telemetry packet received", cls: "" },
+                    { msg: "AI inference completed in 142ms", cls: "" },
+                    { msg: `RAM stable at ${randInt(40, 75)}%`, cls: "" },
+                    { msg: "Provider fallback chain verified", cls: "ok" },
+                    { msg: "Agent swarm sync OK", cls: "ok" },
+                    { msg: "Network latency spike detected (48ms)", cls: "warn" },
+                    { msg: "Bifrost gateway health check passed", cls: "ok" },
+                    { msg: "MobSF scan queue: 0 pending", cls: "" },
+                    { msg: `CPU temp: ${randInt(40, 58)}°C — nominal`, cls: "" },
+                ];
+
+                function addLog() {
+                    const entry = logMessages[randInt(0, logMessages.length - 1)];
+                    const now = new Date();
+                    const time =
+                        String(now.getHours()).padStart(2, "0") +
+                        ":" +
+                        String(now.getMinutes()).padStart(2, "0") +
+                        ":" +
+                        String(now.getSeconds()).padStart(2, "0");
+                    const div = document.createElement("div");
+                    div.className = "log-entry";
+                    div.innerHTML = `<span class="log-time">[${time}]</span><span class="log-msg ${entry.cls}">${entry.msg}</span>`;
+                    logConsole.appendChild(div);
+                    if (logConsole.children.length > 50) {
+                        logConsole.removeChild(logConsole.firstChild);
+                    }
+                    logConsole.scrollTop = logConsole.scrollHeight;
+                }
+                setInterval(addLog, 3000 + randInt(0, 3000));
+
+                // ─── Metrics count simulation ───
+                let reqCount = 1247;
+                let tokenCount = 892;
+                setInterval(() => {
+                    reqCount += randInt(1, 5);
+                    tokenCount += randInt(50, 300);
+                    $("reqCount").textContent = reqCount.toLocaleString();
+                    $("tokenCount").textContent = (tokenCount / 1000).toFixed(1) + "K";
+                    $("latencyVal").textContent = randInt(12, 45) + "ms";
+                }, 3000);
+
+                // ─── Random telemetry connector status ───
+                setInterval(() => {
+                    const dots = document.querySelectorAll(".connector-item .c-dot");
+                    dots.forEach((dot) => {
+                        if (Math.random() > 0.85) {
+                            dot.className =
+                                "c-dot " + (Math.random() > 0.5 ? "degraded" : "offline");
+                            setTimeout(
+                                () => {
+                                    dot.className = "c-dot online";
+                                },
+                                3000 + randInt(0, 4000),
+                            );
+                        }
+                    });
+                }, 8000);
+
+                // ─── Agent pulse animation ───
+                setInterval(() => {
+                    const pulses = document.querySelectorAll(".agent-pulse");
+                    pulses.forEach((p) => {
+                        if (Math.random() > 0.9) {
+                            const states = ["online", "idle", "busy"];
+                            p.className = "agent-pulse " + states[randInt(0, 2)];
+                        }
+                    });
+                }, 10000);
+            })();
+        </script>
+    </body>
+</html>

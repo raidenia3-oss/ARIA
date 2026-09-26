@@ -1,0 +1,13 @@
+{
+  "sessions": [
+    {
+      "session_id": "BRW-4c9012279c9a",
+      "browser_type": "chromium",
+      "status": "idle",
+      "created_at": 1789675106.840762,
+      "last_activity": 1789675106.840762,
+      "task": null,
+      "memory_usage_mb": 0.0
+    }
+  ]
+}

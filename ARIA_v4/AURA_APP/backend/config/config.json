@@ -1,0 +1,22 @@
+{
+  "app": {
+    "name": "ARIA OS",
+    "version": "4.0.0",
+    "mode": "standalone"
+  },
+  "ai": {
+    "provider": "ollama",
+    "model": "dolphin-2_6-phi-2",
+    "temperature": 0.7,
+    "max_tokens": 2048
+  },
+  "voice": {
+    "stt": "vosk",
+    "tts": "edge-tts",
+    "language": "es"
+  },
+  "storage": {
+    "db_path": "AURA_APP/data/cerebro.db",
+    "memory_limit_mb": 100
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "snapshot": false,
+  "indexing": {
+    "provider": "mistral",
+    "model": "pixtral",
+    "mistral": {
+      "apiKey": "J0fkJ75cZIZuDzcwZmeXnJPQekB96ORn"
+    }
+  },
+  "mcp": {
+    "github": {
+      "enabled": true
+    },
+    "n8n-mcp": {
+      "enabled": true
+    }
+  }
+}

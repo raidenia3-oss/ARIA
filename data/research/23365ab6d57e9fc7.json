@@ -1,0 +1,50 @@
+{
+  "mission_id": "23365ab6d57e9fc7",
+  "question": "Historia de la inteligencia artificial y sus aplicaciones",
+  "status": "completed",
+  "sub_questions": [
+    "Historia de la inteligencia artificial sus aplicaciones"
+  ],
+  "sources": [],
+  "findings": [
+    {
+      "source_url": "seed://inline",
+      "sentence": "El aprendizaje automatico es una subdisciplina clave de la inteligencia artificial moderna y las redes neuronales profundas impulsan gran parte de sus avances.",
+      "relevance": 0.933
+    }
+  ],
+  "knowledge_map": {
+    "concepts": {
+      "aprendizaje": 1,
+      "automatico": 1,
+      "subdisciplina": 1,
+      "clave": 1,
+      "inteligencia": 1,
+      "artificial": 1,
+      "moderna": 1,
+      "redes": 1,
+      "neuronales": 1,
+      "profundas": 1,
+      "impulsan": 1,
+      "gran": 1
+    },
+    "concept_count": 12,
+    "finding_count": 1,
+    "summary": "1 fuentes sintetizadas sobre: aprendizaje automatico subdisciplina clave inteligencia artificial.",
+    "noise_ratio": 0.0,
+    "sources_indexed": 0,
+    "refinement_rounds": 0,
+    "coverage": 1.0,
+    "target_met": true
+  },
+  "refinement_rounds": 0,
+  "memory_ids": [
+    "9cf4fc007799cceb96b72c20"
+  ],
+  "error": "",
+  "created_at": 1789158913.2993848,
+  "updated_at": 1789158917.597599,
+  "metadata": {
+    "origin": "kilo_tool"
+  }
+}

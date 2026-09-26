@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "otp_required": true,
+  "email_verification": true,
+  "allowed_ips": [],
+  "otp_expiry_seconds": 300,
+  "max_attempts": 3,
+  "last_otp": "431575",
+  "last_otp_timestamp": 1780084931
+}

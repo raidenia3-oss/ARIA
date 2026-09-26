@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARIA OS v3.1 — Dashboard Integrado</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0e1a; color:#e2e8f0; font-family:'Courier New',monospace; overflow-x:hidden; min-height:100vh; }
+.dashboard { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto auto 1fr; gap:12px; padding:12px; height:100vh; }
+.header { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; padding:8px 16px; background:rgba(15,23,42,0.9); border:1px solid rgba(56,189,248,0.2); border-radius:10px; backdrop-filter:blur(10px); }
+.header h1 { font-size:16px; color:#38bdf8; text-shadow:0 0 10px rgba(56,189,248,0.5); }
+.header .status { font-size:11px; color:#10b981; padding:3px 8px; border:1px solid rgba(16,185,129,0.3); border-radius:4px; }
+.dim-panel { background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:12px; overflow-y:auto; backdrop-filter:blur(10px); }
+.dim-panel h2 { font-size:13px; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; gap:6px; }
+.dim-panel .badge { font-size:10px; padding:2px 6px; border-radius:3px; background:rgba(255,255,255,0.1); }
+.suggestion-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; }
+.suggestion-card:hover { border-color:rgba(56,189,248,0.4); background:rgba(56,189,248,0.06); transform:translateX(3px); }
+.suggestion-card .sc-title { font-size:12px; font-weight:bold; margin-bottom:4px; }
+.suggestion-card .sc-preview { font-size:11px; color:#94a3b8; line-height:1.4; }
+.suggestion-card .sc-meta { font-size:10px; color:#64748b; margin-top:6px; display:flex; gap:8px; }
+.suggestion-card .sc-expand { max-height:0; overflow:hidden; transition:max-height 0.3s; }
+.suggestion-card.expanded .sc-expand { max-height:300px; }
+.suggestion-card .sc-detail { font-size:11px; color:#cbd5e1; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05); margin-top:8px; line-height:1.5; }
+.activity-monitor { background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; }
+.activity-monitor h3 { font-size:12px; color:#38bdf8; margin-bottom:4px; }
+.activity-item { font-size:11px; padding:6px 8px; background:rgba(255,255,255,0.03); border-radius:4px; border-left:3px solid #38bdf8; }
+.activity-item .ai-time { font-size:9px; color:#64748b; }
+.activity-item .ai-text { color:#94a3b8; margin-top:2px; }
+.chat-panel { background:rgba(15,23,42,0.9); border:1px solid rgba(56,189,248,0.2); border-radius:10px; display:flex; flex-direction:column; overflow:hidden; }
+.chat-messages { flex:1; overflow-y:auto; padding:10px; display:flex; flex-direction:column; gap:6px; }
+.chat-msg { padding:6px 10px; border-radius:8px; font-size:12px; line-height:1.4; max-width:85%; }
+.chat-msg.user { align-self:flex-end; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; }
+.chat-msg.aria { align-self:flex-start; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.2); color:#e2e8f0; }
+.chat-input { display:flex; padding:8px; border-top:1px solid rgba(255,255,255,0.05); gap:6px; }
+.chat-input input { flex:1; padding:8px; background:rgba(15,23,42,0.7); border:1px solid rgba(56,189,248,0.2); border-radius:6px; color:#e2e8f0; font-family:inherit; font-size:12px; outline:none; }
+.chat-input input:focus { border-color:#38bdf8; }
+.chat-input button { padding:8px 14px; background:linear-gradient(135deg,#38bdf8,#a855f7); border:none; border-radius:6px; color:#fff; cursor:pointer; font-weight:bold; font-size:12px; font-family:inherit; }
+.orb-container { display:flex; align-items:center; justify-content:center; padding:10px; }
+.orb { width:80px; height:80px; border-radius:50%; background:radial-gradient(circle,#38bdf8,#0f172a); box-shadow:0 0 30px rgba(56,189,248,0.5); animation:orbPulse 2s ease-in-out infinite; }
+@keyframes orbPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+.mood-indicator { display:flex; align-items:center; gap:6px; padding:6px 10px; background:rgba(255,255,255,0.03); border-radius:6px; font-size:11px; }
+.mood-bar { height:4px; border-radius:2px; transition:width 0.5s; }
+.disc { border-color:rgba(56,189,248,0.3); } .disc h2 { color:#38bdf8; } .disc .suggestion-card:hover { border-color:rgba(56,189,248,0.4); }
+.cre { border-color:rgba(16,185,129,0.3); } .cre h2 { color:#10b981; } .cre .suggestion-card:hover { border-color:rgba(16,185,129,0.4); }
+.del { border-color:rgba(255,107,53,0.3); } .del h2 { color:#ff6b35; } .del .suggestion-card:hover { border-color:rgba(255,107,53,0.4); }
+.cyb { border-color:rgba(239,68,68,0.3); } .cyb h2 { color:#ef4444; } .cyb .suggestion-card:hover { border-color:rgba(239,68,68,0.4); }
+.ws-status { font-size:10px; padding:2px 6px; border-radius:3px; }
+.ws-connected { background:rgba(16,185,129,0.15); color:#10b981; }
+.ws-disconnected { background:rgba(239,68,68,0.15); color:#ef4444; }
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <div class="header">
+    <h1>💎 ARIA OS v3.1 — Dashboard Integrado</h1>
+    <span class="ws-status ws-disconnected" id="ws-status">WS: Desconectado</span>
+  </div>
+  <div class="dim-panel disc" id="panel-discovery">
+    <h2>🔵 Discovery <span class="badge">Research/Analysis</span></h2>
+    <div id="discovery-suggestions"></div>
+  </div>
+  <div class="dim-panel cre" id="panel-creation">
+    <h2>🟢 Creation <span class="badge">Story/Character/World</span></h2>
+    <div id="creation-suggestions"></div>
+  </div>
+  <div class="dim-panel del" id="panel-delivery">
+    <h2>🟠 Delivery <span class="badge">Prompt/Docs/Report</span></h2>
+    <div id="delivery-suggestions"></div>
+  </div>
+  <div class="dim-panel cyb" id="panel-cyber">
+    <h2>🔴 Cybersecurity <span class="badge">Security/Threat</span></h2>
+    <div id="cyber-suggestions"></div>
+  </div>
+  <div class="activity-monitor" id="activity-monitor" style="grid-column:1;">
+    <h3>📡 Activity Monitor</h3>
+    <div id="activity-items"><div class="activity-item"><span class="ai-time">Iniciando...</span></div></div>
+    <div style="margin-top:8px;">
+      <div class="mood-indicator" id="mood-indicator">
+        <span>😐</span>
+        <span id="mood-text">Idle</span>
+        <div class="mood-bar" id="mood-bar" style="width:0%;background:#38bdf8;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-panel" id="chat-panel" style="grid-column:2;">
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-msg aria">ARIA v3.1 activa. Observando y sugiriendo...</div>
+    </div>
+    <div class="chat-input">
+      <input id="chat-input-field" type="text" placeholder="Pregunta a ARIA...">
+      <button onclick="sendChat()">Enviar</button>
+    </div>
+  </div>
+</div>
+<script>
+const DIM_MAP = { discovery:'discovery', creation:'creation', delivery:'delivery', cyber:'cyber' };
+let suggestions = [];
+let mood = { mood:'idle', intensity:0 };
+
+function addActivity(text) {
+  const container = document.getElementById('activity-items');
+  const now = new Date();
+  const time = now.toLocaleTimeString('es-ES');
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.innerHTML = `<span class="ai-time">${time}</span><div class="ai-text">${text}</div>`;
+  container.insertBefore(item, container.firstChild);
+  if (container.children.length > 15) container.removeChild(container.lastChild);
+}
+
+function addSuggestionCard(s) {
+  const panelId = s.suggestion_type + '-suggestions';
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const card = document.createElement('div');
+  card.className = 'suggestion-card';
+  card.dataset.id = s.suggestion_id;
+  card.innerHTML = `
+    <div class="sc-title">${s.title}</div>
+    <div class="sc-preview">${s.preview}</div>
+    <div class="sc-meta"><span>${s.suggestion_type}</span><span>conf: ${(s.confidence||0.5).toFixed(0)}%</span></div>
+    <div class="sc-expand"><div class="sc-detail">${s.reason||''}<br><small>Endpoint: ${s.endpoint}</small></div></div>
+  `;
+  card.onclick = () => {
+    card.classList.toggle('expanded');
+    if (card.classList.contains('expanded')) {
+      addActivity(`Sugerencia expandida: ${s.title}`);
+    }
+  };
+  panel.insertBefore(card, panel.firstChild);
+}
+
+function updateMood(moodData) {
+  mood = moodData;
+  const indicator = document.getElementById('mood-indicator');
+  const text = document.getElementById('mood-text');
+  const bar = document.getElementById('mood-bar');
+  const icons = { explorando:'🔍', creando:'🎨', relajado:'😌', idle:'😐' };
+  indicator.querySelector('span:first-child').textContent = icons[moodData.mood] || '😐';
+  text.textContent = moodData.mood.charAt(0).toUpperCase() + moodData.mood.slice(1);
+  bar.style.width = (moodData.intensity || 0) + '%';
+  bar.style.background = moodData.mood === 'creando' ? '#10b981' : moodData.mood === 'explorando' ? '#38bdf8' : '#ff6b35';
+}
+
+function connectWS() {
+  const ws = new WebSocket('ws://localhost:8000/api/aria/g7/stream');
+  ws.onopen = () => {
+    document.getElementById('ws-status').className = 'ws-status ws-connected';
+    document.getElementById('ws-status').textContent = 'WS: Conectado';
+    addActivity('WebSocket conectado');
+  };
+  ws.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    if (data.type === 'suggestion') {
+      addSuggestionCard(data.suggestion);
+      suggestions.push(data.suggestion);
+    } else if (data.type === 'mood') {
+      updateMood(data);
+    } else if (data.type === 'activity') {
+      addActivity(data.text);
+    } else if (data.type === 'intent') {
+      addActivity(`Intención: ${data.intent} (${data.confidence}%)`);
+    }
+  };
+  ws.onclose = () => {
+    document.getElementById('ws-status').className = 'ws-status ws-disconnected';
+    document.getElementById('ws-status').textContent = 'WS: Reconectando...';
+    setTimeout(connectWS, 3000);
+  };
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input-field');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const messages = document.getElementById('chat-messages');
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg user';
+  userDiv.textContent = msg;
+  messages.appendChild(userDiv);
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+  try {
+    const res = await fetch('http://localhost:8000/api/aria/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:msg}),
+    });
+    const data = await res.json();
+    const ariaDiv = document.createElement('div');
+    ariaDiv.className = 'chat-msg aria';
+    ariaDiv.textContent = data.response || '...';
+    messages.appendChild(ariaDiv);
+  } catch(e) {
+    const errDiv = document.createElement('div');
+    errDiv.className = 'chat-msg aria';
+    errDiv.textContent = 'Error de conexión';
+    messages.appendChild(errDiv);
+  }
+  messages.scrollTop = messages.scrollHeight;
+}
+
+document.getElementById('chat-input-field').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') sendChat();
+});
+
+connectWS();
+setTimeout(() => addActivity('Dashboard v3.1 cargado'), 500);
+</script>
+</body>
+</html>

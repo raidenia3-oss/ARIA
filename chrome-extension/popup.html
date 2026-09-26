@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body { width: 260px; padding: 12px; font-family: sans-serif; background: #0b1020; color: #e6e9f0; }
+    h3 { margin: 0 0 8px; font-size: 14px; }
+    button { width: 100%; padding: 8px; margin: 6px 0; border: 0; border-radius: 6px; background: #2a6bff; color: white; cursor: pointer; }
+    button.secondary { background: #232b3a; }
+    #status { font-size: 11px; color: #8a93a6; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h3>AURA Bridge</h3>
+  <button id="sync">Sync current tab</button>
+  <button id="inject" class="secondary">Inject AURA snippet</button>
+  <button id="apps" class="secondary">List apps</button>
+  <div id="status">Disconnected</div>
+  <script src="popup.js"></script>
+</body>
+</html>

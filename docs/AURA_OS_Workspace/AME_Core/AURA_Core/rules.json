@@ -1,0 +1,172 @@
+[
+    {
+        "id": "low_battery_alert",
+        "description": "Alerta cuando la batería de un nodo móvil está por debajo del 20%. Detiene workers de alto consumo para ahorrar batería.",
+        "trigger": {
+            "device_id": "*",
+            "condition": "battery_level < 20",
+            "field": "battery_level"
+        },
+        "actions": [
+            {
+                "type": "desktop_notification",
+                "title": "¡Advertencia de Batería Crítica!",
+                "message": "El nodo {{device_id}} tiene solo {{battery_level}}% de batería. Se recomienda recargar pronto para evitar apagados inesperados."
+            },
+            {
+                "type": "stop_high_consumption_workers",
+                "device_id": "{{device_id}}",
+                "priority": "high"
+            },
+            {
+                "type": "log_message",
+                "message": "Batería crítica detectada en {{device_id}}. Workers de alto consumo detenidos."
+            }
+        ]
+    },
+    {
+        "id": "high_cpu_usage",
+        "description": "Alerta cuando el uso de CPU supera el 90%. Puede indicar sobrecarga o malware.",
+        "trigger": {
+            "device_id": "*",
+            "condition": "cpu_usage > 90",
+            "field": "cpu_usage"
+        },
+        "actions": [
+            {
+                "type": "desktop_notification",
+                "title": "¡Alerta de Alto Uso de CPU!",
+                "message": "El nodo {{device_id}} tiene un uso de CPU del {{cpu_usage}}%. Verificar actividad sospechosa."
+            },
+            {
+                "type": "log_message",
+                "message": "Alto uso de CPU detectado en {{device_id}}: {{cpu_usage}}%. Revisar logs del sistema."
+            }
+        ]
+    },
+    {
+        "id": "high_temperature_warning",
+        "description": "Alerta cuando la temperatura del dispositivo supera los 50°C. Puede indicar sobrecalentamiento.",
+        "trigger": {
+            "device_id": "*",
+            "condition": "temperature > 50",
+            "field": "temperature"
+        },
+        "actions": [
+            {
+                "type": "desktop_notification",
+                "title": "¡Advertencia de Sobrecalentamiento!",
+                "message": "El nodo {{device_id}} tiene una temperatura de {{temperature}}°C. Riesgo de daño por calor excesivo."
+            },
+            {
+                "type": "log_message",
+                "message": "Sobrecalentamiento detectado en {{device_id}}: {{temperature}}°C."
+            }
+        ]
+    },
+    {
+        "id": "connection_lost",
+        "description": "Alerta cuando un nodo pierde conexión con el servidor. Puede indicar problemas de red o batería agotada.",
+        "trigger": {
+            "device_id": "*",
+            "condition": "connection_status == 'inactive'",
+            "field": "connection_status"
+        },
+        "actions": [
+            {
+                "type": "desktop_notification",
+                "title": "¡Conexión Perdida!",
+                "message": "El nodo {{device_id}} ha perdido conexión. Verificar red y batería."
+            },
+            {
+                "type": "log_message",
+                "message": "Conexión perdida con {{device_id}}. Intentando reconectar..."
+            }
+        ]
+    },
+    {
+        "id": "low_memory_warning",
+        "description": "Alerta cuando la memoria disponible cae por debajo del 10%. Puede afectar el rendimiento.",
+        "trigger": {
+            "device_id": "*",
+            "condition": "memory_available_percent < 10",
+            "field": "memory_available_percent"
+        },
+        "actions": [
+            {
+                "type": "desktop_notification",
+                "title": "¡Advertencia de Memoria Baja!",
+                "message": "El nodo {{device_id}} tiene solo {{memory_available_percent}}% de memoria disponible. Cerrar aplicaciones no esenciales."
+            },
+            {
+                "type": "log_message",
+                "message": "Memoria baja detectada en {{device_id}}: {{memory_available_percent}}% disponible."
+            }
+        ]
+    },
+    {
+        "id": "storage_critical",
+        "description": "Alerta cuando el almacenamiento disponible cae por debajo del 5%. Riesgo de fallo del sistema.",
+        "trigger": {
+            "device_id": "*",
+            "condition": "storage_available_percent < 5",
+            "field": "storage_available_percent"
+        },
+        "actions": [
+            {
+                "type": "desktop_notification",
+                "title": "¡Alerta de Almacenamiento Crítico!",
+                "message": "El nodo {{device_id}} tiene solo {{storage_available_percent}}% de almacenamiento disponible. Limpiar espacio urgentemente."
+            },
+            {
+                "type": "log_message",
+                "message": "Almacenamiento crítico en {{device_id}}: {{storage_available_percent}}% disponible."
+            }
+        ]
+    },
+    {
+        "id": "network_issues",
+        "description": "Alerta cuando hay problemas de conectividad en la red del dispositivo.",
+        "trigger": {
+            "device_id": "*",
+            "condition": "network_status == 'unreachable' or network_status == 'degraded'",
+            "field": "network_status"
+        },
+        "actions": [
+            {
+                "type": "desktop_notification",
+                "title": "¡Problemas de Red Detectados!",
+                "message": "El nodo {{device_id}} tiene problemas de conectividad: {{network_status}}."
+            },
+            {
+                "type": "log_message",
+                "message": "Problemas de red en {{device_id}}: {{network_status}}."
+            }
+        ]
+    },
+    {
+        "id": "worker_failure",
+        "description": "Alerta cuando un worker reporta fallos consecutivos.",
+        "trigger": {
+            "device_id": "*",
+            "condition": "worker_failure_count > 3",
+            "field": "worker_failure_count"
+        },
+        "actions": [
+            {
+                "type": "desktop_notification",
+                "title": "¡Fallo de Worker Detectado!",
+                "message": "El nodo {{device_id}} ha reportado {{worker_failure_count}} fallos consecutivos en sus workers."
+            },
+            {
+                "type": "log_message",
+                "message": "Fallo crítico de workers en {{device_id}}: {{worker_failure_count}} fallos."
+            },
+            {
+                "type": "stop_high_consumption_workers",
+                "device_id": "{{device_id}}",
+                "priority": "critical"
+            }
+        ]
+    }
+]

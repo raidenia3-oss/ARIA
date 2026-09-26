@@ -1,0 +1,865 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el Data Lakehouse de AURA",
+    "node_id": "server_node_001",
+    "db_path": "/data/data/com.termux/files/home/aura_intel.db",
+    "data_lake_root": "/data/data/com.termux/files/home/aura_data_lake",
+    "index_path": "/data/data/com.termux/files/home/aura_index.db",
+    "telemetry_path": "/data/data/com.termux/files/home/aura_telemetry",
+    "osint_path": "/data/data/com.termux/files/home/aura_osint",
+    "network_path": "/data/data/com.termux/files/home/aura_network",
+    "log_path": "/data/data/com.termux/files/home/aura_logs",
+    "threat_report_path": "/data/data/com.termux/files/home/threat_reports",
+    "max_file_size_mb": 100,
+    "max_files_per_dir": 1000,
+    "index_update_interval": 3600,
+    "retention_days": 90,
+    "compression_level": 6,
+    "data_processing_interval": 60,
+    "error_retry_delay": 60,
+    "log_file": "/data/data/com.termux/files/home/data_lakehouse.log",
+    "enable_compression": true,
+    "compression_method": "zstd",
+    "enable_indexing": true,
+    "indexing_threads": 4,
+    "fuzzy_matching_threshold": 80,
+    "device_relationship_threshold": 0.7,
+    "threat_analysis_interval": 604800,
+    "security_settings": {
+        "enable_data_encryption": true,
+        "encryption_key_path": "/data/data/com.termux/files/home/data_encryption.key",
+        "enable_access_control": true,
+        "allowed_ips": ["127.0.0.1", "192.168.1.0/24"],
+        "api_rate_limit": 100,
+        "rate_limit_window": 60
+    },
+    "performance_settings": {
+        "cache_enabled": true,
+        "cache_size_mb": 512,
+        "parallel_processing": true,
+        "max_parallel_tasks": 8,
+        "query_timeout": 30,
+        "indexing_timeout": 60
+    },
+    "data_sources": {
+        "network_scans": {
+            "enabled": true,
+            "path": "/data/data/com.termux/files/home/aura_network",
+            "file_format": "json",
+            "processing_interval": 60,
+            "data_types": ["new_devices", "disappeared_devices", "changed_devices", "network_map"]
+        },
+        "osint_scans": {
+            "enabled": true,
+            "path": "/data/data/com.termux/files/home/aura_osint",
+            "file_format": "json",
+            "processing_interval": 300,
+            "data_types": ["domains", "subdomains", "vulnerabilities", "reputation_scores"]
+        },
+        "telemetry_data": {
+            "enabled": true,
+            "path": "/data/data/com.termux/files/home/aura_telemetry",
+            "file_format": "parquet",
+            "processing_interval": 300,
+            "data_types": ["node_metrics", "device_sightings", "battery_levels", "network_conditions"]
+        },
+        "system_logs": {
+            "enabled": true,
+            "path": "/data/data/com.termux/files/home/aura_logs",
+            "file_format": "json",
+            "processing_interval": 60,
+            "data_types": ["security_events", "device_activity", "system_events", "alerts"]
+        },
+        "swarm_data": {
+            "enabled": true,
+            "path": "/data/data/com.termux/files/home/aura_swarm",
+            "file_format": "json",
+            "processing_interval": 300,
+            "data_types": ["task_assignments", "task_results", "node_health", "swarm_metrics"]
+        }
+    },
+    "threat_intel_settings": {
+        "enabled": true,
+        "threat_levels": {
+            "critical": {"score": 90, "color": "#F44336", "description": "Amenaza crítica que requiere acción inmediata"},
+            "high": {"score": 70, "color": "#FF9800", "description": "Amenaza significativa que debe ser abordada pronto"},
+            "medium": {"score": 50, "color": "#FFC107", "description": "Amenaza que debe ser monitoreada"},
+            "low": {"score": 30, "color": "#4CAF50", "description": "Amenaza menor que puede ser ignorada o monitoreada ocasionalmente"},
+            "unknown": {"score": 0, "color": "#9E9E9E", "description": "Nivel de amenaza desconocido"}
+        },
+        "risk_assessment": {
+            "ip_changes_weight": 0.2,
+            "mac_changes_weight": 0.2,
+            "vendor_changes_weight": 0.1,
+            "behavior_score_weight": 0.3,
+            "threat_history_weight": 0.2,
+            "geographic_weight": 0.1,
+            "temporal_weight": 0.1
+        },
+        "reporting": {
+            "enabled": true,
+            "schedule": "weekly",
+            "recipients": ["security@aura-system.com", "threat_intel@aura-system.com"],
+            "format": "json",
+            "retention_days": 365,
+            "email_subject": "[AURA] Threat Intelligence Report - Weekly Summary",
+            "email_template": {
+                "header": "Informe Semanal de Inteligencia de Amenazas - AURA",
+                "summary_section": "Resumen Ejecutivo",
+                "devices_section": "Dispositivos de Alto Riesgo",
+                "threats_section": "Amenazas Detectadas",
+                "recommendations_section": "Recomendaciones de Acción",
+                "footer": "Este informe fue generado automáticamente por el sistema AURA. Para más información, consulte el informe completo adjunto."
+            }
+        },
+        "threat_categorization": {
+            "malware": {
+                "description": "Software malicioso detectado en dispositivos",
+                "indicators": ["anomalous_processes", "unexpected_connections", "behavioral_anomalies"],
+                "severity_mapping": {"critical": 0.9, "high": 0.7, "medium": 0.5, "low": 0.3}
+            },
+            "unauthorized_access": {
+                "description": "Acceso no autorizado a sistemas o redes",
+                "indicators": ["login_attempts", "privilege_escalation", "lateral_movement"],
+                "severity_mapping": {"critical": 0.95, "high": 0.8, "medium": 0.6, "low": 0.4}
+            },
+            "data_exfiltration": {
+                "description": "Transferencia no autorizada de datos",
+                "indicators": ["unexpected_data_transfers", "large_outbound_traffic", "suspicious_destinations"],
+                "severity_mapping": {"critical": 0.9, "high": 0.75, "medium": 0.5, "low": 0.3}
+            },
+            "rogue_devices": {
+                "description": "Dispositivos no autorizados en la red",
+                "indicators": ["unknown_mac_addresses", "unexpected_ips", "no_vendor_info"],
+                "severity_mapping": {"critical": 0.8, "high": 0.6, "medium": 0.4, "low": 0.2}
+            },
+            "insider_threats": {
+                "description": "Posibles amenazas internas",
+                "indicators": ["unusual_access_patterns", "data_access_anomalies", "policy_violations"],
+                "severity_mapping": {"critical": 0.85, "high": 0.7, "medium": 0.5, "low": 0.3}
+            },
+            "phishing_attempts": {
+                "description": "Intentos de phishing detectados",
+                "indicators": ["suspicious_emails", "malicious_links", "credential_theft_attempts"],
+                "severity_mapping": {"critical": 0.8, "high": 0.6, "medium": 0.4, "low": 0.2}
+            },
+            "configuration_issues": {
+                "description": "Problemas de configuración que podrían ser explotados",
+                "indicators": ["open_ports", "weak_encryption", "default_credentials"],
+                "severity_mapping": {"critical": 0.7, "high": 0.5, "medium": 0.3, "low": 0.1}
+            }
+        },
+        "automated_response": {
+            "enabled": true,
+            "rules": {
+                "high_risk_devices": {
+                    "actions": ["block_network_access", "notify_security_team", "quarantine_device"],
+                    "conditions": ["risk_score > 70", "threat_level in ['high', 'critical']"]
+                },
+                "rogue_devices": {
+                    "actions": ["block_network_access", "add_to_blacklist", "investigate_origin"],
+                    "conditions": ["vendor == 'Unknown'", "related_events > 3"]
+                },
+                "unusual_activity": {
+                    "actions": ["monitor_closely", "increase_logging", "notify_analyst"],
+                    "conditions": ["behavior_score > 50", "ip_changes > 2"]
+                },
+                "data_exfiltration": {
+                    "actions": ["block_outbound_connections", "notify_security_team", "freeze_accounts"],
+                    "conditions": ["unexpected_data_transfers > 0", "large_outbound_traffic > 1GB"]
+                }
+            }
+        }
+    },
+    "correlation_settings": {
+        "enabled": true,
+        "fuzzy_matching": {
+            "enabled": true,
+            "threshold": 80,
+            "mac_pattern_length": 8,
+            "ip_pattern_length": 2,
+            "mac_manufacturer_length": 6,
+            "similarity_algorithms": ["ratio", "partial_ratio", "token_sort_ratio", "token_set_ratio"],
+            "boost_factors": {
+                "mac_manufacturer_match": 1.5,
+                "ip_subnet_match": 1.3,
+                "vendor_match": 1.2,
+                "device_type_match": 1.1
+            }
+        },
+        "device_relationships": {
+            "enabled": true,
+            "min_similarity": 0.7,
+            "max_relationships": 50,
+            "relationship_types": [
+                {"type": "potential_duplicate", "description": "Dispositivos que podrían ser el mismo con MAC diferente"},
+                {"type": "shared_behavior", "description": "Dispositivos que muestran patrones de comportamiento similares"},
+                {"type": "potential_communication", "description": "Dispositivos que podrían estar comunicándose entre sí"},
+                {"type": "geographic_proximity", "description": "Dispositivos vistos en la misma ubicación geográfica"},
+                {"type": "temporal_pattern", "description": "Dispositivos con patrones temporales similares de actividad"}
+            ],
+            "evidence_types": [
+                {"type": "mac_pattern", "weight": 0.3},
+                {"type": "ip_pattern", "weight": 0.2},
+                {"type": "vendor_match", "weight": 0.15},
+                {"type": "device_type_match", "weight": 0.1},
+                {"type": "temporal_pattern", "weight": 0.1},
+                {"type": "geographic_proximity", "weight": 0.05},
+                {"type": "behavior_similarity", "weight": 0.1}
+            ]
+        },
+        "time_window_days": 30,
+        "location_threshold_km": 10,
+        "geographic_correlation": {
+            "enabled": true,
+            "distance_weight": 0.2,
+            "time_weight": 0.3,
+            "location_sources": ["gps", "wifi_triangulation", "cell_tower"],
+            "max_distance_for_relationship": 50
+        },
+        "temporal_correlation": {
+            "enabled": true,
+            "time_pattern_weight": 0.4,
+            "activity_window_hours": 24,
+            "significant_pattern_threshold": 0.7
+        }
+    },
+    "device_analysis": {
+        "risk_assessment": {
+            "enabled": true,
+            "scoring_model": {
+                "base_score": 0,
+                "ip_changes_factor": 0.2,
+                "mac_changes_factor": 0.2,
+                "vendor_changes_factor": 0.1,
+                "behavior_score_factor": 0.3,
+                "threat_history_factor": 0.2,
+                "geographic_factor": 0.1,
+                "temporal_factor": 0.1
+            },
+            "risk_score_ranges": {
+                "0-20": {"level": "low", "description": "Dispositivo normal con bajo riesgo"},
+                "21-40": {"level": "medium", "description": "Dispositivo con actividad moderada que debe ser monitoreado"},
+                "41-60": {"level": "medium-high", "description": "Dispositivo con actividad sospechosa que requiere atención"},
+                "61-80": {"level": "high", "description": "Dispositivo de alto riesgo que debe ser investigado"},
+                "81-100": {"level": "critical", "description": "Dispositivo crítico que requiere acción inmediata"}
+            },
+            "anomaly_detection": {
+                "enabled": true,
+                "thresholds": {
+                    "ip_changes": 3,
+                    "mac_changes": 2,
+                    "vendor_changes": 1,
+                    "behavior_score": 50,
+                    "activity_frequency": {
+                        "too_frequent": 300,  # Menos de 5 minutos entre avistamientos
+                        "too_infrequent": 86400  # Más de 24 horas entre avistamientos
+                    }
+                }
+            }
+        },
+        "behavior_analysis": {
+            "enabled": true,
+            "analysis_types": [
+                {"type": "temporal_patterns", "description": "Análisis de patrones temporales de actividad"},
+                {"type": "geographic_patterns", "description": "Análisis de patrones geográficos de movimiento"},
+                {"type": "network_behavior", "description": "Análisis de comportamiento en la red"},
+                {"type": "device_interactions", "description": "Análisis de interacciones con otros dispositivos"},
+                {"type": "resource_usage", "description": "Análisis de uso de recursos del dispositivo"}
+            ],
+            "pattern_detection": {
+                "enabled": true,
+                "time_patterns": {
+                    "daily": {"enabled": true, "weight": 0.3},
+                    "weekly": {"enabled": true, "weight": 0.2},
+                    "hourly": {"enabled": true, "weight": 0.2},
+                    "seasonal": {"enabled": true, "weight": 0.1}
+                },
+                "geographic_patterns": {
+                    "enabled": true,
+                    "location_types": ["home", "work", "public", "unknown"],
+                    "transition_patterns": ["home_to_work", "work_to_home", "public_locations"]
+                }
+            }
+        },
+        "device_profiling": {
+            "enabled": true,
+            "profile_attributes": [
+                {"attribute": "vendor", "weight": 0.2},
+                {"attribute": "device_type", "weight": 0.15},
+                {"attribute": "os", "weight": 0.1},
+                {"attribute": "manufacturer", "weight": 0.1},
+                {"attribute": "model", "weight": 0.1},
+                {"attribute": "typical_locations", "weight": 0.15},
+                {"attribute": "typical_activity_times", "weight": 0.15},
+                {"attribute": "network_behavior", "weight": 0.1}
+            ],
+            "profile_update_frequency": 86400  # 1 día en segundos
+        }
+    },
+    "threat_hunting": {
+        "enabled": true,
+        "hunting_rules": [
+            {
+                "id": "rogue_device_detection",
+                "name": "Detección de Dispositivos No Autorizados",
+                "description": "Detecta dispositivos con MACs desconocidas o sin información de fabricante",
+                "conditions": [
+                    {"field": "vendor", "operator": "equals", "value": "Unknown"},
+                    {"field": "related_events", "operator": "greater_than", "value": 3}
+                ],
+                "severity": "high",
+                "actions": ["block_network_access", "notify_security_team", "add_to_blacklist"]
+            },
+            {
+                "id": "unusual_activity_pattern",
+                "name": "Patrones de Actividad Inusual",
+                "description": "Detecta dispositivos con patrones de actividad anormales",
+                "conditions": [
+                    {"field": "behavior_score", "operator": "greater_than", "value": 50},
+                    {"field": "ip_changes", "operator": "greater_than", "value": 2}
+                ],
+                "severity": "medium",
+                "actions": ["monitor_closely", "increase_logging", "notify_analyst"]
+            },
+            {
+                "id": "data_exfiltration_attempt",
+                "name": "Intentos de Exfiltración de Datos",
+                "description": "Detecta posibles intentos de exfiltración de datos",
+                "conditions": [
+                    {"field": "unexpected_data_transfers", "operator": "greater_than", "value": 0},
+                    {"field": "large_outbound_traffic", "operator": "greater_than", "value": 1000}
+                ],
+                "severity": "critical",
+                "actions": ["block_outbound_connections", "notify_security_team", "freeze_accounts"]
+            },
+            {
+                "id": "lateral_movement",
+                "name": "Movimiento Lateral Detectado",
+                "description": "Detecta posibles intentos de movimiento lateral en la red",
+                "conditions": [
+                    {"field": "related_devices", "operator": "greater_than", "value": 5},
+                    {"field": "communication_patterns", "operator": "contains", "value": "lateral"}
+                ],
+                "severity": "high",
+                "actions": ["isolate_device", "notify_security_team", "analyze_communication"]
+            },
+            {
+                "id": "configuration_vulnerabilities",
+                "name": "Vulnerabilidades de Configuración",
+                "description": "Detecta dispositivos con configuraciones vulnerables",
+                "conditions": [
+                    {"field": "open_ports", "operator": "greater_than", "value": 5},
+                    {"field": "weak_encryption", "operator": "equals", "value": true}
+                ],
+                "severity": "medium",
+                "actions": ["apply_patches", "notify_admin", "monitor_closely"]
+            }
+        ],
+        "hunting_schedule": {
+            "enabled": true,
+            "frequency": "daily",
+            "start_time": "03:00",
+            "end_time": "05:00",
+            "priority_rules": ["critical", "high"]
+        },
+        "automated_investigation": {
+            "enabled": true,
+            "investigation_levels": [
+                {"level": "basic", "description": "Investigación automática básica de amenazas detectadas"},
+                {"level": "deep", "description": "Investigación profunda con análisis forense"},
+                {"level": "manual", "description": "Asignación a analistas humanos para investigación manual"}
+            ],
+            "investigation_rules": {
+                "high_risk_devices": "deep",
+                "critical_threats": "manual",
+                "medium_risk": "basic",
+                "low_risk": "none"
+            }
+        }
+    },
+    "integration_settings": {
+        "network_sensor": {
+            "enabled": true,
+            "api_endpoint": "/api/network/scan",
+            "data_types": ["new_devices", "disappeared_devices", "changed_devices"],
+            "processing_interval": 60
+        },
+        "osint_engine": {
+            "enabled": true,
+            "api_endpoint": "/api/osint/scan",
+            "data_types": ["domains", "subdomains", "vulnerabilities"],
+            "processing_interval": 300
+        },
+        "swarm_manager": {
+            "enabled": true,
+            "api_endpoint": "/api/swarm/task",
+            "data_types": ["task_assignments", "task_results", "node_health"],
+            "processing_interval": 300
+        },
+        "telemetry_manager": {
+            "enabled": true,
+            "api_endpoint": "/api/telemetry/data",
+            "data_types": ["node_metrics", "device_sightings", "battery_levels"],
+            "processing_interval": 300
+        },
+        "dashboard": {
+            "enabled": true,
+            "api_endpoint": "/api/data_lakehouse/health",
+            "update_interval": 3600,
+            "visualization_endpoint": "/api/data_lakehouse/visualization"
+        },
+        "alert_system": {
+            "enabled": true,
+            "api_endpoint": "/api/alerts/threat",
+            "severity_mapping": {
+                "critical": 1,
+                "high": 2,
+                "medium": 3,
+                "low": 4
+            }
+        }
+    },
+    "visualization_settings": {
+        "enabled": true,
+        "visualization_types": [
+            {"type": "device_network", "description": "Visualización de la red de dispositivos y sus relaciones"},
+            {"type": "threat_map", "description": "Mapa de amenazas detectadas y su severidad"},
+            {"type": "activity_trends", "description": "Tendencias de actividad de dispositivos a lo largo del tiempo"},
+            {"type": "risk_distribution", "description": "Distribución de puntuaciones de riesgo entre dispositivos"},
+            {"type": "geographic_map", "description": "Mapa geográfico de dispositivos y su actividad"}
+        ],
+        "graph_visualization": {
+            "enabled": true,
+            "layout": "force",
+            "physics": {
+                "enabled": true,
+                "solver": "forceAtlas2Based",
+                "timestep": 0.5,
+                "strongGravityMode": true,
+                "gravitationalConstant": -50,
+                "centralGravity": 0.01,
+                "springLength": 100,
+                "springConstant": 0.08,
+                "damping": 0.9
+            },
+            "node_size_range": [5, 20],
+            "connection_width_range": [1, 5],
+            "color_schemes": {
+                "device_status": {
+                    "online": "#4CAF50",
+                    "busy": "#FFC107",
+                    "degraded": "#FF5722",
+                    "offline": "#F44336",
+                    "maintenance": "#9E9E9E"
+                },
+                "threat_level": {
+                    "critical": "#F44336",
+                    "high": "#FF9800",
+                    "medium": "#FFC107",
+                    "low": "#4CAF50",
+                    "unknown": "#9E9E9E"
+                },
+                "relationship_type": {
+                    "potential_duplicate": "#9C27B0",
+                    "shared_behavior": "#2196F3",
+                    "potential_communication": "#FF5722",
+                    "geographic_proximity": "#4CAF50",
+                    "temporal_pattern": "#795548"
+                }
+            },
+            "update_interval": 60
+        },
+        "time_series_visualization": {
+            "enabled": true,
+            "metrics": [
+                {"metric": "device_activity", "description": "Número de dispositivos activos por hora"},
+                {"metric": "threat_levels", "description": "Distribución de niveles de amenaza por hora"},
+                {"metric": "risk_scores", "description": "Puntuaciones de riesgo promedio por hora"},
+                {"metric": "network_traffic", "description": "Tráfico de red por hora"}
+            ],
+            "time_ranges": ["hourly", "daily", "weekly", "monthly"]
+        },
+        "geographic_visualization": {
+            "enabled": true,
+            "map_provider": "leaflet",
+            "location_sources": ["gps", "wifi_triangulation", "cell_tower"],
+            "heatmap_enabled": true,
+            "cluster_enabled": true,
+            "device_markers": {
+                "normal": {"color": "#4CAF50", "radius": 5},
+                "high_risk": {"color": "#FF9800", "radius": 8},
+                "critical": {"color": "#F44336", "radius": 10}
+            }
+        }
+    },
+    "machine_learning": {
+        "enabled": true,
+        "ml_models": {
+            "anomaly_detection": {
+                "enabled": true,
+                "model_type": "isolation_forest",
+                "training_data": "/data/data/com.termux/files/home/ml_models/anomaly_detection.pkl",
+                "retrain_interval": 86400,
+                "feature_importance": {
+                    "ip_changes": 0.25,
+                    "mac_changes": 0.2,
+                    "behavior_score": 0.2,
+                    "activity_frequency": 0.15,
+                    "geographic_variation": 0.1,
+                    "temporal_patterns": 0.1
+                }
+            },
+            "device_classification": {
+                "enabled": true,
+                "model_type": "random_forest",
+                "training_data": "/data/data/com.termux/files/home/ml_models/device_classification.pkl",
+                "retrain_interval": 604800,
+                "features": [
+                    "vendor", "device_type", "os", "manufacturer",
+                    "model", "typical_locations", "typical_activity_times"
+                ]
+            },
+            "threat_prediction": {
+                "enabled": true,
+                "model_type": "xgboost",
+                "training_data": "/data/data/com.termux/files/home/ml_models/threat_prediction.pkl",
+                "retrain_interval": 2592000,
+                "input_features": [
+                    "risk_score", "behavior_score", "ip_changes",
+                    "mac_changes", "vendor_changes", "related_events",
+                    "activity_frequency", "geographic_variation"
+                ],
+                "output_classes": ["low", "medium", "high", "critical"]
+            }
+        },
+        "model_training": {
+            "enabled": true,
+            "training_schedule": "weekly",
+            "training_window_days": 30,
+            "validation_set_size": 0.2,
+            "performance_metrics": ["precision", "recall", "f1_score", "roc_auc"],
+            "model_versioning": true,
+            "max_model_versions": 5
+        },
+        "feature_engineering": {
+            "enabled": true,
+            "feature_generation": [
+                {"type": "temporal_features", "description": "Generación de características temporales"},
+                {"type": "geographic_features", "description": "Generación de características geográficas"},
+                {"type": "network_features", "description": "Generación de características de red"},
+                {"type": "behavioral_features", "description": "Generación de características de comportamiento"}
+            ],
+            "feature_selection": {
+                "enabled": true,
+                "method": "recursive_feature_elimination",
+                "threshold": 0.95
+            }
+        }
+    },
+    "api_settings": {
+        "enabled": true,
+        "api_version": "v1",
+        "base_url": "/api/data_lakehouse",
+        "endpoints": [
+            {
+                "path": "/devices",
+                "method": "GET",
+                "description": "Buscar dispositivos por MAC, IP u otros criterios",
+                "parameters": [
+                    {"name": "mac", "type": "string", "required": false},
+                    {"name": "ip", "type": "string", "required": false},
+                    {"name": "vendor", "type": "string", "required": false},
+                    {"name": "fuzzy", "type": "boolean", "required": false, "default": true}
+                ]
+            },
+            {
+                "path": "/devices/{device_id}/relationships",
+                "method": "GET",
+                "description": "Obtener relaciones de un dispositivo específico",
+                "parameters": [
+                    {"name": "device_id", "type": "integer", "required": true, "in": "path"},
+                    {"name": "min_strength", "type": "number", "required": false, "default": 0.5}
+                ]
+            },
+            {
+                "path": "/threat-intel",
+                "method": "GET",
+                "description": "Obtener inteligencia de amenazas",
+                "parameters": [
+                    {"name": "threat_type", "type": "string", "required": false},
+                    {"name": "severity", "type": "string", "required": false},
+                    {"name": "time_range", "type": "string", "required": false, "description": "Ej: 'last_7_days'"}
+                ]
+            },
+            {
+                "path": "/reports/threat",
+                "method": "GET",
+                "description": "Generar informe de amenazas",
+                "parameters": [
+                    {"name": "start_date", "type": "string", "required": false, "format": "date"},
+                    {"name": "end_date", "type": "string", "required": false, "format": "date"},
+                    {"name": "format", "type": "string", "required": false, "default": "json"}
+                ]
+            },
+            {
+                "path": "/visualization/graph",
+                "method": "GET",
+                "description": "Obtener datos para visualización de grafo",
+                "parameters": [
+                    {"name": "time_range", "type": "string", "required": false, "default": "last_7_days"},
+                    {"name": "filter", "type": "string", "required": false, "description": "Filtro para dispositivos"}
+                ]
+            },
+            {
+                "path": "/visualization/time-series",
+                "method": "GET",
+                "description": "Obtener datos para visualización de series temporales",
+                "parameters": [
+                    {"name": "metric", "type": "string", "required": false, "description": "Métrica a visualizar"},
+                    {"name": "time_range", "type": "string", "required": false, "default": "last_30_days"}
+                ]
+            },
+            {
+                "path": "/data",
+                "method": "POST",
+                "description": "Ingresar nuevos datos al Data Lakehouse",
+                "parameters": [
+                    {"name": "data_type", "type": "string", "required": true, "enum": ["network", "osint", "telemetry", "logs"]},
+                    {"name": "data", "type": "object", "required": true, "description": "Datos a almacenar"}
+                ]
+            }
+        ],
+        "authentication": {
+            "enabled": true,
+            "auth_method": "api_key",
+            "api_key": "aura_data_lakehouse_api_key_123",
+            "rate_limits": {
+                "requests_per_minute": 100,
+                "burst_limit": 50
+            }
+        },
+        "caching": {
+            "enabled": true,
+            "cache_duration": 300,
+            "cache_size": 1000,
+            "cache_policies": {
+                "/devices": {"duration": 600},
+                "/threat-intel": {"duration": 1800},
+                "/reports/threat": {"duration": 3600},
+                "/visualization/*": {"duration": 300}
+            }
+        }
+    },
+    "alerting_system": {
+        "enabled": true,
+        "alert_types": [
+            {"type": "device_anomaly", "description": "Comportamiento anómalo detectado en un dispositivo"},
+            {"type": "threat_detection", "description": "Amenaza potencial detectada"},
+            {"type": "device_relationship", "description": "Relación sospechosa entre dispositivos"},
+            {"type": "data_exfiltration", "description": "Posible exfiltración de datos detectada"},
+            {"type": "configuration_issue", "description": "Problema de configuración que podría ser explotado"},
+            {"type": "unauthorized_access", "description": "Intento de acceso no autorizado detectado"}
+        ],
+        "notification_channels": [
+            {"type": "email", "enabled": true, "recipients": ["security@aura-system.com", "threat_intel@aura-system.com"]},
+            {"type": "slack", "enabled": true, "webhook_url": "https://hooks.slack.com/services/XXX/YYY/ZZZ", "channel": "#security-alerts"},
+            {"type": "dashboard", "enabled": true, "endpoint": "/api/alerts/notifications"},
+            {"type": "sms", "enabled": false, "phone_numbers": ["+51987654321"]},
+            {"type": "push_notification", "enabled": true, "endpoint": "/api/notifications/push"}
+        ],
+        "severity_mapping": {
+            "critical": {"priority": 1, "notification_channels": ["email", "slack", "dashboard", "push_notification"]},
+            "high": {"priority": 2, "notification_channels": ["email", "slack", "dashboard"]},
+            "medium": {"priority": 3, "notification_channels": ["email", "dashboard"]},
+            "low": {"priority": 4, "notification_channels": ["dashboard"]}
+        },
+        "alert_escalation": {
+            "enabled": true,
+            "escalation_rules": [
+                {
+                    "condition": "severity == 'critical' && no_response_within_minutes(30)",
+                    "actions": ["notify_security_team_lead", "escalate_to_incident_manager"]
+                },
+                {
+                    "condition": "severity == 'high' && no_response_within_minutes(60)",
+                    "actions": ["notify_security_team_lead"]
+                },
+                {
+                    "condition": "device.risk_score > 80 && device.threat_level == 'critical'",
+                    "actions": ["quarantine_device", "notify_all_analysts"]
+                }
+            ],
+            "response_time_tracking": {
+                "enabled": true,
+                "acknowledgment_timeout": 1440,
+                "resolution_timeout": 43200
+            }
+        },
+        "alert_suppression": {
+            "enabled": true,
+            "suppression_rules": [
+                {
+                    "type": "duplicate_alerts",
+                    "description": "Suprimir alertas duplicadas de los mismos dispositivos",
+                    "window_minutes": 30,
+                    "threshold": 3
+                },
+                {
+                    "type": "low_severity_noise",
+                    "description": "Suprimir alertas de baja severidad que no requieren acción",
+                    "severity_level": "low",
+                    "frequency_threshold": 10
+                },
+                {
+                    "type": "known_false_positives",
+                    "description": "Suprimir alertas de dispositivos conocidos como seguros",
+                    "device_list": ["known_secure_device_001", "known_secure_device_002"]
+                }
+            ]
+        }
+    },
+    "data_quality": {
+        "enabled": true,
+        "data_validation": {
+            "enabled": true,
+            "validation_rules": [
+                {"field": "mac_address", "rule": "mac_address_format", "error_message": "Formato de MAC inválido"},
+                {"field": "ip_address", "rule": "ip_address_format", "error_message": "Formato de IP inválido"},
+                {"field": "timestamp", "rule": "datetime_format", "error_message": "Formato de fecha inválido"},
+                {"field": "risk_score", "rule": "numeric_range", "min": 0, "max": 100, "error_message": "Puntuación de riesgo fuera de rango"},
+                {"field": "vendor", "rule": "non_empty_string", "error_message": "Vendor no puede estar vacío"}
+            ],
+            "validation_frequency": "hourly"
+        },
+        "data_cleaning": {
+            "enabled": true,
+            "cleaning_rules": [
+                {
+                    "rule": "remove_duplicate_records",
+                    "description": "Eliminar registros duplicados basados en MAC y timestamp",
+                    "frequency": "daily"
+                },
+                {
+                    "rule": "correct_invalid_formats",
+                    "description": "Corregir formatos inválidos en campos críticos",
+                    "frequency": "hourly"
+                },
+                {
+                    "rule": "fill_missing_values",
+                    "description": "Completar valores faltantes con datos por defecto",
+                    "fields": ["vendor", "device_type", "os"],
+                    "default_values": {
+                        "vendor": "Unknown",
+                        "device_type": "unknown",
+                        "os": "unknown"
+                    },
+                    "frequency": "daily"
+                },
+                {
+                    "rule": "normalize_data",
+                    "description": "Normalizar datos para consistencia",
+                    "actions": [
+                        {"field": "mac_address", "action": "uppercase"},
+                        {"field": "ip_address", "action": "standardize_format"},
+                        {"field": "timestamp", "action": "standardize_format"}
+                    ],
+                    "frequency": "hourly"
+                }
+            ]
+        },
+        "data_profiling": {
+            "enabled": true,
+            "profiling_frequency": "weekly",
+            "metrics_to_collect": [
+                "record_count",
+                "missing_values_percentage",
+                "duplicate_records_percentage",
+                "outlier_percentage",
+                "data_distribution",
+                "data_quality_score"
+            ],
+            "quality_thresholds": {
+                "missing_values": 5,
+                "duplicates": 1,
+                "outliers": 3
+            }
+        },
+        "data_enrichment": {
+            "enabled": true,
+            "enrichment_sources": [
+                {
+                    "source": "mac_vendor_database",
+                    "description": "Base de datos de fabricantes de MAC",
+                    "update_frequency": "monthly",
+                    "fields": ["vendor", "manufacturer"]
+                },
+                {
+                    "source": "threat_intelligence_feeds",
+                    "description": "Alimentación de inteligencia de amenazas",
+                    "update_frequency": "daily",
+                    "fields": ["threat_level", "risk_score"]
+                },
+                {
+                    "source": "geolocation_database",
+                    "description": "Base de datos de geolocalización",
+                    "update_frequency": "weekly",
+                    "fields": ["location"]
+                },
+                {
+                    "source": "device_fingerprint_database",
+                    "description": "Base de datos de huellas digitales de dispositivos",
+                    "update_frequency": "monthly",
+                    "fields": ["device_type", "os", "model"]
+                }
+            ],
+            "enrichment_rules": [
+                {
+                    "rule": "enrich_mac_with_vendor",
+                    "description": "Enriquecer registros con información de fabricante de MAC",
+                    "fields": ["vendor", "manufacturer"]
+                },
+                {
+                    "rule": "update_threat_intel",
+                    "description": "Actualizar información de inteligencia de amenazas",
+                    "fields": ["threat_level", "risk_score"]
+                },
+                {
+                    "rule": "geocode_locations",
+                    "description": "Geocodificar ubicaciones cuando sea posible",
+                    "fields": ["location"]
+                },
+                {
+                    "rule": "classify_device_types",
+                    "description": "Clasificar tipos de dispositivos cuando no estén definidos",
+                    "fields": ["device_type"]
+                }
+            ]
+        }
+    },
+    "last_updated": "2026-06-02T00:00:00Z",
+    "system_status": {
+        "last_maintenance": "2026-06-02T00:00:00Z",
+        "next_maintenance": "2026-06-09T00:00:00Z",
+        "data_volume": {
+            "total": 0,
+            "telemetry": 0,
+            "osint": 0,
+            "network": 0,
+            "logs": 0,
+            "reports": 0
+        },
+        "processing_stats": {
+            "records_processed": 0,
+            "records_failed": 0,
+            "processing_time_avg": 0,
+            "system_uptime": 0
+        },
+        "health_metrics": {
+            "database_health": "good",
+            "indexing_performance": "good",
+            "storage_availability": "good",
+            "system_resources": "good"
+        }
+    }
+}

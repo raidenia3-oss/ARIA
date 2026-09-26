@@ -1,0 +1,12 @@
+[ARIA v4.0] Desktop Standalone — Sin HTTP, Sin servidores
+[ARIA v4.0] Iniciando UI + Logic (IPC pipes)...
+[UI] Starting QApplication...
+[UI] QApplication created
+[UI] IPC started, healthy=True
+[UI] ChatWindow created
+[UI] Skills loaded
+[UI] OverlayOrb created (80x80, always-on-top)
+[UI] Tray created
+[UI] Window shown, visible=True
+[UI] Window geometry: (650,100,620,720)
+[UI] Entering event loop...

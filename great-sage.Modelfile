@@ -1,0 +1,11 @@
+FROM dolphin-2_6-phi-2:latest
+# LoRA Fine-tuning Config for Great Sage
+PARAMETER lora_rank 8
+PARAMETER lora_alpha 16
+PARAMETER lora_dropout 0.05
+PARAMETER lora_base_model dolphin-2_6-phi-2
+PARAMETER training_data training_data.jsonl
+PARAMETER epochs 3
+PARAMETER learning_rate 0.001
+PARAMETER adapter "lora"
+PARAMETER target_modules "q_proj,k_proj,v_proj,o_proj"

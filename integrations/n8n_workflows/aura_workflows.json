@@ -1,0 +1,45 @@
+{
+  "rollercoin_monitor": {
+    "name": "RollerCoin Monitor",
+    "description": "Monitorea RollerCoin cada hora y alerta si el bot se cae",
+    "trigger": "cron",
+    "schedule": "0 * * * *",
+    "actions": [
+      "HTTP Request -> GET https://raiden456-slut.hf.space/health",
+      "IF -> status != ok -> Send alert",
+      "Email/Discord -> notificar"
+    ]
+  },
+  "gmail_rollercoin_code": {
+    "name": "Gmail -> RollerCoin Login Code",
+    "description": "Detecta codigo de login de RollerCoin en Gmail",
+    "trigger": "gmail_new_email",
+    "filter": "from:rollercoin.com",
+    "actions": [
+      "Extract code from email body",
+      "HTTP Request -> POST a AURA EventBus",
+      "AURA completa el login automaticamente"
+    ]
+  },
+  "hf_space_monitor": {
+    "name": "HF Space Health Monitor",
+    "description": "Verifica cada 30min que el servidor de IA esta activo",
+    "trigger": "cron",
+    "schedule": "*/30 * * * *",
+    "actions": [
+      "HTTP GET -> https://raiden456-slut.hf.space/health",
+      "IF -> no responde -> notificar por Discord/Email"
+    ]
+  },
+  "ame_update_notify": {
+    "name": "AME Auto Update",
+    "description": "Cuando hay nuevo commit en GitHub, notifica para actualizar AME",
+    "trigger": "github_webhook",
+    "repo": "tu-usuario/aura-ame",
+    "actions": [
+      "Detectar nuevo commit en main",
+      "HTTP POST -> AURA EventBus -> AME_UPDATE",
+      "Notificar por Discord"
+    ]
+  }
+}

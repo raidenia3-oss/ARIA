@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AURA · Panel Local</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:#0a0a1a;
+    color:#e0e0e0;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem
+  }
+  .container{width:100%;max-width:640px}
+  h1{
+    font-size:2.5rem;font-weight:700;letter-spacing:4px;
+    background:linear-gradient(135deg,#00d4ff,#7b2ff7);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:.25rem
+  }
+  .sub{color:#666;font-size:.9rem;margin-bottom:2rem}
+  .card{
+    background:#12122a;border:1px solid #2a2a4e;border-radius:16px;
+    padding:1.5rem;margin-bottom:1.5rem
+  }
+  .card h2{font-size:1rem;color:#00d4ff;margin-bottom:1rem;font-weight:600}
+  label{display:block;font-size:.85rem;color:#888;margin-bottom:.4rem}
+  .input-row{display:flex;gap:.5rem;flex-wrap:wrap}
+  input[type=text]{
+    flex:1;min-width:180px;
+    background:#1a1a2e;border:1px solid #2a2a4e;border-radius:8px;
+    padding:.7rem 1rem;color:#fff;font-size:1rem;font-family:monospace
+  }
+  input[type=text]:focus{outline:none;border-color:#00d4ff;box-shadow:0 0 0 2px rgba(0,212,255,.2)}
+  button{
+    background:#00d4ff;color:#0a0a1a;border:none;border-radius:8px;
+    padding:.7rem 1.4rem;font-weight:700;font-size:.95rem;cursor:pointer;
+    transition:.2s;white-space:nowrap
+  }
+  button:hover{background:#00e5ff;transform:translateY(-1px)}
+  button:active{transform:translateY(0)}
+  button.secondary{background:#2a2a4e;color:#e0e0e0}
+  button.secondary:hover{background:#3a3a5e}
+  .btn-group{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+  .result-box{
+    background:#0d0d20;border:1px solid #1a1a3e;border-radius:10px;
+    padding:1rem;margin-top:.8rem;font-family:monospace;font-size:.85rem;
+    min-height:3rem;white-space:pre-wrap;word-break:break-all
+  }
+  .result-box.success{border-color:#00ff88}
+  .result-box.error{border-color:#ff4444;color:#ff6666}
+  .result-box.pending{color:#888;font-style:italic}
+  .vision-card{border-color:#7b2ff7}
+  .vision-card h2{color:#7b2ff7}
+  .drop-zone{
+    border:2px dashed #2a2a4e;border-radius:12px;padding:1.2rem;text-align:center;
+    cursor:pointer;transition:.2s;margin-bottom:1rem;color:#888
+  }
+  .drop-zone:hover,.drop-zone.dragover{border-color:#7b2ff7;color:#b388ff;background:#161630}
+  .drop-zone.has-file{border-color:#00ff88;color:#00ff88}
+  .preview-img{max-width:100%;max-height:220px;border-radius:10px;margin-top:.8rem;display:none}
+  .vision-meta{font-size:.75rem;color:#666;margin-top:.4rem;font-family:monospace}
+  .memory-tag{display:inline-block;background:#1a1a2e;color:#7b2ff7;font-family:monospace;font-size:.75rem;padding:.2rem .6rem;border-radius:4px;margin-right:.3rem}
+  .status-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.8rem}
+  .status-item{
+    background:#0d0d20;border:1px solid #1a1a3e;border-radius:8px;
+    padding:.6rem .8rem;text-align:center
+  }
+  .status-item .label{font-size:.7rem;color:#666;text-transform:uppercase;letter-spacing:.5px}
+  .status-item .value{font-size:1.1rem;font-weight:700;margin-top:.2rem}
+  .value.online{color:#00ff88}
+  .value.offline{color:#ff4444}
+  .endpoint-tag{
+    display:inline-block;background:#1a1a2e;color:#00d4ff;font-family:monospace;
+    font-size:.75rem;padding:.2rem .6rem;border-radius:4px;margin-right:.3rem;margin-bottom:.3rem
+  }
+  footer{color:#444;font-size:.75rem;margin-top:2rem;text-align:center}
+  a{color:#00d4ff;text-decoration:none}
+  a:hover{text-decoration:underline}
+  @media(max-width:480px){
+    h1{font-size:1.8rem}
+    .card{padding:1rem}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>AURA</h1>
+  <p class="sub">Panel de control · Red Wi-Fi local</p>
+
+  <!-- CONFIGURACIÓN IP -->
+  <div class="card">
+    <h2>🔗 Conexión</h2>
+    <label for="ipInput">IP/host del servidor AURA (puerto 8000) · deja vacío para usar el host actual</label>
+    <div class="input-row">
+      <input type="text" id="ipInput" placeholder="ej: 192.168.1.100 (vacío = host actual)">
+      <button id="connectBtn">Conectar</button>
+    </div>
+    <div class="result-box pending" id="connectionStatus">Esperando conexión...</div>
+  </div>
+
+  <!-- ENDPOINTS -->
+  <div class="card">
+    <h2>🧪 Probar endpoints</h2>
+    <div class="btn-group">
+      <button class="secondary" data-endpoint="/health">/health</button>
+      <button class="secondary" data-endpoint="/api/admin/servers">/admin-servers</button>
+      <button class="secondary" data-endpoint="/api/skills/browser-control">/browser-control</button>
+      <button class="secondary" data-endpoint="/api/chat">/api/chat</button>
+      <button class="secondary" data-endpoint="/api/mobile/ames">/ames</button>
+      <button class="secondary" data-endpoint="/api/analytics">/analytics</button>
+    </div>
+    <div class="result-box pending" id="endpointResult">Selecciona un endpoint para probar</div>
+  </div>
+
+  <!-- ESTADO RÁPIDO -->
+  <div class="card">
+    <h2>📊 Estado del servidor</h2>
+    <div class="status-grid" id="statusGrid">
+      <div class="status-item"><div class="label">Servidor</div><div class="value offline" id="srvStatus">—</div></div>
+      <div class="status-item"><div class="label">Latencia</div><div class="value" id="srvLatency">—</div></div>
+      <div class="status-item"><div class="label">API</div><div class="value offline" id="srvApi">—</div></div>
+      <div class="status-item"><div class="label">Conexión</div><div class="value offline" id="srvConn">—</div></div>
+    </div>
+    <div class="btn-group">
+      <button class="secondary" id="refreshStatusBtn">🔄 Refrescar estado</button>
+    </div>
+  </div>
+
+  <!-- MÓDULO DE VISIÓN -->
+  <div class="card vision-card">
+    <h2>👁️ Módulo de Visión</h2>
+    <p class="sub" style="margin-bottom:1rem">Análisis multimodal nativo con Gemini 2.0 Flash · AURA recuerda visualmente vía <span class="memory-tag">[VISION]</span></p>
+    <div class="drop-zone" id="visionDrop">
+      📷 Arrastra o haz clic para subir una imagen (PNG, JPEG, WEBP)
+      <input type="file" id="visionFile" accept="image/png,image/jpeg,image/webp" hidden>
+      <img id="visionPreview" class="preview-img" alt="preview">
+      <div class="vision-meta" id="visionFileMeta"></div>
+    </div>
+    <label for="visionPrompt">Instrucción para AURA (opcional)</label>
+    <div class="input-row">
+      <input type="text" id="visionPrompt" placeholder="Describe esta imagen en detalle.">
+      <button id="visionBtn">👁️ Analizar</button>
+    </div>
+    <div class="result-box pending" id="visionResult">Sube una imagen para activar la visión de AURA.</div>
+    <div class="btn-group">
+      <button class="secondary" id="visionMemoryBtn">🧠 Ver memoria [VISION]</button>
+    </div>
+  </div>
+
+  <!-- MÓDULO OPERADOR DE WORKSPACE -->
+  <div class="card vision-card">
+    <h2>🛠️ Operador de Workspace</h2>
+    <p class="sub" style="margin-bottom:1rem">AURA opera archivos en su sandbox local · <span class="memory-tag">[WORKSPACE]</span></p>
+    <label for="wsPath">Ruta relativa (ej: AME/recon.py)</label>
+    <div class="input-row">
+      <input type="text" id="wsPath" placeholder="AME/recon.py">
+      <button id="wsListBtn" class="secondary">📂 Listar</button>
+      <button id="wsReadBtn" class="secondary">👁️ Leer</button>
+    </div>
+    <label for="wsContent">Contenido a escribir (solo texto plano)</label>
+    <div class="input-row">
+      <input type="text" id="wsContent" placeholder="Texto a guardar...">
+      <button id="wsWriteBtn">💾 Escribir</button>
+    </div>
+    <div class="result-box pending" id="wsResult">Usa Listar/Leer/Escribir dentro del sandbox de AURA.</div>
+    <div class="btn-group">
+      <button class="secondary" id="wsMemoryBtn">🧠 Ver memoria [WORKSPACE]</button>
+    </div>
+  </div>
+
+  <!-- ENJAMBRE AUTÓNOMO: ORQUESTADOR + ENRUTADOR LIBRE -->
+  <div class="card vision-card">
+    <h2>🐝 Enjambre Autónomo</h2>
+    <p class="sub" style="margin-bottom:1rem">Orquestador + Enrutador Multi-Modelo (Modo Libre)</p>
+
+    <label for="orchPrompt">Instrucción para AURA</label>
+    <div class="input-row">
+      <input type="text" id="orchPrompt" placeholder="Analiza el rendimiento de la neurona y sugiere optimizaciones">
+      <button id="orchAnalyzeBtn" class="secondary">🧠 Analizar</button>
+    </div>
+
+    <div class="btn-group">
+      <button class="secondary" id="orchScoutBtn">🛰️ Server Scout</button>
+      <button class="secondary" id="orchDeployBtn">📦 Generar Docker</button>
+      <button class="secondary" id="routerStatusBtn">🔀 Estado Enrutador</button>
+    </div>
+
+    <label for="freePrompt" style="margin-top:1rem">Modo Libre (modelos sin censura)</label>
+    <div class="input-row">
+      <input type="text" id="freePrompt" placeholder="Habla en Modo Libre...">
+      <button id="freeBtn">🔓 Libre</button>
+    </div>
+
+    <div class="result-box pending" id="orchResult">Usa Analizar, Server Scout o el Modo Libre.</div>
+  </div>
+
+  <footer>
+    AURA v4.0 · Modo local Wi-Fi · 
+    <a href="#" id="openDocs">README.md</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const ipInput = document.getElementById('ipInput');
+  const connectBtn = document.getElementById('connectBtn');
+  const connectionStatus = document.getElementById('connectionStatus');
+  const endpointResult = document.getElementById('endpointResult');
+  const endpointBtns = document.querySelectorAll('[data-endpoint]');
+  const refreshBtn = document.getElementById('refreshStatusBtn');
+
+  let BASE_URL = '';
+
+  function getBaseUrl(){
+    const raw = ipInput.value.trim();
+    if(raw){
+      return raw.startsWith('http') ? raw.replace(/\/+$/, '') : `http://${raw}:8000`;
+    }
+    if(window.location.origin && window.location.origin !== 'null'){
+      return window.location.origin;
+    }
+    return '';
+  }
+
+  function currentHostLabel(){
+    const raw = ipInput.value.trim();
+    if(raw) return raw;
+    try { return new URL(window.location.origin).host; }
+    catch(e){ return window.location.host || 'host actual'; }
+  }
+
+  async function fetchFrom(url, options={}){
+    const resp = await fetch(url, { ...options, signal: AbortSignal.timeout(8000) });
+    if(!resp.ok){
+      const text = await resp.text();
+      throw new Error(`${resp.status} ${resp.statusText}: ${text.slice(0,200)}`);
+    }
+    const ct = resp.headers.get('content-type') || '';
+    if(ct.includes('application/json')) return await resp.json();
+    return await resp.text();
+  }
+
+  function showResult(element, data, isError=false){
+    element.className = 'result-box';
+    if(isError){
+      element.classList.add('error');
+      element.textContent = `❌ ${String(data)}`;
+    } else {
+      element.classList.add('success');
+      try {
+        element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      } catch(e){
+        element.textContent = String(data);
+      }
+    }
+  }
+
+  async function testConnection(){
+    const base = getBaseUrl();
+    if(!base){
+      showResult(connectionStatus, 'Ingresa una IP válida', true);
+      return false;
+    }
+    connectionStatus.className = 'result-box pending';
+    connectionStatus.textContent = `Conectando a ${currentHostLabel()} ...`;
+    BASE_URL = base;
+    try {
+      const data = await fetchFrom(`${base}/health`);
+      showResult(connectionStatus, data);
+      updateStatusGrid(data);
+      return true;
+    } catch(e){
+      showResult(connectionStatus, `No se pudo conectar a ${currentHostLabel()} — ${e.message}`, true);
+      updateStatusGrid(null);
+      return false;
+    }
+  }
+
+  function updateStatusGrid(healthData){
+    const srv = document.getElementById('srvStatus');
+    const lat = document.getElementById('srvLatency');
+    const api = document.getElementById('srvApi');
+    const conn = document.getElementById('srvConn');
+
+    if(!healthData){
+      srv.className='value offline'; srv.textContent='OFF';
+      lat.textContent='—';
+      api.className='value offline'; api.textContent='—';
+      conn.className='value offline'; conn.textContent='—';
+      return;
+    }
+    srv.className='value online'; srv.textContent='OK';
+    api.className='value online'; api.textContent='OK';
+    conn.className='value online'; conn.textContent='Wi-Fi';
+    lat.textContent = healthData.latency_ms ? `${healthData.latency_ms}ms` : '< 50ms';
+  }
+
+  async function testEndpoint(endpoint){
+    const base = getBaseUrl();
+    if(!base){
+      showResult(endpointResult, 'Primero configura y conecta la IP', true);
+      return;
+    }
+    
+    const url = `${base}${endpoint}`;
+    endpointResult.className = 'result-box pending';
+    endpointResult.textContent = `Llamando ${url} ...`;
+
+    try {
+      let data;
+      if(endpoint === '/api/chat'){
+        data = await fetchFrom(url, {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({prompt: 'Hola AURA, ¿cómo estás?', context: 'test desde dashboard local'})
+        });
+      } else {
+        data = await fetchFrom(url);
+      }
+      showResult(endpointResult, data);
+
+      // Si llamamos /health actualizamos el status grid
+      if(endpoint === '/health') updateStatusGrid(data);
+    } catch(e){
+      showResult(endpointResult, `Error en ${endpoint}: ${e.message}`, true);
+    }
+  }
+
+  // Eventos
+  connectBtn.addEventListener('click', testConnection);
+  ipInput.addEventListener('keydown', e => { if(e.key==='Enter') testConnection(); });
+
+  endpointBtns.forEach(btn => {
+    btn.addEventListener('click', () => testEndpoint(btn.dataset.endpoint));
+  });
+
+  refreshBtn.addEventListener('click', testConnection);
+
+  // --- MÓDULO DE VISIÓN ---
+  const visionDrop = document.getElementById('visionDrop');
+  const visionFile = document.getElementById('visionFile');
+  const visionPreview = document.getElementById('visionPreview');
+  const visionFileMeta = document.getElementById('visionFileMeta');
+  const visionPrompt = document.getElementById('visionPrompt');
+  const visionBtn = document.getElementById('visionBtn');
+  const visionResult = document.getElementById('visionResult');
+  const visionMemoryBtn = document.getElementById('visionMemoryBtn');
+
+  let visionSelectedFile = null;
+
+  function setVisionFile(file){
+    if(!file) return;
+    const allowed = ['image/png','image/jpeg','image/webp'];
+    if(!allowed.includes(file.type)){
+      showResult(visionResult, `Tipo no soportado: ${file.type || 'desconocido'}. Usa PNG, JPEG o WEBP.`, true);
+      return;
+    }
+    visionSelectedFile = file;
+    visionDrop.classList.add('has-file');
+    visionFileMeta.textContent = `${file.name} · ${(file.size/1024).toFixed(1)} KB · ${file.type}`;
+    const reader = new FileReader();
+    reader.onload = e => {
+      visionPreview.src = e.target.result;
+      visionPreview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  visionDrop.addEventListener('click', () => visionFile.click());
+  visionFile.addEventListener('change', e => setVisionFile(e.target.files[0]));
+  ['dragover','dragenter'].forEach(ev => visionDrop.addEventListener(ev, e => { e.preventDefault(); visionDrop.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(ev => visionDrop.addEventListener(ev, e => { e.preventDefault(); visionDrop.classList.remove('dragover'); }));
+  visionDrop.addEventListener('drop', e => {
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) setVisionFile(f);
+  });
+
+  async function runVision(){
+    if(!visionSelectedFile){
+      showResult(visionResult, 'Primero selecciona una imagen.', true);
+      return;
+    }
+    visionResult.className = 'result-box pending';
+    visionResult.textContent = '👁️ AURA está mirando...';
+    visionBtn.disabled = true;
+    try {
+      const fd = new FormData();
+      fd.append('file', visionSelectedFile);
+      fd.append('prompt', visionPrompt.value.trim() || 'Describe esta imagen en detalle.');
+      const resp = await fetch(`${BASE_URL || getBaseUrl()}/api/vision`, {
+        method: 'POST',
+        body: fd,
+        signal: AbortSignal.timeout(60000)
+      });
+      const data = await resp.json().catch(() => ({}));
+      if(!resp.ok){
+        throw new Error(data.detail || data.error || `HTTP ${resp.status}`);
+      }
+      showResult(visionResult, `👁️ Análisis (${data.provider || 'ai'}):\n\n${data.analysis || '(sin texto)'}`);
+    } catch(e){
+      showResult(visionResult, `Error de visión: ${e.message}`, true);
+    } finally {
+      visionBtn.disabled = false;
+    }
+  }
+
+  async function showVisionMemory(){
+    visionResult.className = 'result-box pending';
+    visionResult.textContent = '🧠 Recuperando memorias [VISION]...';
+    try {
+      const data = await fetchFrom(`${BASE_URL || getBaseUrl()}/api/memory?limit=20`);
+      const visions = (data.memories || []).filter(m => String(m.kind || '').includes('VISION'));
+      if(!visions.length){
+        showResult(visionResult, 'Aún no hay recuerdos visuales [VISION] en el subconsciente.');
+        return;
+      }
+      let out = `🧠 ${visions.length} recuerdo(s) visual(es):\n\n`;
+      visions.forEach((m, i) => { out += `#${i+1} [${m.kind}] ${String(m.content || '').slice(0,300)}\n\n`; });
+      showResult(visionResult, out);
+    } catch(e){
+      showResult(visionResult, `No se pudo leer la memoria: ${e.message}`, true);
+    }
+  }
+
+  visionBtn.addEventListener('click', runVision);
+  visionMemoryBtn.addEventListener('click', showVisionMemory);
+
+  // --- MÓDULO OPERADOR DE WORKSPACE ---
+  const wsPath = document.getElementById('wsPath');
+  const wsContent = document.getElementById('wsContent');
+  const wsResult = document.getElementById('wsResult');
+  const wsListBtn = document.getElementById('wsListBtn');
+  const wsReadBtn = document.getElementById('wsReadBtn');
+  const wsWriteBtn = document.getElementById('wsWriteBtn');
+  const wsMemoryBtn = document.getElementById('wsMemoryBtn');
+
+  async function wsCall(body){
+    const base = BASE_URL || getBaseUrl();
+    return fetchFrom(`${base}/api/workspace`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+  }
+
+  wsListBtn.addEventListener('click', async () => {
+    wsResult.className='result-box pending'; wsResult.textContent='📂 Listando...';
+    try {
+      const data = await wsCall({action:'list', path: wsPath.value.trim(), depth: 2});
+      if(!data.ok){ throw new Error(data.error || 'fallo'); }
+      let out = `📂 ${data.path} (${data.count}):\n`;
+      (data.items||[]).forEach(i => { out += `  ${i.type==='dir'?'📁':'📄'} ${i.name}\n`; });
+      showResult(wsResult, out);
+    } catch(e){ showResult(wsResult, `Error: ${e.message}`, true); }
+  });
+
+  wsReadBtn.addEventListener('click', async () => {
+    const p = wsPath.value.trim();
+    if(!p){ showResult(wsResult, 'Ingresa una ruta.', true); return; }
+    wsResult.className='result-box pending'; wsResult.textContent=`👁️ Leyendo ${p}...`;
+    try {
+      const data = await wsCall({action:'read', path: p});
+      if(!data.ok){ throw new Error(data.error || 'fallo'); }
+      showResult(wsResult, `📄 ${data.path} (${data.size} bytes):\n\n${data.content}`);
+    } catch(e){ showResult(wsResult, `Error: ${e.message}`, true); }
+  });
+
+  wsWriteBtn.addEventListener('click', async () => {
+    const p = wsPath.value.trim();
+    const c = wsContent.value;
+    if(!p){ showResult(wsResult, 'Ingresa una ruta.', true); return; }
+    wsResult.className='result-box pending'; wsResult.textContent=`💾 Escribiendo ${p}...`;
+    try {
+      const data = await wsCall({action:'write', path: p, content: c});
+      if(!data.ok){ throw new Error(data.error || 'fallo'); }
+      showResult(wsResult, `✅ ${data.path} · ${data.bytes_written} bytes (${data.mode})\nResumen indexado en memoria [WORKSPACE].`);
+    } catch(e){ showResult(wsResult, `Error: ${e.message}`, true); }
+  });
+
+  wsMemoryBtn.addEventListener('click', async () => {
+    wsResult.className='result-box pending'; wsResult.textContent='🧠 Recuperando memorias [WORKSPACE]...';
+    try {
+      const data = await fetchFrom(`${BASE_URL || getBaseUrl()}/api/memory?limit=20`);
+      const ws = (data.memories || []).filter(m => String(m.kind || '').includes('WORKSPACE'));
+      if(!ws.length){ showResult(wsResult, 'Aún no hay recuerdos [WORKSPACE].'); return; }
+      let out = `🧠 ${ws.length} recuerdo(s) [WORKSPACE]:\n\n`;
+      ws.forEach((m,i) => { out += `#${i+1} ${String(m.content||'').slice(0,300)}\n\n`; });
+      showResult(wsResult, out);
+    } catch(e){ showResult(wsResult, `No se pudo leer la memoria: ${e.message}`, true); }
+  });
+
+  // --- ENJAMBRE AUTÓNOMO: ORQUESTADOR + ENRUTADOR ---
+  const orchPrompt = document.getElementById('orchPrompt');
+  const orchResult = document.getElementById('orchResult');
+  const orchAnalyzeBtn = document.getElementById('orchAnalyzeBtn');
+  const orchScoutBtn = document.getElementById('orchScoutBtn');
+  const orchDeployBtn = document.getElementById('orchDeployBtn');
+  const routerStatusBtn = document.getElementById('routerStatusBtn');
+  const freePrompt = document.getElementById('freePrompt');
+  const freeBtn = document.getElementById('freeBtn');
+
+  async function orchCall(body){
+    const base = BASE_URL || getBaseUrl();
+    return fetchFrom(`${base}/api/orchestrator`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+  }
+
+  orchAnalyzeBtn.addEventListener('click', async () => {
+    orchResult.className='result-box pending'; orchResult.textContent='🧠 Analizando neurona...';
+    try {
+      const data = await orchCall({action:'analyze'});
+      if(!data.ok){ throw new Error(data.error||'fallo'); }
+      showResult(orchResult, `🧠 Análisis (${data.provider}):\n\n${data.analysis||'(sin sugerencias)'}`);
+    } catch(e){ showResult(orchResult, `Error: ${e.message}`, true); }
+  });
+
+  orchScoutBtn.addEventListener('click', async () => {
+    orchResult.className='result-box pending'; orchResult.textContent='🛰️ Escaneando infraestructura...';
+    try {
+      const data = await orchCall({action:'scout'});
+      if(!data.ok){ throw new Error(data.error||'fallo'); }
+      let out = '🛰️ Plataformas detectadas:\n\n';
+      (data.platforms||[]).forEach(p => { out += `• ${p.url}\n  ${String(p.snippet||p.error||'').slice(0,120)}\n`; });
+      showResult(orchResult, out);
+    } catch(e){ showResult(orchResult, `Error: ${e.message}`, true); }
+  });
+
+  orchDeployBtn.addEventListener('click', async () => {
+    orchResult.className='result-box pending'; orchResult.textContent='📦 Generando Dockerfile...';
+    try {
+      const data = await orchCall({action:'deploy', target:'swarm-node'});
+      if(!data.ok){ throw new Error(data.error||'fallo'); }
+      showResult(orchResult, `📦 Dockerfile (${data.target}):\n\n${data.dockerfile}\n\n--- docker-compose ---\n${data.docker_compose}`);
+    } catch(e){ showResult(orchResult, `Error: ${e.message}`, true); }
+  });
+
+  routerStatusBtn.addEventListener('click', async () => {
+    orchResult.className='result-box pending'; orchResult.textContent='🔀 Consultando enrutador...';
+    try {
+      const data = await fetchFrom(`${BASE_URL||getBaseUrl()}/api/router`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'status'})
+      });
+      let out = `🔀 Modo Libre disponible: ${data.free_mode_available}\n\nProveedores:\n`;
+      (data.providers||[]).forEach(p => { out += `• ${p.provider} :: ${p.model} (${p.configured?'✓':'✗'})\n`; });
+      showResult(orchResult, out);
+    } catch(e){ showResult(orchResult, `Error: ${e.message}`, true); }
+  });
+
+  freeBtn.addEventListener('click', async () => {
+    const p = freePrompt.value.trim();
+    if(!p){ showResult(orchResult, 'Escribe algo para el Modo Libre.', true); return; }
+    orchResult.className='result-box pending'; orchResult.textContent='🔓 Modo Libre...';
+    try {
+      const data = await fetchFrom(`${BASE_URL||getBaseUrl()}/api/router`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'chat', prompt:p, free_mode:true})
+      });
+      showResult(orchResult, `🔓 (${data.provider||'free'}):\n\n${data.text||data.error||'(sin respuesta)'}`);
+    } catch(e){ showResult(orchResult, `Error: ${e.message}`, true); }
+  });
+
+  // Auto-conectar al cargar: usa el host actual (nube) o la IP guardada (local)
+  const saved = localStorage.getItem('aura_local_ip');
+  if(saved){ ipInput.value = saved; }
+  testConnection();
+  ipInput.addEventListener('change', () => localStorage.setItem('aura_local_ip', ipInput.value.trim()));
+
+  document.getElementById('openDocs').addEventListener('click', e => {
+    e.preventDefault();
+    window.open('README.md', '_blank');
+  });
+
+  // Enter también prueba el endpoint activo
+  console.log('AURA Dashboard Local listo.');
+})();
+</script>
+</body>
+</html>

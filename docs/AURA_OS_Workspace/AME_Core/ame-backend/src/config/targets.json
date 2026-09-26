@@ -1,0 +1,50 @@
+[
+    {
+        "platform": "ysense",
+        "name": "YSense",
+        "base_url": "https://www.ysense.com",
+        "login_url": "https://www.ysense.com/login",
+        "credentials": {
+            "email": "${BOT_EMAIL}",
+            "password": "${BOT_PASSWORD}"
+        },
+        "selectors": {
+            "email": "input[type='email'], input[name='email'], input[name='username']",
+            "password": "input[type='password'], input[name='password']",
+            "submit": "button[type='submit'], input[type='submit']"
+        },
+        "survey_wall_signals": ["survey", "encuesta", "available", "earn"]
+    },
+    {
+        "platform": "swagbucks",
+        "name": "SwagBucks",
+        "base_url": "https://www.swagbucks.com",
+        "login_url": "https://www.swagbucks.com/login",
+        "credentials": {
+            "email": "${BOT_EMAIL}",
+            "password": "${BOT_PASSWORD}"
+        },
+        "selectors": {
+            "email": "input[type='email'], input[name='email'], input[name='username']",
+            "password": "input[type='password'], input[name='password']",
+            "submit": "button[type='submit'], input[type='submit']"
+        },
+        "survey_wall_signals": ["survey", "encuesta", "available", "earn"]
+    },
+    {
+        "platform": "freecash",
+        "name": "Freecash",
+        "base_url": "https://freecash.com",
+        "login_url": "https://freecash.com/login",
+        "credentials": {
+            "email": "${BOT_EMAIL}",
+            "password": "${BOT_PASSWORD}"
+        },
+        "selectors": {
+            "email": "input[type='email'], input[name='email'], input[name='username']",
+            "password": "input[type='password'], input[name='password']",
+            "submit": "button[type='submit'], input[type='submit']"
+        },
+        "survey_wall_signals": ["survey", "encuesta", "available", "earn"]
+    }
+]

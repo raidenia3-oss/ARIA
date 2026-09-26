@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.env
+.env.local
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+*.exe
+*.msi
+*.dmg
+
+# Data
+data/
+training_data.jsonl
+
+# Temp
+*.tmp
+*.temp
+.cache/
+
+# Python backend modules - do NOT ignore
+!backend/

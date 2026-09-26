@@ -1,0 +1,176 @@
+/* Estilos para el Módulo de Inteligencia OSINT */
+.osint-module-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 16px;
+}
+
+.osint-module-card h2 {
+    color: var(--accent-color);
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.osint-search-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.osint-search-input {
+    background-color: var(--input-background);
+    border: 1px solid var(--input-border);
+    border-radius: 20px;
+    padding: 10px 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.osint-platform-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.osint-platform-control {
+    background-color: var(--button-background);
+    color: var(--text-primary);
+    border: 1px solid var(--input-border);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 80px;
+    text-align: center;
+}
+
+.osint-platform-control:hover {
+    background-color: var(--button-hover);
+}
+
+.osint-platform-control.active {
+    background-color: var(--accent-color);
+    color: var(--background-primary);
+    border-color: var(--accent-color);
+}
+
+.osint-results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 200px;
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.osint-result-card {
+    background-color: rgba(30, 30, 30, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.osint-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.osint-card-header h3 {
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin: 0;
+    font-weight: bold;
+}
+
+.osint-card-platform {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.osint-card-body {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+.osint-card-body p {
+    margin: 0;
+}
+
+.osint-card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.osint-open-link-btn {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    background-color: transparent;
+    transition: all 0.2s;
+}
+
+.osint-open-link-btn:hover {
+    background-color: rgba(57, 255, 20, 0.1);
+    border-color: var(--accent-color);
+}
+
+.no-results, .error-message {
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--accent-color);
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Estilos para el botón de búsqueda en estado de carga */
+#osint-search-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Asegurar que el módulo se adapte al tema actual */
+:root.theme-stealth .osint-card-body p {
+    color: var(--text-secondary-stealth);
+}
+
+:root.theme-solar .osint-card-body p {
+    color: var(--text-secondary-solar);
+}

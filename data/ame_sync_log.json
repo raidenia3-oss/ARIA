@@ -1,0 +1,133 @@
+[
+  {
+    "eventId": "ev-001",
+    "type": "character_upsert",
+    "status": "applied",
+    "detail": "character hero upserted in w1",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "ev-002",
+    "type": "canon_event",
+    "status": "applied",
+    "detail": "canon event canon_1788748067025 added to w1",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "ev-003",
+    "type": "chat",
+    "status": "applied",
+    "detail": "chat event registered (no central mutation)",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "ev-004",
+    "type": "note",
+    "status": "applied",
+    "detail": "note buffered",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "dup-1",
+    "type": "note",
+    "status": "applied",
+    "detail": "note buffered",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "dup-2",
+    "type": "note",
+    "status": "applied",
+    "detail": "note buffered",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "log-1",
+    "type": "note",
+    "status": "applied",
+    "detail": "note buffered",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "c1",
+    "type": "note",
+    "status": "applied",
+    "detail": "note buffered",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "c2",
+    "type": "note",
+    "status": "applied",
+    "detail": "note buffered",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "c3",
+    "type": "note",
+    "status": "applied",
+    "detail": "note buffered",
+    "device_id": "ame_1",
+    "synced_at": "2026-09-06T21:27:47-0500"
+  },
+  {
+    "eventId": "pc_ea59f82f5412",
+    "type": "chat_received",
+    "status": "applied",
+    "detail": "",
+    "payload": {
+      "role": "user",
+      "content": "hola",
+      "response": "hola",
+      "timestamp": 123
+    },
+    "device_id": "pc_test",
+    "source": "test",
+    "synced_at": "2026-09-14T20:29:19-0500",
+    "createdAt": 1789435759.0999498
+  },
+  {
+    "eventId": "pc_03b4ce543db5",
+    "type": "chat_received",
+    "status": "applied",
+    "detail": "",
+    "payload": {
+      "role": "user",
+      "content": "Hola AURA",
+      "response": "Hola, soy AURA. ¿En qué puedo ayudarte?",
+      "provider": "local",
+      "session_id": null,
+      "client_id": "mobile_001",
+      "timestamp": 1789436610.4048378
+    },
+    "device_id": "mobile_001",
+    "source": "backend_chat",
+    "synced_at": "2026-09-14T20:43:30-0500",
+    "createdAt": 1789436610.4060411
+  },
+  {
+    "eventId": "pc_d05bde74a041",
+    "type": "memory_updated",
+    "status": "applied",
+    "detail": "",
+    "payload": {
+      "session_id": null,
+      "text": "User: Hola AURA\nAURA: Hola, soy AURA. ¿En qué puedo ayudarte?",
+      "memory_type": "episodic",
+      "timestamp": 1789436610.4090502
+    },
+    "device_id": "mobile_001",
+    "source": "backend_chat",
+    "synced_at": "2026-09-14T20:43:30-0500",
+    "createdAt": 1789436610.4090502
+  }
+]

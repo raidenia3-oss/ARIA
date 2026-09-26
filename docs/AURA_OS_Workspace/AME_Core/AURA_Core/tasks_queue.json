@@ -1,0 +1,255 @@
+{
+  "version": "1.0.0",
+  "description": "Cola de tareas para el sistema AURA. Todas las tareas pendientes se almacenan aquí y son asignadas a nodos disponibles.",
+  "tasks": [
+    {
+      "id": "task_001",
+      "type": "SCAN_WIFI",
+      "status": "pending",
+      "priority": "high",
+      "created_at": "2026-06-02T12:00:00Z",
+      "assigned_node": null,
+      "assigned_at": null,
+      "parameters": {
+        "network": "2.4GHz",
+        "scan_type": "active",
+        "duration": 60,
+        "target_ssids": ["AURA-NET", "Guest-WiFi"]
+      },
+      "expected_result": {
+        "devices": [],
+        "access_points": [],
+        "security_issues": []
+      },
+      "metadata": {
+        "requested_by": "system",
+        "reason": "Monitoreo de red local",
+        "retries": 0,
+        "max_retries": 3
+      }
+    },
+    {
+      "id": "task_002",
+      "type": "ANALIZAR_RED_LOCAL",
+      "status": "pending",
+      "priority": "medium",
+      "created_at": "2026-06-02T12:05:00Z",
+      "assigned_node": null,
+      "assigned_at": null,
+      "parameters": {
+        "interface": "eth0",
+        "scan_duration": 120,
+        "detect_rogue_devices": true,
+        "check_for_malware": true,
+        "generate_report": true
+      },
+      "expected_result": {
+        "network_map": {},
+        "rogue_devices": [],
+        "malware_indicators": [],
+        "report_path": "/tmp/local_network_analysis_report.json"
+      },
+      "metadata": {
+        "requested_by": "security_team",
+        "reason": "Análisis de seguridad de la red local",
+        "retries": 0,
+        "max_retries": 2
+      }
+    },
+    {
+      "id": "task_003",
+      "type": "OSINT_SCAN",
+      "status": "pending",
+      "priority": "high",
+      "created_at": "2026-06-02T12:10:00Z",
+      "assigned_node": null,
+      "assigned_at": null,
+      "parameters": {
+        "target": "example.com",
+        "tools": ["PhantomOSINT", "SubdomainEnumeration", "PortScanner"],
+        "depth": 3,
+        "timeout": 300,
+        "output_format": "json"
+      },
+      "expected_result": {
+        "domains": [],
+        "subdomains": [],
+        "ports": [],
+        "vulnerabilities": [],
+        "report": null
+      },
+      "metadata": {
+        "requested_by": "intel_team",
+        "reason": "Investigación de inteligencia de dominio",
+        "retries": 0,
+        "max_retries": 3
+      }
+    },
+    {
+      "id": "task_004",
+      "type": "MONITOREO_BATERIA",
+      "status": "pending",
+      "priority": "low",
+      "created_at": "2026-06-02T12:15:00Z",
+      "assigned_node": null,
+      "assigned_at": null,
+      "parameters": {
+        "interval": 3600,
+        "threshold": 20,
+        "duration": 86400
+      },
+      "expected_result": {
+        "battery_levels": [],
+        "low_battery_warnings": [],
+        "final_status": null
+      },
+      "metadata": {
+        "requested_by": "system",
+        "reason": "Monitoreo de consumo de batería",
+        "retries": 0,
+        "max_retries": 1
+      }
+    },
+    {
+      "id": "task_005",
+      "type": "EJECUTAR_MODULE_VENICE",
+      "status": "pending",
+      "priority": "medium",
+      "created_at": "2026-06-02T12:20:00Z",
+      "assigned_node": null,
+      "assigned_at": null,
+      "parameters": {
+        "module_name": "osint_module.py",
+        "module_args": ["--target", "target.com", "--depth", "2"],
+        "timeout": 600,
+        "requirements": ["python3", "requests"]
+      },
+      "expected_result": {
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "",
+        "execution_time": 0,
+        "module_output": null
+      },
+      "metadata": {
+        "requested_by": "operator",
+        "reason": "Ejecutar módulo OSINT personalizado",
+        "retries": 0,
+        "max_retries": 2
+      }
+    }
+  ],
+  "completed_tasks": [],
+  "failed_tasks": [],
+  "task_types": {
+    "SCAN_WIFI": {
+      "description": "Escaneo de redes WiFi disponibles y dispositivos conectados",
+      "required_capabilities": ["wifi_scan", "device_detection"],
+      "output_format": "json",
+      "example_parameters": {
+        "network": "2.4GHz",
+        "scan_type": "active",
+        "duration": 60,
+        "target_ssids": ["AURA-NET"]
+      }
+    },
+    "ANALIZAR_RED_LOCAL": {
+      "description": "Análisis completo de la red local en busca de dispositivos no autorizados y malware",
+      "required_capabilities": ["network_analysis", "malware_detection"],
+      "output_format": "json",
+      "example_parameters": {
+        "interface": "eth0",
+        "scan_duration": 120,
+        "detect_rogue_devices": true,
+        "check_for_malware": true
+      }
+    },
+    "OSINT_SCAN": {
+      "description": "Escaneo OSINT utilizando múltiples herramientas para recopilar inteligencia sobre un objetivo",
+      "required_capabilities": ["osint_tools", "data_aggregation"],
+      "output_format": "json",
+      "example_parameters": {
+        "target": "example.com",
+        "tools": ["PhantomOSINT", "SubdomainEnumeration"],
+        "depth": 2,
+        "timeout": 300
+      }
+    },
+    "MONITOREO_BATERIA": {
+      "description": "Monitoreo continuo del nivel de batería del dispositivo",
+      "required_capabilities": ["battery_monitoring"],
+      "output_format": "json",
+      "example_parameters": {
+        "interval": 3600,
+        "threshold": 20,
+        "duration": 86400
+      }
+    },
+    "EJECUTAR_MODULE_VENICE": {
+      "description": "Ejecutar un módulo Venice en el dispositivo móvil",
+      "required_capabilities": ["module_execution"],
+      "output_format": "json",
+      "example_parameters": {
+        "module_name": "osint_module.py",
+        "module_args": ["--target", "target.com"],
+        "timeout": 600
+      }
+    },
+    "OSINT_SHODAN": {
+      "description": "Escaneo Shodan OSINT usando módulo Venice - IP, puertos, vulns críticos, geolocalización",
+      "required_capabilities": ["osint_tools", "module_execution"],
+      "output_format": "json",
+      "example_parameters": {
+        "target": "8.8.8.8",
+        "mode": "host",
+        "limit": 10
+      }
+    },
+    "CAPTURA_TRANSACCIONES": {
+      "description": "Captura y análisis de transacciones de red",
+      "required_capabilities": ["network_capture", "packet_analysis"],
+      "output_format": "pcap",
+      "example_parameters": {
+        "interface": "wlan0",
+        "filter": "tcp port 80 or port 443",
+        "duration": 300,
+        "output_file": "/tmp/network_capture.pcap"
+      }
+    },
+    "AUDITORIA_SEGURIDAD": {
+      "description": "Auditoría de seguridad del sistema del dispositivo",
+      "required_capabilities": ["security_audit"],
+      "output_format": "json",
+      "example_parameters": {
+        "check_open_ports": true,
+        "scan_vulnerabilities": true,
+        "check_firewall": true,
+        "generate_report": true
+      }
+    }
+  },
+  "node_capabilities": {
+    "node_001": [
+      "wifi_scan",
+      "network_analysis",
+      "osint_tools",
+      "module_execution"
+    ],
+    "node_002": ["wifi_scan", "battery_monitoring", "security_audit"],
+    "node_003": ["network_capture", "packet_analysis", "osint_tools"],
+    "node_004": ["module_execution", "battery_monitoring"]
+  },
+  "task_priorities": {
+    "high": 1,
+    "medium": 2,
+    "low": 3
+  },
+  "status_codes": {
+    "pending": "La tarea está en cola esperando asignación",
+    "assigned": "La tarea ha sido asignada a un nodo",
+    "in_progress": "La tarea está siendo ejecutada por un nodo",
+    "completed": "La tarea se ha completado con éxito",
+    "failed": "La tarea falló y debe reintentarse",
+    "cancelled": "La tarea fue cancelada antes de completarse"
+  }
+}

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA Dashboard v3</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(138,43,226,0.3); border-radius: 10px; }
+        body {
+            background: linear-gradient(135deg, #050816 0%, #0a0e27 100%);
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+        }
+        .dashboard { padding: 20px; max-width: 1600px; margin: 0 auto; }
+        header {
+            background: rgba(10, 14, 39, 0.6);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(138,43,226,0.3);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-radius: 12px;
+        }
+        .logo { display: flex; align-items: center; gap: 12px; }
+        .logo-orb {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, #38bdf8, #8a2be2);
+            border-radius: 50%;
+            box-shadow: 0 0 14px rgba(56,189,248,0.5);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+        .logo-text { font-size: 20px; font-weight: 700; background: linear-gradient(90deg, #38bdf8, #8a2be2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-meta { display: flex; gap: 20px; font-size: 13px; color: rgba(226,232,240,0.6); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .card {
+            background: rgba(15, 18, 50, 0.7);
+            border: 1px solid rgba(138,43,226,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.3s;
+        }
+        .card:hover { border-color: rgba(56,189,248,0.4); }
+        .card-title { font-size: 12px; text-transform: uppercase; color: rgba(226,232,240,0.5); margin-bottom: 8px; letter-spacing: 0.5px; }
+        .card-value { font-size: 28px; font-weight: 700; color: #e2e8f0; }
+        .card-sub { font-size: 12px; color: rgba(226,232,240,0.4); margin-top: 4px; }
+        .stat-green { color: #22c55e; }
+        .stat-yellow { color: #f59e0b; }
+        .stat-red { color: #ef4444; }
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .chart-container {
+            background: rgba(15, 18, 50, 0.7);
+            border: 1px solid rgba(138,43,226,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            height: 300px;
+        }
+        .section-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: rgba(226,232,240,0.9); }
+        .plugin-list, .agent-list { list-style: none; }
+        .plugin-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 12px; border-bottom: 1px solid rgba(138,43,226,0.1);
+        }
+        .plugin-name { font-weight: 500; }
+        .plugin-version { font-size: 11px; color: rgba(226,232,240,0.4); }
+        .badge { padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+        .badge-active { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .badge-inactive { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .logs-viewer {
+            background: rgba(5,8,22,0.8);
+            border: 1px solid rgba(138,43,226,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 250px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+        .log-line { color: rgba(226,232,240,0.7); }
+        .log-error { color: #ef4444; }
+        .log-success { color: #22c55e; }
+        .revenue-tracker {
+            background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(56,189,248,0.1));
+            border: 1px solid rgba(34,197,94,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .revenue-value { font-size: 36px; font-weight: 800; color: #22c55e; }
+        .revenue-label { font-size: 12px; color: rgba(226,232,240,0.5); margin-top: 4px; }
+        .btn {
+            padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(138,43,226,0.3);
+            background: rgba(138,43,226,0.1); color: #e2e8f0; cursor: pointer; font-size: 13px;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: rgba(138,43,226,0.2); border-color: rgba(56,189,248,0.4); }
+        .btn-danger { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.1); }
+        .btn-danger:hover { background: rgba(239,68,68,0.2); }
+        .refresh-btn { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
+        .tab-bar { display: flex; gap: 4px; margin-bottom: 16px; }
+        .tab { padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 13px; background: rgba(15,18,50,0.5); border: 1px solid rgba(138,43,226,0.1); }
+        .tab.active { background: rgba(138,43,226,0.2); border-color: rgba(138,43,226,0.4); color: #38bdf8; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <div class="logo">
+                <div class="logo-orb"></div>
+                <span class="logo-text">AURA Dashboard v3</span>
+            </div>
+            <div class="header-meta">
+                <span id="system-status">Cargando...</span>
+                <span id="uptime"></span>
+                <span id="last-update"></span>
+            </div>
+        </header>
+
+        <div class="grid" id="stats-grid">
+            <div class="card">
+                <div class="card-title">CPU Usage</div>
+                <div class="card-value" id="cpu-val">0%</div>
+                <div class="card-sub" id="cpu-detail">Detectando...</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Memory</div>
+                <div class="card-value" id="mem-val">0%</div>
+                <div class="card-sub" id="mem-detail">Detectando...</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Disk</div>
+                <div class="card-value" id="disk-val">0%</div>
+                <div class="card-sub" id="disk-detail">Detectando...</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Active Agents</div>
+                <div class="card-value" id="agents-val">0</div>
+                <div class="card-sub">En tiempo real</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Requests/s</div>
+                <div class="card-value" id="rps-val">0</div>
+                <div class="card-sub">Tráfico actual</div>
+            </div>
+            <div class="revenue-tracker">
+                <div class="revenue-value" id="revenue-val">$0.00</div>
+                <div class="revenue-label">Ingresos por hora</div>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="chart-container">
+                <div class="section-title">CPU y Requests (24h)</div>
+                <canvas id="cpuChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="section-title">Revenue (24h)</div>
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <div class="charts-row">
+            <div class="chart-container">
+                <div class="section-title">Estado de Agentes</div>
+                <canvas id="agentChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="section-title">Performance Timeline</div>
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+
+        <div class="tab-bar">
+            <div class="tab active" onclick="showTab('plugins')">Plugins</div>
+            <div class="tab" onclick="showTab('agents')">Agentes</div>
+            <div class="tab" onclick="showTab('logs')">Logs</div>
+        </div>
+
+        <div class="card" id="tab-plugins">
+            <div class="section-title">Plugins Cargados</div>
+            <ul class="plugin-list" id="plugin-list"></ul>
+        </div>
+
+        <div class="card" id="tab-agents" style="display:none">
+            <div class="section-title">Estadísticas de Agentes</div>
+            <ul class="agent-list" id="agent-list"></ul>
+        </div>
+
+        <div class="card" id="tab-logs" style="display:none">
+            <div class="section-title">Logs (últimas 100 líneas)</div>
+            <div class="logs-viewer" id="logs-content"></div>
+        </div>
+
+        <button class="btn refresh-btn" onclick="refreshDashboard()">⟳ Refrescar</button>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let cpuChart, revenueChart, agentChart, timelineChart;
+
+        async function refreshDashboard() {
+            try {
+                const [sysRes, agentsRes, pluginsRes] = await Promise.all([
+                    fetch(`${API_BASE}/dashboard/system`).then(r => r.json()),
+                    fetch(`${API_BASE}/dashboard/agents`).then(r => r.json()),
+                    fetch(`${API_BASE}/plugins`).then(r => r.json()),
+                ]);
+                const sys = sysRes.system || sysRes;
+                document.getElementById('cpu-val').textContent = sys.cpu ? sys.cpu.toFixed(1) + '%' : 'N/A';
+                document.getElementById('mem-val').textContent = sys.memory ? sys.memory.toFixed(1) + '%' : 'N/A';
+                document.getElementById('disk-val').textContent = sys.disk ? sys.disk.toFixed(1) + '%' : 'N/A';
+                document.getElementById('cpu-detail').textContent = `Platform: ${sys.platform || 'N/A'}`;
+                document.getElementById('mem-detail').textContent = `Uptime: ${sys.uptime || 'N/A'}`;
+                document.getElementById('disk-detail').textContent = `Python: ${sys.python || 'N/A'}`;
+                document.getElementById('agents-val').textContent = sys.active_agents || 0;
+                document.getElementById('rps-val').textContent = sys.requests_per_sec || 0;
+                document.getElementById('revenue-val').textContent = '$' + (sys.revenue_per_hour || 0).toFixed(2);
+                document.getElementById('system-status').textContent = sys.cpu > 90 ? '⚠ Crítico' : sys.cpu > 75 ? '⚡ Carga alta' : '✓ Saludable';
+                document.getElementById('uptime').textContent = sys.uptime || '';
+                document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+
+                renderPlugins(pluginsRes);
+                updateCharts(sys);
+            } catch (e) {
+                console.error('Dashboard refresh error:', e);
+            }
+        }
+
+        function renderPlugins(plugins) {
+            const list = document.getElementById('plugin-list');
+            list.innerHTML = '';
+            (plugins || []).forEach(p => {
+                const li = document.createElement('li');
+                li.className = 'plugin-item';
+                li.innerHTML = `<div><div class="plugin-name">${p.name}</div><div class="plugin-version">v${p.version} — ${p.commands?.length || 0} comandos</div></div><span class="badge badge-active">${p.status}</span>`;
+                list.appendChild(li);
+            });
+        }
+
+        function updateCharts(sys) {
+            if (cpuChart) cpuChart.data.datasets[0].data.push(sys.cpu || 0);
+            if (revenueChart) revenueChart.data.datasets[0].data.push(sys.revenue_per_hour || 0);
+        }
+
+        async function loadLogs() {
+            try {
+                const res = await fetch(`${API_BASE}/dashboard/logs`);
+                const lines = await res.json();
+                const container = document.getElementById('logs-content');
+                container.innerHTML = lines.map(l => {
+                    let cls = 'log-line';
+                    if (l.includes('ERROR')) cls = 'log-error';
+                    if (l.includes('OK') || l.includes('success')) cls = 'log-success';
+                    return `<div class="${cls}">${l}</div>`;
+                }).join('');
+            } catch (e) {}
+        }
+
+        function showTab(name) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-plugins').style.display = name === 'plugins' ? 'block' : 'none';
+            document.getElementById('tab-agents').style.display = name === 'agents' ? 'block' : 'none';
+            document.getElementById('tab-logs').style.display = name === 'logs' ? 'block' : 'none';
+            if (name === 'logs') loadLogs();
+        }
+
+        function initCharts() {
+            const labels = Array.from({length: 24}, (_, i) => `${i}:00`);
+            cpuChart = new Chart(document.getElementById('cpuChart'), {
+                type: 'line',
+                data: { labels, datasets: [{ label: 'CPU %', data: Array(24).fill(0), borderColor: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.1)', tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#e2e8f0' } } }, scales: { x: { ticks: { color: 'rgba(226,232,240,0.4)' }, grid: { color: 'rgba(138,43,226,0.1)' } }, y: { ticks: { color: 'rgba(226,232,240,0.4)' }, grid: { color: 'rgba(138,43,226,0.1)' } } } }
+            });
+            revenueChart = new Chart(document.getElementById('revenueChart'), {
+                type: 'line',
+                data: { labels, datasets: [{ label: 'Revenue $', data: Array(24).fill(0), borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.1)', tension: 0.4 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#e2e8f0' } } }, scales: { x: { ticks: { color: 'rgba(226,232,240,0.4)' }, grid: { color: 'rgba(138,43,226,0.1)' } }, y: { ticks: { color: 'rgba(226,232,240,0.4)' }, grid: { color: 'rgba(138,43,226,0.1)' } } } }
+            });
+            agentChart = new Chart(document.getElementById('agentChart'), {
+                type: 'doughnut',
+                data: { labels: ['Activos', 'Inactivos'], datasets: [{ data: [0, 0], backgroundColor: ['#22c55e', 'rgba(239,68,68,0.3)'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#e2e8f0' } } } }
+            });
+            timelineChart = new Chart(document.getElementById('timelineChart'), {
+                type: 'bar',
+                data: { labels, datasets: [{ label: 'Requests', data: Array(24).fill(0), backgroundColor: 'rgba(138,43,226,0.3)', borderColor: '#8a2be2', borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#e2e8f0' } } }, scales: { x: { ticks: { color: 'rgba(226,232,240,0.4)' }, grid: { color: 'rgba(138,43,226,0.1)' } }, y: { ticks: { color: 'rgba(226,232,240,0.4)' }, grid: { color: 'rgba(138,43,226,0.1)' } } } }
+            });
+        }
+
+        initCharts();
+        refreshDashboard();
+        setInterval(refreshDashboard, 30000);
+    </script>
+</body>
+</html>

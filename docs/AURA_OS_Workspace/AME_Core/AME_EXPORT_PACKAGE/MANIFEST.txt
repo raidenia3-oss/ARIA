@@ -1,0 +1,49 @@
+# AME_EXPORT_PACKAGE - MANIFEST
+# Generado: 2026-06-06T23:21:00Z
+# Arquitectura: Orquestador Central Universal AURA/AME v2.0
+
+# Formato: RUTA_RELATIVA  TIPO  DESCRIPCION
+
+# ─── Archivos raíz ───────────────────────────────────────────────────────────
+install_ame.sh                   bash/installer   INSTALADOR_UNIFICADO
+ame_termux_node.py               python/client    CLIENTE_TERMUX_ORQUESTADOR
+README.md                        documentation    GUIA_USO
+MANIFEST.txt                     documentation    INVENTARIO_ARCHIVOS
+.env.example                     env/config       PLANTILLA_API_KEY_OPENROUTER
+
+# ─── Orquestador Central (core/) ─────────────────────────────────────────────
+core/server.py                   python/proxy     ORQUESTADOR_CENTRAL_FASTAPI
+
+# ─── Módulos Python ──────────────────────────────────────────────────────────
+modules/osint_username.py        python/osint     MODULO_RASTREO_ALIAS_14_PLATAFORMAS
+modules/osint_reputation.py      python/osint     MODULO_REPUTACION_IP_DOMINIO
+modules/wifi_client_telemetry.py python/telemetry MODULO_TELEMETRIA_WIFI_TERMUX
+
+# ─── Hooks y configuración ───────────────────────────────────────────────────
+hooks/termux_hooks.sh            bash/hooks       GANCHOS_NATIVOS_TERMUX
+config/ame_config_template.json  json/config      PLANTILLA_CONFIGURACION
+
+# ─── Resumen ─────────────────────────────────────────────────────────────────
+# Total de archivos: 12
+#
+# Orquestador Central:  core/server.py (FastAPI + proxy + sync + status)
+# Cliente Termux:       ame_termux_node.py (sin dependencias externas)
+# Módulos OSINT:        osint_username.py, osint_reputation.py
+# Telemetría:           wifi_client_telemetry.py
+# Hooks:                termux_hooks.sh
+# Config:               ame_config_template.json, .env.example
+#
+# Endpoints del servidor:
+#   POST /v1/chat/completions  - Proxy LLM des-censor (Maid/APK)
+#   POST /v1/agent/sync        - Sync datos desde Termux
+#   GET  /v1/agent/status      - Estado en tiempo real
+#   GET  /v1/models            - Modelos disponibles
+#   GET  /health               - Health check
+#
+# Dependencias pip (servidor):    fastapi, uvicorn, httpx, python-dotenv
+# Dependencias pip (módulos):     requests, websockets
+# Dependencias pip (cliente):     NINGUNA (usa urllib stdlib)
+# Dependencias pkg:               python, termux-api, openssh
+#
+# Entorno objetivo: Termux (Android)
+# Ruta absoluta en Termux: /data/data/com.termux/files/home/AME_EXPORT_PACKAGE/

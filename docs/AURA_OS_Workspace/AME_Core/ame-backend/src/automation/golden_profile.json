@@ -1,0 +1,34 @@
+{
+    "personal": {
+        "age": 35,
+        "gender": "male",
+        "marital_status": "married",
+        "children": 2,
+        "household_income": "high",
+        "home_owner": true,
+        "car_owner": true,
+        "car_year": 2023,
+        "education": "bachelor",
+        "occupation": "it_manager",
+        "decision_maker": true
+    },
+    "consumer": {
+        "technology_adoption": "early_adopter",
+        "travel_frequency": "monthly",
+        "shipping_services": ["amazon_prime", "fedex", "ups"],
+        "subscriptions": ["netflix", "spotify", "github_pro"],
+        "purchases": ["electronics", "home_improvement", "travel", "insurance"]
+    },
+    "survey_preferences": {
+        "preferred_topics": ["technology", "finance", "automotive", "travel", "insurance"],
+        "excluded_topics": ["gambling", "tobacco", "payday_loans"],
+        "min_survey_time_minutes": 8,
+        "max_survey_time_minutes": 25
+    },
+    "demographic_consistency": {
+        "zip_codes": ["10001", "90210", "33101", "60601", "75001"],
+        "states": ["NY", "CA", "FL", "IL", "TX"],
+        "countries": ["US"],
+        "languages": ["en"]
+    }
+}

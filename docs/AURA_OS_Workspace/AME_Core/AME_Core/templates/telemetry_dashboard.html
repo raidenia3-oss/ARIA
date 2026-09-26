@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Dashboard de Telemetría</title>
+    <link rel="stylesheet" href="/static/css/telemetry_dashboard.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/telemetry_dashboard.js" defer></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Dashboard de Telemetría - AURA</h1>
+            <div class="dashboard-subtitle">Monitoreo en tiempo real de nodos móviles</div>
+        </header>
+
+        <div class="telemetry-cards">
+            <div class="card-grid">
+                <div class="telemetry-card">
+                    <div class="card-header">
+                        <h3>Estado de Conexión</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="status-indicator" id="connection-status">Desconectado</div>
+                    </div>
+                </div>
+
+                <div class="telemetry-card">
+                    <div class="card-header">
+                        <h3>Temperatura Móvil</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="value" id="temperature">--°C</div>
+                    </div>
+                </div>
+
+                <div class="telemetry-card">
+                    <div class="card-header">
+                        <h3>Carga de CPU</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="value" id="cpu-usage">--%</div>
+                    </div>
+                </div>
+
+                <div class="telemetry-card">
+                    <div class="card-header">
+                        <h3>Nodos Activos</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="value" id="active-nodes">0</div>
+                    </div>
+                </div>
+
+                <div class="telemetry-card">
+                    <div class="card-header">
+                        <h3>Nivel de Batería</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="value" id="battery-level">--%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="telemetry-history">
+            <h2>Historial de Telemetría</h2>
+            <div class="history-container" id="telemetry-history">
+                <!-- Historial de telemetría se cargará dinámicamente -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

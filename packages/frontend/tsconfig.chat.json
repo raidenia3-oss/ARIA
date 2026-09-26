@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "app/api/ame-core/route.ts",
+    "app/chat/page.tsx",
+    "app/page.tsx"
+  ],
+  "exclude": ["node_modules", ".next", "next-env.d.ts"]
+}

@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Inteligencia Conectiva - AURA</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #0a0f1e;
+            color: white;
+        }
+
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            z-index: 100;
+            max-width: 800px;
+        }
+
+        .terminal {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            width: 300px;
+            height: 500px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            padding: 15px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            color: #00d4ff;
+        }
+
+        .terminal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff3366;
+            font-weight: bold;
+        }
+
+        .terminal-header::before {
+            content: "🔧";
+            margin-right: 10px;
+        }
+
+        .terminal-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Estilos para los paneles de conocimiento */
+        .knowledge-panel-container {
+            position: fixed;
+            z-index: 2000;
+            width: 400px;
+            height: 500px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .knowledge-panel-content {
+            padding: 15px;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .knowledge-panel-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .knowledge-panel-header h2 {
+            color: #ff3366;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .knowledge-panel-header .path {
+            color: #ccc;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #00d4ff;
+        }
+
+        .dates {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .knowledge-panel-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 51, 102, 0.2);
+            border: 1px solid rgba(255, 51, 102, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff3366;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .knowledge-panel-close:hover {
+            background: rgba(255, 51, 102, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Estilos para el panel de control de amenazas */
+        .threat-control-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 400px;
+            background: rgba(10, 15, 26, 0.95);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1011;
+            display: none;
+            flex-direction: column;
+            padding: 15px;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .threat-control-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff3366;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.3);
+            border-bottom: 1px solid rgba(255, 51, 102, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .threat-control-header::before {
+            content: "🚨";
+            margin-right: 10px;
+        }
+
+        .threat-section {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(20, 25, 40, 0.5);
+        }
+
+        .threat-node-list {
+            flex-grow: 1;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(20, 25, 40, 0.5);
+            border-radius: 8px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.3;
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.1);
+        }
+
+        .threat-node-item {
+            margin-bottom: 8px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .threat-node-item:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateX(5px);
+        }
+
+        .threat-node-title {
+            color: #ff3366;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .threat-node-path {
+            color: #ccc;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .threat-node-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+
+        .threat-node-tag {
+            background: rgba(255, 51, 102, 0.2);
+            padding: 2px 5px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #ff3366;
+        }
+
+        .threat-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .threat-control-button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .threat-control-button.clear {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.5);
+        }
+
+        .threat-control-button.propagate {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.5);
+        }
+
+        .threat-control-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para el panel de búsqueda */
+        .search-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 300px;
+            width: 300px;
+            background: rgba(10, 15, 26, 0.95);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1009;
+            padding: 15px;
+            display: none;
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .search-header::before {
+            content: "🔍";
+            margin-right: 10px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(20, 25, 40, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .search-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-button.highlight {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.5);
+        }
+
+        .search-button.reset {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.5);
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .search-results {
+            height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(20, 25, 40, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .search-result {
+            margin-bottom: 8px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-result:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateX(5px);
+        }
+
+        .search-result-title {
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .search-result-path {
+            color: #ccc;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .search-result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+
+        .search-result-tag {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 2px 5px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #00d4ff;
+        }
+
+        /* Botones de control */
+        #search-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.3);
+            border: 2px solid rgba(0, 212, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1008;
+            transition: all 0.2s ease;
+            opacity: 0.9;
+            transform: scale(1);
+            pointer-events: auto;
+            user-select: none;
+        }
+
+        #search-btn::before {
+            content: "🔍";
+            font-size: 24px;
+            color: rgba(0, 212, 255, 0.8);
+        }
+
+        #search-btn:hover {
+            background: rgba(0, 212, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        #threat-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 51, 102, 0.3);
+            border: 2px solid rgba(255, 51, 102, 0.6);
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1008;
+            transition: all 0.2s ease;
+            opacity: 0.9;
+            transform: scale(1);
+            pointer-events: auto;
+            user-select: none;
+        }
+
+        #threat-btn::before {
+            content: "🚨";
+            font-size: 24px;
+            color: rgba(255, 51, 102, 0.8);
+        }
+
+        #threat-btn:hover {
+            background: rgba(255, 51, 102, 0.4);
+            transform: scale(1.1);
+        }
+
+        /* Estilos para el log de sistema */
+        .system-log {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 400px;
+            height: 200px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1007;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 3px;
+            border-radius: 3px;
+        }
+
+        .log-entry.info {
+            color: #00d4ff;
+        }
+
+        .log-entry.warning {
+            color: #ffcc00;
+        }
+
+        .log-entry.error {
+            color: #ff3366;
+        }
+
+        .log-entry.success {
+            color: #00ff88;
+        }
+
+        .log-header {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .log-header::before {
+            content: "📡";
+            margin-right: 10px;
+        }
+
+        /* Estilos para el canvas de Three.js */
+        #antigravity-nodes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2>Prueba de Inteligencia Conectiva</h2>
+        <p>Demostración de análisis de grafo, conexiones físicas y filtrado dinámico</p>
+        <p>🖱️ Usa los botones para interactuar con el sistema</p>
+    </div>
+    <div id="instructions">
+        <p>📌 Instrucciones:</p>
+        <ul>
+            <li>🔍 Haz clic en el botón de búsqueda para resaltar nodos relacionados</li>
+            <li>🚨 Haz clic en el botón de amenaza para simular una amenaza en un nodo</li>
+            <li>🎯 Haz clic en los nodos para ver su contenido y relaciones</li>
+            <li>🔗 Observa las líneas de conexión entre nodos relacionados</li>
+            <li>🌐 Las conexiones físicas actúan como muelles que agrupan nodos</li>
+            <li>🔄 Usa el panel de búsqueda para filtrar nodos por término</li>
+        </ul>
+    </div>
+
+    <!-- Terminal de ejemplo -->
+    <div class="terminal">
+        <div class="terminal-header">
+            PRUEBA DE INTELIGENCIA CONECTIVA
+        </div>
+        <div style="margin-bottom: 20px; color: #ccc;">
+            <div>📡 Sistema de nodos tácticos con inteligencia conectiva</div>
+            <div>🔍 Cargando base de conocimiento con relaciones...</div>
+            <div style="margin-top: 10px; font-size: 12px;">
+                <div style="color: #00d4ff;">📡 Funcionalidades:</div>
+                <div style="color: #00ff88;">- Análisis de grafo de conocimiento</div>
+                <div style="color: #00d4ff;">- Conexiones físicas con LineSegments</div>
+                <div style="color: #ff3366;">- Spring constraints en Cannon.js</div>
+                <div style="color: #00ff88;">- Filtrado dinámico por búsqueda</div>
+                <div style="color: #ff3366;">- Actualizaciones en tiempo real desde Shadow-Core</div>
+            </div>
+        </div>
+        <div class="terminal-footer">
+            🔄 Actualizando cada 2 segundos
+        </div>
+    </div>
+
+    <!-- Log del sistema -->
+    <div class="system-log">
+        <div class="log-header">
+            LOG DEL SISTEMA
+        </div>
+        <div id="system-log">
+            <div class="log-entry info">📡 Sistema de inteligencia conectiva iniciado</div>
+            <div class="log-entry info">🌐 Cargando grafo de conocimiento...</div>
+            <div class="log-entry info">🔗 Creando conexiones físicas entre nodos...</div>
+        </div>
+    </div>
+
+    <!-- Panel de búsqueda -->
+    <div class="search-panel" id="search-panel">
+        <div class="search-header">
+            BÚSQUEDA DE CONOCIMIENTO
+        </div>
+
+        <input type="text" class="search-input" id="search-input" placeholder="Buscar en el grafo de conocimiento...">
+
+        <div class="search-buttons">
+            <button class="search-button highlight" id="highlight-btn">RESALTAR</button>
+            <button class="search-button reset" id="reset-btn">RESTAURAR</button>
+        </div>
+
+        <div class="search-results" id="search-results">
+            <div style="text-align: center; color: #666; font-style: italic;">
+                Resultados de búsqueda aparecerán aquí...
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de control de amenazas -->
+    <div class="threat-control-panel" id="threat-control-panel">
+        <div class="threat-control-header">
+            CONTROL DE AMENAZAS
+        </div>
+
+        <div class="threat-section">
+            <div class="threat-node-list" id="threat-node-list">
+                <div style="text-align: center; color: #ff3366; font-style: italic;">
+                    No hay amenazas activas
+                </div>
+            </div>
+        </div>
+
+        <div class="threat-controls">
+            <button class="threat-control-button clear" id="clear-threats-btn">LIMPIAR AMENAZAS</button>
+            <button class="threat-control-button propagate" id="propagate-threat-btn">PROPAGAR</button>
+        </div>
+    </div>
+
+    <!-- Botón de búsqueda -->
+    <div id="search-btn"></div>
+
+    <!-- Botón de amenaza -->
+    <div id="threat-btn"></div>
+
+    <!-- Canvas para nodos 3D -->
+    <canvas id="antigravity-nodes" data-three-canvas></canvas>
+
+    <!-- Librerías necesarias -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.min.js"></script>
+
+    <!-- Módulo de nodos de conocimiento -->
+    <script>
+        // Configuración para la prueba
+        const testConfig = {
+            knowledgeBasePath: '/knowledge_base.json',
+            physicsConfig: {
+                gravity: 0.3,
+                damping: 0.2,
+                massMultiplier: 0.3
+            },
+            testData: {
+                "last_indexed": "2026-05-28T16:00:00",
+                "notes": {
+                    "AURA/Shadow-Core/001-shadow-core-spec.md": {
+                        "path": "AURA/Shadow-Core/001-shadow-core-spec.md",
+                        "title": "Shadow-Core Specification",
+                        "tags": ["shadow-core", "spec", "architecture", "osint"],
+                        "created": "2026-05-20T10:00:00",
+                        "modified": "2026-05-27T18:30:00",
+                        "content": "## Shadow-Core Specification\n\nThe Shadow-Core is a microservice designed for advanced OSINT operations. It operates in isolation from the main AURA system to prevent cascading failures.\n\n### Key Features\n- **Isolated Execution**: Runs on port 5001\n- **Threat Detection**: Integrated with Security Shield\n- **Data Exfiltration**: Supports DNS and ICMP channels\n- **Stealth Mode**: SYN Stealth and ARP scanning capabilities\n\n### Components\n1. **Net Recon Ghost**: Network reconnaissance module\n2. **Data Exfiltration Layer**: Secure data exfiltration\n3. **Security Shield Integration**: Real-time threat monitoring\n\n### Threat Levels\n- CLEAN: No threats detected\n- WARNING: Potential threats\n- ALERT: Immediate action required\n- CRITICAL: System isolation required\n\n### API Endpoints\n- `/api/net_recon`: Network reconnaissance\n- `/api/data_exfil`: Data exfiltration\n- `/api/execute_advanced`: Advanced command execution\n\n### Example Usage\n```python\n# Example of executing a stealth scan\nresult = run_recon('192.168.1.0/24', ['80', '443', '22'])\n```",
+                        "chunks": [
+                            "The Shadow-Core is a microservice designed for advanced OSINT operations. It operates in isolation from the main AURA system to prevent cascading failures.",
+                            "### Key Features\n- **Isolated Execution**: Runs on port 5001\n- **Threat Detection**: Integrated with Security Shield\n- **Data Exfiltration**: Supports DNS and ICMP channels\n- **Stealth Mode**: SYN Stealth and ARP scanning capabilities",
+                            "### Components\n1. **Net Recon Ghost**: Network reconnaissance module\n2. **Data Exfiltration Layer**: Secure data exfiltration\n3. **Security Shield Integration**: Real-time threat monitoring",
+                            "### Threat Levels\n- CLEAN: No threats detected\n- WARNING: Potential threats\n- ALERT: Immediate action required\n- CRITICAL: System isolation required",
+                            "### API Endpoints\n- `/api/net_recon`: Network reconnaissance\n- `/api/data_exfil`: Data exfiltration\n- `/api/execute_advanced`: Advanced command execution",
+                            "### Example Usage\n```python\n# Example of executing a stealth scan\nresult = run_recon('192.168.1.0/24', ['80', '443', '22'])\n```"
+                        ],
+                        "hash": "a1b2c3d4e5f678901234567890abcdef12",
+                        "links": [
+                            {
+                                "target": "AURA/physics_ui_integration.md",
+                                "type": "depends_on",
+                                "strength": 0.8,
+                                "description": "Usa el motor de física para efectos de visualización de amenazas"
+                            },
+                            {
+                                "target": "AURA/antigravity_nodes.md",
+                                "type": "related_to",
+                                "strength": 0.7,
+                                "description": "Implementa visualización 3D de nodos de amenaza"
+                            },
+                            {
+                                "target": "AURA/obsidian_integration.md",
+                                "type": "uses",
+                                "strength": 0.6,
+                                "description": "Almacena información de amenazas en la base de conocimiento"
+                            }
+                        ]
+                    },
+                    "AURA/physics_ui_integration.md": {
+                        "path": "AURA/physics_ui_integration.md",
+                        "title": "Physics UI Integration",
+                        "tags": ["3d", "physics", "dashboard", "antigravity", "visualization"],
+                        "created": "2026-05-25T12:00:00",
+                        "modified": "2026-05-27T20:15:00",
+                        "content": "## Physics UI Integration\n\nThis document describes the integration of the PHYS-UI-ENGINE with the AURA dashboard to create a 3D Antigravity environment.\n\n### Objectives\n- Transform the dashboard into a 3D physical space\n- Implement realistic physics with Three.js and Cannon-es\n- Create interactive elements with drag-and-drop physics\n- Add visual effects inspired by the Antigravity style\n\n### Implementation\n\n#### 1. Physics Engine\n- **Three.js**: For 3D rendering\n- **Cannon-es**: For physics simulation\n- **Custom Physics Config**:\n  - Gravity: 0.3 (reduced for Antigravity effect)\n  - Damping: 0.2 (low for more inertia)\n  - Spring Constant: 0.15 (for drag effects)\n\n#### 2. Dashboard Elements\n- **Terminals**: Converted to 3D objects with physics\n- **Panels**: Flotantes con efectos de profundidad\n- **Interactivity**: Arrastre con efecto de resorte\n\n#### 3. Visual Effects\n- **Lighting**: Ambient and directional lights\n- **Materials**: Glass-like materials with transparency\n- **Shadows**: Soft shadows for depth\n\n### Example Code\n```javascript\n// Creating a physics object\nconst physicsObject = PhysicsUI.createObject({\n  mass: 1.5,\n  width: 8,\n  height: 8,\n  depth: 8,\n  color: 0xff3366,\n  position: { x: 0, y: 40, z: 0 }\n});\n\n// Creating an HTML object with physics\nconst terminalObject = PhysicsUI.createHtmlObject(\n  document.querySelector('.evolution-terminal'), {\n    width: 30,\n    height: 50,\n    depth: 2,\n    color: 0x00d4ff,\n    position: { x: -30, y: 20, z: 0 }\n  }\n);\n```",
+                        "chunks": [
+                            "This document describes the integration of the PHYS-UI-ENGINE with the AURA dashboard to create a 3D Antigravity environment.",
+                            "### Objectives\n- Transform the dashboard into a 3D physical space\n- Implement realistic physics with Three.js and Cannon-es\n- Create interactive elements with drag-and-drop physics\n- Add visual effects inspired by the Antigravity style",
+                            "### Implementation\n\n#### 1. Physics Engine\n- **Three.js**: For 3D rendering\n- **Cannon-es**: For physics simulation\n- **Custom Physics Config**:\n  - Gravity: 0.3 (reduced for Antigravity effect)\n  - Damping: 0.2 (low for more inertia)\n  - Spring Constant: 0.15 (for drag effects)",
+                            "#### 2. Dashboard Elements\n- **Terminals**: Converted to 3D objects with physics\n- **Panels**: Flotantes con efectos de profundidad\n- **Interactivity**: Arrastre con efecto de resorte",
+                            "#### 3. Visual Effects\n- **Lighting**: Ambient and directional lights\n- **Materials**: Glass-like materials with transparency\n- **Shadows**: Soft shadows for depth",
+                            "### Example Code\n```javascript\n// Creating a physics object\nconst physicsObject = PhysicsUI.createObject({\n  mass: 1.5,\n  width: 8,\n  height: 8,\n  depth: 8,\n  color: 0xff3366,\n  position: { x: 0, y: 40, z: 0 }\n});\n```"
+                        ],
+                        "hash": "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7",
+                        "links": [
+                            {
+                                "target": "AURA/Shadow-Core/001-shadow-core-spec.md",
+                                "type": "implemented_by",
+                                "strength": 0.8,
+                                "description": "Proporciona el motor de física para visualización de amenazas"
+                            },
+                            {
+                                "target": "AURA/antigravity_nodes.md",
+                                "type": "extends",
+                                "strength": 0.9,
+                                "description": "Implementa efectos de física avanzados para nodos"
+                            },
+                            {
+                                "target": "AURA/obsidian_integration.md",
+                                "type": "visualizes",
+                                "strength": 0.7,
+                                "description": "Muestra relaciones de conocimiento en 3D"
+                            }
+                        ]
+                    },
+                    "AURA/antigravity_nodes.md": {
+                        "path": "AURA/antigravity_nodes.md",
+                        "title": "Antigravity Nodes",
+                        "tags": ["3d", "visualization", "nodes", "physics", "connections"],
+                        "created": "2026-05-27T10:15:00",
+                        "modified": "2026-05-27T16:30:00",
+                        "content": "## Antigravity Nodes\n\nThis document describes the implementation of Antigravity-style nodes in the AURA dashboard.\n\n### Concept\n\nAntigravity nodes are 3D visual representations of data points that float in space with realistic physics. They are inspired by the visual style of the Antigravity project and provide an immersive way to interact with information.\n\n### Features\n\n1. **Physics-Based Movement**: Nodes respond to gravity and collisions\n2. **Interactive**: Click to expand and view details\n3. **Visual Effects**: Glassmorphism materials and soft shadows\n4. **Proportional Sizing**: Node size reflects importance/relevance\n5. **Drag-and-Drop**: Move nodes with spring physics\n6. **Connection Lines**: Show relationships between nodes\n7. **Spring Constraints**: Physical connections that help group related nodes\n\n### Implementation Details\n\n#### Node Types\n- **Knowledge Nodes**: Represent Obsidian notes\n- **System Nodes**: Represent dashboard components\n- **Interaction Nodes**: Represent user actions\n\n#### Physics Properties\n| Property | Value | Description |\n|----------|-------|-------------|\n| Mass | 0.1-2.0 | Determines how responsive the node is to forces\n| Gravity | 0.3 | Reduced for Antigravity effect\n| Damping | 0.2 | Low for more inertia\n| Restitution | 0.8 | High for bouncy effect\n| Spring Constant | 0.15 | For drag effects\n\n#### Visual Properties\n- **Materials**: Glass-like with transparency\n- **Colors**: Based on node type (blue for knowledge, red for alerts)\n- **Lighting**: Ambient and directional lights\n- **Shadows**: Soft shadows for depth\n- **Connection Lines**: Lines between related nodes\n\n### Example Node Creation\n\n```javascript\n// Create a knowledge node\nconst knowledgeNode = PhysicsUI.createObject({\n  mass: 1.2,\n  width: 6,\n  height: 6,\n  depth: 6,\n  color: 0x00d4ff, // Blue for knowledge nodes\n  position: { x: 10, y: 25, z: 0 },\n  userData: {\n    type: 'knowledge',\n    title: 'Shadow-Core Specification',\n    path: 'AURA/Shadow-Core/001-shadow-core-spec.md',\n    content: 'The Shadow-Core is a microservice designed for advanced OSINT operations...'\n  }\n});\n\n// Make the node interactive\nknowledgeNode.mesh.userData.interactive = true;\nknowledgeNode.mesh.userData.onClick = function() {\n  showKnowledgePanel(knowledgeNode.userData);\n};\n```\n\n### Connection System\n\nThe Antigravity Nodes system implements a connection system that:\n\n1. **Detects Relationships**: Analyzes links between notes\n2. **Creates Visual Connections**: Draws lines between related nodes\n3. **Implements Physics Constraints**: Uses spring constraints to group related nodes\n4. **Dynamic Updates**: Adjusts connections when nodes move\n\n### Connection Types\n\n| Type | Description | Visual Style | Physics Strength |\n|------|-------------|--------------|------------------|\n| depends_on | Strong dependency | Thick blue line | High (0.8-1.0) |\n| related_to | Logical relationship | Medium green line | Medium (0.5-0.7) |\n| uses | Resource usage | Thin orange line | Low (0.3-0.5) |\n| implemented_by | Implementation relationship | Dashed purple line | Medium (0.6-0.8) |\n\n### Physics Constraints\n\nTo create realistic connections, the system uses Cannon.js spring constraints:\n\n```javascript\n// Create a spring constraint between two nodes\nconst constraint = new CANNON.Spring(\n  node1.body, node2.body, \n  { restLength: distance, stiffness: strength * 100, damping: 0.3 }\n);\nphysicsWorld.addConstraint(constraint);\n```\n\n### Dynamic Filtering\n\nThe system supports dynamic filtering of nodes based on search results:\n\n1. **Highlight Matching Nodes**: Nodes containing search terms become more opaque\n2. **Fade Non-Matching Nodes**: Irrelevant nodes become semi-transparent (ghost mode)\n3. **Adjust Connection Visibility**: Only show connections between relevant nodes\n4. **Color Coding**: Use color to indicate relevance level\n\n### Threat Visualization\n\nWhen the Shadow-Core detects a threat:\n\n1. **Color Change**: Affected nodes change color to red\n2. **Pulse Effect**: Nodes pulse to draw attention\n3. **Connection Highlight**: Related nodes get brighter connections\n4. **Alert Notification**: System-wide alert is triggered",
+                        "chunks": [
+                            "This document describes the implementation of Antigravity-style nodes in the AURA dashboard.",
+                            "### Concept\n\nAntigravity nodes are 3D visual representations of data points that float in space with realistic physics. They are inspired by the visual style of the Antigravity project and provide an immersive way to interact with information.",
+                            "### Features\n\n1. **Physics-Based Movement**: Nodes respond to gravity and collisions\n2. **Interactive**: Click to expand and view details\n3. **Visual Effects**: Glassmorphism materials and soft shadows\n4. **Proportional Sizing**: Node size reflects importance/relevance\n5. **Drag-and-Drop**: Move nodes with spring physics\n6. **Connection Lines**: Show relationships between nodes\n7. **Spring Constraints**: Physical connections that help group related nodes",
+                            "### Implementation Details\n\n#### Node Types\n- **Knowledge Nodes**: Represent Obsidian notes\n- **System Nodes**: Represent dashboard components\n- **Interaction Nodes**: Represent user actions",
+                            "#### Physics Properties\n| Property | Value | Description |\n|----------|-------|-------------|\n| Mass | 0.1-2.0 | Determines how responsive the node is to forces\n| Gravity | 0.3 | Reduced for Antigravity effect\n| Damping | 0.2 | Low for more inertia\n| Restitution | 0.8 | High for bouncy effect\n| Spring Constant | 0.15 | For drag effects",
+                            "#### Visual Properties\n- **Materials**: Glass-like with transparency\n- **Colors**: Based on node type (blue for knowledge, red for alerts)\n- **Lighting**: Ambient and directional lights\n- **Shadows**: Soft shadows for depth\n- **Connection Lines**: Lines between related nodes"
+                        ],
+                        "hash": "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8",
+                        "links": [
+                            {
+                                "target": "AURA/Shadow-Core/001-shadow-core-spec.md",
+                                "type": "visualizes",
+                                "strength": 0.9,
+                                "description": "Muestra visualmente las amenazas detectadas por Shadow-Core"
+                            },
+                            {
+                                "target": "AURA/physics_ui_integration.md",
+                                "type": "extends",
+                                "strength": 0.9,
+                                "description": "Añade conexiones físicas y visuales a los nodos"
+                            },
+                            {
+                                "target": "AURA/obsidian_integration.md",
+                                "type": "enhances",
+                                "strength": 0.8,
+                                "description": "Mejora la visualización de relaciones de conocimiento"
+                            }
+                        ]
+                    },
+                    "AURA/obsidian_integration.md": {
+                        "path": "AURA/obsidian_integration.md",
+                        "title": "Obsidian Integration",
+                        "tags": ["obsidian", "knowledge", "memory", "search", "graph"],
+                        "created": "2026-05-26T15:30:00",
+                        "modified": "2026-05-27T19:45:00",
+                        "content": "## Obsidian Integration\n\nThis document describes how to integrate AURA with Obsidian vaults for long-term knowledge management.\n\n### Objectives\n- Index Obsidian notes for search\n- Create a knowledge graph\n- Implement tactical nodes in 3D space\n- Enable interactive exploration of knowledge\n- Analyze relationships between notes\n\n### Implementation\n\n#### 1. Indexing System\n- **ObsidianIndexer**: Python class for indexing\n- **Metadata Extraction**: Frontmatter processing\n- **Text Chunking**: For efficient search\n- **JSON Storage**: knowledge_base.json\n- **Relationship Analysis**: Detects links between notes\n\n#### 2. Search Functionality\n- **Endpoint**: /api/obsidian/search\n- **Parameters**: query, limit\n- **Response**: Relevant note fragments\n- **Graph Analysis**: Returns related notes\n\n#### 3. 3D Visualization\n- **Tactical Nodes**: Represent notes as 3D objects\n- **Size Proportional**: Based on note relevance\n- **Interactive**: Click to expand and view content\n- **Connection Visualization**: Shows relationships between nodes\n- **Dynamic Filtering**: Highlights relevant nodes based on search\n\n### Knowledge Graph\n\nThe integration creates a knowledge graph that:\n\n1. **Detects Relationships**: Analyzes links between notes\n2. **Visualizes Connections**: Shows relationships in 3D space\n3. **Enables Exploration**: Users can navigate through related content\n4. **Supports Filtering**: Highlights relevant portions of the graph\n\n### Relationship Types\n\n| Type | Description | Example |\n|------|-------------|---------|\n| depends_on | One note depends on another | Shadow-Core depends on Physics UI |\n| related_to | Logical relationship | Physics UI is related to Antigravity Nodes |\n| uses | Resource usage | Shadow-Core uses Obsidian Integration |\n| implemented_by | Implementation relationship | Physics UI is implemented by Shadow-Core |\n| extends | Extension relationship | Antigravity Nodes extends Physics UI |\n\n### Graph Analysis\n\nThe system analyzes the knowledge graph to:\n\n1. **Calculate Centrality**: Identify important nodes\n2. **Detect Clusters**: Group related nodes\n3. **Measure Distance**: Calculate relationship strength\n4. **Predict Connections**: Suggest new relationships\n\n### Dynamic Filtering\n\nWhen performing a search, the system:\n\n1. **Highlights Relevant Nodes**: Makes them more opaque\n2. **Fades Irrelevant Nodes**: Reduces their opacity\n3. **Adjusts Connections**: Only shows connections to relevant nodes\n4. **Changes Colors**: Uses color coding to indicate relevance",
+                        "chunks": [
+                            "This document describes how to integrate AURA with Obsidian vaults for long-term knowledge management.",
+                            "### Objectives\n- Index Obsidian notes for search\n- Create a knowledge graph\n- Implement tactical nodes in 3D space\n- Enable interactive exploration of knowledge\n- Analyze relationships between notes",
+                            "### Implementation\n\n#### 1. Indexing System\n- **ObsidianIndexer**: Python class for indexing\n- **Metadata Extraction**: Frontmatter processing\n- **Text Chunking**: For efficient search\n- **JSON Storage**: knowledge_base.json\n- **Relationship Analysis**: Detects links between notes",
+                            "#### 2. Search Functionality\n- **Endpoint**: /api/obsidian/search\n- **Parameters**: query, limit\n- **Response**: Relevant note fragments\n- **Graph Analysis**: Returns related notes",
+                            "#### 3. 3D Visualization\n- **Tactical Nodes**: Represent notes as 3D objects\n- **Size Proportional**: Based on note relevance\n- **Interactive**: Click to expand and view content\n- **Connection Visualization**: Shows relationships between nodes\n- **Dynamic Filtering**: Highlights relevant nodes based on search",
+                            "### Knowledge Graph\n\nThe integration creates a knowledge graph that:\n\n1. **Detects Relationships**: Analyzes links between notes\n2. **Visualizes Connections**: Shows relationships in 3D space\n3. **Enables Exploration**: Users can navigate through related content\n4. **Supports Filtering**: Highlights relevant portions of the graph"
+                        ],
+                        "hash": "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f",
+                        "links": [
+                            {
+                                "target": "AURA/Shadow-Core/001-shadow-core-spec.md",
+                                "type": "stores",
+                                "strength": 0.7,
+                                "description": "Almacena información de amenazas detectadas"
+                            },
+                            {
+                                "target": "AURA/physics_ui_integration.md",
+                                "type": "visualizes",
+                                "strength": 0.8,
+                                "description": "Muestra las relaciones de conocimiento en 3D"
+                            },
+                            {
+                                "target": "AURA/antigravity_nodes.md",
+                                "type": "enhances",
+                                "strength": 0.9,
+                                "description": "Añade conexiones físicas entre nodos relacionados"
+                            }
+                        ]
+                    }
+                },
+                "categories": {
+                    "shadow-core": {
+                        "title": "Shadow-Core",
+                        "description": "Advanced OSINT operations and system isolation",
+                        "color": 0xff3366,
+                        "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"]
+                    },
+                    "physics": {
+                        "title": "Physics UI",
+                        "description": "3D physics integration and Antigravity effects",
+                        "color": 0x00d4ff,
+                        "nodes": ["AURA/physics_ui_integration.md", "AURA/antigravity_nodes.md"]
+                    },
+                    "obsidian": {
+                        "title": "Obsidian Integration",
+                        "description": "Knowledge management and search functionality",
+                        "color": 0x00ff88,
+                        "nodes": ["AURA/obsidian_integration.md"]
+                    }
+                },
+                "search_index": {
+                    "last_updated": "2026-05-28T16:00:00",
+                    "terms": {
+                        "shadow": {
+                            "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                            "strength": 0.95
+                        },
+                        "core": {
+                            "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                            "strength": 0.9
+                        },
+                        "osint": {
+                            "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md", "AURA/physics_ui_integration.md"],
+                            "strength": 0.85
+                        },
+                        "physics": {
+                            "nodes": ["AURA/physics_ui_integration.md", "AURA/antigravity_nodes.md"],
+                            "strength": 0.9
+                        },
+                        "antigravity": {
+                            "nodes": ["AURA/antigravity_nodes.md", "AURA/physics_ui_integration.md"],
+                            "strength": 0.88
+                        },
+                        "nodes": {
+                            "nodes": ["AURA/antigravity_nodes.md", "AURA/obsidian_integration.md"],
+                            "strength": 0.85
+                        },
+                        "knowledge": {
+                            "nodes": ["AURA/obsidian_integration.md", "AURA/antigravity_nodes.md"],
+                            "strength": 0.9
+                        },
+                        "threat": {
+                            "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                            "strength": 0.92
+                        },
+                        "visualization": {
+                            "nodes": ["AURA/physics_ui_integration.md", "AURA/antigravity_nodes.md"],
+                            "strength": 0.88
+                        },
+                        "connections": {
+                            "nodes": ["AURA/antigravity_nodes.md", "AURA/obsidian_integration.md"],
+                            "strength": 0.87
+                        }
+                    },
+                    "node_relationships": {
+                        "AURA/Shadow-Core/001-shadow-core-spec.md": {
+                            "depends_on": ["AURA/physics_ui_integration.md"],
+                            "related_to": ["AURA/antigravity_nodes.md"],
+                            "uses": ["AURA/obsidian_integration.md"]
+                        },
+                        "AURA/physics_ui_integration.md": {
+                            "implemented_by": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                            "extends": ["AURA/antigravity_nodes.md"],
+                            "visualizes": ["AURA/obsidian_integration.md"]
+                        },
+                        "AURA/antigravity_nodes.md": {
+                            "visualizes": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                            "extends": ["AURA/physics_ui_integration.md"],
+                            "enhances": ["AURA/obsidian_integration.md"]
+                        },
+                        "AURA/obsidian_integration.md": {
+                            "stores": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                            "visualizes": ["AURA/physics_ui_integration.md"],
+                            "enhances": ["AURA/antigravity_nodes.md"]
+                        }
+                    }
+                }
+            }
+        };
+
+        // Función para añadir mensaje al log
+        function addLogEntry(message, type) {
+            const logContainer = document.getElementById('system-log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = message;
+
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+
+            // Limitar a 20 entradas
+            if (logContainer.children.length > 20) {
+                logContainer.removeChild(logContainer.firstChild);
+            }
+        }
+
+        // Función para simular la carga de la base de conocimiento
+        async function simulateKnowledgeBase() {
+            try {
+                addLogEntry('🌐 Simulando carga de grafo de conocimiento...', 'info');
+
+                // Simular la estructura de categories
+                const categories = {
+                    'shadow-core': {
+                        title: "Shadow-Core",
+                        description: "Advanced OSINT operations and system isolation",
+                        color: 0xff3366,
+                        nodes: ["AURA/Shadow-Core/001-shadow-core-spec.md"]
+                    },
+                    'physics': {
+                        title: "Physics UI",
+                        description: "3D physics integration and Antigravity effects",
+                        color: 0x00d4ff,
+                        nodes: ["AURA/physics_ui_integration.md", "AURA/antigravity_nodes.md"]
+                    },
+                    'obsidian': {
+                        title: "Obsidian Integration",
+                        description: "Knowledge management and search functionality",
+                        color: 0x00ff88,
+                        nodes: ["AURA/obsidian_integration.md"]
+                    }
+                };
+
+                // Crear nodos para cada categoría
+                const nodePaths = Object.keys(testConfig.testData.notes);
+                nodePaths.forEach((notePath, index) => {
+                    const note = testConfig.testData.notes[notePath];
+
+                    // Determinar el tamaño del nodo basado en la relevancia
+                    const chunkCount = note.chunks ? note.chunks.length : 1;
+                    const linkCount = note.links ? note.links.length : 0;
+                    const size = 4 + (chunkCount * 0.5) + (linkCount * 0.4);
+
+                    // Calcular posición basada en el índice para distribución más uniforme
+                    const position = {
+                        x: (index % 3) * 15 - 15,  // Distribuir en rango -15 a 15
+                        y: Math.floor(index / 3) * 10 - 10,  // Distribuir en rango -10 a 10
+                        z: 0
+                    };
+
+                    // Crear el nodo físico
+                    const node = window.PhysicsUI.createObject({
+                        mass: 0.8 + (size * 0.1),
+                        width: size,
+                        height: size,
+                        depth: size * 0.6,
+                        color: categories['shadow-core'].color,
+                        position: position,
+                        userData: {
+                            type: 'knowledge',
+                            category: 'shadow-core',
+                            title: note.title,
+                            path: note.path,
+                            content: note.content,
+                            chunks: note.chunks,
+                            tags: note.tags,
+                            created: note.created,
+                            modified: note.modified,
+                            originalSize: size,
+                            originalColor: categories['shadow-core'].color,
+                            nodeData: {
+                                node: note,
+                                connections: note.links || []
+                            }
+                        },
+                        isDraggable: true
+                    });
+
+                    // Añadir efecto de brillo
+                    addGlowEffect(node.mesh, categories['shadow-core'].color);
+
+                    // Hacer el nodo interactivo
+                    makeNodeInteractive(node, note);
+
+                    addLogEntry(`✅ Nodo creado: ${note.title}`, 'info');
+                });
+
+                // Crear conexiones entre nodos
+                createTestConnections();
+
+                addLogEntry(`🎉 Sistema de inteligencia conectiva listo`, 'success');
+                addLogEntry(`   - ${nodePaths.length} nodos creados`, 'success');
+                addLogEntry(`   - ${calculateTestConnections()} conexiones físicas establecidas`, 'success');
+
+            } catch (error) {
+                addLogEntry(`❌ Error: ${error.message}`, 'error');
+                console.error('Error en la simulación:', error);
+            }
+        }
+
+        // Función para crear conexiones de prueba
+        function createTestConnections() {
+            const nodes = window.KnowledgeNodes ? window.KnowledgeNodes.knowledgeNodes : [];
+            const graph = testConfig.testData;
+
+            // Crear conexiones basadas en las relaciones definidas
+            for (const [sourcePath, sourceNote] of Object.entries(graph.notes)) {
+                if (!sourceNote.links) continue;
+
+                sourceNote.links.forEach(link => {
+                    const targetPath = link.target;
+                    const targetNote = graph.notes[targetPath];
+
+                    if (!targetNote) return;
+
+                    // Encontrar los nodos en la escena
+                    const sourceNode = nodes.find(n => n.userData.path === sourcePath);
+                    const targetNode = nodes.find(n => n.userData.path === targetPath);
+
+                    if (sourceNode && targetNode) {
+                        // Crear la conexión visual
+                        createConnectionLine(sourceNode, targetNode, link);
+
+                        // Crear la restricción física
+                        createPhysicsConstraint(sourceNode, targetNode, link);
+
+                        addLogEntry(`🔗 Conexión creada: ${sourceNote.title} → ${targetNote.title} (${link.type})`, 'info');
+                    }
+                });
+            }
+        }
+
+        // Función para calcular el número de conexiones de prueba
+        function calculateTestConnections() {
+            let total = 0;
+            const graph = testConfig.testData;
+
+            for (const [notePath, note] of Object.entries(graph.notes)) {
+                if (note.links) {
+                    total += note.links.length;
+                }
+            }
+
+            return total;
+        }
+
+        // Función para añadir efecto de brillo a un nodo (simulada)
+        function addGlowEffect(mesh, color) {
+            // En una implementación real, esto crearía un efecto de brillo
+            // Para esta prueba, solo lo registramos
+            mesh.userData.glowEffect = true;
+            mesh.userData.glowColor = color;
+        }
+
+        // Función para hacer un nodo interactivo
+        function makeNodeInteractive(node, note) {
+            // Añadir evento de clic
+            node.mesh.userData.onClick = function() {
+                showKnowledgePanel(note);
+            };
+
+            // Añadir evento de doble clic para expandir/contraer
+            node.mesh.userData.onDoubleClick = function() {
+                if (node.userData.expanded) {
+                    collapseKnowledgeNode(node);
+                } else {
+                    expandKnowledgeNode(node);
+                }
+            };
+
+            addLogEntry(`🎯 Nodo interactivo configurado: ${note.title}`, 'info');
+        }
+
+        // Función para mostrar el panel de conocimiento
+        function showKnowledgePanel(note) {
+            // Cerrar cualquier panel activo
+            const existingPanel = document.querySelector('.knowledge-panel-container');
+            if (existingPanel) {
+                existingPanel.style.display = 'none';
+            }
+
+            // Crear el contenedor del panel
+            const panelContainer = document.createElement('div');
+            panelContainer.className = 'knowledge-panel-container';
+            panelContainer.style.position = 'fixed';
+            panelContainer.style.zIndex = '2000';
+            panelContainer.style.width = '400px';
+            panelContainer.style.height = '500px';
+            panelContainer.style.left = '50%';
+            panelContainer.style.top = '50%';
+            panelContainer.style.transform = 'translate(-50%, -50%)';
+            panelContainer.style.background = 'rgba(10, 15, 26, 0.9)';
+            panelContainer.style.border = '1px solid rgba(0, 212, 255, 0.3)';
+            panelContainer.style.borderRadius = '10px';
+            panelContainer.style.boxShadow = '0 0 30px rgba(0, 212, 255, 0.3)';
+            panelContainer.style.backdropFilter = 'blur(10px)';
+            panelContainer.style.overflow = 'hidden';
+            panelContainer.style.display = 'none';
+            panelContainer.style.transition = 'all 0.3s ease';
+
+            // Crear el contenido del panel
+            const panelContent = document.createElement('div');
+            panelContent.className = 'knowledge-panel-content';
+            panelContent.style.padding = '15px';
+            panelContent.style.color = '#00d4ff';
+            panelContent.style.fontFamily = "'Courier New', monospace";
+            panelContent.style.fontSize = '12px';
+            panelContent.style.lineHeight = '1.4';
+            panelContent.style.height = '100%';
+            panelContent.style.overflowY = 'auto';
+
+            // Crear el encabezado del panel
+            const panelHeader = document.createElement('div');
+            panelHeader.className = 'knowledge-panel-header';
+
+            // Título del panel
+            const panelTitle = document.createElement('h2');
+            panelTitle.textContent = note.title;
+            panelTitle.style.color = '#ff3366';
+            panelTitle.style.margin = '0 0 5px 0';
+            panelTitle.style.fontSize = '16px';
+
+            // Ruta de la nota
+            const panelPath = document.createElement('div');
+            panelPath.textContent = note.path;
+            panelPath.className = 'path';
+            panelPath.style.color = '#ccc';
+            panelPath.style.fontSize = '11px';
+            panelPath.style.marginBottom = '10px';
+
+            // Tags
+            const tagsContainer = document.createElement('div');
+            tagsContainer.className = 'tags';
+
+            note.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.textContent = `#${tag}`;
+                tagElement.className = 'tag';
+                tagsContainer.appendChild(tagElement);
+            });
+
+            // Fechas
+            const datesContainer = document.createElement('div');
+            datesContainer.className = 'dates';
+
+            const createdDate = document.createElement('div');
+            createdDate.textContent = `Creado: ${note.created}`;
+            createdDate.style.marginRight = '15px';
+
+            const modifiedDate = document.createElement('div');
+            modifiedDate.textContent = `Modificado: ${note.modified}`;
+
+            datesContainer.appendChild(createdDate);
+            datesContainer.appendChild(modifiedDate);
+
+            // Añadir elementos al encabezado
+            panelHeader.appendChild(panelTitle);
+            panelHeader.appendChild(panelPath);
+            panelHeader.appendChild(tagsContainer);
+            panelHeader.appendChild(datesContainer);
+
+            // Contenido principal
+            const contentTitle = document.createElement('h3');
+            contentTitle.textContent = 'Contenido';
+            contentTitle.style.color = '#00d4ff';
+            contentTitle.style.margin = '15px 0 10px 0';
+            contentTitle.style.fontSize = '14px';
+
+            // Procesar el contenido para mostrarlo con formato
+            const contentDiv = document.createElement('div');
+            contentDiv.style.whiteSpace = 'pre-wrap';
+            contentDiv.style.lineHeight = '1.5';
+
+            // Dividir el contenido en párrafos
+            const paragraphs = note.content.split('\n\n').filter(p => p.trim().length > 0);
+
+            paragraphs.forEach(paragraph => {
+                const pElement = document.createElement('p');
+                pElement.textContent = paragraph;
+                pElement.style.margin = '5px 0';
+                pElement.style.color = '#ccc';
+
+                // Resaltar encabezados
+                if (paragraph.startsWith('## ')) {
+                    pElement.style.fontWeight = 'bold';
+                    pElement.style.color = '#00d4ff';
+                    pElement.style.marginTop = '15px';
+                } else if (paragraph.startsWith('### ')) {
+                    pElement.style.fontWeight = 'bold';
+                    pElement.style.color = '#00ff88';
+                    pElement.style.marginTop = '10px';
+                }
+
+                contentDiv.appendChild(pElement);
+            });
+
+            // Sección de conexiones
+            const connectionsTitle = document.createElement('h3');
+            connectionsTitle.textContent = 'Relaciones';
+            connectionsTitle.style.color = '#00ff88';
+            connectionsTitle.style.margin = '20px 0 10px 0';
+            connectionsTitle.style.fontSize = '14px';
+
+            const connectionsDiv = document.createElement('div');
+            connectionsDiv.style.marginTop = '10px';
+
+            // Obtener datos de conexiones del grafo
+            const nodeData = testConfig.testData.notes[note.path];
+            if (nodeData && nodeData.links && nodeData.links.length > 0) {
+                nodeData.links.sort((a, b) => b.strength - a.strength);
+
+                // Mostrar las conexiones más fuertes
+                const connectionsToShow = Math.min(nodeData.links.length, 5);
+                for (let i = 0; i < connectionsToShow; i++) {
+                    const connection = nodeData.links[i];
+                    const targetNote = testConfig.testData.notes[connection.target];
+
+                    if (targetNote) {
+                        const connectionElement = document.createElement('div');
+                        connectionElement.style.marginBottom = '8px';
+                        connectionElement.style.padding = '5px';
+                        connectionElement.style.background = 'rgba(20, 25, 40, 0.5)';
+                        connectionElement.style.borderRadius = '5px';
+                        connectionElement.style.borderLeft = `3px solid ${getConnectionColor(connection.type)}`;
+
+                        const connectionType = document.createElement('span');
+                        connectionType.textContent = `${connection.type}: `;
+                        connectionType.style.color = '#00d4ff';
+                        connectionType.style.fontWeight = 'bold';
+
+                        const connectionTitle = document.createElement('span');
+                        connectionTitle.textContent = targetNote.title;
+                        connectionTitle.style.color = '#ccc';
+                        connectionTitle.style.cursor = 'pointer';
+                        connectionTitle.addEventListener('click', () => {
+                            // Encontrar el nodo objetivo y mostrar su panel
+                            const targetNode = window.KnowledgeNodes.knowledgeNodes.find(n => n.userData.path === connection.target);
+                            if (targetNode) {
+                                showKnowledgePanel(targetNode.userData.node);
+                            }
+                        });
+
+                        const connectionStrength = document.createElement('span');
+                        connectionStrength.textContent = ` (${connection.strength.toFixed(1)})`;
+                        connectionStrength.style.color = '#666';
+                        connectionStrength.style.fontSize = '10px';
+
+                        connectionElement.appendChild(connectionType);
+                        connectionElement.appendChild(connectionTitle);
+                        connectionElement.appendChild(connectionStrength);
+
+                        connectionsDiv.appendChild(connectionElement);
+                    }
+                }
+            } else {
+                const noConnections = document.createElement('div');
+                noConnections.textContent = 'No hay relaciones definidas para esta nota.';
+                noConnections.style.color = '#666';
+                noConnections.style.fontStyle = 'italic';
+                connectionsDiv.appendChild(noConnections);
+            }
+
+            // Botón para cerrar el panel
+            const closeButton = document.createElement('div');
+            closeButton.className = 'knowledge-panel-close';
+            closeButton.style.position = 'absolute';
+            closeButton.style.top = '10px';
+            closeButton.style.right = '10px';
+            closeButton.style.width = '24px';
+            closeButton.style.height = '24px';
+            closeButton.style.background = 'rgba(255, 51, 102, 0.2)';
+            closeButton.style.border = '1px solid rgba(255, 51, 102, 0.5)';
+            closeButton.style.borderRadius = '50%';
+            closeButton.style.display = 'flex';
+            closeButton.style.alignItems = 'center';
+            closeButton.style.justifyContent = 'center';
+            closeButton.style.color = '#ff3366';
+            closeButton.style.fontSize = '16px';
+            closeButton.style.cursor = 'pointer';
+            closeButton.style.zIndex = '10';
+            closeButton.style.transition = 'all 0.2s ease';
+            closeButton.innerHTML = '✕';
+
+            closeButton.addEventListener('click', () => {
+                panelContainer.style.opacity = '0';
+                panelContainer.style.transform = 'translate(-50%, -50%) scale(0.9)';
+
+                setTimeout(() => {
+                    document.body.removeChild(panelContainer);
+                }, 300);
+            });
+
+            // Añadir elementos al panel
+            panelContent.appendChild(panelHeader);
+            panelContent.appendChild(contentTitle);
+            panelContent.appendChild(contentDiv);
+            panelContent.appendChild(connectionsTitle);
+            panelContent.appendChild(connectionsDiv);
+
+            // Añadir el botón de cerrar al contenedor
+            panelContainer.appendChild(closeButton);
+            panelContainer.appendChild(panelContent);
+
+            // Añadir el panel al cuerpo
+            document.body.appendChild(panelContainer);
+
+            // Mostrar el panel con animación
+            setTimeout(() => {
+                panelContainer.style.display = 'block';
+            }, 10);
+
+            addLogEntry(`📄 Panel de conocimiento mostrado: ${note.title}`, 'info');
+        }
+
+        // Función para obtener el color de una conexión por tipo
+        function getConnectionColor(type) {
+            const colors = {
+                'depends_on': '#00d4ff',
+                'related_to': '#00ff88',
+                'uses': '#ffcc00',
+                'implemented_by': '#8888ff',
+                'extends': '#ff66cc',
+                'visualizes': '#00ccff',
+                'enhances': '#ccff00',
+                'stores': '#ff6600'
+            };
+            return colors[type] || '#8888ff';
+        }
+
+        // Función para expandir un nodo
+        function expandKnowledgeNode(node) {
+            if (node.userData.expanded) return;
+
+            const originalSize = node.userData.originalSize;
+            const targetSize = originalSize * 1.5;
+
+            // Guardar el estado original
+            node.userData.expanded = true;
+            node.userData.originalScale = new THREE.Vector3(
+                node.mesh.scale.x,
+                node.mesh.scale.y,
+                node.mesh.scale.z
+            );
+
+            // Animación de expansión
+            let startTime = null;
+            const duration = 300; // ms
+
+            function animateExpand(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Calcular escala intermedia
+                const currentScale = node.userData.originalScale.clone();
+                currentScale.multiplyScalar(1 + (targetSize/originalSize - 1) * progress);
+
+                // Aplicar escala
+                node.mesh.scale.copy(currentScale);
+
+                // Continuar la animación si no ha terminado
+                if (progress < 1) {
+                    node.userData.expandAnimationId = requestAnimationFrame(animateExpand);
+                } else {
+                    node.userData.expanding = false;
+                }
+            }
+
+            node.userData.expandAnimationId = requestAnimationFrame(animateExpand);
+            addLogEntry(`🔍 Nodo expandido: ${node.userData.title}`, 'info');
+        }
+
+        // Función para contraer un nodo
+        function collapseKnowledgeNode(node) {
+            if (!node.userData.expanded) return;
+
+            const originalScale = node.userData.originalScale;
+
+            // Animación de contracción
+            let startTime = null;
+            const duration = 300; // ms
+
+            function animateCollapse(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Calcular escala intermedia
+                const currentScale = new THREE.Vector3(
+                    originalScale.x + (node.mesh.scale.x - originalScale.x) * (1 - progress),
+                    originalScale.y + (node.mesh.scale.y - originalScale.y) * (1 - progress),
+                    originalScale.z + (node.mesh.scale.z - originalScale.z) * (1 - progress)
+                );
+
+                // Aplicar escala
+                node.mesh.scale.copy(currentScale);
+
+                // Continuar la animación si no ha terminado
+                if (progress < 1) {
+                    node.userData.expandAnimationId = requestAnimationFrame(animateCollapse);
+                } else {
+                    node.userData.expanded = false;
+                    node.userData.expanding = false;
+                }
+            }
+
+            node.userData.expandAnimationId = requestAnimationFrame(animateCollapse);
+            addLogEntry(`🔗 Nodo contraído: ${node.userData.title}`, 'info');
+        }
+
+        // Función para crear una línea de conexión entre dos nodos
+        function createConnectionLine(node1, node2, connectionData) {
+            if (!window.KnowledgeNodes.config.connectionLines) return;
+
+            // Obtener configuración de la conexión
+            const connectionType = connectionData.type || 'related_to';
+            const config = {
+                color: getConnectionColor(connectionType),
+                width: 2,
+                dashed: false,
+                strength: 0.5
+            };
+
+            // Crear geometría para la línea
+            const geometry = new THREE.BufferGeometry();
+            const material = new THREE.LineBasicMaterial({
+                color: config.color,
+                linewidth: config.width,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending,
+                depthTest: false
+            });
+
+            // Crear línea con geometría dinámica
+            const line = new THREE.Line(geometry, material);
+            line.userData = {
+                node1: node1,
+                node2: node2,
+                type: connectionType,
+                strength: config.strength,
+                visible: true,
+                dashed: config.dashed
+            };
+
+            // Añadir la línea al escenario
+            window.threeScene.add(line);
+
+            // Función para actualizar la línea
+            line.update = function() {
+                if (!this.userData.visible) return;
+
+                const points = [];
+                const node1Pos = this.userData.node1.mesh.position;
+                const node2Pos = this.userData.node2.mesh.position;
+
+                // Punto de inicio (centro del nodo 1)
+                points.push(new THREE.Vector3(
+                    node1Pos.x,
+                    node1Pos.y,
+                    node1Pos.z
+                ));
+
+                // Punto intermedio (para curvar ligeramente)
+                const midX = (node1Pos.x + node2Pos.x) / 2;
+                const midY = (node1Pos.y + node2Pos.y) / 2;
+                const midZ = Math.max(node1Pos.z, node2Pos.z) + 2;
+
+                points.push(new THREE.Vector3(midX, midY, midZ));
+
+                // Punto de fin (centro del nodo 2)
+                points.push(new THREE.Vector3(
+                    node2Pos.x,
+                    node2Pos.y,
+                    node2Pos.z
+                ));
+
+                // Actualizar geometría
+                geometry.setFromPoints(points);
+            };
+
+            // Inicializar la línea
+            line.update();
+
+            // Guardar referencia a la línea
+            if (!window.KnowledgeNodes.connectionLines) {
+                window.KnowledgeNodes.connectionLines = [];
+            }
+            window.KnowledgeNodes.connectionLines.push(line);
+
+            addLogEntry(`🔗 Línea de conexión creada: ${node1.userData.title} → ${node2.userData.title}`, 'info');
+        }
+
+        // Función para crear una restricción física entre dos nodos
+        function createPhysicsConstraint(node1, node2, connectionData) {
+            if (!window.KnowledgeNodes.config.physicsConstraints || !window.CANNON) return;
+
+            // Obtener configuración de la conexión
+            const connectionType = connectionData.type || 'related_to';
+            const config = {
+                strength: 0.5
+            };
+
+            // Calcular distancia entre los nodos
+            const node1Pos = node1.mesh.position;
+            const node2Pos = node2.mesh.position;
+            const distance = node1Pos.distanceTo(node2Pos);
+
+            // Crear restricción de muelle (spring)
+            const constraint = new CANNON.Spring(
+                node1.body,
+                node2.body,
+                {
+                    restLength: distance,
+                    stiffness: config.strength * 100,
+                    damping: 0.3
+                }
+            );
+
+            // Añadir restricción al mundo físico
+            window.physicsWorld.addConstraint(constraint);
+
+            // Guardar referencia a la restricción
+            if (!window.KnowledgeNodes.physicsConstraints) {
+                window.KnowledgeNodes.physicsConstraints = [];
+            }
+            window.KnowledgeNodes.physicsConstraints.push({
+                constraint: constraint,
+                node1: node1,
+                node2: node2,
+                type: connectionType,
+                strength: config.strength
+            });
+
+            addLogEntry(`🔗 Restricción física creada: ${node1.userData.title} ↔ ${node2.userData.title}`, 'info');
+        }
+
+        // Función para filtrar nodos por búsqueda
+        function filterNodesBySearch(query) {
+            if (!query || query.trim() === '') {
+                // Restaurar todos los nodos si no hay búsqueda
+                resetNodeVisibility();
+                return;
+            }
+
+            // Buscar términos en el índice de búsqueda
+            const searchTerms = query.toLowerCase().split(' ');
+            const relevantNodes = new Set();
+
+            // Buscar en el índice de términos
+            for (const term of searchTerms) {
+                if (testConfig.testData.search_index.terms[term]) {
+                    testConfig.testData.search_index.terms[term].nodes.forEach(nodePath => {
+                        relevantNodes.add(nodePath);
+                    });
+                }
+            }
+
+            // Si no se encontraron términos exactos, buscar en el contenido
+            if (relevantNodes.size === 0) {
+                for (const [nodePath, nodeData] of Object.entries(testConfig.testData.notes)) {
+                    const content = (nodeData.content || '').toLowerCase();
+                    for (const term of searchTerms) {
+                        if (content.includes(term)) {
+                            relevantNodes.add(nodePath);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Aplicar filtrado a los nodos
+            const nodes = window.KnowledgeNodes ? window.KnowledgeNodes.knowledgeNodes : [];
+            nodes.forEach(node => {
+                const nodePath = node.userData.path;
+                const isRelevant = relevantNodes.has(nodePath);
+
+                // Aplicar opacidad según relevancia
+                if (isRelevant) {
+                    node.mesh.material.opacity = 0.9;
+                    node.mesh.material.transparent = true;
+                } else {
+                    node.mesh.material.opacity = 0.2;
+                    node.mesh.material.transparent = true;
+                }
+            });
+
+            // Actualizar visibilidad de conexiones
+            updateConnectionVisibility(relevantNodes);
+
+            // Mostrar resultados en el panel de búsqueda
+            showSearchResults(query, relevantNodes);
+
+            addLogEntry(`🔍 Filtrado aplicado: ${relevantNodes.size} nodos relevantes de ${nodes.length} totales`, 'info');
+        }
+
+        // Función para restaurar la visibilidad de todos los nodos
+        function resetNodeVisibility() {
+            const nodes = window.KnowledgeNodes ? window.KnowledgeNodes.knowledgeNodes : [];
+            nodes.forEach(node => {
+                // Restaurar opacidad original
+                node.mesh.material.opacity = 1;
+                node.mesh.material.transparent = false;
+            });
+
+            // Restaurar visibilidad de todas las conexiones
+            updateConnectionVisibility(new Set(Object.keys(testConfig.testData.notes)));
+
+            // Limpiar resultados
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = '<div style="text-align: center; color: #666; font-style: italic;">Resultados de búsqueda aparecerán aquí...</div>';
+
+            addLogEntry('🔄 Restaurando visibilidad de todos los nodos', 'info');
+        }
+
+        // Función para actualizar visibilidad de conexiones
+        function updateConnectionVisibility(relevantNodes) {
+            const nodes = window.KnowledgeNodes ? window.KnowledgeNodes.knowledgeNodes : [];
+            const lines = window.KnowledgeNodes ? window.KnowledgeNodes.connectionLines : [];
+
+            lines.forEach(line => {
+                const node1Path = line.userData.node1.userData.path;
+                const node2Path = line.userData.node2.userData.path;
+
+                // Verificar si ambos nodos son relevantes o si al menos uno lo es
+                const isRelevant = relevantNodes.has(node1Path) || relevantNodes.has(node2Path);
+
+                // Mostrar u ocultar la conexión según relevancia
+                line.userData.visible = isRelevant;
+            });
+
+            addLogEntry(`🔗 ${lines.filter(line => line.userData.visible).length} de ${lines.length} conexiones visibles`, 'info');
+        }
+
+        // Función para mostrar resultados de búsqueda
+        function showSearchResults(query, relevantNodes) {
+            const resultsContainer = document.getElementById('search-results');
+
+            if (relevantNodes.size > 0) {
+                resultsContainer.innerHTML = '';
+
+                // Convertir a array y ordenar por relevancia
+                const sortedNodes = Array.from(relevantNodes).sort((a, b) => {
+                    const aNode = testConfig.testData.notes[a];
+                    const bNode = testConfig.testData.notes[b];
+
+                    if (!aNode || !bNode) return 0;
+
+                    // Priorizar nodos con más conexiones
+                    const aConnections = (aNode.links || []).length;
+                    const bConnections = (bNode.links || []).length;
+
+                    return bConnections - aConnections;
+                });
+
+                // Mostrar los 10 resultados más relevantes
+                const resultsToShow = Math.min(sortedNodes.length, 10);
+                for (let i = 0; i < resultsToShow; i++) {
+                    const nodePath = sortedNodes[i];
+                    const note = testConfig.testData.notes[nodePath];
+
+                    if (note) {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result';
+                        resultItem.addEventListener('click', () => {
+                            const node = window.KnowledgeNodes.knowledgeNodes.find(n => n.userData.path === nodePath);
+                            if (node) {
+                                showKnowledgePanel(node.userData.node);
+                            }
+                        });
+
+                        resultItem.innerHTML = `
+                            <div class="search-result-title">${note.title}</div>
+                            <div class="search-result-path">${note.path}</div>
+                            <div class="search-result-tags">
+                                ${note.tags ? note.tags.map(tag => `<span class="search-result-tag">#${tag}</span>`).join('') : ''}
+                            </div>
+                        `;
+
+                        resultsContainer.appendChild(resultItem);
+                    }
+                }
+
+                if (resultsContainer.children.length === 0) {
+                    resultsContainer.innerHTML = '<div style="text-align: center; color: #666; font-style: italic;">No se encontraron resultados para "' + query + '"</div>';
+                }
+            } else {
+                resultsContainer.innerHTML = '<div style="text-align: center; color: #666; font-style: italic;">No se encontraron resultados para "' + query + '"</div>';
+            }
+        }
+
+        // Función para simular una amenaza en un nodo
+        function simulateThreat(nodePath) {
+            if (!window.KnowledgeNodes) {
+                addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                return;
+            }
+
+            // Encontrar el nodo
+            const node = window.KnowledgeNodes.knowledgeNodes.find(n => n.userData.path === nodePath);
+            if (!node) {
+                addLogEntry(`❌ Nodo no encontrado: ${nodePath}`, 'error');
+                return;
+            }
+
+            // Aplicar amenaza al nodo
+            window.KnowledgeNodes.updateThreatState(nodePath, true);
+
+            // Mostrar mensaje
+            addLogEntry(`🚨 AMENZA SIMULADA: ${node.userData.title}`, 'warning');
+
+            // Mostrar panel de control de amenazas
+            const threatPanel = document.getElementById('threat-control-panel');
+            threatPanel.style.display = 'block';
+
+            // Actualizar lista de amenazas
+            updateThreatNodeList();
+        }
+
+        // Función para actualizar la lista de nodos con amenaza
+        function updateThreatNodeList() {
+            const threatNodeList = document.getElementById('threat-node-list');
+            const threatNodes = window.KnowledgeNodes ? window.KnowledgeNodes.threatActiveNodes : [];
+
+            if (threatNodes.length === 0) {
+                threatNodeList.innerHTML = '<div style="text-align: center; color: #ff3366; font-style: italic;">No hay amenazas activas</div>';
+                return;
+            }
+
+            // Ordenar nodos por relevancia (más conexiones primero)
+            const sortedThreats = threatNodes.sort((a, b) => {
+                const aNode = testConfig.testData.notes[a];
+                const bNode = testConfig.testData.notes[b];
+
+                if (!aNode || !bNode) return 0;
+                return (aNode.links || []).length - (bNode.links || []).length;
+            });
+
+            // Mostrar nodos con amenaza
+            threatNodeList.innerHTML = '';
+            sortedThreats.forEach(nodePath => {
+                const note = testConfig.testData.notes[nodePath];
+
+                if (note) {
+                    const threatItem = document.createElement('div');
+                    threatItem.className = 'threat-node-item';
+                    threatItem.addEventListener('click', () => {
+                        const node = window.KnowledgeNodes.knowledgeNodes.find(n => n.userData.path === nodePath);
+                        if (node) {
+                            showKnowledgePanel(node.userData.node);
+                        }
+                    });
+
+                    threatItem.innerHTML = `
+                        <div class="threat-node-title">${note.title}</div>
+                        <div class="threat-node-path">${note.path}</div>
+                        <div class="threat-node-tags">
+                            ${note.tags ? note.tags.map(tag => `<span class="threat-node-tag">#${tag}</span>`).join('') : ''}
+                        </div>
+                    `;
+
+                    threatNodeList.appendChild(threatItem);
+                }
+            });
+        }
+
+        // Función para limpiar todas las amenazas
+        function clearAllThreats() {
+            if (!window.KnowledgeNodes) {
+                addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                return;
+            }
+
+            // Limpiar todas las amenazas
+            const threatNodes = Object.keys(testConfig.testData.notes);
+            threatNodes.forEach(nodePath => {
+                window.KnowledgeNodes.updateThreatState(nodePath, false);
+            });
+
+            // Actualizar lista
+            updateThreatNodeList();
+
+            addLogEntry('🟢 Todas las amenazas han sido limpiadas', 'success');
+        }
+
+        // Función para propagar amenaza a nodos relacionados
+        function propagateThreat() {
+            if (!window.KnowledgeNodes) {
+                addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                return;
+            }
+
+            // Obtener nodos con amenaza
+            const threatNodes = window.KnowledgeNodes.threatActiveNodes || [];
+
+            if (threatNodes.length === 0) {
+                addLogEntry('❌ No hay amenazas activas para propagar', 'warning');
+                return;
+            }
+
+            // Propagar amenaza a nodos relacionados
+            threatNodes.forEach(nodePath => {
+                window.KnowledgeNodes.updateThreatState(nodePath, true);
+            });
+
+            // Actualizar lista
+            updateThreatNodeList();
+
+            addLogEntry('🔥 Amenazas propagadas a nodos relacionados', 'warning');
+        }
+
+        // Función para inicializar el sistema
+        function initSystem() {
+            // Verificar si Three.js y Cannon-es están disponibles
+            if (!window.THREE || !window.CANNON) {
+                console.warn("Three.js o Cannon-es no disponibles. Esperando...");
+                setTimeout(initSystem, 1000);
+                return;
+            }
+
+            // Inicializar el motor de física
+            if (!window.PhysicsUI) {
+                window.PhysicsUI = {
+                    init: function() {
+                        // Crear mundo físico
+                        window.physicsWorld = new CANNON.World();
+                        window.physicsWorld.gravity.set(0, -0.3, 0);
+
+                        // Crear escena Three.js
+                        window.threeScene = new THREE.Scene();
+                        window.threeScene.background = new THREE.Color(0x0a0f1e);
+
+                        // Crear cámara
+                        window.threeCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+                        window.threeCamera.position.set(0, 0, 80);
+                        window.threeCamera.lookAt(0, 0, 0);
+
+                        // Crear renderer
+                        window.threeRenderer = new THREE.WebGLRenderer({
+                            antialias: true,
+                            alpha: true
+                        });
+                        window.threeRenderer.setSize(window.innerWidth, window.innerHeight);
+                        window.threeRenderer.setPixelRatio(window.devicePixelRatio);
+
+                        // Añadir renderer al canvas
+                        const canvas = document.getElementById('antigravity-nodes');
+                        canvas.appendChild(window.threeRenderer.domElement);
+
+                        // Añadir luces
+                        const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+                        window.threeScene.add(ambientLight);
+
+                        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
+                        directionalLight.position.set(1, 1, 1);
+                        window.threeScene.add(directionalLight);
+
+                        // Iniciar animación
+                        function animate() {
+                            requestAnimationFrame(animate);
+                            window.threeRenderer.render(window.threeScene, window.threeCamera);
+                        }
+                        animate();
+
+                        return true;
+                    },
+                    createObject: function(options) {
+                        // Crear cuerpo físico en Cannon
+                        const shape = new CANNON.Box(new CANNON.Vec3(
+                            options.width / 2,
+                            options.height / 2,
+                            options.depth / 2
+                        ));
+
+                        const body = new CANNON.Body({
+                            mass: options.mass,
+                            shape: shape,
+                            position: new CANNON.Vec3(
+                                options.position.x,
+                                options.position.y,
+                                options.position.z
+                            ),
+                            linearDamping: 0.2,
+                            angularDamping: 0.2
+                        });
+
+                        // Crear malla en Three.js
+                        const geometry = new THREE.BoxGeometry(
+                            options.width,
+                            options.height,
+                            options.depth
+                        );
+
+                        const material = new THREE.MeshStandardMaterial({
+                            color: options.color,
+                            metalness: 0.4,
+                            roughness: 0.6,
+                            transparent: true,
+                            opacity: 1
+                        });
+
+                        const mesh = new THREE.Mesh(geometry, material);
+                        mesh.castShadow = true;
+                        mesh.receiveShadow = true;
+                        mesh.userData = options.userData;
+
+                        // Añadir cuerpo físico al mundo
+                        window.physicsWorld.addBody(body);
+
+                        // Añadir malla a la escena
+                        window.threeScene.add(mesh);
+
+                        // Guardar referencia al objeto
+                        const physicsObject = {
+                            mesh: mesh,
+                            body: body,
+                            config: options,
+                            update: function() {
+                                if (body.position) mesh.position.copy(body.position);
+                                if (body.quaternion) mesh.quaternion.copy(body.quaternion);
+                            }
+                        };
+
+                        return physicsObject;
+                    },
+                    updatePhysics: function() {
+                        // Actualizar física
+                        const timeStep = 1/60;
+                        window.physicsWorld.step(timeStep);
+
+                        // Actualizar objetos en la escena
+                        if (window.KnowledgeNodes) {
+                            window.KnowledgeNodes.update();
+                        }
+                    }
+                };
+            }
+
+            // Inicializar PhysicsUI
+            window.PhysicsUI.init();
+
+            // Inicializar el sistema de nodos
+            simulateKnowledgeBase();
+
+            // Configurar botones
+            const searchBtn = document.getElementById('search-btn');
+            const threatBtn = document.getElementById('threat-btn');
+            const highlightBtn = document.getElementById('highlight-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const clearThreatsBtn = document.getElementById('clear-threats-btn');
+            const propagateThreatBtn = document.getElementById('propagate-threat-btn');
+
+            // Botón de búsqueda
+            searchBtn.addEventListener('click', function() {
+                const searchPanel = document.getElementById('search-panel');
+                if (searchPanel.style.display === 'block') {
+                    searchPanel.style.display = 'none';
+                } else {
+                    searchPanel.style.display = 'block';
+                    document.getElementById('search-input').focus();
+                }
+            });
+
+            // Botón de amenaza
+            threatBtn.addEventListener('click', function() {
+                // Simular amenaza en el nodo Shadow-Core
+                simulateThreat("AURA/Shadow-Core/001-shadow-core-spec.md");
+            });
+
+            // Botón para resaltar resultados
+            highlightBtn.addEventListener('click', function() {
+                const query = document.getElementById('search-input').value.trim();
+                if (query.length === 0) {
+                    addLogEntry('❌ Por favor ingrese un término de búsqueda', 'warning');
+                    return;
+                }
+                filterNodesBySearch(query);
+            });
+
+            // Botón para restaurar visibilidad
+            resetBtn.addEventListener('click', function() {
+                resetNodeVisibility();
+            });
+
+            // Botón para limpiar amenazas
+            clearThreatsBtn.addEventListener('click', function() {
+                clearAllThreats();
+            });
+
+            // Botón para propagar amenaza
+            propagateThreatBtn.addEventListener('click', function() {
+                propagateThreat();
+            });
+
+            // Evento para buscar al presionar Enter
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    highlightBtn.click();
+                }
+            });
+
+            addLogEntry('🎮 Sistema de inteligencia conectiva inicializado con éxito', 'success');
+        }
+
+        // Inicializar el sistema cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', initSystem);
+
+        // Actualizar el sistema cada 2 segundos
+        setInterval(() => {
+            if (window.KnowledgeNodes) {
+                window.KnowledgeNodes.update();
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

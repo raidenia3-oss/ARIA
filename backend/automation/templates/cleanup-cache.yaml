@@ -1,0 +1,27 @@
+name: cleanup-cache
+description: Automated cache and temp file cleanup
+trigger: schedule
+schedule: "0 4 * * *"
+enabled: true
+version: "1.0"
+
+steps:
+  - name: scan_cache
+    action: cleanup.scan_cache
+    timeout_sec: 30
+    retry_on_failure: false
+
+  - name: identify_temp
+    action: cleanup.identify_temp
+    timeout_sec: 30
+    retry_on_failure: false
+
+  - name: remove_files
+    action: cleanup.remove
+    timeout_sec: 120
+    retry_on_failure: true
+
+  - name: report_savings
+    action: cleanup.report
+    timeout_sec: 15
+    retry_on_failure: false

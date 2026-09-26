@@ -1,0 +1,12 @@
+{
+  "trace_id": "trace-manual-1789165515716",
+  "task_id": "manual-1789165515716",
+  "objective": "problema de conexión",
+  "outcome": "corrected",
+  "steps": [],
+  "error": "connection refused",
+  "correction": "Reintentar",
+  "duration_ms": 0.0,
+  "created_at": 1789165515.7163248,
+  "metadata": {}
+}

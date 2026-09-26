@@ -1,0 +1,27 @@
+name: report-daily
+description: Daily activity report generation and distribution
+trigger: schedule
+schedule: "0 8 * * *"
+enabled: true
+version: "1.0"
+
+steps:
+  - name: collect_metrics
+    action: report.collect_metrics
+    timeout_sec: 60
+    retry_on_failure: true
+
+  - name: generate_report
+    action: report.generate
+    timeout_sec: 90
+    retry_on_failure: true
+
+  - name: send_report
+    action: report.send
+    timeout_sec: 60
+    retry_on_failure: true
+
+  - name: archive_report
+    action: report.archive
+    timeout_sec: 30
+    retry_on_failure: false

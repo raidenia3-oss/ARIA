@@ -1,0 +1,12 @@
+{
+  "trace_id": "trace-manual-1789095777403",
+  "task_id": "manual-1789095777403",
+  "objective": "tarea fallida",
+  "outcome": "failed",
+  "steps": [],
+  "error": "fallo",
+  "correction": "",
+  "duration_ms": 0.0,
+  "created_at": 1789095777.4031372,
+  "metadata": {}
+}

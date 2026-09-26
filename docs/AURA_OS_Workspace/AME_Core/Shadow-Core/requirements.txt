@@ -1,0 +1,4 @@
+aiohttp
+websockets
+pyttsx3
+sqlite3

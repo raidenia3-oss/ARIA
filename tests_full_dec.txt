@@ -1,0 +1,191 @@
+﻿........................................................................ [  7%]
+........................................................................ [ 14%]
+........................................................................ [ 21%]
+........................................................................ [ 28%]
+........................................................................ [ 35%]
+........................................................................ [ 42%]
+..........................F............................................. [ 49%]
+............FFFFFFFFFF.......................................F.FF.....F. [ 56%]
+FF..F................FF............F......................s.FFF.FF...... [ 64%]
+....................................FFFFFFFFFFFFFFF..................... [ 71%]
+........................................................................ [ 78%]
+........s............................................................... [ 85%]
+.....................................FFFFFFFFFFFFFFFFFFFFF.............. [ 92%]
+........................................................FF.FFF...FF..... [ 99%]
+....                                                                     [100%]
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_e2e_backend.py::test_backend_health
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\_pytest\python.py:171: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_e2e_backend.py::test_backend_health returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_e2e_backend.py::test_brain_endpoints
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\_pytest\python.py:171: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_e2e_backend.py::test_brain_endpoints returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_e2e_backend.py::test_routing_endpoints
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\_pytest\python.py:171: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_e2e_backend.py::test_routing_endpoints returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_e2e_backend.py::test_treasury_endpoints
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\_pytest\python.py:171: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_e2e_backend.py::test_treasury_endpoints returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_e2e_backend.py::test_training_endpoints
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\_pytest\python.py:171: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_e2e_backend.py::test_training_endpoints returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_e2e_backend.py::test_rollercoin_endpoints
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\_pytest\python.py:171: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_e2e_backend.py::test_rollercoin_endpoints returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_e2e_backend.py::test_chat_endpoints
+  C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\_pytest\python.py:171: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_e2e_backend.py::test_chat_endpoints returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_bloque20.py::TestDiscovery::test_discovery_returns_aura_info
+FAILED tests/test_core.py::test_version_json_exists - AssertionError: version...
+FAILED tests/test_core.py::test_version_json_valid - FileNotFoundError: [Errn...
+FAILED tests/test_core.py::test_imports_aura_core - Failed: Error importando ...
+FAILED tests/test_core.py::test_imports_scripts - Failed: Error importando sc...
+FAILED tests/test_core.py::test_imports_nodes - Failed: Error importando nodo...
+FAILED tests/test_core.py::test_changelog_exists - AssertionError: Secciones ...
+FAILED tests/test_core.py::test_gitignore_exists - AssertionError: Encabezado...
+FAILED tests/test_core.py::test_github_workflows - AssertionError: Workflow t...
+FAILED tests/test_core.py::test_health_check_importable - Failed: Error impor...
+FAILED tests/test_core.py::test_version_manager_functions - Failed: Error en ...
+FAILED tests/test_e2e.py::TestChatFlow::test_simple_chat_flow - AssertionErro...
+FAILED tests/test_e2e.py::TestChatFlow::test_chat_stream - assert 400 == 200
+FAILED tests/test_e2e.py::TestMultiUserScenarios::test_concurrent_chats - Ass...
+FAILED tests/test_e2e.py::TestDataPersistence::test_chat_history_saved - asse...
+FAILED tests/test_e2e.py::TestSecurityAndAuth::test_unauthorized_access_blocked
+FAILED tests/test_e2e.py::TestSecurityAndAuth::test_invalid_token_rejected - ...
+FAILED tests/test_e2e.py::TestErrorHandling::test_malformed_request_rejected
+FAILED tests/test_e2e_integration.py::TestBackendLifecycle::test_launcher_module_imports
+FAILED tests/test_e2e_integration.py::TestBackendLifecycle::test_port_check_function
+FAILED tests/test_e2e_integration.py::TestWebSocketSignaling::test_websocket_signaling
+FAILED tests/test_export_compiler.py::test_rest_export_epub - assert 404 == 200
+FAILED tests/test_export_compiler.py::test_rest_export_markdown - assert 404 ...
+FAILED tests/test_export_compiler.py::test_rest_export_custom_filename - asse...
+FAILED tests/test_export_compiler.py::test_rest_export_invalid_format - asser...
+FAILED tests/test_export_compiler.py::test_rest_export_async_epub - assert 40...
+FAILED tests/test_graph_manager.py::test_rest_get_relationships - assert 404 ...
+FAILED tests/test_graph_manager.py::test_rest_add_relationship - assert 404 =...
+FAILED tests/test_graph_manager.py::test_rest_add_relationship_invalid_type
+FAILED tests/test_graph_manager.py::test_rest_update_relationship - assert 40...
+FAILED tests/test_graph_manager.py::test_rest_remove_relationship - assert 40...
+FAILED tests/test_graph_manager.py::test_rest_relationship_summary - assert 4...
+FAILED tests/test_graph_manager.py::test_rest_check_conflict - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_export_graph - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_create_faction - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_list_factions - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_get_faction - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_update_faction - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_delete_faction - assert 404 == 200
+FAILED tests/test_graph_manager.py::test_rest_add_character_to_faction - asse...
+FAILED tests/test_graph_manager.py::test_rest_remove_character_from_faction
+FAILED tests/test_timeline_manager.py::test_rest_get_timeline - assert 404 ==...
+FAILED tests/test_timeline_manager.py::test_rest_get_timeline_stats - assert ...
+FAILED tests/test_timeline_manager.py::test_rest_get_chronology - assert 404 ...
+FAILED tests/test_timeline_manager.py::test_rest_create_timeline_event - asse...
+FAILED tests/test_timeline_manager.py::test_rest_create_timeline_event_invalid_type
+FAILED tests/test_timeline_manager.py::test_rest_list_timeline_events - asser...
+FAILED tests/test_timeline_manager.py::test_rest_get_timeline_event - KeyErro...
+FAILED tests/test_timeline_manager.py::test_rest_update_timeline_event - KeyE...
+FAILED tests/test_timeline_manager.py::test_rest_delete_timeline_event - KeyE...
+FAILED tests/test_timeline_manager.py::test_rest_create_timeline_link - KeyEr...
+FAILED tests/test_timeline_manager.py::test_rest_delete_timeline_link - KeyEr...
+FAILED tests/test_timeline_manager.py::test_rest_list_timeline_links - assert...
+FAILED tests/test_timeline_manager.py::test_rest_create_timeline_thread - ass...
+FAILED tests/test_timeline_manager.py::test_rest_list_timeline_threads - asse...
+FAILED tests/test_timeline_manager.py::test_rest_get_timeline_thread - assert...
+FAILED tests/test_timeline_manager.py::test_rest_update_timeline_thread - ass...
+FAILED tests/test_timeline_manager.py::test_rest_delete_timeline_thread - ass...
+FAILED tests/test_timeline_manager.py::test_rest_add_event_to_thread - KeyErr...
+FAILED tests/test_timeline_manager.py::test_rest_validate_chronology - assert...
+FAILED tests/test_timeline_manager.py::test_rest_check_sequence - KeyError: '...
+FAILED tests/test_timeline_manager.py::test_rest_check_sequence_valid - KeyEr...
+FAILED tests/test_vector_rag.py::test_search_returns_relevant_canon - ValueEr...
+FAILED tests/test_vector_rag.py::test_search_returns_character_fragment - Val...
+FAILED tests/test_vector_rag.py::test_search_respects_top_k - ValueError: sha...
+FAILED tests/test_vector_rag.py::test_persistence_maintains_recall - ValueErr...
+FAILED tests/test_vector_rag.py::test_inject_context_returns_block - ValueErr...
+FAILED tests/test_vector_rag.py::test_rest_semantic_search - ValueError: shap...
+FAILED tests/test_vector_rag.py::test_rest_context_inject - ValueError: shape...
+.venv\Scripts\python.exe : --- Logging error ---
+En línea: 4 Carácter: 1
++ .venv\Scripts\python.exe -m pytest tests/ -q --tb=no > tests_full_out ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (--- Logging error ---:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py", line 1113, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\huggingface_hub\utils\_http.py", line 413, in 
+close_session
+    client.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_client.py", line 1270, in close
+    self._transport.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py", line 262, in close
+    self._pool.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py", line 353, in close
+    self._close_connections(closing_connections)
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py", line 345, in 
+_close_connections
+    connection.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection.py", line 172, in close
+    with Trace("close", logger, None, {}):
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_trace.py", line 52, in __enter__
+    self.trace(f"{self.name}.started", info)
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_trace.py", line 47, in trace
+    self.logger.debug(message)
+Message: 'close.started'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py", line 1113, in emit
+    stream.write(msg + self.terminator)
+ValueError: I/O operation on closed file.
+Call stack:
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\huggingface_hub\utils\_http.py", line 413, in 
+close_session
+    client.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_client.py", line 1270, in close
+    self._transport.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpx\_transports\default.py", line 262, in close
+    self._pool.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py", line 353, in close
+    self._close_connections(closing_connections)
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection_pool.py", line 345, in 
+_close_connections
+    connection.close()
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_sync\connection.py", line 172, in close
+    with Trace("close", logger, None, {}):
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_trace.py", line 64, in __exit__
+    self.trace(f"{self.name}.complete", info)
+  File "C:\Users\User\Downloads\AURA\.venv\Lib\site-packages\httpcore\_trace.py", line 47, in trace
+    self.logger.debug(message)
+Message: 'close.complete'
+Arguments: ()

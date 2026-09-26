@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "python ../discord_bot.py",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}

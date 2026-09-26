@@ -1,0 +1,11 @@
+[
+  {
+    "pattern_id": "pattern_1789519791_0",
+    "trigger": "cuando pide hora",
+    "response": "responde hora",
+    "frequency": 1,
+    "last_used": 1789519791.385283,
+    "confidence": 0.5,
+    "created_at": 1789519791.385283
+  }
+]

@@ -1,0 +1,11 @@
+# Godot
+.godot/
+*.pck
+*.exe
+*.dmg
+*.apk
+*.aab
+export/
+export_presets.cfg
+user://
+imported/

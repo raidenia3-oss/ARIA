@@ -1,0 +1,7 @@
+{
+  "name": "hello_world",
+  "version": "0.1.0",
+  "description": "Plugin mínimo de ejemplo para AURA Godot.",
+  "author": "AURA",
+  "main_scene": "res://plugins/hello_world/hello_world.tscn"
+}

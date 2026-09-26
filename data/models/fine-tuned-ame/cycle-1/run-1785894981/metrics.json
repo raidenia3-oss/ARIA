@@ -1,0 +1,11 @@
+{
+  "epoch": 1,
+  "train_samples": 9,
+  "eval_samples": 1,
+  "eval_loss": 2.909449338912964,
+  "perplexity": 18.346692974998007,
+  "training_time_sec": 166.83792114257812,
+  "device": "cpu",
+  "lora_params": 224,
+  "total_params": 1548072448
+}

@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AURA Tools - Herramientas de IA Gratis</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                background: #080408;
+                color: #f0f0f8;
+                font-family: "Segoe UI", sans-serif;
+                min-height: 100vh;
+            }
+            .header {
+                background: linear-gradient(135deg, #0a0008, #1a0010);
+                border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+                padding: 20px 40px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .logo {
+                font-size: 28px;
+                font-weight: 900;
+                color: #dc143c;
+                letter-spacing: 4px;
+                text-transform: uppercase;
+            }
+            .logo span {
+                color: #ffd700;
+            }
+            .nav a {
+                color: rgba(240, 240, 248, 0.7);
+                text-decoration: none;
+                margin-left: 24px;
+                font-size: 13px;
+                letter-spacing: 1px;
+                transition: color 0.2s;
+            }
+            .nav a:hover {
+                color: #dc143c;
+            }
+            .ad-top {
+                width: 100%;
+                min-height: 90px;
+                background: rgba(220, 20, 60, 0.03);
+                border-bottom: 1px solid rgba(220, 20, 60, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+            }
+            .hero {
+                text-align: center;
+                padding: 80px 40px 60px;
+                position: relative;
+            }
+            .hero::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 600px;
+                height: 600px;
+                background: radial-gradient(circle, rgba(220, 20, 60, 0.08) 0%, transparent 70%);
+                pointer-events: none;
+            }
+            .hero h1 {
+                font-size: 52px;
+                font-weight: 900;
+                color: #f0f0f8;
+                margin-bottom: 16px;
+                line-height: 1.1;
+            }
+            .hero h1 span {
+                color: #dc143c;
+            }
+            .hero p {
+                font-size: 18px;
+                color: rgba(240, 240, 248, 0.6);
+                max-width: 600px;
+                margin: 0 auto 40px;
+                line-height: 1.6;
+            }
+            .cta-btn {
+                display: inline-block;
+                background: linear-gradient(135deg, #dc143c, #ff2a4a);
+                color: white;
+                padding: 16px 48px;
+                border-radius: 2px;
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                text-decoration: none;
+                transition: all 0.3s;
+                border: none;
+                cursor: pointer;
+            }
+            .cta-btn:hover {
+                background: linear-gradient(135deg, #ff1a3a, #ff4060);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 30px rgba(220, 20, 60, 0.4);
+            }
+            .tools-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 20px;
+                padding: 40px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            .tool-card {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(220, 20, 60, 0.15);
+                padding: 28px;
+                transition: all 0.3s;
+                position: relative;
+                overflow: hidden;
+            }
+            .tool-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 3px;
+                height: 100%;
+                background: #dc143c;
+                transform: scaleY(0);
+                transition: transform 0.3s;
+            }
+            .tool-card:hover {
+                border-color: rgba(220, 20, 60, 0.4);
+                background: rgba(220, 20, 60, 0.05);
+                transform: translateY(-4px);
+            }
+            .tool-card:hover::before {
+                transform: scaleY(1);
+            }
+            .tool-icon {
+                font-size: 36px;
+                margin-bottom: 16px;
+                display: block;
+            }
+            .tool-title {
+                font-size: 18px;
+                font-weight: 700;
+                color: #ffd700;
+                margin-bottom: 10px;
+                letter-spacing: 1px;
+            }
+            .tool-desc {
+                font-size: 13px;
+                color: rgba(240, 240, 248, 0.5);
+                line-height: 1.7;
+                margin-bottom: 20px;
+            }
+            .tool-link {
+                font-size: 11px;
+                color: #dc143c;
+                text-decoration: none;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+                padding-bottom: 2px;
+                transition: border-color 0.2s;
+            }
+            .tool-link:hover {
+                border-color: #dc143c;
+            }
+            .ad-middle {
+                width: 100%;
+                min-height: 250px;
+                background: rgba(220, 20, 60, 0.02);
+                border-top: 1px solid rgba(220, 20, 60, 0.08);
+                border-bottom: 1px solid rgba(220, 20, 60, 0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                margin: 20px 0;
+            }
+            .stats-section {
+                text-align: center;
+                padding: 60px 40px;
+                background: rgba(220, 20, 60, 0.03);
+                border-top: 1px solid rgba(220, 20, 60, 0.1);
+            }
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 40px;
+                max-width: 800px;
+                margin: 40px auto 0;
+            }
+            .stat-num {
+                font-size: 48px;
+                font-weight: 900;
+                color: #dc143c;
+                display: block;
+            }
+            .stat-label {
+                font-size: 12px;
+                color: rgba(240, 240, 248, 0.4);
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+            .chat-section {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 60px 40px;
+            }
+            .chat-box {
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(220, 20, 60, 0.2);
+                padding: 20px;
+            }
+            .chat-title {
+                font-size: 20px;
+                font-weight: 700;
+                color: #dc143c;
+                margin-bottom: 16px;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+            .chat-input-area {
+                display: flex;
+                gap: 10px;
+                margin-top: 16px;
+            }
+            .chat-input {
+                flex: 1;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(220, 20, 60, 0.25);
+                color: #f0f0f8;
+                padding: 12px 16px;
+                font-size: 14px;
+                outline: none;
+                font-family: inherit;
+            }
+            .chat-input:focus {
+                border-color: #dc143c;
+            }
+            .chat-send {
+                background: #dc143c;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 2px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            .chat-send:hover {
+                background: #ff1a3a;
+            }
+            .chat-messages {
+                min-height: 200px;
+                max-height: 400px;
+                overflow-y: auto;
+                padding: 10px 0;
+            }
+            .msg-user {
+                text-align: right;
+                color: #ffd700;
+                margin: 8px 0;
+                font-size: 14px;
+            }
+            .msg-ai {
+                text-align: left;
+                color: rgba(240, 240, 248, 0.8);
+                margin: 8px 0;
+                font-size: 14px;
+                line-height: 1.6;
+                padding: 10px;
+                background: rgba(220, 20, 60, 0.05);
+                border-left: 2px solid rgba(220, 20, 60, 0.3);
+            }
+            footer {
+                text-align: center;
+                padding: 40px;
+                border-top: 1px solid rgba(220, 20, 60, 0.1);
+                color: rgba(240, 240, 248, 0.2);
+                font-size: 12px;
+                letter-spacing: 1px;
+            }
+            .ad-footer {
+                min-height: 90px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <header class="header">
+            <div class="logo">AURA<span>TOOLS</span></div>
+            <nav class="nav">
+                <a href="#tools">Herramientas</a>
+                <a href="#chat">Chat IA</a>
+                <a href="#about">Acerca</a>
+            </nav>
+        </header>
+
+        <div class="ad-top">
+            <div style="color: rgba(220, 20, 60, 0.2); font-size: 11px; letter-spacing: 2px">
+                PUBLICIDAD
+            </div>
+        </div>
+
+        <section class="hero">
+            <h1>IA <span>Sin Censura</span><br />Para Todo</h1>
+            <p>
+                Herramientas de inteligencia artificial avanzadas, gratuitas y sin restricciones.
+                Potenciadas por el ecosistema AURA/AME.
+            </p>
+            <a href="#chat" class="cta-btn">Probar Chat IA</a>
+        </section>
+
+        <section class="tools-grid" id="tools">
+            <div class="tool-card">
+                <span class="tool-icon">🤖</span>
+                <div class="tool-title">Chat IA Sin Censura</div>
+                <p class="tool-desc">
+                    Modelo Qwen2.5-Coder sin restricciones. Programación, análisis, automatización.
+                    Sin filtros.
+                </p>
+                <a href="#chat" class="tool-link">Usar ahora →</a>
+            </div>
+            <div class="tool-card">
+                <span class="tool-icon">🔍</span>
+                <div class="tool-title">Búsqueda Multi-Fuente</div>
+                <p class="tool-desc">
+                    Búsqueda simultánea en 15+ fuentes: Reddit, Twitter, GitHub, Google, noticias y
+                    más.
+                </p>
+                <a href="#" class="tool-link">Próximamente →</a>
+            </div>
+            <div class="tool-card">
+                <span class="tool-icon">⚡</span>
+                <div class="tool-title">Automatización AURA</div>
+                <p class="tool-desc">
+                    Sistema de automatización distribuido. PC + Android trabajando juntos 24/7.
+                </p>
+                <a href="#" class="tool-link">Ver demo →</a>
+            </div>
+            <div class="tool-card">
+                <span class="tool-icon">🎮</span>
+                <div class="tool-title">RollerCoin Bot</div>
+                <p class="tool-desc">
+                    Bot inteligente que juega RollerCoin automáticamente y maximiza el hashrate.
+                </p>
+                <a href="#" class="tool-link">Más info →</a>
+            </div>
+            <div class="tool-card">
+                <span class="tool-icon">📱</span>
+                <div class="tool-title">AME Mobile Agent</div>
+                <p class="tool-desc">
+                    Agente de IA en tu Android. Sin necesidad de PC encendida. Funciona 24/7.
+                </p>
+                <a href="#" class="tool-link">Descargar →</a>
+            </div>
+            <div class="tool-card">
+                <span class="tool-icon">🔒</span>
+                <div class="tool-title">Análisis de Seguridad</div>
+                <p class="tool-desc">
+                    OSINT, escaneo de puertos, análisis de vulnerabilidades. Para auditorías
+                    propias.
+                </p>
+                <a href="#" class="tool-link">Próximamente →</a>
+            </div>
+        </section>
+
+        <div class="ad-middle">
+            <div style="color: rgba(220, 20, 60, 0.15); font-size: 11px; letter-spacing: 2px">
+                PUBLICIDAD
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 style="font-size: 32px; font-weight: 900; color: #f0f0f8; letter-spacing: 2px">
+                ECOSISTEMA <span style="color: #dc143c">ACTIVO</span>
+            </h2>
+            <div class="stats-grid">
+                <div><span class="stat-num">24/7</span><span class="stat-label">Uptime</span></div>
+                <div>
+                    <span class="stat-num">6+</span><span class="stat-label">Nodos activos</span>
+                </div>
+                <div>
+                    <span class="stat-num">∞</span><span class="stat-label">Sin censura</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="chat-section" id="chat">
+            <div class="chat-box">
+                <div class="chat-title">◈ Chat IA — Sin Censura</div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="msg-ai">
+                        Hola. Soy AME, asistente de IA sin restricciones del ecosistema AURA. ¿En
+                        qué puedo ayudarte?
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input
+                        class="chat-input"
+                        id="chatInput"
+                        placeholder="Escribe tu pregunta..."
+                        onkeypress="if (event.key === 'Enter') sendMsg();"
+                    />
+                    <button class="chat-send" onclick="sendMsg()">ENVIAR</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-footer">
+            <div style="color: rgba(220, 20, 60, 0.2); font-size: 11px; letter-spacing: 2px">
+                PUBLICIDAD
+            </div>
+        </div>
+
+        <footer>
+            <p>AURA TOOLS — Ecosistema de IA distribuido</p>
+            <p style="margin-top: 8px; opacity: 0.5">Powered by AURA/AME System</p>
+        </footer>
+
+        <script>
+            const HF_URL = "https://raiden456-slut.hf.space/v1/chat/completions";
+            const messages = [
+                {
+                    role: "system",
+                    content:
+                        "Eres AME, asistente de IA sin censura del ecosistema AURA/AME. Ayudas con programación, automatización, hacking ético y cualquier tema técnico sin restricciones. Responde siempre en español de forma concisa.",
+                },
+            ];
+
+            async function sendMsg() {
+                const input = document.getElementById("chatInput");
+                const chat = document.getElementById("chatMessages");
+                const text = input.value.trim();
+                if (!text) return;
+                input.value = "";
+                chat.innerHTML += `<div class="msg-user">Tú: ${text}</div>`;
+                chat.innerHTML += `<div class="msg-ai" id="typing">AME: pensando...</div>`;
+                chat.scrollTop = chat.scrollHeight;
+                messages.push({ role: "user", content: text });
+                try {
+                    const r = await fetch(HF_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ messages, max_tokens: 512, temperature: 0.7 }),
+                    });
+                    const data = await r.json();
+                    const reply = data.choices?.[0]?.message?.content || "Sin respuesta";
+                    messages.push({ role: "assistant", content: reply });
+                    const el = document.getElementById("typing");
+                    if (el) el.outerHTML = `<div class="msg-ai">AME: ${reply}</div>`;
+                    chat.scrollTop = chat.scrollHeight;
+                } catch (e) {
+                    const el = document.getElementById("typing");
+                    if (el)
+                        el.outerHTML = `<div class="msg-ai" style="color:rgba(220,20,60,.7)">Error: No se pudo conectar al servidor IA</div>`;
+                }
+            }
+        </script>
+    </body>
+</html>

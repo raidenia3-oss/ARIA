@@ -1,0 +1,319 @@
+# ═══════════════════════════════════════════════
+# missions.yaml — AURA Mission Profiles
+# Macros tácticas: misiones complejas con un solo comando
+# ═══════════════════════════════════════════════
+
+version: "1.0"
+last_updated: "2026-06-03"
+
+# ─── Configuración Global de Misiones ───
+global:
+  max_retries: 3            # Reintentos automáticos por paso
+  retry_delay: 10           # Segundos entre reintentos
+  alert_on_failure: true    # Alertar si falla después de reintentos
+  alert_channel: "whatsapp" # Canal para alertas de fallo
+  parallel_nodes: false     # Ejecutar misiones en paralelo entre nodos
+  mission_timeout: 1800     # Timeout global por misión (30 min)
+
+# ═══════════════════════════════════════════════
+# MISIONES DEFINIDAS
+# ═══════════════════════════════════════════════
+
+missions:
+
+  # ── MISIÓN 1: DeepScan (Escaneo completo de red) ──
+  deep_scan:
+    name: "DeepScan — Auditoría Completa de Red"
+    description: "Escaneo completo de la red, identificación de dispositivos, auditoría Venice en hosts vulnerables, reporte en Discord."
+    priority: "high"
+    max_retries: 2
+    timeout: 900  # 15 minutos
+
+    steps:
+      - id: step_1
+        name: "Escanear red completa"
+        module: "network_sensor"
+        action: "full_scan"
+        parameters:
+          scan_type: "full"
+          timeout: 120
+        timeout: 120
+        retries: 1
+
+      - id: step_2
+        name: "Identificar dispositivos vulnerables"
+        module: "network_sensor"
+        action: "analyze_devices"
+        parameters:
+          check_vulnerabilities: true
+          check_vendor: true
+        depends_on: "step_1"
+        timeout: 60
+
+      - id: step_3
+        name: "Auditoría Venice en hosts vulnerables"
+        module: "osint_engine"
+        action: "venice_audit"
+        parameters:
+          target: "{{step_2.vulnerable_hosts}}"
+          depth: 3
+          timeout: 300
+        depends_on: "step_2"
+        timeout: 300
+        retry_on_fail: true
+        max_retries: 2
+
+      - id: step_4
+        name: "Reportar resultados en Discord"
+        module: "notification_bridge"
+        action: "send_discord"
+        parameters:
+          channel: "reports"
+          format: "embed"
+          message: "DeepScan completado: {{step_1.total_devices}} dispositivos, {{step_3.vulnerabilities}} vulnerabilidades"
+        depends_on: "step_3"
+        timeout: 30
+
+    on_complete:
+      - type: "notify"
+        channel: "discord"
+        message: "✅ Misión DeepScan completada exitosamente"
+      - type: "log"
+        category: "mission_success"
+
+    on_failure:
+      - type: "notify"
+        channel: "whatsapp"
+        message: "❌ Misión DeepScan falló después de reintentos. Revisar logs."
+      - type: "log"
+        category: "mission_failure"
+
+  # ── MISIÓN 2: ThreatHunt (Caza de amenazas) ──
+  threat_hunt:
+    name: "ThreatHunt — Caza Activa de Amenazas"
+    description: "Busca amenazas activas en la red usando análisis heurístico y OSINT."
+    priority: "critical"
+    max_retries: 2
+    timeout: 600
+
+    steps:
+      - id: step_1
+        name: "Escaneo de amenazas activas"
+        module: "network_sensor"
+        action: "threat_scan"
+        parameters:
+          mode: "aggressive"
+          include_dark_web: true
+        timeout: 180
+
+      - id: step_2
+        name: "Análisis OSINT de IPs sospechosas"
+        module: "osint_engine"
+        action: "ip_lookup"
+        parameters:
+          targets: "{{step_1.suspicious_ips}}"
+          depth: 2
+        depends_on: "step_1"
+        timeout: 240
+        retry_on_fail: true
+
+      - id: step_3
+        name: "Correlacionar hallazgos"
+        module: "swarm_orchestrator"
+        action: "correlate_findings"
+        parameters:
+          threat_data: "{{step_2.results}}"
+          node_data: "{{step_1.node_anomalies}}"
+        depends_on: "step_2"
+        timeout: 60
+
+      - id: step_4
+        name: "Generar alerta y reporte"
+        module: "notification_bridge"
+        action: "send_alerts"
+        parameters:
+          severity: "{{step_3.max_severity}}"
+          channel: "discord"
+          include_details: true
+        depends_on: "step_3"
+        timeout: 30
+
+    on_complete:
+      - type: "notify"
+        channel: "discord"
+        message: "✅ ThreatHunt completado"
+      - type: "store"
+        location: "network_history_db"
+
+    on_failure:
+      - type: "notify"
+        channel: "whatsapp"
+        message: "❌ ThreatHunt falló — intervention manual requerida"
+
+  # ── MISIÓN 3: NodeHealthCheck (Salud de nodos) ──
+  node_health_check:
+    name: "NodeHealthCheck — Verificación de Nodos"
+    description: "Verifica el estado de todos los nodos, predice fallos y ejecuta acciones preventivas."
+    priority: "medium"
+    max_retries: 1
+    timeout: 600
+
+    steps:
+      - id: step_1
+        name: "Verificar conectividad de todos los nodos"
+        module: "swarm_manager"
+        action: "health_check_all"
+        parameters:
+          include_metrics: true
+          timeout_per_node: 30
+        timeout: 120
+
+      - id: step_2
+        name: "Ejecutar predicción de fallos"
+        module: "predictive_maintenance"
+        action: "predict_all"
+        parameters:
+          window_hours: 4
+        depends_on: "step_1"
+        timeout: 60
+
+      - id: step_3
+        name: "Enviar reporte de salud"
+        module: "notification_bridge"
+        action: "send_discord"
+        parameters:
+          channel: "health"
+          format: "embed"
+        depends_on: "step_2"
+        timeout: 30
+
+    on_complete:
+      - type: "notify"
+        channel: "discord"
+        message: "✅ NodeHealthCheck completado"
+
+    on_failure:
+      - type: "notify"
+        channel: "whatsapp"
+        message: "❌ NodeHealthCheck falló"
+
+  # ── MISIÓN 4: FullRecovery (Recuperación completa) ──
+  full_recovery:
+    name: "FullRecovery — Reset de Emergencia"
+    description: "Reset completo de TODOS los nodos a estado fábrica."
+    priority: "critical"
+    max_retries: 1
+    timeout: 1200
+
+    steps:
+      - id: step_1
+        name: "Detener servicios en todos los nodos"
+        module: "swarm_manager"
+        action: "broadcast_command"
+        parameters:
+          command: "graceful_shutdown"
+          timeout: 60
+        timeout: 60
+
+      - id: step_2
+        name: "Limpiar caché en todos los nodos"
+        module: "swarm_manager"
+        action: "broadcast_command"
+        parameters:
+          command: "cache_purge"
+          timeout: 120
+        depends_on: "step_1"
+        timeout: 120
+
+      - id: step_3
+        name: "Restaurar servicios en todos los nodos"
+        module: "swarm_manager"
+        action: "broadcast_command"
+        parameters:
+          command: "service_restore"
+          timeout: 300
+        depends_on: "step_2"
+        timeout: 300
+
+      - id: step_4
+        name: "Verificar que todos los nodos estén online"
+        module: "swarm_manager"
+        action: "health_check_all"
+        depends_on: "step_3"
+        timeout: 120
+
+      - id: step_5
+        name: "Notificar recuperación exitosa"
+        module: "notification_bridge"
+        action: "send_all"
+        parameters:
+          channel: "discord"
+          message: "FullRecovery completado — todos los nodos operativos"
+        depends_on: "step_4"
+        timeout: 30
+
+    on_complete:
+      - type: "notify"
+        channel: "discord"
+        message: "✅ FullRecovery completado — todos los nodos operativos"
+
+    on_failure:
+      - type: "notify"
+        channel: "whatsapp"
+        message: "❌ FullRecovery falló — intervenir manualmente en nodos problemáticos"
+
+  # ── MISIÓN 5: QuickOSINT (OSINT rápido de un objetivo) ──
+  quick_osint:
+    name: "QuickOSINT — Investigación Rápida"
+    description: "Ejecuta investigación OSINT rápida sobre un objetivo específico."
+    priority: "low"
+    max_retries: 2
+    timeout: 300
+
+    steps:
+      - id: step_1
+        name: "Recopilar información del objetivo"
+        module: "osint_engine"
+        action: "quick_lookup"
+        parameters:
+          target: "{{target}}"
+          tools: ["whois", "dns", "shodan"]
+        timeout: 120
+
+      - id: step_2
+        name: "Analizar vulnerabilidades"
+        module: "osint_engine"
+        action: "vuln_scan"
+        parameters:
+          target: "{{target}}"
+        depends_on: "step_1"
+        timeout: 180
+
+      - id: step_3
+        name: "Generar reporte"
+        module: "notification_bridge"
+        action: "send_discord"
+        parameters:
+          channel: "osint"
+          format: "embed"
+        depends_on: "step_2"
+        timeout: 30
+
+    on_complete:
+      - type: "notify"
+        channel: "discord"
+        message: "✅ QuickOSINT completado para {{target}}"
+
+    on_failure:
+      - type: "notify"
+        channel: "whatsapp"
+        message: "❌ QuickOSINT falló"
+
+# ═══════════════════════════════════════════════
+# VARIABLES DISPONIBLES EN PLANTILLAS
+# ═══════════════════════════════════════════════
+# {{step_N.result}}       — Resultado del paso N
+# {{step_N.total_devices}}— Número de dispositivos encontrados
+# {{target}}              — Objetivo proporcionado al iniciar la misión
+# {{current_node}}        — Nodo actual ejecutando
+# {{mission_id}}          — ID de la misión actual

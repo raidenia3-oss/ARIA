@@ -1,0 +1,30 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el dispatcher de tareas AURA",
+    "tasks_queue_path": "tasks_queue.json",
+    "nodes_config_path": "nodes_config.json",
+    "ssh_host": "localhost",
+    "ssh_port": 8022,
+    "ssh_user": "user",
+    "ssh_timeout": 30,
+    "task_timeout": 3600,
+    "retry_delay": 60,
+    "max_retries": 3,
+    "task_check_interval": 10,
+    "log_file": "task_dispatcher.log",
+    "ssh_key_path": "~/.ssh/id_rsa",
+    "ssh_options": "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null",
+    "temp_dir": "/tmp/aura_tasks",
+    "max_concurrent_tasks": 3,
+    "priority_weights": {
+        "high": 1,
+        "medium": 2,
+        "low": 3
+    },
+    "node_heartbeat_interval": 60,
+    "task_result_storage": "mobile_database_manager.py",
+    "communication_protocol": "ssh",
+    "task_execution_timeout": 3600,
+    "max_task_retries": 3,
+    "task_assignment_strategy": "round_robin"
+}

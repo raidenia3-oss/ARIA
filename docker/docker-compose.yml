@@ -1,0 +1,75 @@
+# AURA — Orquestación multi-servicio (Oracle Cloud VPS / cualquier host Docker)
+# Backend FastAPI + Frontend + Motor de IA local (Ollama, ARM64)
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: aura-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-change-me}
+      - JWT_SECRET_ADMIN=${JWT_SECRET_ADMIN:-change-me}
+      - BRIDGE_SECRET=${BRIDGE_SECRET:-change-me}
+      - DATABASE_URL=${DATABASE_URL:-}
+      - AI_PROVIDER=${AI_PROVIDER:-local}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - aura-net
+
+  frontend:
+    image: node:20-slim
+    container_name: aura-frontend
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "npm install --legacy-peer-deps && npm run build && npm run start"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:8000
+      - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://backend:8000}
+    depends_on:
+      - backend
+    networks:
+      - aura-net
+
+  ai-engine-local:
+    image: ollama/ollama:latest
+    container_name: aura-ai-local
+    restart: unless-stopped
+    # Oracle Cloud Free Tier usa ARM64 (Ampere) — Ollama corre nativo.
+    platform: linux/arm64
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    # Modelo ligero eficiente (LFM 2.5 / equivalente) para ARM64 + 24GB RAM.
+    # Se precarga al arrancar; cambia por el modelo que prefieras.
+    command: sh -c "ollama serve & sleep 5 && ollama pull lfm2.5:latest && wait"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:11434/api/tags || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - aura-net
+
+networks:
+  aura-net:
+    driver: bridge
+
+volumes:
+  ollama-data:

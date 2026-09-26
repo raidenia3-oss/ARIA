@@ -1,0 +1,33 @@
+{
+  "scores": {
+    "groq": 10,
+    "mistral": 70,
+    "local-ollama": 0,
+    "jan": 0,
+    "gemini": 0
+  },
+  "last_failures": {
+    "groq": {
+      "time": 1788040484.6642432,
+      "error": "Client error '404 Not Found' for url 'https://api.groq.com/openai/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+    },
+    "local-ollama": {
+      "time": 1789353711.0408468,
+      "error": "All connection attempts failed"
+    },
+    "jan": {
+      "time": 1789353708.521228,
+      "error": "All connection attempts failed"
+    },
+    "gemini": {
+      "time": 1789353712.39912,
+      "error": "Client error '400 Bad Request' for url 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=test-key'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+    }
+  },
+  "circuit_until": {
+    "groq": 1788040514.6642432,
+    "local-ollama": 1789353741.0408468,
+    "jan": 1789353738.521228,
+    "gemini": 1789353742.39912
+  }
+}

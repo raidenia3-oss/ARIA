@@ -1,0 +1,114 @@
+# ═══════════════════════════════════════════════
+# openspec.yaml — AURA Tactics (Idle RPG de Red)
+# Spec-Driven Development — Restricciones del Sistema
+# ═══════════════════════════════════════════════
+
+version: "1.0.0"
+project: "AURA Tactics"
+description: "Juego de simulación de gestión de red donde nodos móviles AME suben de nivel ejecutando operaciones reales de seguridad y OSINT en el ecosistema AURA."
+
+# ─── Restricción Fundacional ───
+constraints:
+  stability_first:
+    priority: P0
+    rule: "NINGUNA lógica de juego puede alterar, retrasar o degradar las operaciones reales de red de AME/AURA."
+    enforcement:
+      - "Todo módulo de juego debe pasar un test 'stability_check' antes de ejecutar cualquier acción en la red real."
+      - "El GameEngine DEBE ser un wrapper de solo-lectura sobre AURA Core para métricas; las escrituras se limitan a player_stats.json."
+      - "XP se genera como subproducto de operaciones reales existentes, nunca como disparador de nuevas operaciones."
+
+  no_interference:
+    priority: P0
+    rule: "El bucle de juego NO puede inyectar latencia adicional en la cadena de respuesta a incidentes."
+    enforcement:
+      - "GameLoop corre en un hilo de prioridad BAJA (threading + time.sleep(1) mínimo)."
+      - "Si el sistema detecta un incidente de seguridad real (severity >= high), GameLoop DEBE pausarse automáticamente."
+      - "El archivo player_stats.json se escribe como máximo cada 60 segundos para evitar I/O innecesario."
+
+  data_ownership:
+    priority: P1
+    rule: "Los datos de juego (stats, habilidades, XP) son independientes de los datos de operación de red."
+    enforcement:
+      - "player_stats.json es el ÚNICO archivo de estado de juego."
+      - "Los datos de red real (config.json, knowledge_base) NUNCA son modificados por el motor de juego."
+      - "Skills del juego son wrappers de solo-lectura sobre las capacidades reales de AURA."
+
+# ─── Stack Tecnológico ───
+tech_stack:
+  language: "Python 3.10+"
+  runtime: "Asíncrono (threading) — prioridad baja"
+  storage: "player_stats.json (JSON plano, sin DB)"
+  test_framework: "pytest (Strict TDD)"
+  dependencies:
+    - "AURA Core (wrapper import)"
+    - "SwarmManager (lectura de eventos)"
+    - "network_sensor (lectura de métricas)"
+    - "datetime, threading, json (stdlib)"
+
+# ─── Archivos del Proyecto ───
+files:
+  spec:
+    - "openspec.yaml"              # ← ESTE ARCHIVO
+    - "GAME_LOGIC_MAP.md"          # Fase 4: Mapa juego ↔ red real
+  
+  skill_registry:
+    - "AURA_Core/skills_forge.py"  # Registro de habilidades existentes
+    - "AURA_Tactics/skill_registry.py"  # Índice de habilidades del juego
+  
+  game_engine:
+    - "AURA_Tactics/game_engine.py"     # Wrapper sobre AURA Core
+    - "AURA_Tactics/player_stats.json"  # Estado del jugador
+    - "AURA_Tactics/game_loop.py"       # Bucle de juego en segundo plano
+  
+  tests:
+    - "AURA_Tactics/tests/test_stability.py"  # Test P0: estabilidad
+    - "AURA_Tactics/tests/test_xp.py"         # Test: generación de XP
+    - "AURA_Tactics/tests/test_skills.py"     # Test: desbloqueo de habilidades
+
+# ─── Sistema de Progresión ───
+progression:
+  base_xp_per_hour_uptime: 10
+  xp_multipliers:
+    tunnel_active: 2.0    # Túnel SSH activo
+    node_available: 1.5   # Nodo disponible en swarm
+    task_completed: 5.0   # Tarea real completada
+    device_detected: 3.0  # Nuevo dispositivo en red
+    threat_blocked: 20.0  # Amenaza bloqueada por Gatekeeper
+  
+  levels:
+    1:  {xp_needed: 0,     skill_slots: 1,  label: "Recruit"}
+    2:  {xp_needed: 50,    skill_slots: 1,  label: "Operator"}
+    3:  {xp_needed: 150,   skill_slots: 2,  label: "Sentinel"}
+    4:  {xp_needed: 350,   skill_slots: 2,  label: "Tactician"}
+    5:  {xp_needed: 750,   skill_slots: 3,  label: "Strategist"}
+    6:  {xp_needed: 1500,  skill_slots: 3,  label: "Overlord"}
+    7:  {xp_needed: 3000,  skill_slots: 4,  label: "Architect"}
+    8:  {xp_needed: 6000,  skill_slots: 4,  label: "Node Zero"}
+    9:  {xp_needed: 12000, skill_slots: 5,  label: "AURA Avatar"}
+
+# ─── Habilidades (referencia al Skill Registry) ───
+skills:
+  tiers:
+    - tier: 1
+      unlock_level: 1
+      skills: ["network_sense", "signal_scan"]
+    - tier: 2
+      unlock_level: 3
+      skills: ["venice_eye", "telemetry_reading"]
+    - tier: 3
+      unlock_level: 5
+      skills: ["gatekeeper_shield", "mesh_walk"]
+    - tier: 4
+      unlock_level: 7
+      skills: ["swarm_command", "proxy_phase"]
+    - tier: 5
+      unlock_level: 9
+      skills: ["node_zero", "aura_avatar"]
+
+# ─── Game Engine Timeouts ───
+engine_config:
+  loop_interval_seconds: 1      # GameLoop: check cada 1s
+  stats_write_interval: 60      # Escribir stats cada 60s
+  stability_check_timeout: 5    # Timeout para test de estabilidad
+  max_xp_per_tick: 100          # Máximo XP por tick de loop
+  incident_pause_threshold: "high"  # Pausar juego si severidad >= high

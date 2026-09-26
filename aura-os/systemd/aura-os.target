@@ -1,0 +1,6 @@
+[Unit]
+Description=AURA OS System
+After=basic.target
+
+[Install]
+WantedBy=default.target

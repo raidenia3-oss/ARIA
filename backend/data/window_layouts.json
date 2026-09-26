@@ -1,0 +1,1363 @@
+{
+  "layouts": [
+    {
+      "layout_id": "c1e405a0-15be-44fb-8ebc-f0b614b84357",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789247891.795965,
+      "updated_at": 1789247891.795965
+    },
+    {
+      "layout_id": "73ec2c26-24a5-4a8b-812c-394a70b312df",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789248016.5849726,
+      "updated_at": 1789248016.5849726
+    },
+    {
+      "layout_id": "e296ee6c-460a-4958-8197-cdc1b6719df2",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789248018.2742193,
+      "updated_at": 1789248018.2742193
+    },
+    {
+      "layout_id": "b3f52ad3-7f34-47bf-8e1c-13b7651f13aa",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "test_block73_kilo.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Python Non-UTF-8 Code Error Fix - Google Gemini - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "use form of : on y in . en español - Buscar con Google - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789248018.3459034,
+      "updated_at": 1789248018.3459034
+    },
+    {
+      "layout_id": "c4bf7b6e-00f9-4f3e-8821-89cc859593a6",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789248067.1643195,
+      "updated_at": 1789248067.1643195
+    },
+    {
+      "layout_id": "256e91e0-6343-456d-afa3-7b7a102cfba9",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "test_block73_kilo.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Python Non-UTF-8 Code Error Fix - Google Gemini - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "use form of : on y in . en español - Buscar con Google - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789248067.2383819,
+      "updated_at": 1789248067.2383819
+    },
+    {
+      "layout_id": "0639107f-9de7-4f86-a626-afe9e0fb5272",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "test_block73_kilo.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Python Non-UTF-8 Code Error Fix - Google Gemini - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "use form of : on y in . en español - Buscar con Google - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789248099.7660673,
+      "updated_at": 1789248099.7660673
+    },
+    {
+      "layout_id": "1277a2cd-a6dc-4a7e-9290-a70dd3d385e8",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789248539.229872,
+      "updated_at": 1789248539.229872
+    },
+    {
+      "layout_id": "87881f3b-e4a7-431f-b2f3-2a2db4887e48",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "test_block73_kilo.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Python Non-UTF-8 Code Error Fix - Google Gemini - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "use form of : on y in . en español - Buscar con Google - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789248539.3221557,
+      "updated_at": 1789248539.3221557
+    },
+    {
+      "layout_id": "dc20d394-57d6-4c61-b096-86551d6daada",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789251010.700756,
+      "updated_at": 1789251010.700756
+    },
+    {
+      "layout_id": "3fa2fe7c-3988-4922-9083-c35ee78ffcc1",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "(3947) Cuando tu WAIFU ya no oculta su AMOR por ti pero tu mejor AMIGA la reta para tener una CITA contigo - YouTube - Google Chrome",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "test_block74_kilo.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "use form of : on y in . en español - Buscar con Google - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789251010.822886,
+      "updated_at": 1789251010.822886
+    },
+    {
+      "layout_id": "6e5bb3b1-4c88-46c6-b2bc-8aeb7f6fbc06",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789253129.6609764,
+      "updated_at": 1789253129.6609764
+    },
+    {
+      "layout_id": "541d0fac-9c95-4076-ac03-dec3c6354775",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "(3948) ¿PERSONAJES QUE TIENEN SIDA ESPACIAL?|#shorts - YouTube - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "main.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "use form of : on y in . en español - Buscar con Google - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789253129.8166378,
+      "updated_at": 1789253129.8166378
+    },
+    {
+      "layout_id": "13956896-bd00-43f5-8184-25c84b4a2197",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789254681.3524694,
+      "updated_at": 1789254681.3524694
+    },
+    {
+      "layout_id": "c8725b60-69df-4dfa-be52-f6b18bb32b6d",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "Simulacro Gastronomía Inglés - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "(3950) ¿PERSONAJES QUE TIENEN SIDA ESPACIAL?|#shorts - YouTube - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "main.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789254681.437372,
+      "updated_at": 1789254681.437372
+    },
+    {
+      "layout_id": "5098afac-89ef-45df-86f0-3cb6edb91d54",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789257404.6867414,
+      "updated_at": 1789257404.6867414
+    },
+    {
+      "layout_id": "e93e31f7-cbae-4199-a297-8d9c26cc416f",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "_check_routes.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "(3950) Bleach: Rey del Harem Cap. 1-25 - YouTube - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Simulacro Gastronomía Inglés - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789257404.764548,
+      "updated_at": 1789257404.764548
+    },
+    {
+      "layout_id": "f36c005f-c23a-4020-8f9b-babfbea30c16",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789257901.1430979,
+      "updated_at": 1789257901.1430979
+    },
+    {
+      "layout_id": "70316a3d-f76e-4416-974e-1e9ca9a09a70",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "(3950) Strongest Fusion Plant. 22 Plants Vs. Zombies PvZ Epic Moments. Max Level Plants vs. Zombies - YouTube - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "_check_routes.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Simulacro Gastronomía Inglés - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789257901.2364721,
+      "updated_at": 1789257901.2364721
+    },
+    {
+      "layout_id": "6c29f842-c0b6-4dfd-b6df-ef23d2082715",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789258079.4286034,
+      "updated_at": 1789258079.4286034
+    },
+    {
+      "layout_id": "e895e9e5-b848-4d36-874c-0585e947a4eb",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "(3950) Strongest Fusion Plant. 22 Plants Vs. Zombies PvZ Epic Moments. Max Level Plants vs. Zombies - YouTube - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "_check_routes.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Simulacro Gastronomía Inglés - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789258079.5267217,
+      "updated_at": 1789258079.5267217
+    },
+    {
+      "layout_id": "dc6df240-0214-4914-adc9-f1038eb44e4a",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789267297.7335515,
+      "updated_at": 1789267297.7335515
+    },
+    {
+      "layout_id": "45291cad-be56-4bd0-8f64-ce4532be888d",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "Python Non-UTF-8 Code Error Fix - Google Gemini - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "_join80.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Simulacro Gastronomía Inglés - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789267297.8717048,
+      "updated_at": 1789267297.8717048
+    },
+    {
+      "layout_id": "f7f39cd0-da5c-45b3-a0dc-6a35e87a7c62",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789267914.5514934,
+      "updated_at": 1789267914.5514934
+    },
+    {
+      "layout_id": "098bcd48-5a05-4338-a538-4d6ec04adff0",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "main.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "(20+) Facebook - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Python Non-UTF-8 Code Error Fix - Google Gemini - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Simulacro Gastronomía Inglés - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789267914.6281269,
+      "updated_at": 1789267914.6281269
+    },
+    {
+      "layout_id": "25dec82a-7e2c-452c-9931-4ff98ccb567e",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789316115.962984,
+      "updated_at": 1789316115.962984
+    },
+    {
+      "layout_id": "546a3047-c20c-4092-9979-f40b6a3342cd",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "Google Play Games",
+          "monitor_index": 0,
+          "x": 198,
+          "y": 79,
+          "width": 1426,
+          "height": 810,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "EdgeFinetunePanel.tsx - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "DIGIMON UP | Bandai Namco Entertainment - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "institutocepea.cubicol.pe - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789316116.1407146,
+      "updated_at": 1789316116.1407146
+    },
+    {
+      "layout_id": "613f2995-cb39-4906-8cab-dd42cbb5c96e",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789333613.1405997,
+      "updated_at": 1789333613.1405997
+    },
+    {
+      "layout_id": "4a009e5d-245a-488f-8c9a-10d95fe76f15",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "(3956) 🔥 Best 3-Page Smart ( Not Nova) Launcher Setup | Minimal & Clean Homescreen Customization! - YouTube - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "identity.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "exercise de ingles - Buscar con Google - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789333613.2226744,
+      "updated_at": 1789333613.2226744
+    },
+    {
+      "layout_id": "74876229-af44-46d0-b87f-503103033682",
+      "name": "TestLayout",
+      "description": "d",
+      "slots": [
+        {
+          "title_substring": "foo",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 800,
+          "height": 600,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789352896.3814108,
+      "updated_at": 1789352896.3814108
+    },
+    {
+      "layout_id": "b9fe385e-d179-4dc2-a8b5-c78cfba8b111",
+      "name": "Captured",
+      "description": "auto",
+      "slots": [
+        {
+          "title_substring": "engine.py - AURA - Visual Studio Code",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Python Non-UTF-8 Code Error Fix - Google Gemini - Google Chrome",
+          "monitor_index": 0,
+          "x": -8,
+          "y": -8,
+          "width": 1936,
+          "height": 1048,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "exercise de ingles - Buscar con Google - Google Chrome",
+          "monitor_index": 0,
+          "x": -32000,
+          "y": -32000,
+          "width": 160,
+          "height": 28,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Experiencia de entrada de Windows",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "wv_1001",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1032,
+          "maximize": false,
+          "focus": false
+        },
+        {
+          "title_substring": "Program Manager",
+          "monitor_index": 0,
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080,
+          "maximize": false,
+          "focus": false
+        }
+      ],
+      "created_at": 1789352896.4654882,
+      "updated_at": 1789352896.4654882
+    }
+  ]
+}

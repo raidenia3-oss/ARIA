@@ -1,0 +1,23 @@
+{
+  "policies": [
+    {
+      "policy_id": "policy2",
+      "name": "Alt Policy",
+      "action": "primary",
+      "alternatives": [
+        "alternative"
+      ],
+      "max_retries": 3
+    },
+    {
+      "policy_id": "rp1",
+      "name": "Auto Recovery",
+      "action": "retry",
+      "alternatives": [
+        "fallback"
+      ],
+      "max_retries": 3
+    }
+  ],
+  "attempts": []
+}

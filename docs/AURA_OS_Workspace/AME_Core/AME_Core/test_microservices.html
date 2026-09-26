@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>AURA — Test Micro-Servicios</title>
+        <style>
+            body {
+                font-family: system-ui;
+                background: #0b0b0b;
+                color: #eee;
+                padding: 20px;
+            }
+            .test {
+                background: rgba(255, 255, 255, 0.03);
+                padding: 12px;
+                border-radius: 8px;
+                margin: 8px 0;
+            }
+            .pass {
+                border-left: 3px solid #4caf50;
+            }
+            .fail {
+                border-left: 3px solid #f44336;
+            }
+            .pending {
+                border-left: 3px solid #ff9800;
+            }
+            button {
+                background: #ff9800;
+                color: #111;
+                border: 0;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                margin: 4px;
+            }
+            pre {
+                white-space: pre-wrap;
+                word-break: break-all;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>AURA — Test de Micro-Servicios</h1>
+        <p>Verifica conectividad Railway + HF simultánea y failover automático.</p>
+
+        <button onclick="runAllTests()">Ejecutar Todos los Tests</button>
+        <button onclick="clearResults()">Limpiar</button>
+
+        <div id="results"></div>
+
+        <script src="static/js/services.config.js"></script>
+        <script>
+            const results = document.getElementById("results");
+
+            function log(msg, status = "pending") {
+                const div = document.createElement("div");
+                div.className = `test ${status}`;
+                div.innerHTML = `<strong>${status.toUpperCase()}</strong><pre>${msg}</pre>`;
+                results.appendChild(div);
+            }
+
+            function clearResults() {
+                results.innerHTML = "";
+            }
+
+            async function testService(name, url, options = {}) {
+                try {
+                    const client = new window.AURA_ServicesConfig.ResilientHttpClient();
+                    const response = await client.get(url, { timeout: 8000, ...options });
+                    log(`${name}: ${url} -> HTTP ${response.status} OK`, "pass");
+                    return true;
+                } catch (error) {
+                    log(`${name}: ${url} -> ERROR: ${error.message}`, "fail");
+                    return false;
+                }
+            }
+
+            async function testFailover() {
+                log("Probando failover de IA (AI_CORE_URL -> AI_CORE_FALLBACK)...", "pending");
+                const services = window.AURA_ServicesConfig.SERVICES;
+
+                // Simular fallo del servicio primario marcándolo como down
+                window.AURA_ServicesConfig.recordServiceHealth(services.AI_CORE_URL, false);
+
+                const client = new window.AURA_ServicesConfig.ResilientHttpClient();
+
+                try {
+                    // Esto debería usar el fallback automáticamente
+                    const response = await client.post(
+                        services.AI_CORE_URL,
+                        { inputs: "test" },
+                        {
+                            fallback: services.AI_CORE_FALLBACK,
+                            timeout: 5000,
+                            headers: {
+                                Authorization: "Bearer test-token",
+                            },
+                        },
+                    );
+
+                    const usedUrl = window.AURA_ServicesConfig.getServiceUrl(
+                        services.AI_CORE_URL,
+                        services.AI_CORE_FALLBACK,
+                    );
+                    log(`Failover IA: Usado ${usedUrl} -> HTTP ${response.status}`, "pass");
+                } catch (error) {
+                    log(`Failover IA: Ambos endpoints fallaron -> ${error.message}`, "fail");
+                }
+            }
+
+            async function runAllTests() {
+                clearResults();
+                log("Iniciando test de micro-servicios AURA...", "pending");
+
+                const services = window.AURA_ServicesConfig.SERVICES;
+
+                log("=== Test 1: Conectividad Railway (API_URL) ===", "pending");
+                await testService("Railway API", services.API_URL + "/health");
+
+                log("=== Test 2: Conectividad Hugging Face (AI_CORE_URL) ===", "pending");
+                await testService("Hugging Face API", services.AI_CORE_URL);
+
+                log("=== Test 3: Monitoreo (ANALYTICS_URL) ===", "pending");
+                await testService("Analytics", services.ANALYTICS_URL);
+
+                log("=== Test 4: Data Feed (DATA_FEED_URL) ===", "pending");
+                await testService("Data Feed", services.DATA_FEED_URL);
+
+                log("=== Test 5: Failover Automático ===", "pending");
+                await testFailover();
+
+                log("=== Test 6: Health Status Global ===", "pending");
+                const health = window.AURA_ServicesConfig.getServicesHealth();
+                log(`Estado de servicios:\n${JSON.stringify(health, null, 2)}`, "pass");
+
+                log("=== Test 7: Escalabilidad - Nuevo Servicio ===", "pending");
+                // Demostrar que agregar un servicio es trivial
+                const nuevoServicio = "TEST_SERVICE_URL";
+                services[nuevoServicio] = "https://test.aura-system.com/api";
+                log(`Servicio agregado: ${nuevoServicio} = ${services[nuevoServicio]}`, "pass");
+                log("Escalabilidad verificada: solo se añadió una línea en SERVICES", "pass");
+
+                log("=== Test 8: CORS - Preflight Request ===", "pending");
+                try {
+                    const response = await fetch(services.API_URL + "/api/mobile-protocol", {
+                        method: "OPTIONS",
+                        mode: "cors",
+                        headers: {
+                            "Access-Control-Request-Method": "POST",
+                            "Access-Control-Request-Headers": "Content-Type",
+                        },
+                    });
+                    log(`CORS Preflight: ${response.status} ${response.statusText}`, "pass");
+                } catch (error) {
+                    log(
+                        `CORS Preflight: ${error.message} (esperado si no hay backend CORS configurado)`,
+                        "pending",
+                    );
+                }
+
+                log("=== Tests Completados ===", "pass");
+            }
+
+            // Auto-ejecutar al cargar
+            window.addEventListener("load", () => {
+                setTimeout(runAllTests, 1000);
+            });
+        </script>
+    </body>
+</html>

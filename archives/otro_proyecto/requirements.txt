@@ -1,0 +1,4 @@
+playwright
+upstash-redis
+pyngrok
+requests

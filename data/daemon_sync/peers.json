@@ -1,0 +1,27 @@
+{
+  "p1": {
+    "node_id": "p1",
+    "display_name": "Peer 1",
+    "platform": "Windows",
+    "ip_address": "192.168.1.5",
+    "port": 8000,
+    "last_seen": 1789355503.5090387,
+    "capabilities": [
+      "code",
+      "rag"
+    ],
+    "trusted": true,
+    "offline_only": true
+  },
+  "p2": {
+    "node_id": "p2",
+    "display_name": "p2",
+    "platform": "Windows",
+    "ip_address": "",
+    "port": 8000,
+    "last_seen": 1789355503.4850154,
+    "capabilities": [],
+    "trusted": true,
+    "offline_only": true
+  }
+}

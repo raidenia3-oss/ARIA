@@ -1,0 +1,18 @@
+{
+  "name": "aura-desktop",
+  "version": "0.1.0",
+  "description": "AURA Desktop Client",
+  "main": "src-tauri/src/main.rs",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "build:windows": "tauri build --target x86_64-pc-windows-msvc",
+    "start": "tauri dev"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.5.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.0"
+  }
+}

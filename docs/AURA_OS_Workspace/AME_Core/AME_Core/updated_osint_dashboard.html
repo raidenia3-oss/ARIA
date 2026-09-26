@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Dashboard OSINT</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/tactical_dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        /* Estilos específicos para el dashboard OSINT */
+        .osint-dashboard {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            min-height: calc(100vh - 20px);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #63b3ed;
+        }
+
+        .dashboard-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-button {
+            background-color: #2d3748;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .control-button:hover {
+            background-color: #4a5568;
+        }
+
+        .control-button.active {
+            background-color: #63b3ed;
+        }
+
+        .alert-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: calc(100vh - 200px);
+        }
+
+        .osint-alert-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .osint-alert-item {
+            background-color: #1e293b;
+            border-left: 4px solid #63b3ed;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .osint-alert-item:hover {
+            background-color: #2d3748;
+        }
+
+        .alert-icon {
+            font-size: 24px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .alert-info {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .alert-source {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .alert-severity {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .severity-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .severity-critical { background-color: #ef4444; }
+        .severity-high { background-color: #f59e0b; }
+        .severity-medium { background-color: #84cc16; }
+        .severity-low { background-color: #3b82f6; }
+        .severity-info { background-color: #6b7280; }
+
+        .alert-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .alert-action {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .alert-action:hover {
+            color: white;
+        }
+
+        .osint-details-panel {
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 15px;
+            display: none;
+        }
+
+        .alert-details {
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .detail-label {
+            color: #a0aec0;
+            min-width: 120px;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: white;
+        }
+
+        .alert-metadata {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #334155;
+        }
+
+        .metadata-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #63b3ed;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .metadata-item {
+            background-color: #2d3748;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .metadata-label {
+            color: #a0aec0;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        .metadata-value {
+            color: white;
+            font-size: 14px;
+        }
+
+        .data-feed-integration {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2d3748;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            z-index: 1000;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-connected { background-color: #10b981; }
+        .status-disconnected { background-color: #ef4444; }
+
+        .connection-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .connection-button {
+            background-color: #63b3ed;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .connection-button:hover {
+            background-color: #478bef;
+        }
+
+        .alert-type-badge {
+            background-color: #374151;
+            color: #a0aec0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .alert-type-phishing { background-color: #ef4444; color: white; }
+        .alert-type-scan { background-color: #f59e0b; color: white; }
+        .alert-type-leak { background-color: #84cc16; color: white; }
+        .alert-type-malware { background-color: #8b5cf6; color: white; }
+        .alert-type-info { background-color: #6b7280; color: white; }
+        .alert-type-decision { background-color: #6366f1; color: white; }
+        .alert-type-status { background-color: #8b5cf6; color: white; }
+
+        /* Estilos para notificaciones del sistema */
+        .system-notifications-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .system-notification {
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            max-width: 350px;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid #63b3ed;
+        }
+
+        .system-notification.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .system-notification.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .system-notification.warning {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .system-notification.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-icon {
+            font-size: 16px;
+        }
+
+        .notification-message {
+            flex: 1;
+            color: #e2e8f0;
+            font-size: 14px;
+        }
+
+        .notification-time {
+            color: #6b7280;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Estilos para el modal de detalles */
+        .decision-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-content {
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .modal-header h3 {
+            color: #63b3ed;
+            margin: 0;
+        }
+
+        .modal-close {
+            color: #a0aec0;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .modal-body {
+            margin-bottom: 15px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-close-btn {
+            background-color: #2d3748;
+            color: #a0aec0;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-close-btn:hover {
+            background-color: #4a5568;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: #a0aec0;
+            min-width: 120px;
+            font-size: 13px;
+        }
+
+        .detail-value {
+            color: #e2e8f0;
+            font-size: 13px;
+        }
+
+        .detail-value.error {
+            color: #ef4444;
+        }
+
+        .detail-value.success {
+            color: #10b981;
+        }
+
+        .details-text {
+            color: #e2e8f0;
+            font-size: 13px;
+            margin-top: 5px;
+            white-space: pre-wrap;
+        }
+
+        /* Estilos para el panel del Decision Core */
+        .decision-core-sidebar {
+            width: 300px;
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            z-index: 1000;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .decision-core-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .decision-core-header h3 {
+            color: #63b3ed;
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-connected {
+            background-color: #10b981;
+        }
+
+        .status-disconnected {
+            background-color: #ef4444;
+        }
+
+        .decision-core-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: #a0aec0;
+            min-width: 120px;
+            font-size: 13px;
+        }
+
+        .detail-value {
+            color: #e2e8f0;
+            font-size: 13px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .history-header h3 {
+            color: #63b3ed;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .history-controls button {
+            background-color: #2d3748;
+            color: #a0aec0;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .history-controls button:hover {
+            background-color: #4a5568;
+        }
+
+        .history-list {
+            height: calc(100% - 100px);
+            overflow-y: auto;
+        }
+
+        .history-empty {
+            color: #6b7280;
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .history-item {
+            background-color: #2d3748;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            background-color: #374151;
+        }
+
+        .history-item.error {
+            border-left: 3px solid #ef4444;
+        }
+
+        .history-item.high {
+            border-left: 3px solid #f59e0b;
+        }
+
+        .history-item.medium {
+            border-left: 3px solid #84cc16;
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .history-item-id {
+            color: #63b3ed;
+            font-weight: bold;
+        }
+
+        .history-item-type {
+            color: #a0aec0;
+            font-size: 12px;
+        }
+
+        .history-item-severity {
+            color: #a0aec0;
+            font-size: 12px;
+        }
+
+        .history-item-time {
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .history-item-details {
+            font-size: 12px;
+            color: #e2e8f0;
+        }
+
+        .history-item-actions {
+            color: #84cc16;
+            font-size: 12px;
+        }
+
+        .history-item-status {
+            color: #a0aec0;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .history-item-summary {
+            font-size: 12px;
+            color: #e2e8f0;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="osint-dashboard">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <i class="fas fa-search-dollar"></i> Dashboard OSINT
+            </div>
+            <div class="dashboard-controls">
+                <button class="control-button" id="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+                <button class="control-button" id="settings-btn">
+                    <i class="fas fa-cog"></i> Configuración
+                </button>
+                <button class="control-button active" id="alerts-btn">
+                    <i class="fas fa-bell"></i> Alertas
+                </button>
+                <button class="control-button" id="map-btn">
+                    <i class="fas fa-globe-americas"></i> Mapa
+                </button>
+            </div>
+        </div>
+
+        <div class="alert-list-container">
+            <div class="osint-alert-list" id="alert-list">
+                <!-- Alertas se cargarán dinámicamente -->
+            </div>
+
+            <div class="osint-details-panel" id="alert-details-panel">
+                <div class="alert-details">
+                    <h3 class="alert-title" id="alert-title">Título de la alerta</h3>
+                    <div class="alert-source" id="alert-source">Fuente: Desconocida</div>
+                    <div class="alert-severity" id="alert-severity">
+                        <span class="severity-indicator severity-info"></span>
+                        <span>Severidad: Información</span>
+                    </div>
+                </div>
+
+                <div class="alert-description" id="alert-description">
+                    <p>Descripción de la alerta...</p>
+                </div>
+
+                <div class="alert-metadata">
+                    <div class="metadata-title">Metadatos</div>
+                    <div class="metadata-grid" id="alert-metadata">
+                        <!-- Metadatos se cargarán dinámicamente -->
+                    </div>
+                </div>
+
+                <div class="alert-actions">
+                    <button class="alert-action" id="acknowledge-btn">
+                        <i class="fas fa-check-circle"></i> Acknowledge
+                    </button>
+                    <button class="alert-action" id="ignore-btn">
+                        <i class="fas fa-times-circle"></i> Ignorar
+                    </button>
+                    <button class="alert-action" id="decision-btn">
+                        <i class="fas fa-brain"></i> Procesar con Decision Core
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="data-feed-integration">
+        <div class="connection-status">
+            <span class="status-indicator status-disconnected" id="connection-status-indicator"></span>
+            <span id="connection-status-text">Desconectado</span>
+        </div>
+        <div class="connection-controls">
+            <button class="connection-button" id="connect-btn">
+                <i class="fas fa-plug"></i> Conectar
+            </button>
+            <button class="connection-button" id="disconnect-btn" disabled>
+                <i class="fas fa-unplug"></i> Desconectar
+            </button>
+        </div>
+        <div class="connection-info" id="connection-info">
+            <div>Servidor: shadow-core.example.com:5002</div>
+            <div>Estado: Desconectado</div>
+            <div>Última conexión: Nunca</div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/data_feed_integration.js"></script>
+    <script src="/static/js/decision_core_integration.js"></script>
+    <script>
+        // Configuración inicial del dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar la integración con el servidor de datos
+            DataFeedIntegration.init({
+                serverUrl: 'http://localhost:5002',
+                socketUrl: 'http://localhost:5002',
+                decisionCoreEnabled: true,
+                onConnected: function() {
+                    document.getElementById('connection-status-indicator').className = 'status-indicator status-connected';
+                    document.getElementById('connection-status-text').textContent = 'Conectado';
+                    document.getElementById('connect-btn').disabled = true;
+                    document.getElementById('disconnect-btn').disabled = false;
+                    document.getElementById('connection-info').innerHTML = `
+                        <div>Servidor: shadow-core.example.com:5002</div>
+                        <div>Estado: Conectado</div>
+                        <div>Última conexión: ${new Date().toLocaleString()}</div>
+                    `;
+                },
+                onDisconnected: function() {
+                    document.getElementById('connection-status-indicator').className = 'status-indicator status-disconnected';
+                    document.getElementById('connection-status-text').textContent = 'Desconectado';
+                    document.getElementById('connect-btn').disabled = false;
+                    document.getElementById('disconnect-btn').disabled = true;
+                    document.getElementById('connection-info').innerHTML = `
+                        <div>Servidor: shadow-core.example.com:5002</div>
+                        <div>Estado: Desconectado</div>
+                        <div>Última conexión: Nunca</div>
+                    `;
+                },
+                onNewAlert: function(alert) {
+                    // Las alertas se manejan automáticamente por DataFeedIntegration
+                }
+            });
+
+            // Botones de control
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                DataFeedIntegration.refreshAlerts();
+            });
+
+            document.getElementById('connect-btn').addEventListener('click', function() {
+                DataFeedIntegration.connect();
+            });
+
+            document.getElementById('disconnect-btn').addEventListener('click', function() {
+                DataFeedIntegration.disconnect();
+            });
+
+            // Botón para acknowledge la alerta actual
+            document.getElementById('acknowledge-btn').addEventListener('click', function() {
+                const alertList = document.getElementById('alert-list');
+                if (alertList.children.length > 0) {
+                    const alertId = alertList.children[0].dataset.alertId;
+                    DataFeedIntegration.acknowledgeAlert(alertId);
+                }
+            });
+
+            // Botón para ignorar la alerta actual
+            document.getElementById('ignore-btn').addEventListener('click', function() {
+                const alertList = document.getElementById('alert-list');
+                if (alertList.children.length > 0) {
+                    const alertId = alertList.children[0].dataset.alertId;
+                    DataFeedIntegration.ignoreAlert(alertId);
+                }
+            });
+
+            // Botón para procesar con Decision Core
+            document.getElementById('decision-btn').addEventListener('click', function() {
+                const alertList = document.getElementById('alert-list');
+                if (alertList.children.length > 0) {
+                    const alertId = alertList.children[0].dataset.alertId;
+                    const alertElement = alertList.children[0];
+
+                    // Obtener los datos de la alerta
+                    const alertTitle = alertElement.querySelector('.alert-title').textContent;
+                    const alertSource = alertElement.querySelector('.alert-source').textContent.replace('Fuente: ', '');
+                    const alertType = alertElement.querySelector('.alert-type-badge').textContent;
+
+                    // Crear objeto de alerta simulada
+                    const alertData = {
+                        id: alertId,
+                        timestamp: new Date().toISOString(),
+                        source: alertSource,
+                        type: alertType,
+                        severity: 'media', // Valor por defecto
+                        title: alertTitle,
+                        description: 'Alerta procesada con Decision Core',
+                        metadata: {
+                            original_alert: alertId,
+                            processed_by: 'decision_core'
+                        }
+                    };
+
+                    // Procesar con Decision Core
+                    DataFeedIntegration.processWithDecisionCore(alertData);
+                }
+            });
+
+            // Manejar eventos del sistema
+            document.addEventListener('new_alert', function(event) {
+                // Las alertas se manejan automáticamente por DataFeedIntegration
+            });
+
+            document.addEventListener('system_message', function(event) {
+                // Los mensajes del sistema se manejan automáticamente por DataFeedIntegration
+            });
+
+            document.addEventListener('decision_result', function(event) {
+                // Los resultados de decisiones se manejan automáticamente por DataFeedIntegration
+            });
+
+            document.addEventListener('agent_status', function(event) {
+                // Los estados del Decision Core se manejan automáticamente por DataFeedIntegration
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "total_conversations": 312,
+  "total_training_samples": 0,
+  "last_training": null,
+  "model_versions": {},
+  "device_stats": {
+    "server:small": 217,
+    "pc-test:pc": 1,
+    "test-pc:pc": 8,
+    "e2e-test:tester": 86
+  }
+}

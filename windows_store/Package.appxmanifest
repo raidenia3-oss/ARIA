@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:res="http://schemas.microsoft.com/appx/manifest/resources/windows10">
+  <Identity Name="AURA" Publisher="CN=Raiden" Version="1.2.0.0" ProcessorArchitecture="x64" />
+  <Properties>
+    <DisplayName>AURA OS</DisplayName>
+    <PublisherDisplayName>Raiden</PublisherDisplayName>
+    <Logo>Assets/StoreLogo.png</Logo>
+    <Description>Advanced personal AI assistant</Description>
+    <Capabilities>
+      <uap:Capability Name="internetClient" />
+      <uap:Capability Name="privateNetworkClientServer" />
+    </Capabilities>
+  </Properties>
+  <Resources>
+    <Resource Language="en-US" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="aura_desktop.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="AURA OS"
+                          Square150x150Logo="Assets/Square150x150Logo.png"
+                          Square44x44Logo="Assets/Square44x44Logo.png"
+                          Description="AURA OS — Advanced AI Assistant"
+                          BackgroundColor="#0f172a">
+        <uap:SplashScreen Image="Assets/SplashScreen.png" BackgroundColor="#0f172a" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+</Package>

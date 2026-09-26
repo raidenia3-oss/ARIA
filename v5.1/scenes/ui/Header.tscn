@@ -1,0 +1,133 @@
+[gd_scene load_steps=3 format=3 uid://b1h1q1q1q1q1]
+
+[ext_resource type="Script" path="res://scripts/ui/Header.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/core/SettingsManager.cs" id="2"]
+
+[node name="Header" type="HBoxContainer" instance_placeholder=0]
+layout_mode = 3
+anchors_preset = 9
+offset_right = 0
+offset_bottom = 60
+custom_constants/separation = 12
+script = ExtResource("1")
+
+[node name="Logo" type="Label" parent="." instance_placeholder=0]
+text = "ARIA"
+horizontal_alignment = 0
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 24
+custom_colors/font_color = Color(0, 0.83, 1, 1)
+mouse_filter = 0
+
+[node name="Version" type="Label" parent="." instance_placeholder=0]
+text = "v5.1"
+horizontal_alignment = 0
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 14
+custom_colors/font_color = Color(0.69, 0.4, 1, 0.8)
+mouse_filter = 0
+
+[node name="Spacer" type="Control" parent="." instance_placeholder=0]
+h_size_flags = 6
+
+[node name="StatusDot" type="Panel" parent="." instance_placeholder=0]
+custom_styles/panel = StyleBoxFlat_1
+custom_constants/min_width = 12
+custom_constants/min_height = 12
+
+[node name="StatusLabel" type="Label" parent="." instance_placeholder=0]
+text = "Desconectado"
+horizontal_alignment = 0
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 13
+custom_colors/font_color = Color(0.8, 0.8, 0.8, 0.7)
+mouse_filter = 0
+
+[node name="ThemePicker" type="OptionButton" parent="." instance_placeholder=0]
+custom_constants/min_width = 140
+items = ["Cyan", "Purple", "Green", "Orange"]
+
+[node name="WindowControls" type="HBoxContainer" parent="." instance_placeholder=0]
+custom_constants/separation = 8
+
+[node name="BtnMinimize" type="TextureButton" parent="WindowControls" instance_placeholder=0]
+custom_styles/normal = StyleBoxFlat_2
+custom_styles/hover = StyleBoxFlat_3
+custom_styles/pressed = StyleBoxFlat_4
+custom_constants/min_width = 28
+custom_constants/min_height = 28
+
+[node name="BtnMaximize" type="TextureButton" parent="WindowControls" instance_placeholder=0]
+custom_styles/normal = StyleBoxFlat_2
+custom_styles/hover = StyleBoxFlat_3
+custom_styles/pressed = StyleBoxFlat_4
+custom_constants/min_width = 28
+custom_constants/min_height = 28
+
+[node name="BtnClose" type="TextureButton" parent="WindowControls" instance_placeholder=0]
+custom_styles/normal = StyleBoxFlat_5
+custom_styles/hover = StyleBoxFlat_6
+custom_styles/pressed = StyleBoxFlat_7
+custom_constants/min_width = 28
+custom_constants/min_height = 28
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
+bg_color = Color(0, 0.83, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2"]
+bg_color = Color(0.1, 0.15, 0.25, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+border_width = 1
+border_color = Color(0.2, 0.3, 0.5, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3"]
+bg_color = Color(0.15, 0.2, 0.35, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+border_width = 1
+border_color = Color(0, 0.83, 1, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4"]
+bg_color = Color(0.2, 0.25, 0.4, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+border_width = 1
+border_color = Color(0.69, 0.4, 1, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5"]
+bg_color = Color(0.1, 0.15, 0.25, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+border_width = 1
+border_color = Color(0.2, 0.3, 0.5, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6"]
+bg_color = Color(0.3, 0.1, 0.15, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+border_width = 1
+border_color = Color(1, 0.3, 0.3, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7"]
+bg_color = Color(0.4, 0.1, 0.1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+border_width = 1
+border_color = Color(1, 0.5, 0.5, 0.5)

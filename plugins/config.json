@@ -1,0 +1,29 @@
+{
+  "plugins": [
+    {
+      "name": "Hello World",
+      "enabled": true,
+      "version": "1.0.0"
+    },
+    {
+      "name": "System Info",
+      "enabled": true,
+      "version": "1.0.0"
+    },
+    {
+      "name": "OSINT Enhancer",
+      "enabled": true,
+      "version": "1.0.0"
+    },
+    {
+      "name": "Device Bridge",
+      "enabled": true,
+      "version": "1.0.0"
+    }
+  ],
+  "settings": {
+    "auto_load_plugins": true,
+    "plugin_directory": "plugins",
+    "allow_unknown_plugins": false
+  }
+}

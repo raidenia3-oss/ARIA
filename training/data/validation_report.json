@@ -1,0 +1,17 @@
+{
+  "total_samples": 660,
+  "valid_samples": 660,
+  "missing_text": 0,
+  "missing_output": 0,
+  "empty_text": 0,
+  "empty_output": 0,
+  "duplicates": 183,
+  "duplicate_entries": 375,
+  "avg_text_length": 36.17,
+  "avg_output_length": 140.53,
+  "min_text_length": 13,
+  "max_text_length": 201,
+  "min_output_length": 50,
+  "max_output_length": 333,
+  "source": "C:\\Users\\User\\Downloads\\AURA\\training\\data\\continual_dataset.jsonl"
+}

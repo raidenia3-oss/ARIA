@@ -1,0 +1,17 @@
+[Unit]
+Description=AURA AI Core Backend
+After=network.target redis-server.service postgresql.service
+Wants=redis-server.service postgresql.service
+
+[Service]
+Type=simple
+User=aura
+WorkingDirectory=/opt/aura
+ExecStart=/opt/aura/venv/bin/python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=10
+Environment="PATH=/opt/aura/venv/bin"
+EnvironmentFile=/etc/aura/aura.env
+
+[Install]
+WantedBy=multi-user.target

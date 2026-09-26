@@ -1,0 +1,28 @@
+name: "translator-agent"
+version: "1.0.0"
+author: "AURA"
+description: "Traductor multiidioma con preservación de contexto cultural"
+
+commands:
+  - name: "translate"
+    params: ["text", "target_lang", "source_lang"]
+    async: true
+  - name: "detect_language"
+    params: ["text"]
+    async: false
+  - name: "batch_translate"
+    params: ["texts", "target_lang"]
+    async: true
+
+dependencies:
+  - "openai>=1.0.0"
+  - "langdetect>=1.0"
+
+capabilities:
+  - "translation"
+  - "language_detection"
+  - "cultural_context"
+
+settings:
+  quality_target: 0.92
+  speed_target: 2000

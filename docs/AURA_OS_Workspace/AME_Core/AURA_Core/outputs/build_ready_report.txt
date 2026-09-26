@@ -1,0 +1,229 @@
+=== BUILD READY REPORT: AME Android ===
+Fecha: 22/06/2026 02:53 p. m.
+
+1) ESCANEO GLOBAL Y ACTIVOS
+- Total archivos AME: 35728
+  Extensiones principales:
+    .py: 11535
+    .pyc: 11445
+    .h: 9350
+    (no ext): 392
+    .pyi: 335
+    .pyd: 207
+    .xml: 204
+    .json: 145
+    .flat: 134
+    .txt: 124
+    .mat: 110
+    .a: 109
+    .lib: 103
+    .js: 100
+    .gz: 98
+
+- Módulos Java principales:
+  - AuraHudActivity.java
+  - CyberLiveWallpaperService.java
+  - GbrainChatActivity.java
+  - GlobalMapActivity.java
+  - MainActivity.java
+  - OmniBarActivity.java
+  - OsintReconActivity.java
+  - RollerMiningActivity.java
+  - TacticalConsoleActivity.java
+  - VeniceScannerActivity.java
+  - WallpaperRotationWorker.java
+  - WebFactoryActivity.java
+  - api\AMEApiClient.java
+  - api\GbrainApiClient.java
+  - api\GbrainService.java
+  - api\GoogleDorkRequest.java
+  - api\OSINTScanRequest.java
+  - api\OsintApiClient.java
+  - api\OsintService.java
+  - plugins\AuraBackgroundPlugin.java
+  - plugins\AuraPlugin.java
+  - services\AuraPassiveService.java
+  - services\FloatingBubbleService.java
+
+- Archivos JS de interfaz:
+  - AME_Core\static\js\TacticalDashboard.js
+  - AME_Core\static\js\action_queue_manager.js
+  - AME_Core\static\js\antigravity_nodes.js
+  - AME_Core\static\js\authInterceptor.js
+  - AME_Core\static\js\background_notifications.js
+  - AME_Core\static\js\biometricAuth.js
+  - AME_Core\static\js\blackbox.js
+  - AME_Core\static\js\chat_history.js
+  - AME_Core\static\js\data_feed_integration.js
+  - AME_Core\static\js\decision_core_integration.js
+  - AME_Core\static\js\decision_core_integration_fixed.js
+  - AME_Core\static\js\feature_audit_console.js
+  - AME_Core\static\js\file_handler.js
+  - AME_Core\static\js\ghost_mode_toggle.js
+  - AME_Core\static\js\hologram_gestures.js
+  - AME_Core\static\js\hologram_gestures_updated.js
+  - AME_Core\static\js\hot_reload_listener.js
+  - AME_Core\static\js\immersive_ui_upgrade.js
+  - AME_Core\static\js\neural_chat_controller.js
+  - AME_Core\static\js\osint_globe.js
+  - AME_Core\static\js\osint_intelligence.js
+  - AME_Core\static\js\osint_recon.js
+  - AME_Core\static\js\ota_updater.js
+  - AME_Core\static\js\physics_ui.js
+  - AME_Core\static\js\secureStorage.js
+  - AME_Core\static\js\streaming_chat.js
+  - AME_Core\static\js\sw.js
+  - AME_Core\static\js\tactical_dashboard.js
+  - AME_Core\static\js\telemetry_dashboard.js
+  - AME_Core\static\js\testAuth.js
+  - AME_Core\static\js\threejs-postprocessing.js
+  - AME_Core\static\js\updated_data_feed_integration.js
+  - AME_Core\static\js\voice_command.js
+  - AME_Core\static\js\wifi_radar.js
+  - AME_Core\static\js\wsAuthInterceptor.js
+
+- Archivos CSS de interfaz:
+  - AME_Core\static\css\blackbox.css
+  - AME_Core\static\css\chat_history.css
+  - AME_Core\static\css\decision_core_styles.css
+  - AME_Core\static\css\lock_screen.css
+  - AME_Core\static\css\osint_intelligence.css
+  - AME_Core\static\css\osint_recon.css
+  - AME_Core\static\css\streaming_chat.css
+  - AME_Core\static\css\style.css
+  - AME_Core\static\css\tactical_dashboard.css
+  - AME_Core\static\css\telemetry_dashboard.css
+
+- Archivos HTML de plantillas:
+  - AME_Core\templates\action_queue_panel.html
+  - AME_Core\templates\agent_swarm_visualizer.html
+  - AME_Core\templates\aura_cyberpunk_hud.html
+  - AME_Core\templates\aura_mobile_hud.html
+  - AME_Core\templates\blue_dashboard.html
+  - AME_Core\templates\blue_dashboard_components.html
+  - AME_Core\templates\blue_dashboard_dragdrop.html
+  - AME_Core\templates\blue_dashboard_immersive.html
+  - AME_Core\templates\blue_dashboard_updated.html
+  - AME_Core\templates\dashboard_universal.html
+  - AME_Core\templates\decision_core_panel.html
+  - AME_Core\templates\lockscreen.html
+  - AME_Core\templates\osint_dashboard.html
+  - AME_Core\templates\telemetry_dashboard.html
+  - AME_Core\templates\updated_osint_dashboard.html
+
+- Módulos Python (lógica de backend/nodos):
+  - AURA_Core\modules\iot_manager.py
+  - AURA_Core\modules\osint\api_integrations.py
+  - AURA_Core\modules\osint\harvester_recon.py
+  - AURA_Core\modules\osint\spiderfoot_handler.py
+  - AURA_Core\modules\osint\web_scrapers.py
+  - AURA_Core\nodes\NOD_DISCORD_SHIELD.py
+  - AURA_Core\nodes\NOD_NETWORK_CHECK.py
+  - AURA_Core\nodes\NOD_NMAP_ADVANCED.py
+  - AURA_Core\nodes\NOD_PHANTOM_OSINT.py
+  - AURA_Core\nodes\NOD_POST_EXPLOIT.py
+  - AURA_Core\nodes\NOD_RECON_PRO.py
+  - AURA_Core\nodes\NOD_ROLLERCOIN_BOT.py
+  - AURA_Core\nodes\NOD_SIGNAL_STRIKE.py
+  - AURA_Core\nodes\NOD_WEB_EXPLOITER.py
+
+2) CONFIGURACIÓN Android / AUDITORÍA
+  Configuración Gradle app: AME_ECOSYSTEM/ame_app_android/app/build.gradle
+    Dependencias actuales:
+      - androidx.appcompat:appcompat:1.6.1
+      - com.google.android.material:material:1.11.0
+      - androidx.constraintlayout:constraintlayout:2.1.4
+      - androidx.work:work-runtime-ktx:2.9.0
+      - com.google.mlkit:barcode-scanning:17.2.0
+      - com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0
+      - com.squareup.retrofit2:retrofit:2.9.0
+      - com.squareup.retrofit2:converter-gson:2.9.0
+      - com.squareup.okhttp3:logging-interceptor:4.12.0
+      - org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3
+      - org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3
+      - androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1
+      - androidx.lifecycle:lifecycle-runtime-ktx:2.6.1
+
+  Dependencias adicionales requeridas:
+    - com.squareup.okhttp3:okhttp:4.12.0
+    - com.google.code.gson:gson:2.10.1
+    - androidx.biometric:biometric:1.1.0
+    - androidx.core:core-ktx:1.13.1
+    - androidx.activity:activity-ktx:1.9.0
+    - androidx.fragment:fragment-ktx:1.8.0
+    - com.google.android.gms:play-services-base:18.5.0
+    - androidx.lifecycle:lifecycle-livedata-ktx:2.6.1
+
+- AndroidManifest.xml:
+  Permisos actuales:
+    - android.permission.INTERNET
+    - android.permission.ACCESS_NETWORK_STATE
+    - android.permission.ACCESS_WIFI_STATE
+    - android.permission.CHANGE_WIFI_STATE
+    - android.permission.CHANGE_NETWORK_STATE
+    - android.permission.CHANGE_WIFI_MULTICAST_STATE
+    - android.permission.READ_EXTERNAL_STORAGE
+    - android.permission.WRITE_EXTERNAL_STORAGE
+    - android.permission.READ_PHONE_STATE
+    - android.permission.CALL_PHONE
+    - android.permission.PROCESS_OUTGOING_CALLS
+    - android.permission.READ_SMS
+    - android.permission.SEND_SMS
+    - android.permission.RECEIVE_SMS
+    - android.permission.READ_CONTACTS
+    - android.permission.WRITE_CONTACTS
+    - android.permission.READ_CALENDAR
+    - android.permission.WRITE_CALENDAR
+    - android.permission.READ_CALL_LOG
+    - android.permission.WRITE_CALL_LOG
+    - android.permission.ACCESS_FINE_LOCATION
+    - android.permission.ACCESS_COARSE_LOCATION
+    - android.permission.CAMERA
+    - android.permission.RECORD_AUDIO
+    - android.permission.MODIFY_AUDIO_SETTINGS
+    - android.permission.WAKE_LOCK
+    - android.permission.VIBRATE
+    - android.permission.FOREGROUND_SERVICE
+    - android.permission.WRITE_SETTINGS
+    - android.permission.SET_ALARM
+    - android.permission.GET_ACCOUNTS
+    - android.permission.READ_PROFILE
+    - android.permission.READ_HISTORY_BOOKMARKS
+    - android.permission.WRITE_HISTORY_BOOKMARKS
+    - android.permission.READ_SYNC_SETTINGS
+    - android.permission.WRITE_SYNC_SETTINGS
+    - android.permission.READ_SYNC_STATS
+    - android.permission.WRITE_SYNC_STATS
+
+  Permisos críticos adicionales que deben estar:
+    - android.permission.FOREGROUND_SERVICE_CAMERA
+    - android.permission.FOREGROUND_SERVICE_MICROPHONE
+    - android.permission.SYSTEM_ALERT_WINDOW
+    - android.permission.USE_BIOMETRIC
+    - android.permission.USE_FINGERPRINT
+    - android.permission.RECEIVE_BOOT_COMPLETED
+    - android.permission.POST_NOTIFICATIONS
+    - android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+    - android.permission.SCHEDULE_EXACT_ALARM
+
+3) LIMPIEZA ABSOLUTA
+  Se requiere ejecutar desde AME_ECOSYSTEM/ame_app_android:
+    ./gradlew clean
+
+4) COMPILACIÓN INCONDICIONAL
+  Ejecutar desde AME_ECOSYSTEM/ame_app_android:
+    ./gradlew assembleDebug
+  En caso de error, revisar:
+    - Falta JDK 17 / variables JAVA_HOME
+    - NDK/SDK actualizados en local.properties
+    - Conflictos de versiones Gson/OkHttp/Retrofit
+    - ProGuard/R8: mantener minifyEnabled=false en buildType debug (ya configurado)
+
+5) ENTREGA DEL ARTEFACTO
+  Ruta candidata del APK debug:
+    AME_ECOSYSTEM/ame_app_android/app/build/outputs/apk/debug/app-debug.apk
+  Copiar/renombrar a:
+    AURA_Core/outputs/AME_Definitive_Latest.apk
+  Contenido esperado del paquete compilado:
+    - Módulos Java, APIs cliente, servicios, workers, lógica OSINT, chat (GBrain), táctica, recon, minería, HUD, biometría, WebSocket
+    - Archivos de interfaz (layouts XML, drawables, mipmaps, assets HTML/JS/CSS si están en res/raw o assets/)

@@ -1,0 +1,34 @@
+{
+  "conditions": [
+    {
+      "condition_id": "integ",
+      "name": "Integration",
+      "metric": "val",
+      "operator": ">",
+      "threshold": 0,
+      "action": "act",
+      "active": true,
+      "triggered_count": 1
+    },
+    {
+      "condition_id": "r1",
+      "name": "Recovery Test",
+      "metric": "err_count",
+      "operator": ">",
+      "threshold": 5,
+      "action": "recover",
+      "active": true,
+      "triggered_count": 0
+    }
+  ],
+  "events": [
+    {
+      "event_id": "TRG-1789675106",
+      "condition_id": "integ",
+      "metric_value": 10,
+      "threshold": 0,
+      "triggered_at": 1789675106.8397605,
+      "action": "act"
+    }
+  ]
+}

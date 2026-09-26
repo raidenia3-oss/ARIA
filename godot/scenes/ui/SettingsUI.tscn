@@ -1,0 +1,69 @@
+[gd_scene load_steps=2 format=3 uid="uid://settings_ui"]
+
+[ext_resource type="Script" path="res://scripts/ui/settings_panel.gd" id="1_settings"]
+
+[node name="SettingsUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_settings")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+text = "⚙️ Configuración"
+
+[node name="BackendRow" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="BackendLabel" type="Label" parent="Margin/VBox/BackendRow"]
+layout_mode = 2
+text = "Backend URL:"
+
+[node name="BackendInput" type="LineEdit" parent="Margin/VBox/BackendRow"]
+layout_mode = 2
+text = "http://localhost:8000"
+size_flags_horizontal = 3
+
+[node name="ThemeRow" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="ThemeLabel" type="Label" parent="Margin/VBox/ThemeRow"]
+layout_mode = 2
+text = "Tema:"
+
+[node name="ThemeOption" type="OptionButton" parent="Margin/VBox/ThemeRow"]
+layout_mode = 2
+item_count = 2
+popup/item_0/text = "JJK Dark"
+popup/item_1/text = "Classic"
+
+[node name="VoiceRow" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="VoiceLabel" type="Label" parent="Margin/VBox/VoiceRow"]
+layout_mode = 2
+text = "Voz:"
+
+[node name="VoiceOption" type="OptionButton" parent="Margin/VBox/VoiceRow"]
+layout_mode = 2
+item_count = 2
+popup/item_0/text = "Piper Local (Femenina)"
+popup/item_1/text = "Silenciosa"
+
+[node name="SaveBtn" type="Button" parent="Margin/VBox"]
+layout_mode = 2
+text = "💾 Guardar"

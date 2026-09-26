@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Dashboard Táctico</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/blackbox.css">
+    <link rel="stylesheet" href="/static/css/tactical_dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-radar-area"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>AURA Tactical Command Center</h1>
+            <div class="dashboard-controls">
+                <button id="toggleDashboard">🌙 Modo Oscuro</button>
+                <button id="refreshDashboard">🔄 Actualizar</button>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="dashboard-grid">
+                <!-- Paneles tácticos -->
+                <div class="dashboard-panel tactical-panel">
+                    <div class="panel-header">
+                        <h3>📡 Radar de Amenazas</h3>
+                        <div class="panel-controls">
+                            <button class="panel-toggle">⚙️</button>
+                            <button class="panel-maximize">⬛</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="radar-chart-container">
+                            <canvas id="threatRadarChart" width="300" height="300"></canvas>
+                        </div>
+                        <div class="radar-legend">
+                            <div class="legend-item critical">🔴 Crítico</div>
+                            <div class="legend-item high">🟡 Alto</div>
+                            <div class="legend-item medium">🟢 Medio</div>
+                            <div class="legend-item low">🔵 Bajo</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-panel resource-panel">
+                    <div class="panel-header">
+                        <h3>🖥️ Estado de Recursos</h3>
+                        <div class="panel-controls">
+                            <button class="panel-toggle">⚙️</button>
+                            <button class="panel-maximize">⬛</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="resource-grid">
+                            <div class="resource-item cpu">
+                                <div class="resource-label">CPU</div>
+                                <div class="resource-bar">
+                                    <div class="resource-fill cpu" id="cpuFill"></div>
+                                </div>
+                                <div class="resource-value" id="cpuValue">0%</div>
+                            </div>
+                            <div class="resource-item ram">
+                                <div class="resource-label">RAM</div>
+                                <div class="resource-bar">
+                                    <div class="resource-fill ram" id="ramFill"></div>
+                                </div>
+                                <div class="resource-value" id="ramValue">0%</div>
+                            </div>
+                            <div class="resource-item bandwidth">
+                                <div class="resource-label">Ancho de Banda</div>
+                                <div class="resource-bar">
+                                    <div class="resource-fill bandwidth" id="bandwidthFill"></div>
+                                </div>
+                                <div class="resource-value" id="bandwidthValue">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-panel network-panel">
+                    <div class="panel-header">
+                        <h3>🌐 Estado de Red</h3>
+                        <div class="panel-controls">
+                            <button class="panel-toggle">⚙️</button>
+                            <button class="panel-maximize">⬛</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="network-status">
+                            <div class="network-item">
+                                <div class="network-label">Conexión</div>
+                                <div class="network-status-indicator online" id="connectionStatus"></div>
+                                <div class="network-value" id="connectionValue">Desconectado</div>
+                            </div>
+                            <div class="network-item">
+                                <div class="network-label">Latencia</div>
+                                <div class="network-value" id="latencyValue">0 ms</div>
+                            </div>
+                            <div class="network-item">
+                                <div class="network-label">Túnel</div>
+                                <div class="network-status-indicator" id="tunnelStatus"></div>
+                                <div class="network-value" id="tunnelValue">Desconectado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-panel console-panel">
+                    <div class="panel-header">
+                        <h3>🖥️ Consola Táctica</h3>
+                        <div class="panel-controls">
+                            <button class="panel-toggle">⚙️</button>
+                            <button class="panel-maximize">⬛</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="console-header">
+                            <div class="console-title">AURA > Tactical Console</div>
+                            <div class="console-input-container">
+                                <input type="text" class="console-input" placeholder="Ingresa un comando...">
+                                <button class="console-submit">➤</button>
+                            </div>
+                        </div>
+                        <div class="console-output" id="consoleOutput">
+                            <!-- Logs se cargarán aquí -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Caja Negra -->
+                <div class="black-box-terminal" id="blackBoxTerminal">
+                    <div class="black-box-header">📜 CAJA NEGRA - LOGS TÁCTICOS</div>
+                    <div class="black-box-tabs">
+                        <div class="black-box-tab active" data-tab="system">Sistema</div>
+                        <div class="black-box-tab" data-tab="emergency">Emergencia</div>
+                        <div class="black-box-tab" data-tab="server">Servidor</div>
+                        <div class="black-box-tab" data-tab="security">Seguridad</div>
+                    </div>
+                    <div class="black-box-content" id="blackBoxContent">
+                        <!-- Logs se cargarán aquí -->
+                    </div>
+                    <div class="black-box-status">Conectado a /api/tactical/logs</div>
+                    <div class="black-box-lock" id="blackBoxLock"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.7.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.7.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="/static/js/threejs-postprocessing.js"></script>
+    <script src="/static/js/antigravity_nodes.js"></script>
+    <script src="/static/js/hologram_gestures.js"></script>
+    <script src="/static/js/voice_command.js"></script>
+    <script src="/static/js/blackbox.js"></script>
+    <script src="/static/js/tactical_dashboard.js"></script>
+</body>
+</html>

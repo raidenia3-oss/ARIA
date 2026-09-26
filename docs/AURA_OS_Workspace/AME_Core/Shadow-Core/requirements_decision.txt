@@ -1,0 +1,5 @@
+# Requisitos adicionales para Decision Core
+# Estos paquetes son necesarios para el módulo de decisión de AURA
+
+socketio==5.16.1
+python-dotenv==1.0.0

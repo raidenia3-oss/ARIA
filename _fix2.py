@@ -1,0 +1,22 @@
+﻿import os
+path = r'C:\Users\User\Downloads\AURA\AURA_APP\backend\atria_integration\__init__.py'
+L = []
+L.append(chr(34)*3 + 'Atria Integration Package.' + chr(34)*3)
+L.append('from AURA_APP.backend.atria_integration.atria_client import AtriaClient')
+L.append('from AURA_APP.backend.atria_integration.training_data_generator import TrainingDataGenerator')
+L.append('from AURA_APP.backend.atria_integration.response_enhancer import ResponseEnhancer')
+L.append('from AURA_APP.backend.atria_integration.skill_synthesizer import SkillSynthesizer')
+L.append('from AURA_APP.backend.atria_integration.reasoning_resolver import ReasoningResolver')
+L.append('from AURA_APP.backend.atria_integration.knowledge_integrator import KnowledgeIntegrator')
+L.append('from AURA_APP.backend.atria_integration.meta_learner import MetaLearner')
+L.append('from AURA_APP.backend.atria_integration.token_optimizer import TokenOptimizer')
+L.append('from AURA_APP.backend.atria_integration.token_monitor import TokenMonitor')
+L.append('from AURA_APP.backend.atria_integration.integration import AURAAtriaIntegration')
+L.append('')
+L.append('__all__ = [')
+L.append('    ' + chr(34) + 'AtriaClient' + chr(34) + ', ' + chr(34) + 'TrainingDataGenerator' + chr(34) + ', ' + chr(34) + 'ResponseEnhancer' + chr(34) + ',')
+L.append('    ' + chr(34) + 'SkillSynthesizer' + chr(34) + ', ' + chr(34) + 'ReasoningResolver' + chr(34) + ', ' + chr(34) + 'KnowledgeIntegrator' + chr(34) + ',')
+L.append('    ' + chr(34) + 'MetaLearner' + chr(34) + ', ' + chr(34) + 'TokenOptimizer' + chr(34) + ', ' + chr(34) + 'TokenMonitor' + chr(34) + ', ' + chr(34) + 'AURAAtriaIntegration' + chr(34) + ',')
+L.append(']')
+open(path, 'w', encoding='utf-8', newline=chr(10)).write(chr(10).join(L))
+print('Updated __init__.py')

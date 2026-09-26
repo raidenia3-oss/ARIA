@@ -1,0 +1,57 @@
+name: Release Notification
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'version.json'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necesario para obtener tags
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Read version
+        id: ver
+        run: |
+          VERSION=$(python -c "import json; print(json.load(open('version.json'))['aura_core'])")
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get changelog entry
+        id: changelog
+        run: |
+          # Obtener la última entrada del changelog
+          LAST_ENTRY=$(tail -n 1 CHANGELOG.md | head -n 1)
+          echo "entry=$LAST_ENTRY" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.ver.outputs.version }}
+          release_name: AURA/AME ${{ steps.ver.outputs.version }}
+          body: |
+            ### Cambios en esta versión
+
+            ${{ steps.changelog.outputs.entry }}
+
+            ---
+            *Generado automáticamente por GitHub Actions*
+          draft: false
+          prerelease: false
+
+      - name: Notify via EventBus (simulado)
+        run: |
+          echo "📢 Notificación de actualización creada:"
+          echo "   - Tag: ${{ steps.ver.outputs.version }}"
+          echo "   - Release: https://github.com/${{ github.repository }}/releases/tag/${{ steps.ver.outputs.version }}"
+          echo "   - Changelog: ${{ steps.changelog.outputs.entry }}"

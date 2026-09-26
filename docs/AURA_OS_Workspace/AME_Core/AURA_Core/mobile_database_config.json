@@ -1,0 +1,19 @@
+{
+    "version": "1.0.0",
+    "description": "Configuración para el gestor de base de datos móvil AURA",
+    "db_path": "/data/data/com.termux/files/home/aura_intel.db",
+    "ssh_host": "localhost",
+    "ssh_port": 8022,
+    "ssh_user": "user",
+    "ssh_timeout": 30,
+    "log_file": "mobile_database_manager.log",
+    "schema_file": "aura_intel_schema.db",
+    "max_retries": 3,
+    "retry_delay": 5,
+    "temp_dir": "/tmp/aura_db_temp",
+    "mobile_device_name": "mobile-device",
+    "ssh_key_path": "~/.ssh/id_rsa",
+    "ssh_options": "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null",
+    "query_timeout": 15,
+    "transaction_timeout": 60
+}

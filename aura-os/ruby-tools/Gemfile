@@ -1,0 +1,37 @@
+source "https://rubygems.org"
+
+gem "rake", "~> 13.0"
+
+# Network & Scanning
+gem "nmap-parser", "~> 0.3"  # Parse nmap XML
+gem "net-ping", "~> 2.0"     # Ping programmatically
+gem "net-dns", "~> 0.15"     # DNS queries
+gem "ipaddress", "~> 0.8"    # IP address utilities
+gem "netaddr", "~> 2.0"      # Network address calculations
+
+# Hashing & Encoding
+gem "bcrypt", "~> 3.1"       # Password hashing
+gem "digest", "~> 3.1"       # SHA/MD5/etc
+gem "base64", "~> 0.2"       # Base64 encoding
+
+# HTTP & APIs
+gem "httparty", "~> 0.21"    # HTTP requests
+gem "rest-client", "~> 2.1"  # REST client
+
+# System & Process
+gem "sys-proctable", "~> 1.3"  # Process list
+gem "sys-uptime", "~> 0.7"     # System uptime
+gem "sys-cpu", "~> 0.8"        # CPU info
+
+# JSON & Data
+gem "json", "~> 2.6"
+gem "yaml", "~> 0.2"
+
+# Security & Hacking
+gem "metasploit-framework", "~> 6.3"  # Opcional - full metasploit
+gem "ronin", "~> 2.0"                 # Red team framework
+gem "rex", "~> 2.0"                   # Metasploit libraries
+
+# Testing
+gem "rspec", "~> 3.12", group: :test
+gem "webmock", "~> 3.18", group: :test

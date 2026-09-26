@@ -1,0 +1,84 @@
+name: AURA Test Suite
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-python-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install websockets requests pytest
+
+      - name: Test imports
+        run: |
+          python -c "import websockets, requests, json, sqlite3, asyncio; print('✅ All imports OK')"
+
+      - name: Test health check
+        run: python scripts/health_check.py --ci-mode
+
+  test-version-manager:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Test version manager
+        run: |
+          python scripts/version_manager.py show
+          python scripts/version_manager.py --verify
+
+  test-node-modules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Test Rollercoin Bot imports
+        run: |
+          python -c "from AURA_Core.nodes.NOD_ROLLERCOIN_BOT import *; print('✅ Rollercoin Bot imports OK')"
+
+      - name: Test scripts
+        run: |
+          python -c "from scripts import health_check, test_ame_connection, version_manager; print('✅ All scripts import OK')"
+
+  test-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check CHANGELOG exists
+        run: |
+          if [ ! -f "CHANGELOG.md" ]; then
+            echo "❌ CHANGELOG.md no encontrado"
+            exit 1
+          fi
+          echo "✅ CHANGELOG.md existe"
+
+      - name: Check CHANGELOG format
+        run: |
+          if ! grep -q "## \[.*\] - \d{4}-\d{2}-\d{2}" CHANGELOG.md; then
+            echo "❌ Formato de versión incorrecto en CHANGELOG.md"
+            exit 1
+          fi
+          echo "✅ Formato de CHANGELOG válido"

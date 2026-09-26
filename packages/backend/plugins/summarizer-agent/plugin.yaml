@@ -1,0 +1,27 @@
+name: "summarizer-agent"
+version: "1.0.0"
+author: "AURA"
+description: "Resumen de textos en modo abstracto, extractivo o bullets"
+
+commands:
+  - name: "summarize"
+    params: ["text", "mode", "detail_level"]
+    async: true
+  - name: "summarize_url"
+    params: ["url", "mode"]
+    async: true
+  - name: "extract_key_points"
+    params: ["text", "count"]
+    async: false
+
+dependencies:
+  - "openai>=1.0.0"
+
+capabilities:
+  - "summarization"
+  - "text_analysis"
+  - "extraction"
+
+settings:
+  quality_target: 0.90
+  speed_target: 3000

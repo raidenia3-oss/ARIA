@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Física 3D - PHYS-UI-ENGINE</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2>PHYS-UI-ENGINE</h2>
+        <p>Prueba de física 3D con Three.js + Cannon-es</p>
+        <p>🖱️ Arrastra el cubo morado para probar los efectos físicos</p>
+    </div>
+    <div id="instructions">
+        <p>📌 Instrucciones:</p>
+        <ul>
+            <li>Haz clic y arrastra el cubo para moverlo</li>
+            <li>Suelta para que siga moviéndose con inercia</li>
+            <li>Usa el mouse para rotar la cámara (orbital)</li>
+            <li>El cubo tiene masa=2 y efecto de resorte</li>
+        </ul>
+    </div>
+
+    <!-- Librerías necesarias -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/DragControls.js"></script>
+
+    <!-- Módulo de física -->
+    <script>
+        // Configuración global (copiada de physics_ui.js)
+        const PHYSICS_CONFIG = {
+            gravity: 0.5,
+            damping: 0.5,
+            springConstant: 0.2,
+            massMultiplier: 0.1,
+            friction: 0.1,
+            restitution: 0.7
+        };
+
+        // Inicialización del mundo físico
+        let physicsWorld;
+        let threeScene;
+        let threeCamera;
+        let threeRenderer;
+        let controls;
+        let rafId;
+        let dragObject = null;
+        let dragOffset = { x: 0, y: 0 };
+        let mouse = { x: 0, y: 0 };
+        let windowHalf = { width: window.innerWidth / 2, height: window.innerHeight / 2 };
+
+        // Inicializar el mundo físico con Cannon-es
+        function initPhysicsWorld() {
+            // Crear mundo físico
+            physicsWorld = new CANNON.World();
+            physicsWorld.gravity.set(0, 0, -PHYSICS_CONFIG.gravity);
+            physicsWorld.broadphase = new CANNON.NaiveBroadphase();
+            physicsWorld.solver.iterations = 10;
+
+            // Crear escena Three.js
+            threeScene = new THREE.Scene();
+            threeScene.background = new THREE.Color(0x0a0f1e);
+
+            // Crear cámara
+            threeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            threeCamera.position.set(0, 0, 50);
+            threeCamera.lookAt(0, 0, 0);
+
+            // Crear renderer
+            threeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            threeRenderer.setSize(window.innerWidth, window.innerHeight);
+            threeRenderer.setPixelRatio(window.devicePixelRatio);
+            threeRenderer.shadowMap.enabled = true;
+            document.body.appendChild(threeRenderer.domElement);
+
+            // Añadir luces
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+            threeScene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            directionalLight.castShadow = true;
+            threeScene.add(directionalLight);
+
+            // Añadir suelo (plano invisible)
+            const groundGeometry = new THREE.PlaneGeometry(200, 200);
+            const groundMaterial = new THREE.MeshStandardMaterial({
+                color: 0x1a1a2e,
+                side: THREE.DoubleSide
+            });
+            const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+            groundMesh.rotation.x = -Math.PI / 2;
+            groundMesh.receiveShadow = true;
+            threeScene.add(groundMesh);
+
+            // Crear mundo físico para el suelo
+            const groundBody = new CANNON.Body({
+                mass: 0,
+                shape: new CANNON.Plane(),
+                position: new CANNON.Vec3(0, 0, 0)
+            });
+            physicsWorld.addBody(groundBody);
+
+            // Configurar controles de orbitación
+            controls = new THREE.OrbitControls(threeCamera, threeRenderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 30;
+            controls.maxDistance = 200;
+            controls.maxPolarAngle = Math.PI / 2;
+
+            // Manejar eventos de redimensionamiento
+            window.addEventListener('resize', onWindowResize);
+
+            // Crear cubo de prueba
+            createTestCube();
+
+            // Configurar controles de arrastre
+            setupDragControls();
+
+            // Iniciar animación
+            animate();
+        }
+
+        // Crear un objeto físico con propiedades personalizables
+        function createPhysicsObject(options = {}) {
+            const defaults = {
+                mass: 1,
+                width: 10,
+                height: 10,
+                depth: 10,
+                color: 0x00d4ff,
+                position: { x: 0, y: 0, z: 0 },
+                velocity: { x: 0, y: 0, z: 0 },
+                angularVelocity: { x: 0, y: 0, z: 0 },
+                userData: {}
+            };
+
+            const config = { ...defaults, ...options };
+
+            // Crear cuerpo físico en Cannon
+            const shape = new CANNON.Box(new CANNON.Vec3(
+                config.width / 2,
+                config.height / 2,
+                config.depth / 2
+            ));
+
+            const body = new CANNON.Body({
+                mass: config.mass * PHYSICS_CONFIG.massMultiplier,
+                shape: shape,
+                position: new CANNON.Vec3(
+                    config.position.x,
+                    config.position.y,
+                    config.position.z
+                ),
+                velocity: new CANNON.Vec3(
+                    config.velocity.x,
+                    config.velocity.y,
+                    config.velocity.z
+                ),
+                angularVelocity: new CANNON.Vec3(
+                    config.angularVelocity.x,
+                    config.angularVelocity.y,
+                    config.angularVelocity.z
+                ),
+                linearDamping: PHYSICS_CONFIG.damping,
+                angularDamping: PHYSICS_CONFIG.damping,
+                material: new CANNON.Material({
+                    friction: PHYSICS_CONFIG.friction,
+                    restitution: PHYSICS_CONFIG.restitution
+                })
+            });
+
+            // Crear malla en Three.js
+            const geometry = new THREE.BoxGeometry(
+                config.width,
+                config.height,
+                config.depth
+            );
+
+            const material = new THREE.MeshStandardMaterial({
+                color: config.color,
+                metalness: 0.3,
+                roughness: 0.7,
+                transparent: true,
+                opacity: 0.8,
+                side: THREE.DoubleSide
+            });
+
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.userData = {
+                physicsBody: body,
+                originalPosition: config.position,
+                originalColor: config.color,
+                originalSize: { width: config.width, height: config.height, depth: config.depth }
+            };
+
+            // Añadir cuerpo físico al mundo
+            physicsWorld.addBody(body);
+
+            // Añadir malla a la escena
+            threeScene.add(mesh);
+
+            return {
+                mesh: mesh,
+                body: body,
+                update: function() {
+                    if (body.position) mesh.position.copy(body.position);
+                    if (body.quaternion) mesh.quaternion.copy(body.quaternion);
+                }
+            };
+        }
+
+        // Crear un cubo de prueba
+        function createTestCube() {
+            return createPhysicsObject({
+                mass: 2,
+                width: 8,
+                height: 8,
+                depth: 8,
+                color: 0xff00aa,
+                position: { x: 0, y: 0, z: 0 },
+                userData: {
+                    type: 'test_cube',
+                    description: 'Cubo de prueba para verificar física 3D'
+                }
+            });
+        }
+
+        // Manejar eventos de arrastre con física realista
+        function setupDragControls() {
+            const dragControls = new THREE.DragControls(
+                [threeScene.children.filter(child => child.userData.physicsBody)],
+                threeCamera,
+                threeRenderer.domElement
+            );
+
+            dragControls.addEventListener('dragstart', function(event) {
+                const object = event.object;
+                dragObject = object;
+                dragOffset = {
+                    x: object.position.x - mouse.x,
+                    y: object.position.y - mouse.y
+                };
+
+                // Aplicar fuerza de arrastre (efecto de resorte)
+                const body = object.userData.physicsBody;
+                body.velocity.set(0, 0, 0);
+                body.angularVelocity.set(0, 0, 0);
+            });
+
+            dragControls.addEventListener('drag', function(event) {
+                const object = event.object;
+                const body = object.userData.physicsBody;
+
+                // Posición del cursor en coordenadas 3D
+                const vector = new THREE.Vector3(
+                    (mouse.x / windowHalf.width) * 100 - 50,
+                    -(mouse.y / windowHalf.height) * 100 + 50,
+                    0
+                );
+
+                // Aplicar fuerza de resorte (efecto de seguimiento con inercia)
+                const springForce = PHYSICS_CONFIG.springConstant;
+                const targetX = vector.x - dragOffset.x;
+                const targetY = vector.y - dragOffset.y;
+
+                // Calcular fuerza hacia la posición del cursor
+                const forceX = (targetX - body.position.x) * springForce;
+                const forceY = (targetY - body.position.y) * springForce;
+
+                // Aplicar fuerza al cuerpo físico
+                body.force.set(forceX, forceY, 0);
+            });
+
+            dragControls.addEventListener('dragend', function(event) {
+                const object = event.object;
+                const body = object.userData.physicsBody;
+
+                // Liberar el objeto (quitar fuerza de arrastre)
+                body.force.set(0, 0, 0);
+
+                // Aplicar un pequeño impulso para efecto de inercia
+                body.velocity.set(
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 2,
+                    0
+                );
+
+                dragObject = null;
+            });
+
+            // Manejar eventos de mouse
+            document.addEventListener('mousemove', (event) => {
+                mouse.x = (event.clientX - windowHalf.width) * 2;
+                mouse.y = (event.clientY - windowHalf.height) * 2;
+            });
+        }
+
+        // Animación principal
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Actualizar física
+            const timeStep = 1/60;
+            physicsWorld.step(timeStep);
+
+            // Actualizar objetos en la escena
+            threeScene.children.forEach(object => {
+                if (object.userData.physicsBody) {
+                    object.update();
+                }
+            });
+
+            // Actualizar controles
+            controls.update();
+
+            // Renderizar
+            threeRenderer.render(threeScene, threeCamera);
+        }
+
+        // Manejar redimensionamiento de ventana
+        function onWindowResize() {
+            windowHalf.width = window.innerWidth / 2;
+            windowHalf.height = window.innerHeight / 2;
+
+            threeCamera.aspect = window.innerWidth / window.innerHeight;
+            threeCamera.updateProjectionMatrix();
+
+            threeRenderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Inicializar el sistema de física
+        function init() {
+            initPhysicsWorld();
+            console.log("🚀 PHYSICS ENGINE INICIALIZADO - Prueba exitosa!");
+        }
+
+        // Iniciar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

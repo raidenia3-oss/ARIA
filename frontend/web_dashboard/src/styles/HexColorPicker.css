@@ -1,0 +1,1 @@
+.hex-picker{display:flex;align-items:center;gap:.75rem}.hex-picker input[type=color]{height:2.5rem;width:2.5rem;cursor:pointer;border-radius:.5rem;border:1px solid rgba(56,189,248,.25);background:transparent}.hex-picker .hex-value{font-family:monospace;font-size:.875rem;color:#38bdf8}

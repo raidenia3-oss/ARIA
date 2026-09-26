@@ -1,0 +1,29 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Escudo tecnológico con elementos de radar y red -->
+    <group>
+        <!-- Fondo del escudo -->
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M12,2 L20,12 L12,22 L4,12 Z" />
+
+        <!-- Radar central -->
+        <path
+            android:fillColor="#FF5722"
+            android:pathData="M12,12 L12,6 A6,6 0 1,1 18,12 A6,6 0 1,1 12,18 A6,6 0 1,1 6,12 A6,6 0 1,1 12,6 Z" />
+
+        <!-- Líneas de conexión (red) -->
+        <path
+            android:strokeColor="#4CAF50"
+            android:strokeWidth="1.5"
+            android:pathData="M12,6 L16,10 M12,6 L8,10 M12,18 L16,14 M12,18 L8,14" />
+
+        <!-- Centro del radar -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M12,12 L12,10 A2,2 0 1,1 14,12 A2,2 0 1,1 12,14 A2,2 0 1,1 10,12 A2,2 0 1,1 12,10 Z" />
+    </group>
+</vector>

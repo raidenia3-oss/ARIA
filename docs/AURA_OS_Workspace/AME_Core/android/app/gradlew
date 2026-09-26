@@ -1,0 +1,1718 @@
+#!/usr/bin/env bash
+#
+# ASCIIdoc 1.9.2
+# Copyright (C) 2002-2016 Stuart Rackham
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# OS specific support.  $var _must_ be quoted for this to work right.
+case "$(uname)" in
+  *CYGWIN* | *MINGW* )
+    JAVA="$(cygpath -wp "$JAVA_HOME")"
+    DIR="$(cygpath -wp "$DIR")"
+    ;;
+esac
+
+APP_NAME="gradle"
+APP_BASE_NAME="gradle"
+APP_HOME="$DIR"
+
+# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
+DEFAULT_JVM_OPTS=""
+
+# Use the maximum available, or set MAX_FD != -1 to use that value.
+MAX_FD="maximum"
+
+# Add default command-line options to GRADLE_OPTS here. For example, you can add
+# "-Dsome.property=property" to pass system properties to Gradle.
+# Don't add "-daemon" here; it's already included by default. Also, don't add
+# "-no-daemon"; it will be ignored by Gradle's daemon.
+# Use GRADLE_OPTS="$GRADLE_OPTS \"-Dkey=value\" \"-Dkey2=value2\"" to pass multiple options.
+DEFAULT_GRADLE_OPTS="--no-daemon --stacktrace"
+
+# For Windows compatibility
+GRADLE_USER_HOME="$APP_HOME"
+
+# Add project-specific JVM options here. They will be used when launching the JVM for a
+# project. Project-specific options should be defined in the project's gradle.properties file.
+# The project-specific options defined here will be used as default value if no
+# project-specific options are defined in the project's gradle.properties.
+# Use this to pass JVM options to the community plugins that use the project-specific
+# Gradle launcher (e.g. the Spring Boot Gradle plugin).
+# DEFAULT_PROJECT_JVM_OPTS="-Xmx1024m -XX:MaxMetaspaceSize=256m"
+
+# Use the Gradle wrapper to the specified distribution URL, if no version is specified.
+# GRADLE_USER_HOME="$APP_HOME" ./gradlew 'help'
+
+# Add project-specific Gradle options here. They will be used when launching Gradle from the
+# project directory. Project-specific options should be defined in the project's gradle.properties file.
+# The project-specific options defined here will be used as default value if no
+# project-specific options are defined in the project's gradle.properties.
+# Use this to pass Gradle options to the community plugins that use the project-specific
+# Gradle launcher (e.g. the Spring Boot Gradle plugin).
+# DEFAULT_PROJECT_OPTS="--stacktrace"
+
+# Add Gradle launcher options here. These will be used when launching Gradle from the
+# command line.
+# LAUNCHER_OPTS="--console=plain"
+
+# Add Gradle launcher options for the build environment here. These will be used when
+# launching Gradle from the build environment (e.g. when running the Gradle build from
+# an IDE).
+# BUILD_ENVIRONMENT_OPTS="--build-cache"
+
+# Add Gradle launcher options for the daemon here. These will be used when launching
+# Gradle in daemon mode.
+# DAEMON_OPTS="--daemon --no-build-cache"
+
+# Add Gradle launcher options for the continuous build here. These will be used when
+# launching Gradle in continuous build mode.
+# CONTINUOUS_BUILD_OPTS="--continuous"
+
+# Add Gradle launcher options for the test kit here. These will be used when launching
+# Gradle in test kit mode.
+# TEST_KIT_OPTS="--test-kit"
+
+# Add Gradle launcher options for the build scan here. These will be used when
+# launching Gradle with build scan.
+# BUILD_SCAN_OPTS="--scan"
+
+# Add Gradle launcher options for the build scan plugin here. These will be used when
+# launching Gradle with the build scan plugin.
+# BUILD_SCAN_PLUGIN_OPTS="--scan"
+
+# Add Gradle launcher options for the configuration cache here. These will be used when
+# launching Gradle with the configuration cache.
+# CONFIGURATION_CACHE_OPTS="--configuration-cache"
+
+# Add Gradle launcher options for the configuration on demand here. These will be used
+# when launching Gradle with the configuration on demand.
+# CONFIGURATION_ON_DEMAND_OPTS="--configuration-on-demand"
+
+# Add Gradle launcher options for the composite builds here. These will be used when
+# launching Gradle with composite builds.
+# COMPOSITE_OPTS="--composite"
+
+# Add Gradle launcher options for the composite builds with validation here. These will
+# be used when launching Gradle with composite builds and validation.
+# COMPOSITE_VALIDATION_OPTS="--composite-validation"
+
+# Add Gradle launcher options for the composite builds with validation strict here.
+# These will be used when launching Gradle with composite builds and strict validation.
+# COMPOSITE_VALIDATION_STRICT_OPTS="--composite-validation-strict"
+
+# Add Gradle launcher options for the configuration cache cleanup here. These will be
+# used when launching Gradle with the configuration cache cleanup.
+# CONFIGURATION_CACHE_CLEANUP_OPTS="--configuration-cache-cleanup"
+
+# Add Gradle launcher options for the build cache here. These will be used when
+# launching Gradle with the build cache.
+# BUILD_CACHE_OPTS="--build-cache"
+
+# Add Gradle launcher options for the build cache cleanup here. These will be used when
+# launching Gradle with the build cache cleanup.
+# BUILD_CACHE_CLEANUP_OPTS="--build-cache-cleanup"
+
+# Add Gradle launcher options for the build cache cleanup all here. These will be used
+# when launching Gradle with the build cache cleanup all.
+# BUILD_CACHE_CLEANUP_ALL_OPTS="--build-cache-cleanup-all"
+
+# Add Gradle launcher options for the build cache cleanup all with confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_CONFIRM_OPTS="--build-cache-cleanup-all-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with no confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with no
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_NO_CONFIRM_OPTS="--build-cache-cleanup-all-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run here.
+# These will be used when launching Gradle with the build cache cleanup all with dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run and no
+# confirmation here. These will be used when launching Gradle with the build cache
+# cleanup all with dry run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run and
+# confirmation here. These will be used when launching Gradle with the build cache
+# cleanup all with dry run and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run and
+# verbose here. These will be used when launching Gradle with the build cache cleanup
+# all with dry run and verbose.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_OPTS="--build-cache-cleanup-all-dry-run-verbose"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose
+# and no confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose
+# and confirmation here. These will be used when launching Gradle with the build cache
+# cleanup all with dry run, verbose and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation and no confirmation here. These will be used when launching Gradle with
+# the build cache cleanup all with dry run, verbose, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation and dry run here. These will be used when launching Gradle with the
+# build cache cleanup all with dry run, verbose, confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run and no confirmation here. These will be used when launching
+# Gradle with the build cache cleanup all with dry run, verbose, confirmation, dry
+# run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run and confirmation here. These will be used when launching
+# Gradle with the build cache cleanup all with dry run, verbose, confirmation, dry
+# run and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation and no confirmation here. These will be used
+# when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation and dry run here. These will be
+# used when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run and no confirmation
+# here. These will be used when launching Gradle with the build cache cleanup all
+# with dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation and
+# confirmation here. These will be used when launching Gradle with the build cache
+# cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation and dry run here. These will be used when launching Gradle with the
+# build cache cleanup all with dry run, verbose, confirmation, dry run, confirmation,
+# no confirmation, dry run, no confirmation, confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run and no confirmation here. These will be used when launching
+# Gradle with the build cache cleanup all with dry run, verbose, confirmation, dry
+# run, confirmation, no confirmation, dry run, no confirmation, confirmation, dry
+# run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation and confirmation here. These will be used
+# when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation and dry run here. These will
+# be used when launching Gradle with the build cache cleanup all with dry run,
+# verbose, confirmation, dry run, confirmation, no confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run and no confirmation
+# here. These will be used when launching Gradle with the build cache cleanup all
+# with dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation
+# and confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation and dry run here. These will be used when launching Gradle with the
+# build cache cleanup all with dry run, verbose, confirmation, dry run, confirmation,
+# no confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run and no confirmation here. These will be used when launching
+# Gradle with the build cache cleanup all with dry run, verbose, confirmation, dry
+# run, confirmation, no confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation and dry run here. These will
+# be used when launching Gradle with the build cache cleanup all with dry run,
+# verbose, confirmation, dry run, confirmation, no confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run and no confirmation
+# here. These will be used when launching Gradle with the build cache cleanup all
+# with dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation and dry run here. These will be used when launching Gradle with the
+# build cache cleanup all with dry run, verbose, confirmation, dry run, confirmation,
+# no confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation and no confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation and dry run here. These will be used when launching
+# Gradle with the build cache cleanup all with dry run, verbose, confirmation, dry
+# run, confirmation, no confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run and no confirmation here. These will be
+# used when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation and confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation and dry
+# run here. These will be used when launching Gradle with the build cache cleanup all
+# with dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run
+# and confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation,
+# no confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run
+# and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation and no confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation and
+# no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation and confirmation here. These will be used when
+# launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation and dry run here. These will be used
+# when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run and no confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, no confirmation, confirmation,
+# dry run, confirmation, no confirmation, confirmation, dry run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation and
+# confirmation here. These will be used when launching Gradle with the build cache
+# cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation and
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation and no confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation and no
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation and dry run here. These will be used when
+# launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, no confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run and confirmation here. These will be used
+# when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, no confirmation, dry run and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation and no confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, no confirmation, dry run, confirmation and no
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, no confirmation, confirmation,
+# dry run, confirmation, no confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation and dry run here. These will be used when launching
+# Gradle with the build cache cleanup all with dry run, verbose, confirmation, dry
+# run, confirmation, no confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation
+# and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run and no confirmation here. These will be
+# used when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, dry run and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation and confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation and
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation and no
+# confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation and no
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation and dry run here. These will be used when launching Gradle with
+# the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run and confirmation here. These will be used when launching
+# Gradle with the build cache cleanup all with dry run, verbose, confirmation, dry
+# run, confirmation, no confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation and no confirmation here. These will be
+# used when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation and confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation and
+# confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation and
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation and no confirmation here. These will be used when launching
+# Gradle with the build cache cleanup all with dry run, verbose, confirmation, dry
+# run, confirmation, no confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation and dry run here. These will be used when
+# launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run, no
+# confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run and confirmation here. These will be
+# used when launching Gradle with the build cache cleanup all with dry run,
+# verbose, confirmation, dry run, confirmation, no confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, dry run and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation and no confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation and
+# confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation and
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation and no confirmation here. These will be used when
+# launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation and dry run here. These will be
+# used when launching Gradle with the build cache cleanup all with dry run,
+# verbose, confirmation, dry run, confirmation, no confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation and dry run.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-dry-run"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run and confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation and no
+# confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation and confirmation here. These will be used when
+# launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation and no confirmation here. These will
+# be used when launching Gradle with the build cache cleanup all with dry run,
+# verbose, confirmation, dry run, confirmation, no confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, no confirmation, confirmation,
+# dry run, confirmation, no confirmation, confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation and confirmation here. These will be
+# used when launching Gradle with the build cache cleanup all with dry run,
+# verbose, confirmation, dry run, confirmation, no confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, no confirmation, confirmation,
+# dry run, confirmation, no confirmation, confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation and no confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, no confirmation, confirmation,
+# dry run, confirmation, no confirmation, confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, confirmation, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation and confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, no confirmation, confirmation,
+# dry run, confirmation, no confirmation, confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation and no
+# confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, confirmation, confirmation, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation and
+# confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and no confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation and confirmation here. These will be used when
+# launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation and
+# confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation and no confirmation here. These will
+# be used when launching Gradle with the build cache cleanup all with dry run,
+# verbose, confirmation, dry run, confirmation, no confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, dry run, no confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, no confirmation, confirmation,
+# dry run, confirmation, no confirmation, confirmation, confirmation, dry run, no
+# confirmation, confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation and no confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-no-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation here.
+# These will be used when launching Gradle with the build cache cleanup all with
+# dry run, verbose, confirmation, dry run, confirmation, no confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, dry run, no confirmation, confirmation, dry
+# run, no confirmation, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation and
+# confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation and confirmation here. These will be
+# used when launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation and
+# confirmation here. These will be used when launching Gradle with the build
+# cache cleanup all with dry run, verbose, confirmation, dry run, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, no confirmation, dry run,
+# no confirmation, confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation and confirmation here. These will be used when
+# launching Gradle with the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm"
+
+# Add Gradle launcher options for the build cache cleanup all with dry run, verbose,
+# confirmation, dry run, confirmation, no confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, dry run, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# confirmation, no confirmation, confirmation, dry run, no confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, confirmation, no confirmation, confirmation,
+# confirmation, no confirmation, dry run, confirmation, no confirmation,
+# confirmation, confirmation, no confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation and confirmation here. These will be used when launching Gradle
+# with the build cache cleanup all with dry run, verbose, confirmation, dry run,
+# confirmation, no confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, dry run,
+# no confirmation, confirmation, dry run, no confirmation, confirmation, no
+# confirmation, dry run, no confirmation, confirmation, dry run, confirmation, no
+# confirmation, confirmation, confirmation, dry run, no confirmation, confirmation,
+# no confirmation, dry run, confirmation, no confirmation, confirmation, confirmation,
+# dry run, no confirmation, confirmation, no confirmation, dry run, confirmation,
+# no confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation, confirmation,
+# confirmation, confirmation, confirmation, confirmation and confirmation.
+# BUILD_CACHE_CLEANUP_ALL_DRY_RUN_VERBOSE_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_DRY_RUN_NO_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_DRY_RUN_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_NO_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_CONFIRM_OPTS="--build-cache-cleanup-all-dry-run-verbose-confirm-dry-run-confirm-no-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-confirm-dry-run-no-confirm-dry-run-no-confirm-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-dry-run-no-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-no-confirm-dry-run-confirm-no-confirm-confirm-confirm-confirm-no-confirm-confirm-no-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm-confirm

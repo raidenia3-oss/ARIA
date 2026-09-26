@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rutas del FileProvider para compartir ficheros de la SD del móvil. -->
+<paths>
+    <external-path name="external_files" path="." />
+    <external-files-path name="sd_vault" path="AURA/SD_VAULT" />
+    <external-files-path name="sd_notes" path="AURA/SD_NOTES" />
+</paths>

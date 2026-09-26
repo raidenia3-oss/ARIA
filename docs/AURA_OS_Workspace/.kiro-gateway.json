@@ -1,0 +1,41 @@
+{
+    "version": "1.0",
+    "description": "Kiro Gateway - Proxy de modelos para AURA",
+    "proxy": {
+        "enabled": true,
+        "base_url": "https://api.anthropic.com",
+        "fallback_url": null,
+        "timeout": 30,
+        "retry_attempts": 3
+    },
+    "providers": {
+        "anthropic": {
+            "api_key_env": "ANTHROPIC_API_KEY",
+            "base_url_env": "ANTHROPIC_BASE_URL",
+            "models": ["claude-3-5-sonnet-20241022", "claude-3-opus-20240229"]
+        },
+        "openai": {
+            "api_key_env": "OPENAI_API_KEY",
+            "base_url_env": "OPENAI_BASE_URL",
+            "models": ["gpt-4-turbo", "gpt-4o"]
+        },
+        "glm": {
+            "api_key_env": "GLM_API_KEY",
+            "base_url": "https://open.bigmodel.cn/api/paas/v4",
+            "models": ["glm-5-2", "glm-4-plus"]
+        }
+    },
+    "routing": {
+        "default_provider": "anthropic",
+        "fallback_chain": ["openai", "glm"],
+        "cost_optimization": {
+            "use_proxy_local": true,
+            "max_tokens_per_request": 1000000
+        }
+    },
+    "logging": {
+        "level": "INFO",
+        "format": "json",
+        "output": "./logs/kiro-gateway.log"
+    }
+}

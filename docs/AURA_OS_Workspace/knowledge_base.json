@@ -1,0 +1,240 @@
+{
+    "last_indexed": "2026-05-28T16:00:00",
+    "notes": {
+        "AURA/Shadow-Core/001-shadow-core-spec.md": {
+            "path": "AURA/Shadow-Core/001-shadow-core-spec.md",
+            "title": "Shadow-Core Specification",
+            "tags": ["shadow-core", "spec", "architecture", "osint"],
+            "created": "2026-05-20T10:00:00",
+            "modified": "2026-05-27T18:30:00",
+            "content": "## Shadow-Core Specification\n\nThe Shadow-Core is a microservice designed for advanced OSINT operations. It operates in isolation from the main AURA system to prevent cascading failures.\n\n### Key Features\n- **Isolated Execution**: Runs on port 5001\n- **Threat Detection**: Integrated with Security Shield\n- **Data Exfiltration**: Supports DNS and ICMP channels\n- **Stealth Mode**: SYN Stealth and ARP scanning capabilities\n\n### Components\n1. **Net Recon Ghost**: Network reconnaissance module\n2. **Data Exfiltration Layer**: Secure data exfiltration\n3. **Security Shield Integration**: Real-time threat monitoring\n\n### Threat Levels\n- CLEAN: No threats detected\n- WARNING: Potential threats\n- ALERT: Immediate action required\n- CRITICAL: System isolation required\n\n### API Endpoints\n- `/api/net_recon`: Network reconnaissance\n- `/api/data_exfil`: Data exfiltration\n- `/api/execute_advanced`: Advanced command execution\n\n### Example Usage\n```python\n# Example of executing a stealth scan\nresult = run_recon('192.168.1.0/24', ['80', '443', '22'])\n```",
+            "chunks": [
+                "The Shadow-Core is a microservice designed for advanced OSINT operations. It operates in isolation from the main AURA system to prevent cascading failures.",
+                "### Key Features\n- **Isolated Execution**: Runs on port 5001\n- **Threat Detection**: Integrated with Security Shield\n- **Data Exfiltration**: Supports DNS and ICMP channels\n- **Stealth Mode**: SYN Stealth and ARP scanning capabilities",
+                "### Components\n1. **Net Recon Ghost**: Network reconnaissance module\n2. **Data Exfiltration Layer**: Secure data exfiltration\n3. **Security Shield Integration**: Real-time threat monitoring",
+                "### Threat Levels\n- CLEAN: No threats detected\n- WARNING: Potential threats\n- ALERT: Immediate action required\n- CRITICAL: System isolation required",
+                "### API Endpoints\n- `/api/net_recon`: Network reconnaissance\n- `/api/data_exfil`: Data exfiltration\n- `/api/execute_advanced`: Advanced command execution",
+                "### Example Usage\n```python\n# Example of executing a stealth scan\nresult = run_recon('192.168.1.0/24', ['80', '443', '22'])\n```"
+            ],
+            "hash": "a1b2c3d4e5f678901234567890abcdef12",
+            "links": [
+                {
+                    "target": "AURA/physics_ui_integration.md",
+                    "type": "depends_on",
+                    "strength": 0.8,
+                    "description": "Usa el motor de física para efectos de visualización de amenazas"
+                },
+                {
+                    "target": "AURA/antigravity_nodes.md",
+                    "type": "related_to",
+                    "strength": 0.7,
+                    "description": "Implementa visualización 3D de nodos de amenaza"
+                },
+                {
+                    "target": "AURA/obsidian_integration.md",
+                    "type": "uses",
+                    "strength": 0.6,
+                    "description": "Almacena información de amenazas en la base de conocimiento"
+                }
+            ]
+        },
+        "AURA/physics_ui_integration.md": {
+            "path": "AURA/physics_ui_integration.md",
+            "title": "Physics UI Integration",
+            "tags": ["3d", "physics", "dashboard", "antigravity", "visualization"],
+            "created": "2026-05-25T12:00:00",
+            "modified": "2026-05-27T20:15:00",
+            "content": "## Physics UI Integration\n\nThis document describes the integration of the PHYS-UI-ENGINE with the AURA dashboard to create a 3D Antigravity environment.\n\n### Objectives\n- Transform the dashboard into a 3D physical space\n- Implement realistic physics with Three.js and Cannon-es\n- Create interactive elements with drag-and-drop physics\n- Add visual effects inspired by the Antigravity style\n\n### Implementation\n\n#### 1. Physics Engine\n- **Three.js**: For 3D rendering\n- **Cannon-es**: For physics simulation\n- **Custom Physics Config**:\n  - Gravity: 0.3 (reduced for Antigravity effect)\n  - Damping: 0.2 (low for more inertia)\n  - Spring Constant: 0.15 (for drag effects)\n\n#### 2. Dashboard Elements\n- **Terminals**: Converted to 3D objects with physics\n- **Panels**: Flotantes con efectos de profundidad\n- **Interactivity**: Arrastre con efecto de resorte\n\n#### 3. Visual Effects\n- **Lighting**: Ambient and directional lights\n- **Materials**: Glass-like materials with transparency\n- **Shadows**: Soft shadows for depth\n\n### Example Code\n```javascript\n// Creating a physics object\nconst physicsObject = PhysicsUI.createObject({\n  mass: 1.5,\n  width: 8,\n  height: 8,\n  depth: 8,\n  color: 0xff3366,\n  position: { x: 0, y: 40, z: 0 }\n});\n\n// Creating an HTML object with physics\nconst terminalObject = PhysicsUI.createHtmlObject(\n  document.querySelector('.evolution-terminal'), {\n    width: 30,\n    height: 50,\n    depth: 2,\n    color: 0x00d4ff,\n    position: { x: -30, y: 20, z: 0 }\n  }\n);\n```",
+            "chunks": [
+                "This document describes the integration of the PHYS-UI-ENGINE with the AURA dashboard to create a 3D Antigravity environment.",
+                "### Objectives\n- Transform the dashboard into a 3D physical space\n- Implement realistic physics with Three.js and Cannon-es\n- Create interactive elements with drag-and-drop physics\n- Add visual effects inspired by the Antigravity style",
+                "### Implementation\n\n#### 1. Physics Engine\n- **Three.js**: For 3D rendering\n- **Cannon-es**: For physics simulation\n- **Custom Physics Config**:\n  - Gravity: 0.3 (reduced for Antigravity effect)\n  - Damping: 0.2 (low for more inertia)\n  - Spring Constant: 0.15 (for drag effects)",
+                "#### 2. Dashboard Elements\n- **Terminals**: Converted to 3D objects with physics\n- **Panels**: Flotantes con efectos de profundidad\n- **Interactivity**: Arrastre con efecto de resorte",
+                "#### 3. Visual Effects\n- **Lighting**: Ambient and directional lights\n- **Materials**: Glass-like materials with transparency\n- **Shadows**: Soft shadows for depth",
+                "### Example Code\n```javascript\n// Creating a physics object\nconst physicsObject = PhysicsUI.createObject({\n  mass: 1.5,\n  width: 8,\n  height: 8,\n  depth: 8,\n  color: 0xff3366,\n  position: { x: 0, y: 40, z: 0 }\n});\n```"
+            ],
+            "hash": "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7",
+            "links": [
+                {
+                    "target": "AURA/Shadow-Core/001-shadow-core-spec.md",
+                    "type": "implemented_by",
+                    "strength": 0.8,
+                    "description": "Proporciona el motor de física para visualización de amenazas"
+                },
+                {
+                    "target": "AURA/antigravity_nodes.md",
+                    "type": "extends",
+                    "strength": 0.9,
+                    "description": "Implementa efectos de física avanzados para nodos"
+                },
+                {
+                    "target": "AURA/obsidian_integration.md",
+                    "type": "visualizes",
+                    "strength": 0.7,
+                    "description": "Muestra relaciones de conocimiento en 3D"
+                }
+            ]
+        },
+        "AURA/antigravity_nodes.md": {
+            "path": "AURA/antigravity_nodes.md",
+            "title": "Antigravity Nodes",
+            "tags": ["3d", "visualization", "nodes", "physics", "connections"],
+            "created": "2026-05-27T10:15:00",
+            "modified": "2026-05-27T16:30:00",
+            "content": "## Antigravity Nodes\n\nThis document describes the implementation of Antigravity-style nodes in the AURA dashboard.\n\n### Concept\n\nAntigravity nodes are 3D visual representations of data points that float in space with realistic physics. They are inspired by the visual style of the Antigravity project and provide an immersive way to interact with information.\n\n### Features\n\n1. **Physics-Based Movement**: Nodes respond to gravity and collisions\n2. **Interactive**: Click to expand and view details\n3. **Visual Effects**: Glassmorphism materials and soft shadows\n4. **Proportional Sizing**: Node size reflects importance/relevance\n5. **Drag-and-Drop**: Move nodes with spring physics\n6. **Connection Lines**: Show relationships between nodes\n7. **Spring Constraints**: Physical connections that help group related nodes\n\n### Implementation Details\n\n#### Node Types\n- **Knowledge Nodes**: Represent Obsidian notes\n- **System Nodes**: Represent dashboard components\n- **Interaction Nodes**: Represent user actions\n\n#### Physics Properties\n| Property | Value | Description |\n|----------|-------|-------------|\n| Mass | 0.1-2.0 | Determines how responsive the node is to forces\n| Gravity | 0.3 | Reduced for Antigravity effect\n| Damping | 0.2 | Low for more inertia\n| Restitution | 0.8 | High for bouncy effect\n| Spring Constant | 0.15 | For drag effects\n\n#### Visual Properties\n- **Materials**: Glass-like with transparency\n- **Colors**: Based on node type (blue for knowledge, red for alerts)\n- **Lighting**: Ambient and directional lights\n- **Shadows**: Soft shadows for depth\n- **Connection Lines**: Lines between related nodes\n\n### Example Node Creation\n\n```javascript\n// Create a knowledge node\nconst knowledgeNode = PhysicsUI.createObject({\n  mass: 1.2,\n  width: 6,\n  height: 6,\n  depth: 6,\n  color: 0x00d4ff, // Blue for knowledge nodes\n  position: { x: 10, y: 25, z: 0 },\n  userData: {\n    type: 'knowledge',\n    title: 'Shadow-Core Specification',\n    path: 'AURA/Shadow-Core/001-shadow-core-spec.md',\n    content: 'The Shadow-Core is a microservice designed for advanced OSINT operations...'\n  }\n});\n\n// Make the node interactive\nknowledgeNode.mesh.userData.interactive = true;\nknowledgeNode.mesh.userData.onClick = function() {\n  showKnowledgePanel(knowledgeNode.userData);\n};\n```\n\n### Connection System\n\nThe Antigravity Nodes system implements a connection system that:\n\n1. **Detects Relationships**: Analyzes links between notes\n2. **Creates Visual Connections**: Draws lines between related nodes\n3. **Implements Physics Constraints**: Uses spring constraints to group related nodes\n4. **Dynamic Updates**: Adjusts connections when nodes move\n\n### Connection Types\n\n| Type | Description | Visual Style | Physics Strength |\n|------|-------------|--------------|------------------|\n| depends_on | Strong dependency | Thick blue line | High (0.8-1.0) |\n| related_to | Logical relationship | Medium green line | Medium (0.5-0.7) |\n| uses | Resource usage | Thin orange line | Low (0.3-0.5) |\n| implemented_by | Implementation relationship | Dashed purple line | Medium (0.6-0.8) |\n\n### Physics Constraints\n\nTo create realistic connections, the system uses Cannon.js spring constraints:\n\n```javascript\n// Create a spring constraint between two nodes\nconst constraint = new CANNON.Spring(\n  node1.body, node2.body, \n  { restLength: distance, stiffness: strength * 100, damping: 0.3 }\n);\nphysicsWorld.addConstraint(constraint);\n```\n\n### Dynamic Filtering\n\nThe system supports dynamic filtering of nodes based on search results:\n\n1. **Highlight Matching Nodes**: Nodes containing search terms become more opaque\n2. **Fade Non-Matching Nodes**: Irrelevant nodes become semi-transparent (ghost mode)\n3. **Adjust Connection Visibility**: Only show connections between relevant nodes\n4. **Color Coding**: Use color to indicate relevance level\n\n### Threat Visualization\n\nWhen the Shadow-Core detects a threat:\n\n1. **Color Change**: Affected nodes change color to red\n2. **Pulse Effect**: Nodes pulse to draw attention\n3. **Connection Highlight**: Related nodes get brighter connections\n4. **Alert Notification**: System-wide alert is triggered\n\n### Future Enhancements\n\n- **Connection Animation**: Smooth animations when connections are added/removed\n- **Force-Directed Layout**: Automatic layout based on connection strengths\n- **3D Pathfinding**: Nodes can \"navigate\" to related nodes\n- **Interactive Exploration**: Users can follow connection paths\n- **Temporal Connections**: Show how relationships change over time",
+            "chunks": [
+                "This document describes the implementation of Antigravity-style nodes in the AURA dashboard.",
+                "### Concept\n\nAntigravity nodes are 3D visual representations of data points that float in space with realistic physics. They are inspired by the visual style of the Antigravity project and provide an immersive way to interact with information.",
+                "### Features\n\n1. **Physics-Based Movement**: Nodes respond to gravity and collisions\n2. **Interactive**: Click to expand and view details\n3. **Visual Effects**: Glassmorphism materials and soft shadows\n4. **Proportional Sizing**: Node size reflects importance/relevance\n5. **Drag-and-Drop**: Move nodes with spring physics\n6. **Connection Lines**: Show relationships between nodes\n7. **Spring Constraints**: Physical connections that help group related nodes",
+                "### Implementation Details\n\n#### Node Types\n- **Knowledge Nodes**: Represent Obsidian notes\n- **System Nodes**: Represent dashboard components\n- **Interaction Nodes**: Represent user actions",
+                "#### Physics Properties\n| Property | Value | Description |\n|----------|-------|-------------|\n| Mass | 0.1-2.0 | Determines how responsive the node is to forces\n| Gravity | 0.3 | Reduced for Antigravity effect\n| Damping | 0.2 | Low for more inertia\n| Restitution | 0.8 | High for bouncy effect\n| Spring Constant | 0.15 | For drag effects",
+                "#### Visual Properties\n- **Materials**: Glass-like with transparency\n- **Colors**: Based on node type (blue for knowledge, red for alerts)\n- **Lighting**: Ambient and directional lights\n- **Shadows**: Soft shadows for depth\n- **Connection Lines**: Lines between related nodes"
+            ],
+            "hash": "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8",
+            "links": [
+                {
+                    "target": "AURA/Shadow-Core/001-shadow-core-spec.md",
+                    "type": "visualizes",
+                    "strength": 0.9,
+                    "description": "Muestra visualmente las amenazas detectadas por Shadow-Core"
+                },
+                {
+                    "target": "AURA/physics_ui_integration.md",
+                    "type": "extends",
+                    "strength": 0.9,
+                    "description": "Añade conexiones físicas y visuales a los nodos"
+                },
+                {
+                    "target": "AURA/obsidian_integration.md",
+                    "type": "enhances",
+                    "strength": 0.8,
+                    "description": "Mejora la visualización de relaciones de conocimiento"
+                }
+            ]
+        },
+        "AURA/obsidian_integration.md": {
+            "path": "AURA/obsidian_integration.md",
+            "title": "Obsidian Integration",
+            "tags": ["obsidian", "knowledge", "memory", "search", "graph"],
+            "created": "2026-05-26T15:30:00",
+            "modified": "2026-05-27T19:45:00",
+            "content": "## Obsidian Integration\n\nThis document describes how to integrate AURA with Obsidian vaults for long-term knowledge management.\n\n### Objectives\n- Index Obsidian notes for search\n- Create a knowledge graph\n- Implement tactical nodes in 3D space\n- Enable interactive exploration of knowledge\n- Analyze relationships between notes\n\n### Implementation\n\n#### 1. Indexing System\n- **ObsidianIndexer**: Python class for indexing\n- **Metadata Extraction**: Frontmatter processing\n- **Text Chunking**: For efficient search\n- **JSON Storage**: knowledge_base.json\n- **Relationship Analysis**: Detects links between notes\n\n#### 2. Search Functionality\n- **Endpoint**: /api/obsidian/search\n- **Parameters**: query, limit\n- **Response**: Relevant note fragments\n- **Graph Analysis**: Returns related notes\n\n#### 3. 3D Visualization\n- **Tactical Nodes**: Represent notes as 3D objects\n- **Size Proportional**: Based on note relevance\n- **Interactive**: Click to expand and view content\n- **Connection Visualization**: Shows relationships between nodes\n- **Dynamic Filtering**: Highlights relevant nodes based on search\n\n### Knowledge Graph\n\nThe integration creates a knowledge graph that:\n\n1. **Detects Relationships**: Analyzes links between notes\n2. **Visualizes Connections**: Shows relationships in 3D space\n3. **Enables Exploration**: Users can navigate through related content\n4. **Supports Filtering**: Highlights relevant portions of the graph\n\n### Relationship Types\n\n| Type | Description | Example |\n|------|-------------|---------|\n| depends_on | One note depends on another | Shadow-Core depends on Physics UI |\n| related_to | Logical relationship | Physics UI is related to Antigravity Nodes |\n| uses | Resource usage | Shadow-Core uses Obsidian Integration |\n| implemented_by | Implementation relationship | Physics UI is implemented by Shadow-Core |\n| extends | Extension relationship | Antigravity Nodes extends Physics UI |\n\n### Graph Analysis\n\nThe system analyzes the knowledge graph to:\n\n1. **Calculate Centrality**: Identify important nodes\n2. **Detect Clusters**: Group related nodes\n3. **Measure Distance**: Calculate relationship strength\n4. **Predict Connections**: Suggest new relationships\n\n### Dynamic Filtering\n\nWhen performing a search, the system:\n\n1. **Highlights Relevant Nodes**: Makes them more opaque\n2. **Fades Irrelevant Nodes**: Reduces their opacity\n3. **Adjusts Connections**: Only shows connections to relevant nodes\n4. **Changes Colors**: Uses color coding to indicate relevance\n\n### Example Usage\n\n```python\n# Initialize the indexer\nindexer = ObsidianIndexer(\"C:/Users/User/ObsidianVault\")\n\n# Index the vault with relationship analysis\nstats = indexer.index_vault(analyze_relationships=True)\n\n# Search for notes with graph context\nresults = indexer.search_notes(\"shadow core osint\", limit=5, include_related=True)\n```\n\n### API Endpoint\n\n```json\nPOST /api/obsidian/search\n{\n  \"query\": \"shadow core osint\",\n  \"limit\": 5,\n  \"include_related\": true,\n  \"depth\": 2\n}\n```\n\nResponse:\n```json\n{\n  \"results\": [\n    {\n      \"title\": \"Shadow-Core Specification\",\n      \"path\": \"AURA/Shadow-Core/001-shadow-core-spec.md\",\n      \"score\": 0.95,\n      \"fragment\": \"The Shadow-Core is a microservice designed for advanced OSINT operations...\",\n      \"tags\": [\"shadow-core\", \"spec\", \"architecture\"],\n      \"related\": [\n        {\n          \"title\": \"Physics UI Integration\",\n          \"path\": \"AURA/physics_ui_integration.md\",\n          \"type\": \"depends_on\",\n          \"strength\": 0.8\n        },\n        {\n          \"title\": \"Antigravity Nodes\",\n          \"path\": \"AURA/antigravity_nodes.md\",\n          \"type\": \"related_to\",\n          \"strength\": 0.7\n        }\n      ]\n    }\n  ]\n}\n```\n\n### Threat Visualization\n\nWhen the system detects a threat:\n\n1. **Node Highlighting**: Affected nodes change color\n2. **Connection Emphasis**: Related connections become more visible\n3. **Alert Propagation**: The threat spreads through related nodes\n4. **User Notification**: Visual and auditory alerts\n\n### Future Enhancements\n\n- **Temporal Graph**: Show how relationships change over time\n- **Predictive Analysis**: Suggest new relationships based on content\n- **Automatic Layout**: Optimize node positions based on graph structure\n- **Collaborative Filtering**: Incorporate user interactions to refine the graph\n- **Export Options**: Save graph visualizations for analysis",
+            "chunks": [
+                "This document describes how to integrate AURA with Obsidian vaults for long-term knowledge management.",
+                "### Objectives\n- Index Obsidian notes for search\n- Create a knowledge graph\n- Implement tactical nodes in 3D space\n- Enable interactive exploration of knowledge\n- Analyze relationships between notes",
+                "### Implementation\n\n#### 1. Indexing System\n- **ObsidianIndexer**: Python class for indexing\n- **Metadata Extraction**: Frontmatter processing\n- **Text Chunking**: For efficient search\n- **JSON Storage**: knowledge_base.json\n- **Relationship Analysis**: Detects links between notes",
+                "#### 2. Search Functionality\n- **Endpoint**: /api/obsidian/search\n- **Parameters**: query, limit\n- **Response**: Relevant note fragments\n- **Graph Analysis**: Returns related notes",
+                "#### 3. 3D Visualization\n- **Tactical Nodes**: Represent notes as 3D objects\n- **Size Proportional**: Based on note relevance\n- **Interactive**: Click to expand and view content\n- **Connection Visualization**: Shows relationships between nodes\n- **Dynamic Filtering**: Highlights relevant nodes based on search",
+                "### Knowledge Graph\n\nThe integration creates a knowledge graph that:\n\n1. **Detects Relationships**: Analyzes links between notes\n2. **Visualizes Connections**: Shows relationships in 3D space\n3. **Enables Exploration**: Users can navigate through related content\n4. **Supports Filtering**: Highlights relevant portions of the graph"
+            ],
+            "hash": "c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f",
+            "links": [
+                {
+                    "target": "AURA/Shadow-Core/001-shadow-core-spec.md",
+                    "type": "stores",
+                    "strength": 0.7,
+                    "description": "Almacena información de amenazas detectadas"
+                },
+                {
+                    "target": "AURA/physics_ui_integration.md",
+                    "type": "visualizes",
+                    "strength": 0.8,
+                    "description": "Muestra las relaciones de conocimiento en 3D"
+                },
+                {
+                    "target": "AURA/antigravity_nodes.md",
+                    "type": "enhances",
+                    "strength": 0.9,
+                    "description": "Añade conexiones físicas entre nodos relacionados"
+                }
+            ]
+        }
+    },
+    "categories": {
+        "shadow-core": {
+            "title": "Shadow-Core",
+            "description": "Advanced OSINT operations and system isolation",
+            "color": 0xff3366,
+            "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"]
+        },
+        "physics": {
+            "title": "Physics UI",
+            "description": "3D physics integration and Antigravity effects",
+            "color": 0x00d4ff,
+            "nodes": ["AURA/physics_ui_integration.md", "AURA/antigravity_nodes.md"]
+        },
+        "obsidian": {
+            "title": "Obsidian Integration",
+            "description": "Knowledge management and search functionality",
+            "color": 0x00ff88,
+            "nodes": ["AURA/obsidian_integration.md"]
+        }
+    },
+    "search_index": {
+        "last_updated": "2026-05-28T16:00:00",
+        "terms": {
+            "shadow": {
+                "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                "strength": 0.95
+            },
+            "core": {
+                "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                "strength": 0.9
+            },
+            "osint": {
+                "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md", "AURA/physics_ui_integration.md"],
+                "strength": 0.85
+            },
+            "physics": {
+                "nodes": ["AURA/physics_ui_integration.md", "AURA/antigravity_nodes.md"],
+                "strength": 0.9
+            },
+            "antigravity": {
+                "nodes": ["AURA/antigravity_nodes.md", "AURA/physics_ui_integration.md"],
+                "strength": 0.88
+            },
+            "nodes": {
+                "nodes": ["AURA/antigravity_nodes.md", "AURA/obsidian_integration.md"],
+                "strength": 0.85
+            },
+            "knowledge": {
+                "nodes": ["AURA/obsidian_integration.md", "AURA/antigravity_nodes.md"],
+                "strength": 0.9
+            },
+            "threat": {
+                "nodes": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                "strength": 0.92
+            },
+            "visualization": {
+                "nodes": ["AURA/physics_ui_integration.md", "AURA/antigravity_nodes.md"],
+                "strength": 0.88
+            },
+            "connections": {
+                "nodes": ["AURA/antigravity_nodes.md", "AURA/obsidian_integration.md"],
+                "strength": 0.87
+            }
+        },
+        "node_relationships": {
+            "AURA/Shadow-Core/001-shadow-core-spec.md": {
+                "depends_on": ["AURA/physics_ui_integration.md"],
+                "related_to": ["AURA/antigravity_nodes.md"],
+                "uses": ["AURA/obsidian_integration.md"]
+            },
+            "AURA/physics_ui_integration.md": {
+                "implemented_by": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                "extends": ["AURA/antigravity_nodes.md"],
+                "visualizes": ["AURA/obsidian_integration.md"]
+            },
+            "AURA/antigravity_nodes.md": {
+                "visualizes": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                "extends": ["AURA/physics_ui_integration.md"],
+                "enhances": ["AURA/obsidian_integration.md"]
+            },
+            "AURA/obsidian_integration.md": {
+                "stores": ["AURA/Shadow-Core/001-shadow-core-spec.md"],
+                "visualizes": ["AURA/physics_ui_integration.md"],
+                "enhances": ["AURA/antigravity_nodes.md"]
+            }
+        }
+    }
+}

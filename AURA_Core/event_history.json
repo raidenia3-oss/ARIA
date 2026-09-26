@@ -1,0 +1,36 @@
+[
+  {
+    "timestamp": "2026-07-02T21:02:30.933057",
+    "event_name": "video_content_ready",
+    "data": {
+      "source": "rollercoin",
+      "timestamp": "2026-07-02T21:02:30.930538",
+      "script_file": "C:\\Users\\User\\Downloads\\AURA\\AME_Core\\scripts\\rollercoin_script_20260702_210230.txt",
+      "thumbnail_file": "C:\\Users\\User\\Downloads\\AURA\\AME_Core\\scripts\\rollercoin_thumbnail_20260702_210230.txt",
+      "status": "generated",
+      "metadata": {
+        "source": "rollercoin",
+        "type": "video_script",
+        "cycle_data": {
+          "games_played": 15,
+          "tokens_earned": 150,
+          "success_rate": 85.3,
+          "top_game": {
+            "name": "Space Invaders",
+            "score": 150
+          },
+          "second_game": {
+            "name": "Pac-Man",
+            "score": 120
+          },
+          "third_game": {
+            "name": "Tetris",
+            "score": 90
+          }
+        },
+        "duration_minutes": 30.5,
+        "timestamp": "2026-07-02T21:02:29.929168"
+      }
+    }
+  }
+]

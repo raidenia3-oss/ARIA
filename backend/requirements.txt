@@ -1,0 +1,25 @@
+# Backend API + News Worker dependencies
+# Used by `uvicorn backend.main:app` and `python news_worker.py`
+requests
+psycopg2-binary
+feedparser
+schedule
+python-dotenv
+fastapi
+uvicorn
+sqlalchemy
+python-jose[cryptography]
+passlib[bcrypt]
+slowapi
+alembic
+opencv-python-headless
+mediapipe
+httpx
+zeroconf
+
+# BLOQUE 37 — Local Whisper STT (100% offline, CPU; NO servicios en la nube).
+# El motor backend/audio/transcriber.py hace lazy import de cualquiera de estos
+# engines y usa un fallback stub (100% local) si ninguno está disponible:
+faster-whisper      # desktop: requiere torch (~800MB); modelo se descarga a cache ~/.cache/huggingface/
+whisper-cpp-python  # AURA OS ligera: bindings C++ CPU, binario ggml incluido (sin torch, ~50MB)
+# numpy + scipy ya presentes: usados para normalización/preprocesado de audio WAV.

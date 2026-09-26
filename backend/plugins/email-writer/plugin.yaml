@@ -1,0 +1,27 @@
+name: "email-writer"
+version: "1.0.0"
+author: "AURA"
+description: "Redacta emails con templates personalizables y A/B testing"
+
+commands:
+  - name: "write_email"
+    params: ["recipient", "subject", "body", "tone", "template"]
+    async: true
+  - name: "generate_ab_variants"
+    params: ["subject", "body", "count"]
+    async: true
+  - name: "summarize_email_thread"
+    params: ["emails"]
+    async: false
+
+dependencies:
+  - "openai>=1.0.0"
+
+capabilities:
+  - "email_generation"
+  - "ab_testing"
+  - "tone_adjustment"
+
+settings:
+  quality_target: 0.93
+  speed_target: 2500

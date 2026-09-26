@@ -1,0 +1,3164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA Evolution Terminal</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* Estilos para el Terminal de Auto-Evolución */
+        .evolution-terminal {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            width: 350px;
+            height: 700px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            color: #00d4ff;
+            border-top: 3px solid #00d4ff;
+        }
+
+        .terminal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff3366;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+
+        .terminal-header::before {
+            content: "🔧";
+            margin-right: 10px;
+        }
+
+        .proposal-card {
+            background: rgba(20, 25, 40, 0.7);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .proposal-card:hover {
+            background: rgba(30, 40, 60, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .proposal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .proposal-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #00d4ff;
+        }
+
+        .proposal-status {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .status-critical {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+        }
+
+        .status-active {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+
+        .status-ready {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        .proposal-code {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #ccc;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .apply-button {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            color: #00d4ff;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .apply-button:hover {
+            background: rgba(0, 212, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .apply-button.active {
+            background: rgba(255, 51, 102, 0.3);
+            border-color: rgba(255, 51, 102, 0.5);
+            color: #ff3366;
+        }
+
+        .no-proposals {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .terminal-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Estilo para el botón de autorización */
+        .approval-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00d4ff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .approval-button:hover {
+            background: rgba(0, 212, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .approval-button.active {
+            background: rgba(255, 51, 102, 0.3);
+            border-color: rgba(255, 51, 102, 0.5);
+            color: #ff3366;
+        }
+
+        /* Estilo para el contenedor principal */
+        .dashboard-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Estilo para el canvas de Three.js */
+        #antigravity-nodes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Estilo para el canvas de gestos */
+        #gestureCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Estilo para la terminal de telemetría */
+        .telemetry-terminal {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 400px;
+            height: 150px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1001;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            color: #ff3366;
+            border-top: 2px solid #ff3366;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .telemetry-header {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #ff3366;
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(255, 51, 102, 0.5);
+        }
+
+        .telemetry-header::before {
+            content: "📡";
+            margin-right: 10px;
+        }
+
+        .telemetry-log {
+            height: calc(100% - 30px);
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .telemetry-log-entry {
+            margin-bottom: 5px;
+            padding: 3px;
+            border-radius: 3px;
+        }
+
+        .telemetry-log-entry.warning {
+            color: #ffcc00;
+        }
+
+        .telemetry-log-entry.critical {
+            color: #ff3366;
+            font-weight: bold;
+        }
+
+        .telemetry-log-entry.info {
+            color: #00d4ff;
+        }
+
+        .telemetry-status {
+            text-align: center;
+            font-size: 11px;
+            color: #ccc;
+        }
+
+        /* Estilo para el modo alarma */
+        .alarm-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1002;
+            display: none;
+        }
+
+        .alarm-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 51, 102, 0.1);
+            pointer-events: none;
+            animation: flash 1s infinite;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        .alarm-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #ff3366;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1003;
+            display: none;
+        }
+
+        .alarm-notification::before {
+            content: "🚨";
+            margin-right: 10px;
+        }
+
+        /* Estilo para el video de reconocimiento de voz */
+        #gestureVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            z-index: 1004;
+        }
+
+        /* Estilo para el indicador de micrófono */
+        #voice-command-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.2);
+            border: 2px solid rgba(0, 212, 255, 0.5);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1002;
+            transition: all 0.2s ease;
+            opacity: 0.8;
+            transform: scale(1);
+            pointer-events: none;
+        }
+
+        #voice-command-indicator::before {
+            content: "🎤";
+            font-size: 20px;
+            color: rgba(0, 212, 255, 0.8);
+        }
+
+        /* Estilo para el botón de micrófono */
+        #voice-command-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.3);
+            border: 2px solid rgba(0, 212, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1003;
+            transition: all 0.2s ease;
+            opacity: 0.9;
+            transform: scale(1);
+            pointer-events: auto;
+            user-select: none;
+        }
+
+        #voice-command-button::before {
+            content: "🎤";
+            font-size: 24px;
+            color: rgba(0, 212, 255, 0.8);
+        }
+
+        /* Estilo para el indicador de micrófono no disponible */
+        #voice-unavailable-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 51, 102, 0.2);
+            border: 2px solid rgba(255, 51, 102, 0.5);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            z-index: 1002;
+            transition: all 0.2s ease;
+        }
+
+        #voice-unavailable-indicator::before {
+            content: "⚠";
+            font-size: 20px;
+            color: rgba(255, 51, 102, 0.8);
+        }
+
+        /* Animación para el indicador de micrófono */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wave {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Estilo para el efecto de glitch */
+        .glitch-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2000;
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .glitch-scanline {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255, 51, 102, 0.8), rgba(255, 51, 102, 0.2));
+            animation: scanline 0.5s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* Estilo para el efecto de brillo holográfico */
+        .hologram-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1005;
+            opacity: 0.3;
+            mix-blend-mode: screen;
+            filter: blur(5px);
+        }
+
+        .hologram-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.1) 0%, rgba(0, 212, 255, 0) 70%);
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0.1; }
+        }
+
+        /* ===== PROTOCOLO DE PÁNICO ===== */
+        #panic-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 9999;
+            background: rgba(255, 0, 0, 0.12);
+            pointer-events: none;
+            display: none;
+            animation: panic-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes panic-pulse {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 0.4; }
+        }
+
+        #panic-overlay.active {
+            display: block;
+            pointer-events: none;
+        }
+
+        #panic-scanlines {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10000;
+            pointer-events: none;
+            display: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 0, 0, 0.08) 2px,
+                rgba(255, 0, 0, 0.08) 4px
+            );
+        }
+
+        #panic-scanlines.active {
+            display: block;
+        }
+
+        #panic-text {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10001;
+            display: none;
+            color: #ff3366;
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.8), 0 0 40px rgba(255, 0, 0, 0.5);
+            animation: panic-text-flicker 0.1s infinite alternate;
+            white-space: pre-line;
+            pointer-events: none;
+            line-height: 1.4;
+        }
+
+        #panic-text.active {
+            display: block;
+        }
+
+        @keyframes panic-text-flicker {
+            0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.01); }
+        }
+
+        .panic-lock-input {
+            pointer-events: none !important;
+            opacity: 0.3 !important;
+            filter: grayscale(100%) !important;
+        }
+
+        /* Nodo 3D en modo pánico - se controla desde antigravity_nodes.js */
+        .panic-3d-override canvas[data-three-canvas] {
+            filter: hue-rotate(300deg) saturate(2) !important;
+        }
+
+        /* Estilos adicionales para el efecto Antigravity */
+        .physics-object {
+            position: absolute;
+            transform-origin: center;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+            will-change: transform;
+        }
+
+        /* Estilos para el terminal de evolución */
+        .evolution-terminal {
+            position: relative !important;
+            transform: none !important;
+            width: auto !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 15px !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        /* Estilos para el terminal de telemetría */
+        .telemetry-terminal {
+            position: relative !important;
+            transform: none !important;
+            width: auto !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 10px !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        /* Estilos para el contenedor principal */
+        .dashboard-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* ===== PANEL DE CONTROL TÁCTICO ===== */
+        .agent-control-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 600px;
+            background: rgba(10, 15, 26, 0.95);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1010;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .agent-control-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .agent-control-header::before {
+            content: "🛡️";
+            margin-right: 10px;
+        }
+
+        .control-section {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(20, 25, 40, 0.5);
+        }
+
+        .section-title {
+            color: #00d4ff;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            margin-right: 8px;
+            font-size: 12px;
+        }
+
+        .status-security-shield::before {
+            content: "🛡️";
+        }
+
+        .status-shadow-core::before {
+            content: "👤";
+        }
+
+        .status-osint-radar::before {
+            content: "📡";
+        }
+
+        .status-knowledge-graph::before {
+            content: "🌐";
+        }
+
+        .status-log::before {
+            content: "📝";
+        }
+
+        .status-command::before {
+            content: "💬";
+        }
+
+        .control-button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-button.shield-button {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.5);
+        }
+
+        .control-button.shield-button.active {
+            background: rgba(255, 51, 102, 0.3);
+            color: #ff3366;
+            border-color: rgba(255, 51, 102, 0.5);
+        }
+
+        .control-button.shadow-button {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.5);
+        }
+
+        .control-button.osint-button {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.5);
+        }
+
+        .control-button.graph-button {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.5);
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: rgba(20, 25, 40, 0.3);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .status-label {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .status-value {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .status-icon {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .status-on {
+            color: #00ff88;
+        }
+
+        .status-off {
+            color: #ff3366;
+        }
+
+        .status-warning {
+            color: #ffcc00;
+        }
+
+        .status-critical {
+            color: #ff3366;
+        }
+
+        .log-terminal {
+            flex-grow: 1;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(20, 25, 40, 0.5);
+            border-radius: 8px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.3;
+            color: #ccc;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 3px;
+            border-radius: 3px;
+        }
+
+        .log-entry.info {
+            color: #00d4ff;
+        }
+
+        .log-entry.warning {
+            color: #ffcc00;
+        }
+
+        .log-entry.error {
+            color: #ff3366;
+        }
+
+        .log-entry.success {
+            color: #00ff88;
+        }
+
+        .command-input {
+            display: flex;
+            margin-top: auto;
+        }
+
+        .command-prompt {
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-right: 5px;
+            align-self: flex-end;
+        }
+
+        .command-field {
+            flex-grow: 1;
+            padding: 8px;
+            background: rgba(20, 25, 40, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .command-field:focus {
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .send-button {
+            margin-left: 5px;
+            padding: 8px 12px;
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .send-button:hover {
+            background: rgba(0, 212, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Estilos para el terminal de evolución */
+        .evolution-terminal {
+            position: relative !important;
+            transform: none !important;
+            width: auto !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 15px !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        /* Estilos para el terminal de telemetría */
+        .telemetry-terminal {
+            position: relative !important;
+            transform: none !important;
+            width: auto !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 10px !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        /* Estilos para el panel de búsqueda de conocimiento */
+        .knowledge-search-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 300px;
+            width: 300px;
+            background: rgba(10, 15, 26, 0.95);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1009;
+            padding: 15px;
+            display: none;
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .search-header::before {
+            content: "🔍";
+            margin-right: 10px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(20, 25, 40, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .search-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-button.highlight {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.5);
+        }
+
+        .search-button.reset {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.5);
+        }
+
+        .search-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .search-results {
+            height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(20, 25, 40, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .search-result {
+            margin-bottom: 8px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-result:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateX(5px);
+        }
+
+        .search-result-title {
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .search-result-path {
+            color: #666;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .search-result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+
+        .search-result-tag {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 2px 5px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #00d4ff;
+        }
+
+        /* Estilos para los paneles de conocimiento */
+        .knowledge-panel-container {
+            position: fixed;
+            z-index: 2000;
+            width: 400px;
+            height: 500px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .knowledge-panel-content {
+            padding: 15px;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .knowledge-panel-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .knowledge-panel-header h2 {
+            color: #ff3366;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .knowledge-panel-header .path {
+            color: #ccc;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #00d4ff;
+        }
+
+        .dates {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .knowledge-panel-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 51, 102, 0.2);
+            border: 1px solid rgba(255, 51, 102, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff3366;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .knowledge-panel-close:hover {
+            background: rgba(255, 51, 102, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Estilos para el botón de búsqueda */
+        #search-knowledge-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.3);
+            border: 2px solid rgba(0, 212, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1008;
+            transition: all 0.2s ease;
+            opacity: 0.9;
+            transform: scale(1);
+            pointer-events: auto;
+            user-select: none;
+        }
+
+        #search-knowledge-btn::before {
+            content: "🔍";
+            font-size: 24px;
+            color: rgba(0, 212, 255, 0.8);
+        }
+
+        #search-knowledge-btn:hover {
+            background: rgba(0, 212, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        /* Estilos para el botón de amenaza */
+        #threat-control-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 51, 102, 0.3);
+            border: 2px solid rgba(255, 51, 102, 0.6);
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1008;
+            transition: all 0.2s ease;
+            opacity: 0.9;
+            transform: scale(1);
+            pointer-events: auto;
+            user-select: none;
+        }
+
+        #threat-control-btn::before {
+            content: "🚨";
+            font-size: 24px;
+            color: rgba(255, 51, 102, 0.8);
+        }
+
+        #threat-control-btn:hover {
+            background: rgba(255, 51, 102, 0.4);
+            transform: scale(1.1);
+        }
+
+        /* Estilos para el panel de control de amenazas */
+        .threat-control-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 280px;
+            height: 400px;
+            background: rgba(10, 15, 26, 0.95);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1011;
+            display: none;
+            flex-direction: column;
+            padding: 15px;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .threat-control-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff3366;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.3);
+            border-bottom: 1px solid rgba(255, 51, 102, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .threat-control-header::before {
+            content: "🚨";
+            margin-right: 10px;
+        }
+
+        .threat-section {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(20, 25, 40, 0.5);
+        }
+
+        .threat-node-list {
+            flex-grow: 1;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(20, 25, 40, 0.5);
+            border-radius: 8px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.3;
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.1);
+        }
+
+        .threat-node-item {
+            margin-bottom: 8px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .threat-node-item:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateX(5px);
+        }
+
+        .threat-node-title {
+            color: #ff3366;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .threat-node-path {
+            color: #ccc;
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .threat-node-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+
+        .threat-node-tag {
+            background: rgba(255, 51, 102, 0.2);
+            padding: 2px 5px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #ff3366;
+        }
+
+        .threat-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .threat-control-button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .threat-control-button.clear {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.5);
+        }
+
+        .threat-control-button.propagate {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.5);
+        }
+
+        .threat-control-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para el panel de búsqueda avanzada */
+        .advanced-search-panel {
+            position: fixed;
+            right: 320px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            height: 400px;
+            background: rgba(10, 15, 26, 0.95);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 1012;
+            display: none;
+            flex-direction: column;
+            padding: 15px;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .advanced-search-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .advanced-search-header::before {
+            content: "🔎";
+            margin-right: 10px;
+        }
+
+        .advanced-search-fields {
+            margin-bottom: 20px;
+        }
+
+        .advanced-search-field {
+            width: 100%;
+            padding: 10px;
+            background: rgba(20, 25, 40, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        .advanced-search-field:focus {
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .advanced-search-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .advanced-search-option {
+            display: flex;
+            align-items: center;
+            background: rgba(20, 25, 40, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .advanced-search-option:hover {
+            background: rgba(20, 25, 40, 0.7);
+        }
+
+        .advanced-search-option input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .advanced-search-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .advanced-search-button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .advanced-search-button.search {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.5);
+        }
+
+        .advanced-search-button.reset {
+            background: rgba(255, 51, 102, 0.2);
+            color: #ff3366;
+            border: 1px solid rgba(255, 51, 102, 0.5);
+        }
+
+        .advanced-search-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para el botón de búsqueda avanzada */
+        #advanced-search-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 120px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.3);
+            border: 2px solid rgba(0, 212, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1008;
+            transition: all 0.2s ease;
+            opacity: 0.9;
+            transform: scale(1);
+            pointer-events: auto;
+            user-select: none;
+        }
+
+        #advanced-search-btn::before {
+            content: "🔎";
+            font-size: 24px;
+            color: rgba(0, 212, 255, 0.8);
+        }
+
+        #advanced-search-btn:hover {
+            background: rgba(0, 212, 255, 0.4);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Terminal de Auto-Evolución -->
+        <div class="evolution-terminal">
+            <div class="terminal-header">
+                TERMINAL DE AUTO-EVOLUCIÓN
+            </div>
+
+            <div id="proposals-container">
+                <div class="loading">Cargando propuestas de mejora...</div>
+            </div>
+
+            <div class="terminal-footer">
+                🔄 Actualizando cada 10 segundos
+            </div>
+        </div>
+
+        <!-- Terminal de Telemetría -->
+        <div class="telemetry-terminal">
+            <div class="telemetry-header">
+                TELEMETRÍA PERIMETRAL
+            </div>
+            <div class="telemetry-log" id="telemetry-log">
+                <div class="telemetry-log-entry info">📡 Sistema de telemetría iniciado</div>
+                <div class="telemetry-log-entry info">🔍 Escaneando sensores CSI y acústicos...</div>
+            </div>
+            <div class="telemetry-status" id="telemetry-status">
+                Estado: MONITOREO ACTIVO
+            </div>
+        </div>
+
+        <!-- Modo Alarma -->
+        <div class="alarm-mode" id="alarm-mode">
+            <div class="alarm-flash"></div>
+            <div class="alarm-notification" id="alarm-notification">
+                ALERTA DE ANOMALÍA DETECTADA<br>
+                <span id="alarm-message">Presencia no autorizada en sector local</span>
+            </div>
+        </div>
+
+        <!-- Efecto de glitch para alertas -->
+        <div class="glitch-effect" id="glitch-effect"></div>
+
+        <!-- Efecto de brillo holográfico -->
+        <div class="hologram-glow" id="hologram-glow"></div>
+
+        <!-- Canvas para nodos 3D -->
+        <canvas id="antigravity-nodes" data-three-canvas></canvas>
+
+        <!-- Canvas para gestos de MediaPipe -->
+        <canvas id="gestureCanvas"></canvas>
+
+        <!-- Video para reconocimiento de voz -->
+        <video id="gestureVideo" autoplay playsinline style="display: none;"></video>
+
+        <!-- ===== PROTOCOLO DE PÁNICO: Overlays ===== -->
+        <div id="panic-overlay"></div>
+        <div id="panic-scanlines"></div>
+        <div id="panic-text">⚠ THREAT DETECTED ⚠\nSHADOW CORE ISOLATED</div>
+
+        <!-- ===== PANEL DE CONTROL TÁCTICO ===== -->
+        <div class="agent-control-panel" id="agent-control-panel">
+            <div class="agent-control-header">
+                PANEL DE CONTROL TÁCTICO
+            </div>
+
+            <div class="control-section">
+                <div class="section-title status-security-shield">
+                    Security Shield
+                </div>
+
+                <div class="status-indicator">
+                    <div class="status-label">Estado:</div>
+                    <div class="status-value" id="shield-status">ONLINE</div>
+                    <div class="status-icon status-on">✓</div>
+                </div>
+
+                <button class="control-button shield-button" id="shield-toggle">
+                    <span id="shield-button-text">TOGGLE SHIELD</span>
+                </button>
+            </div>
+
+            <div class="control-section">
+                <div class="section-title status-shadow-core">
+                    Shadow-Core
+                </div>
+
+                <div class="status-indicator">
+                    <div class="status-label">Estado:</div>
+                    <div class="status-value" id="shadow-status">ONLINE</div>
+                    <div class="status-icon status-on">✓</div>
+                </div>
+
+                <div class="status-indicator">
+                    <div class="status-label">Threat:</div>
+                    <div class="status-value" id="threat-status">CLEAN</div>
+                    <div class="status-icon status-on">✓</div>
+                </div>
+
+                <button class="control-button shadow-button" id="shadow-status-btn">
+                    <span>STATUS</span>
+                </button>
+            </div>
+
+            <div class="control-section">
+                <div class="section-title status-osint-radar">
+                    OSINT Radar
+                </div>
+
+                <div class="status-indicator">
+                    <div class="status-label">Último escaneo:</div>
+                    <div class="status-value" id="last-scan">NUNCA</div>
+                    <div class="status-icon">📅</div>
+                </div>
+
+                <button class="control-button osint-button" id="osint-scan-btn">
+                    <span>SCAN</span>
+                </button>
+            </div>
+
+            <div class="control-section">
+                <div class="section-title status-knowledge-graph">
+                    Knowledge Graph
+                </div>
+
+                <div class="status-indicator">
+                    <div class="status-label">Nodos:</div>
+                    <div class="status-value" id="graph-nodes">0</div>
+                    <div class="status-icon">🌐</div>
+                </div>
+
+                <div class="status-indicator">
+                    <div class="status-label">Conexiones:</div>
+                    <div class="status-value" id="graph-connections">0</div>
+                    <div class="status-icon">🔗</div>
+                </div>
+
+                <button class="control-button graph-button" id="graph-info-btn">
+                    <span>INFO</span>
+                </button>
+            </div>
+
+            <div class="control-section">
+                <div class="section-title status-log">
+                    Logs en Vivo
+                </div>
+
+                <div class="log-terminal" id="agent-log">
+                    <div class="log-entry info">📡 Sistema AURA inicializado</div>
+                    <div class="log-entry info">🔧 Panel de control táctico activado</div>
+                    <div class="log-entry info">🛡️ Security Shield: ONLINE</div>
+                    <div class="log-entry info">👤 Shadow-Core: CONECTADO</div>
+                    <div class="log-entry info">📡 OSINT Radar: LISTO</div>
+                    <div class="log-entry info">🌐 Knowledge Graph: ACTIVO</div>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <div class="section-title status-command">
+                    Comando Directo
+                </div>
+
+                <div class="command-input">
+                    <div class="command-prompt">AURA></div>
+                    <input type="text" class="command-field" id="command-input" placeholder="Ingrese comando...">
+                    <button class="send-button" id="send-command">ENVIAR</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PANEL DE BÚSQUEDA DE CONOCIMIENTO ===== -->
+        <div class="knowledge-search-panel" id="knowledge-search-panel">
+            <div class="search-header">
+                BÚSQUEDA DE CONOCIMIENTO
+            </div>
+
+            <input type="text" class="search-input" id="knowledge-search-input" placeholder="Buscar en el grafo de conocimiento...">
+
+            <div class="search-buttons">
+                <button class="search-button highlight" id="highlight-search-btn">RESALTAR</button>
+                <button class="search-button reset" id="reset-search-btn">RESTAURAR</button>
+            </div>
+
+            <div class="search-results" id="search-results">
+                <div style="text-align: center; color: #666; font-style: italic;">
+                    Resultados de búsqueda aparecerán aquí...
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PANEL DE CONTROL DE AMENAZAS ===== -->
+        <div class="threat-control-panel" id="threat-control-panel">
+            <div class="threat-control-header">
+                CONTROL DE AMENAZAS
+            </div>
+
+            <div class="threat-section">
+                <div class="threat-node-list" id="threat-node-list">
+                    <div style="text-align: center; color: #ff3366; font-style: italic;">
+                        No hay amenazas activas
+                    </div>
+                </div>
+            </div>
+
+            <div class="threat-controls">
+                <button class="threat-control-button clear" id="clear-threats-btn">LIMPIAR AMENAZAS</button>
+                <button class="threat-control-button propagate" id="propagate-threat-btn">PROPAGAR</button>
+            </div>
+        </div>
+
+        <!-- ===== PANEL DE BÚSQUEDA AVANZADA ===== -->
+        <div class="advanced-search-panel" id="advanced-search-panel">
+            <div class="advanced-search-header">
+                BÚSQUEDA AVANZADA
+            </div>
+
+            <div class="advanced-search-fields">
+                <input type="text" class="advanced-search-field" id="advanced-search-query" placeholder="Términos de búsqueda...">
+                <input type="text" class="advanced-search-field" id="advanced-search-category" placeholder="Categoría (opcional)...">
+                <input type="text" class="advanced-search-field" id="advanced-search-tags" placeholder="Tags (opcional, separados por coma)...">
+            </div>
+
+            <div class="advanced-search-options">
+                <div class="advanced-search-option">
+                    <input type="checkbox" id="advanced-search-highlight" checked>
+                    <label for="advanced-search-highlight">Resaltar nodos</label>
+                </div>
+                <div class="advanced-search-option">
+                    <input type="checkbox" id="advanced-search-connections" checked>
+                    <label for="advanced-search-connections">Mostrar conexiones</label>
+                </div>
+                <div class="advanced-search-option">
+                    <input type="checkbox" id="advanced-search-depth" checked>
+                    <label for="advanced-search-depth">Incluir nodos relacionados</label>
+                </div>
+            </div>
+
+            <div class="advanced-search-buttons">
+                <button class="advanced-search-button search" id="advanced-search-btn">BUSCAR</button>
+                <button class="advanced-search-button reset" id="advanced-reset-btn">RESTAURAR</button>
+            </div>
+        </div>
+
+        <!-- Botón de búsqueda de conocimiento -->
+        <div id="search-knowledge-btn"></div>
+
+        <!-- Botón de control de amenazas -->
+        <div id="threat-control-btn"></div>
+
+        <!-- Botón de búsqueda avanzada -->
+        <div id="advanced-search-btn"></div>
+    </div>
+
+    <!-- Librerías para física 3D (PHYS-UI-ENGINE) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.min.js"></script>
+    <script src="/ui_engine/physics_ui.js"></script>
+
+    <!-- Librerías originales -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.7.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.7.0"></script>
+    <script src="/static/js/threejs-postprocessing.js"></script>
+    <script src="/static/js/antigravity_nodes.js"></script>
+    <script src="/static/js/hologram_gestures.js"></script>
+    <script src="/static/js/voice_command.js"></script>
+
+    <!-- Módulo de nodos de conocimiento -->
+    <script src="/ui_engine/knowledge_nodes.js"></script>
+
+    <script>
+        // Configuración del Terminal de Auto-Evolución
+        document.addEventListener('DOMContentLoaded', function() {
+            const proposalsContainer = document.getElementById('proposals-container');
+            const telemetryLog = document.getElementById('telemetry-log');
+            const telemetryStatus = document.getElementById('telemetry-status');
+            const alarmMode = document.getElementById('alarm-mode');
+            const alarmNotification = document.getElementById('alarm-notification');
+            const glitchEffect = document.getElementById('glitch-effect');
+            const hologramGlow = document.getElementById('hologram-glow');
+
+            // Estado global de alarma
+            let isAlarmActive = false;
+            let alarmTimeout = null;
+            let glitchActive = false;
+            let glitchTimeout = null;
+
+            // Función para cargar propuestas desde el servidor
+            async function loadProposals() {
+                try {
+                    const response = await fetch('/api/evolution/proposals');
+                    const data = await response.json();
+
+                    if (data.proposals && data.proposals.length > 0) {
+                        renderProposals(data.proposals);
+                    } else {
+                        proposalsContainer.innerHTML = `
+                            <div class="no-proposals">
+                                No hay propuestas de mejora pendientes.<br>
+                                El sistema está en estado estable.
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error cargando propuestas:', error);
+                    proposalsContainer.innerHTML = `
+                        <div class="no-proposals">
+                            Error al cargar propuestas.<br>
+                            Verifica la conexión al servidor.
+                        </div>
+                    `;
+                }
+            }
+
+            // Función para renderizar propuestas
+            function renderProposals(proposals) {
+                proposalsContainer.innerHTML = '';
+
+                proposals.forEach(proposal => {
+                    // Determinar el estado visual
+                    let statusClass = 'status-ready';
+                    if (proposal.status === 'active') {
+                        statusClass = 'status-active';
+                    } else if (proposal.status === 'CRITICAL_SYNTAX_FIX') {
+                        statusClass = 'status-critical';
+                    }
+
+                    // Crear tarjeta de propuesta
+                    const card = document.createElement('div');
+                    card.className = 'proposal-card';
+                    card.dataset.proposalId = proposal.inspiration_id || proposal.id;
+
+                    // Añadir botón de aprobación
+                    const approvalButton = document.createElement('div');
+                    approvalButton.className = 'approval-button';
+                    approvalButton.innerHTML = '✓';
+                    approvalButton.title = 'Aprobar parche con gesto de pellizco';
+                    card.appendChild(approvalButton);
+
+                    // Contenido de la tarjeta
+                    card.innerHTML += `
+                        <div class="proposal-header">
+                            <div class="proposal-title">${proposal.description}</div>
+                            <div class="proposal-status ${statusClass}">
+                                ${proposal.status || 'Pendiente'}
+                            </div>
+                        </div>
+
+                        <div class="proposal-code">
+                            ${highlightCode(proposal.code_after || proposal.description)}
+                        </div>
+
+                        <button class="apply-button" data-proposal-id="${proposal.inspiration_id || proposal.id}">
+                            AUTORIZAR INYECCIÓN
+                        </button>
+                    `;
+
+                    proposalsContainer.appendChild(card);
+
+                    // Añadir evento de click al botón de aprobación
+                    const applyButton = card.querySelector('.apply-button');
+                    applyButton.addEventListener('click', function() {
+                        this.classList.add('active');
+                        setTimeout(() => {
+                            this.classList.remove('active');
+                        }, 200);
+                    });
+                });
+
+                // Escuchar eventos de pellizco para aprobación gestual
+                document.addEventListener('aura-pinch-click', function(event) {
+                    const targetElement = event.target.closest('.approval-button, .apply-button');
+                    if (!targetElement) return;
+
+                    const proposalId = targetElement.closest('.proposal-card').dataset.proposalId;
+                    if (!proposalId) return;
+
+                    // Enviar solicitud de aplicación al servidor
+                    applyProposal(proposalId);
+                });
+            }
+
+            // Función para aplicar una propuesta
+            async function applyProposal(proposalId) {
+                try {
+                    const response = await fetch('/api/evolution/apply', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ proposal_id: proposalId })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === 'ok') {
+                        console.log('✅ Parche aplicado:', proposalId);
+                        addTelemetryLog('✅ Parche aplicado: ' + result.proposal.description, 'info');
+                        alert(`🔧 Parche aplicado con éxito:\n${result.proposal.description}`);
+
+                        // Recargar propuestas para actualizar la lista
+                        setTimeout(loadProposals, 1000);
+                    } else {
+                        console.error('❌ Error aplicando parche:', result.message);
+                        addTelemetryLog('❌ Error aplicando parche: ' + result.message, 'critical');
+                        alert(`❌ Error aplicando parche:\n${result.message}`);
+                    }
+                } catch (error) {
+                    console.error('❌ Error en la comunicación con el servidor:', error);
+                    addTelemetryLog('❌ Error de comunicación: ' + error.message, 'critical');
+                    alert(`❌ Error en la comunicación:\n${error.message}`);
+                }
+            }
+
+            // Función para resaltar código
+            function highlightCode(code) {
+                if (!code) return 'Sin código sugerido';
+
+                // Simple highlighting para Python
+                const lines = code.split('\n');
+                return lines.map(line => {
+                    // Resaltar palabras clave
+                    let highlighted = line.replace(/def\s+(\w+)/g, '🔹 def <span style="color:#00d4ff">$1</span>');
+                    highlighted = highlighted.replace(/import\s+(\w+)/g, '📥 import <span style="color:#00d4ff">$1</span>');
+                    highlighted = highlighted.replace(/class\s+(\w+)/g, '🏗️ class <span style="color:#00d4ff">$1</span>');
+
+                    // Resaltar strings
+                    highlighted = highlighted.replace(/(".*?")/g, '<span style="color:#ffcc00">$1</span>');
+
+                    // Resaltar comentarios
+                    highlighted = highlighted.replace(/\#.*/g, '<span style="color:#666"># $&</span>');
+
+                    return highlighted;
+                }).join('\n');
+            }
+
+            // Función para añadir entradas al log de telemetría
+            function addTelemetryLog(message, type) {
+                const entry = document.createElement('div');
+                entry.className = `telemetry-log-entry ${type}`;
+                entry.textContent = message;
+
+                telemetryLog.appendChild(entry);
+                telemetryLog.scrollTop = telemetryLog.scrollHeight;
+
+                // Limitar a 50 entradas
+                if (telemetryLog.children.length > 50) {
+                    telemetryLog.removeChild(telemetryLog.firstChild);
+                }
+            }
+
+            // Función para actualizar el estado de telemetría
+            function updateTelemetryStatus(status) {
+                telemetryStatus.textContent = `Estado: ${status}`;
+            }
+
+            // Función para activar el modo alarma
+            function activateAlarm(message, severity = 'warning') {
+                isAlarmActive = true;
+                alarmMode.style.display = 'block';
+                alarmNotification.textContent = message;
+                alarmNotification.style.display = 'block';
+
+                // Notificar al usuario
+                addTelemetryLog(message, 'critical');
+
+                // Cambiar el color de iluminación en Three.js
+                if (window.antigravityNodes) {
+                    window.antigravityNodes.setAlarmMode(true);
+                }
+
+                // Mostrar notificación por 5 segundos
+                setTimeout(() => {
+                    alarmNotification.style.display = 'none';
+                }, 5000);
+
+                // Desactivar alarma después de 10 segundos
+                alarmTimeout = setTimeout(() => {
+                    deactivateAlarm();
+                }, 10000);
+
+                // Activar efecto de glitch si es severo
+                if (severity === 'critical') {
+                    triggerGlitchEffect();
+                }
+            }
+
+            // Función para desactivar el modo alarma
+            function deactivateAlarm() {
+                isAlarmActive = false;
+                alarmMode.style.display = 'none';
+
+                // Restaurar el color de iluminación en Three.js
+                if (window.antigravityNodes) {
+                    window.antigravityNodes.setAlarmMode(false);
+                }
+
+                // Limpiar timeout
+                if (alarmTimeout) {
+                    clearTimeout(alarmTimeout);
+                    alarmTimeout = null;
+                }
+            }
+
+            // Función para activar efecto de glitch
+            function triggerGlitchEffect() {
+                if (glitchActive) return;
+
+                glitchActive = true;
+                glitchEffect.style.display = 'block';
+
+                // Crear líneas de scanline
+                glitchEffect.innerHTML = '';
+                for (let i = 0; i < 10; i++) {
+                    const scanline = document.createElement('div');
+                    scanline.className = 'glitch-scanline';
+                    scanline.style.top = `${Math.random() * 100}%`;
+                    scanline.style.animationDelay = `${Math.random() * 0.5}s`;
+                    glitchEffect.appendChild(scanline);
+                }
+
+                // Restaurar después de 1.5 segundos
+                glitchTimeout = setTimeout(() => {
+                    glitchEffect.style.display = 'none';
+                    glitchActive = false;
+                    clearTimeout(glitchTimeout);
+                }, 1500);
+
+                // Notificar al sistema 3D para que active su efecto de glitch
+                if (window.antigravityNodes) {
+                    window.antigravityNodes.triggerGlitchEffect('critical');
+                }
+            }
+
+            // Función para consultar sensores de telemetría
+            async function pollSensors() {
+                try {
+                    // Consultar sensores CSI
+                    const csiResponse = await fetch('/api/sensor/wifi_csi');
+                    const csiData = await csiResponse.json();
+
+                    // Consultar sensores acústicos
+                    const acousticResponse = await fetch('/api/sensor/acoustic');
+                    const acousticData = await acousticResponse.json();
+
+                    // Procesar datos CSI
+                    if (csiData.status === 'processed' && csiData.fluctuation_percent > 40) {
+                        const message = `📡 ALERTA CSI: Fluctuación ${csiData.fluctuation_percent.toFixed(1)}% (RSSI: ${csiData.rssi}dBm)`;
+                        addTelemetryLog(message, 'warning');
+
+                        // Severidad basada en el nivel de fluctuación
+                        const severity = csiData.fluctuation_percent > 70 ? 'critical' : 'warning';
+                        activateAlarm(`ANOMALÍA DETECTADA\n${message}`, severity);
+
+                        // Disparar evento para el sistema 3D
+                        document.dispatchEvent(new CustomEvent('sensorAnomaly', {
+                            detail: { severity: severity, message: message }
+                        }));
+                    }
+
+                    // Procesar datos acústicos (simulados)
+                    if (acousticData.status === 'standby' && Math.random() > 0.9) { // Simular alerta aleatoria
+                        const message = `🔊 ALERTA ACÚSTICA: Eco anómalo detectado`;
+                        addTelemetryLog(message, 'warning');
+                        activateAlarm(`ANOMALÍA ACÚSTICA\n${message}`, 'warning');
+
+                        // Disparar evento para el sistema 3D
+                        document.dispatchEvent(new CustomEvent('sensorAnomaly', {
+                            detail: { severity: 'warning', message: message }
+                        }));
+                    }
+
+                    // Actualizar estado
+                    updateTelemetryStatus('MONITOREO ACTIVO');
+
+                } catch (error) {
+                    console.error('Error consultando sensores:', error);
+                    addTelemetryLog('❌ Error en sensores: ' + error.message, 'critical');
+                    updateTelemetryStatus('ERROR DE CONEXIÓN');
+                }
+            }
+
+            // Cargar propuestas inicialmente
+            loadProposals();
+
+            // Actualizar cada 10 segundos
+            setInterval(loadProposals, 10000);
+
+            // Consultar sensores cada 2 segundos
+            setInterval(pollSensors, 2000);
+
+            // Inicializar gestos holográficos
+            if (window.hologramGestures) {
+                window.hologramGestures.init();
+            }
+
+            // Inicializar sistema de voz
+            if (window.voiceCommandSystem) {
+                window.voiceCommandSystem.init();
+            }
+
+            // Escuchar eventos de voz
+            document.addEventListener('voiceCommandEvent', (event) => {
+                const { type, data } = event.detail;
+                console.log(`🎤 Evento de voz: ${type}`, data);
+
+                // Procesar comandos específicos
+                switch(type) {
+                    case 'voice_start':
+                        addTelemetryLog('🎤 Micrófono activado', 'info');
+                        break;
+                    case 'voice_end':
+                        addTelemetryLog('🎤 Micrófono desactivado', 'info');
+                        break;
+                    case 'voice_error':
+                        addTelemetryLog(`❌ Error de voz: ${data}`, 'critical');
+                        break;
+                    case 'voice_command':
+                        addTelemetryLog(`🗣️ Comando: "${data}"`, 'info');
+                        break;
+                    case 'systemShutdown':
+                        if (confirm('¿Estás seguro de que quieres apagar el sistema?')) {
+                            fetch('/api/system/shutdown', { method: 'POST' });
+                        }
+                        break;
+                    case 'showRadar':
+                        addTelemetryLog('📡 Mostrando radar OSINT', 'info');
+                        // Aquí podrías redirigir o mostrar el radar
+                        break;
+                    case 'injectPatch':
+                        addTelemetryLog('🔧 Inyectando parche', 'info');
+                        // Aquí podrías mostrar el panel de parches
+                        break;
+                    case 'assimilateTarget':
+                        addTelemetryLog(`🌐 Asimilando: ${data.target}`, 'info');
+                        // Aquí podrías mostrar el panel de asimilación
+                        break;
+                    case 'executeOsint':
+                        addTelemetryLog(`🔍 Ejecutando OSINT en: ${data.target}`, 'info');
+                        // Aquí podrías mostrar el panel de OSINT
+                        break;
+                    case 'enableGestures':
+                        addTelemetryLog('👋 Activando gestos holográficos', 'info');
+                        if (window.hologramGestures) {
+                            window.hologramGestures.init();
+                        }
+                        break;
+                    case 'disableGestures':
+                        addTelemetryLog('🛑 Desactivando gestos holográficos', 'info');
+                        if (window.hologramGestures) {
+                            window.hologramGestures.stop();
+                        }
+                        break;
+                    case 'systemRestart':
+                        if (confirm('¿Estás seguro de que quieres reiniciar el sistema?')) {
+                            fetch('/api/system/restart', { method: 'POST' });
+                        }
+                        break;
+                    case 'showDashboard':
+                        addTelemetryLog('📊 Mostrando dashboard principal', 'info');
+                        // Aquí podrías redirigir o mostrar el dashboard
+                        break;
+                    case 'searchKnowledge':
+                        showKnowledgeSearchPanel();
+                        break;
+                    case 'threatControl':
+                        showThreatControlPanel();
+                        break;
+                    case 'advancedSearch':
+                        showAdvancedSearchPanel();
+                        break;
+                }
+            });
+
+            // Escuchar eventos de alerta del sistema
+            document.addEventListener('systemAlert', (event) => {
+                const { severity, message } = event.detail;
+                console.log(`🚨 Alerta del sistema: ${severity}`, message);
+
+                if (severity === 'critical') {
+                    activateAlarm(message, severity);
+                } else {
+                    addTelemetryLog(message, severity);
+                }
+            });
+
+            // ===== PROTOCOLO DE PÁNICO =====
+            const panicOverlay = document.getElementById('panic-overlay');
+            const panicScanlines = document.getElementById('panic-scanlines');
+            const panicText = document.getElementById('panic-text');
+            let isPanicMode = false;
+            let panicModeTimeout = null;
+
+            // triggerPanicMode(): activa el Protocolo de Pánico
+            window.triggerPanicMode = function() {
+                if (isPanicMode) return;
+
+                isPanicMode = true;
+
+                // 1. Overlay rojo pulsante
+                panicOverlay.classList.add('active');
+
+                // 2. Scanlines de ruido
+                panicScanlines.classList.add('active');
+
+                // 3. Texto de advertencia
+                panicText.textContent = '⚠ THREAT DETECTED ⚠\nSHADOW CORE ISOLATED';
+                panicText.classList.add('active');
+
+                // 4. Lock de inputs de comandos
+                document.querySelectorAll('input, button, textarea, select').forEach(el => {
+                    el.classList.add('panic-lock-input');
+                });
+
+                // 5. Override 3D canvas a rojo
+                document.querySelectorAll('[data-three-canvas]').forEach(el => {
+                    el.closest('.panic-3d-override') || el.parentElement.classList.add('panic-3d-override');
+                });
+
+                // Notificar al sistema 3D
+                if (window.antigravityNodes) {
+                    window.antigravityNodes.setAlarmMode(true);
+                }
+                if (window.globeConfig) {
+                    // Cambiar color del wireframe a rojo
+                    window.globeConfig.globe.material.color.setHex(0xff0000);
+                }
+
+                addTelemetryLog('🚨 PROTOCOLO DE PÁNICO ACTIVADO - Shadow Core AISLADO', 'critical');
+
+                // Auto-desactivar después de 60 segundos
+                if (panicModeTimeout) clearTimeout(panicModeTimeout);
+                panicModeTimeout = setTimeout(() => {
+                    deactivatePanicMode();
+                }, 60000);
+            };
+
+            // deactivatePanicMode(): restaura el estado normal
+            window.deactivatePanicMode = function() {
+                if (!isPanicMode) return;
+
+                isPanicMode = false;
+                panicOverlay.classList.remove('active');
+                panicScanlines.classList.remove('active');
+                panicText.classList.remove('active');
+
+                document.querySelectorAll('.panic-lock-input').forEach(el => {
+                    el.classList.remove('panic-lock-input');
+                });
+                document.querySelectorAll('.panic-3d-override').forEach(el => {
+                    el.classList.remove('panic-3d-override');
+                });
+
+                if (window.antigravityNodes) {
+                    window.antigravityNodes.setAlarmMode(false);
+                }
+                if (window.globeConfig) {
+                    window.globeConfig.globe.material.color.setHex(0x00ffff);
+                }
+
+                addTelemetryLog('🟢 Protocolo de Pánico desactivado - Shadow Core restaurado', 'info');
+            };
+
+            // Polling heartbeat del Shadow-Core (cada 5s)
+            async function pollShadowHeartbeat() {
+                try {
+                    const resp = await fetch('/api/shadow/status');
+                    if (!resp.ok) {
+                        // Si el endpoint no existe, disparar pánico
+                        window.triggerPanicMode();
+                        return;
+                    }
+                    const data = await resp.json();
+
+                    // Si threat_status es ALERT o shadow_online es false
+                    if (data.connection === 'offline' || data.shadow_online === false) {
+                        window.triggerPanicMode();
+                    } else if (data.threat_status !== 'CLEAN' && data.threat_status !== 'UNKNOWN') {
+                        // threat no limpio = pánico
+                        window.triggerPanicMode();
+                    } else {
+                        // Todo limpio, si estaba en pánico restaurar
+                        if (isPanicMode) {
+                            deactivatePanicMode();
+                        }
+                    }
+
+                    // Actualizar estado en el panel de control
+                    updateControlPanel(data);
+                } catch (e) {
+                    // Error de conexión = pánico
+                    window.triggerPanicMode();
+                }
+            }
+
+            // Iniciar polling heartbeat y repetir cada 5s
+            pollShadowHeartbeat();
+            setInterval(pollShadowHeartbeat, 5000);
+
+            // Escuchar evento de Shadow-Core ALERT desde el servidor
+            document.addEventListener('shadowCoreAlert', (event) => {
+                const { threat_status } = event.detail;
+                if (threat_status !== 'CLEAN') {
+                    window.triggerPanicMode();
+                }
+            });
+
+            // Escuchar cambios en /api/status
+            async function pollStatusForPanic() {
+                try {
+                    const resp = await fetch('/api/status');
+                    const st = await resp.json();
+                    if (st.shadow_status && st.shadow_status.status === 'offline') {
+                        window.triggerPanicMode();
+                    }
+                } catch (e) {}
+            }
+            setInterval(pollStatusForPanic, 5000);
+
+            // ===== INTEGRACIÓN CON PHYSICS UI ENGINE (ANTIGRAVITY) =====
+            function initPhysicsDashboard() {
+                // Verificar si el motor de física está disponible
+                if (!window.PhysicsUI) {
+                    console.warn("PhysicsUI no disponible. Cargando librerías...");
+                    return;
+                }
+
+                // Inicializar el motor de física
+                if (!window.PhysicsUI.init()) {
+                    console.error("Error inicializando PhysicsUI");
+                    return;
+                }
+
+                // Crear contenedores para los elementos del dashboard
+                const evolutionTerminal = document.querySelector('.evolution-terminal');
+                const telemetryTerminal = document.querySelector('.telemetry-terminal');
+
+                // Crear objetos físicos para los terminales
+                if (evolutionTerminal) {
+                    // Crear objeto físico para el terminal de evolución
+                    const evolutionObject = window.PhysicsUI.createHtmlObject(evolutionTerminal, {
+                        width: 30,
+                        height: 50,
+                        depth: 2,
+                        color: 0x00d4ff,
+                        position: { x: -30, y: 20, z: 0 },
+                        isDraggable: true,
+                        type: 'html'
+                    });
+
+                    // Añadir clase para identificar el objeto
+                    evolutionTerminal.classList.add('physics-object');
+                    evolutionTerminal.dataset.physicsObject = 'evolution-terminal';
+                }
+
+                if (telemetryTerminal) {
+                    // Crear objeto físico para el terminal de telemetría
+                    const telemetryObject = window.PhysicsUI.createHtmlObject(telemetryTerminal, {
+                        width: 35,
+                        height: 12,
+                        depth: 2,
+                        color: 0xff3366,
+                        position: { x: 30, y: -15, z: 0 },
+                        isDraggable: true,
+                        type: 'html'
+                    });
+
+                    // Añadir clase para identificar el objeto
+                    telemetryTerminal.classList.add('physics-object');
+                    telemetryTerminal.dataset.physicsObject = 'telemetry-terminal';
+                }
+
+                // Crear un cubo de prueba adicional para demostrar la física
+                window.PhysicsUI.createObject({
+                    mass: 1.2,
+                    width: 6,
+                    height: 6,
+                    depth: 6,
+                    color: 0x00ff88,
+                    position: { x: 0, y: 35, z: 0 },
+                    userData: {
+                        type: 'demo_cube',
+                        description: 'Cubo de demostración Antigravity'
+                    }
+                });
+
+                console.log("🎮 PHYSICS DASHBOARD INTEGRADO - Efecto Antigravity activado");
+            }
+
+            // ===== PANEL DE CONTROL TÁCTICO =====
+            function initControlPanel() {
+                // Botón para activar/desactivar Security Shield
+                const shieldToggle = document.getElementById('shield-toggle');
+                shieldToggle.addEventListener('click', function() {
+                    const currentState = shieldToggle.classList.contains('active');
+                    const newState = !currentState;
+
+                    // Cambiar estado visual
+                    if (newState) {
+                        shieldToggle.classList.add('active');
+                        shieldToggle.querySelector('span').textContent = 'DISABLE SHIELD';
+                        document.getElementById('shield-status').textContent = 'ACTIVADO';
+                        document.getElementById('shield-status').className = 'status-value';
+                        document.querySelector('.status-icon').className = 'status-icon status-on';
+                        addLogEntry('🛡️ Security Shield ACTIVADO', 'success');
+                    } else {
+                        shieldToggle.classList.remove('active');
+                        shieldToggle.querySelector('span').textContent = 'TOGGLE SHIELD';
+                        document.getElementById('shield-status').textContent = 'DESACTIVADO';
+                        document.getElementById('shield-status').className = 'status-value';
+                        document.querySelector('.status-icon').className = 'status-icon status-off';
+                        addLogEntry('🛡️ Security Shield DESACTIVADO', 'warning');
+                    }
+
+                    // Simular acción en el servidor
+                    fetch('/api/security/shield', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ action: newState ? 'enable' : 'disable' })
+                    }).catch(error => {
+                        console.error('Error al cambiar el estado del Security Shield:', error);
+                        addLogEntry('❌ Error al cambiar Security Shield', 'error');
+                    });
+                });
+
+                // Botón para obtener estado de Shadow-Core
+                const shadowStatusBtn = document.getElementById('shadow-status-btn');
+                shadowStatusBtn.addEventListener('click', function() {
+                    fetch('/api/shadow/status')
+                        .then(response => response.json())
+                        .then(data => {
+                            addLogEntry(`👤 Shadow-Core: ${data.connection} (Threat: ${data.threat_status})`, 'info');
+                            console.log('Estado de Shadow-Core:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error al obtener estado de Shadow-Core:', error);
+                            addLogEntry('❌ Error al obtener estado de Shadow-Core', 'error');
+                        });
+                });
+
+                // Botón para iniciar escaneo OSINT
+                const osintScanBtn = document.getElementById('osint-scan-btn');
+                osintScanBtn.addEventListener('click', function() {
+                    const timestamp = new Date().toLocaleString();
+                    addLogEntry(`📡 Iniciando escaneo OSINT...`, 'info');
+
+                    // Simular escaneo
+                    setTimeout(() => {
+                        addLogEntry(`📡 Escaneo OSINT completado a las ${timestamp}`, 'success');
+                        document.getElementById('last-scan').textContent = timestamp;
+                    }, 2000);
+
+                    // Enviar solicitud al servidor
+                    fetch('/api/osint/scan', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ target: 'global' })
+                    }).catch(error => {
+                        console.error('Error al iniciar escaneo OSINT:', error);
+                        addLogEntry('❌ Error al iniciar escaneo OSINT', 'error');
+                    });
+                });
+
+                // Botón para mostrar información del grafo de conocimiento
+                const graphInfoBtn = document.getElementById('graph-info-btn');
+                graphInfoBtn.addEventListener('click', function() {
+                    showKnowledgeGraphInfo();
+                });
+
+                // Campo de comandos directos
+                const commandInput = document.getElementById('command-input');
+                const sendCommandBtn = document.getElementById('send-command');
+
+                sendCommandBtn.addEventListener('click', executeCommand);
+                commandInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        executeCommand();
+                    }
+                });
+
+                function executeCommand() {
+                    const command = commandInput.value.trim();
+                    if (command.length === 0) return;
+
+                    // Añadir comando al log
+                    addLogEntry(`💬 > ${command}`, 'info');
+
+                    // Ejecutar comando (simulado)
+                    setTimeout(() => {
+                        // Simular respuesta del sistema
+                        const responses = {
+                            'status': 'Sistema operativo: AURA v3.7.2\nÚltima actualización: 2026-05-28\nModo: Táctico',
+                            'shadow status': 'Shadow-Core: CONECTADO\nThreat Status: CLEAN\nÚltimo heartbeat: 2 segundos atrás',
+                            'osint scan': 'Escaneo OSINT iniciado en 360°\nObjetivos: 12 nodos detectados\nDuración estimada: 45 segundos',
+                            'security shield': 'Security Shield: ACTIVADO\nNivel de protección: ALTO\nÚltima amenaza bloqueada: 1 hora atrás',
+                            'help': 'Comandos disponibles:\n- status: Estado del sistema\n- shadow status: Estado de Shadow-Core\n- osint scan: Iniciar escaneo OSINT\n- security shield: Estado del Security Shield\n- help: Mostrar esta ayuda\n- search: Mostrar panel de búsqueda de conocimiento\n- threat: Mostrar panel de control de amenazas\n- graph info: Información del grafo de conocimiento',
+                            'search': 'Mostrando panel de búsqueda de conocimiento',
+                            'threat': 'Mostrando panel de control de amenazas',
+                            'graph info': 'Mostrando información del grafo de conocimiento',
+                            'exit': 'Saliendo del modo de comandos directos'
+                        };
+
+                        const response = responses[command.toLowerCase()] ||
+                                         `Comando no reconocido: ${command}\nUse 'help' para ver comandos disponibles`;
+
+                        addLogEntry(`💬 < ${response}`, 'info');
+                        commandInput.value = '';
+                    }, 1000);
+
+                    // Enviar comando al servidor real
+                    fetch('/api/command/execute', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ command: command })
+                    }).catch(error => {
+                        console.error('Error al ejecutar comando:', error);
+                        addLogEntry('❌ Error al ejecutar comando', 'error');
+                    });
+                }
+
+                // Función para actualizar el panel de control con datos del Shadow-Core
+                function updateControlPanel(data) {
+                    if (!data) return;
+
+                    // Actualizar estado de Shadow-Core
+                    const shadowStatus = document.getElementById('shadow-status');
+                    const threatStatus = document.getElementById('threat-status');
+
+                    if (data.connection === 'offline') {
+                        shadowStatus.textContent = 'OFFLINE';
+                        shadowStatus.className = 'status-value';
+                        document.querySelector('.status-shadow-core .status-icon').className = 'status-icon status-off';
+                        threatStatus.textContent = 'CRITICAL';
+                        threatStatus.className = 'status-value';
+                        document.querySelector('.status-shadow-core + .status-indicator .status-icon').className = 'status-icon status-critical';
+                    } else {
+                        shadowStatus.textContent = 'ONLINE';
+                        shadowStatus.className = 'status-value';
+                        document.querySelector('.status-shadow-core .status-icon').className = 'status-icon status-on';
+
+                        if (data.threat_status === 'CLEAN') {
+                            threatStatus.textContent = 'CLEAN';
+                            threatStatus.className = 'status-value';
+                            document.querySelector('.status-shadow-core + .status-indicator .status-icon').className = 'status-icon status-on';
+                        } else if (data.threat_status === 'WARNING') {
+                            threatStatus.textContent = 'WARNING';
+                            threatStatus.className = 'status-value';
+                            document.querySelector('.status-shadow-core + .status-indicator .status-icon').className = 'status-icon status-warning';
+                        } else {
+                            threatStatus.textContent = data.threat_status;
+                            threatStatus.className = 'status-value';
+                            document.querySelector('.status-shadow-core + .status-indicator .status-icon').className = 'status-icon status-critical';
+                        }
+                    }
+
+                    // Añadir mensaje al log
+                    addLogEntry(`👤 Shadow-Core: ${data.connection} (Threat: ${data.threat_status})`, 'info');
+                }
+
+                // Función para añadir entradas al log
+                function addLogEntry(message, type) {
+                    const logTerminal = document.getElementById('agent-log');
+                    const entry = document.createElement('div');
+                    entry.className = `log-entry ${type}`;
+                    entry.textContent = message;
+
+                    logTerminal.appendChild(entry);
+                    logTerminal.scrollTop = logTerminal.scrollHeight;
+
+                    // Limitar a 100 entradas
+                    if (logTerminal.children.length > 100) {
+                        logTerminal.removeChild(logTerminal.firstChild);
+                    }
+                }
+
+                // Función para mostrar información del grafo de conocimiento
+                function showKnowledgeGraphInfo() {
+                    if (!window.KnowledgeNodes) {
+                        addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                        return;
+                    }
+
+                    try {
+                        const graph = window.KnowledgeNodes.getGraph();
+                        const nodeCount = Object.keys(graph).length;
+                        let connectionCount = 0;
+
+                        // Contar conexiones
+                        for (const [nodePath, nodeData] of Object.entries(graph)) {
+                            connectionCount += nodeData.connections.length;
+                        }
+
+                        // Actualizar información en el panel
+                        document.getElementById('graph-nodes').textContent = nodeCount;
+                        document.getElementById('graph-connections').textContent = connectionCount;
+
+                        // Mostrar mensaje en el log
+                        addLogEntry(`🌐 Grafo de conocimiento: ${nodeCount} nodos, ${connectionCount} conexiones`, 'info');
+
+                        // Mostrar detalles en un alert
+                        alert(`🌐 INFORMACIÓN DEL GRAFO DE CONOCIMIENTO\n\n` +
+                              `Nodos totales: ${nodeCount}\n` +
+                              `Conexiones totales: ${connectionCount}\n\n` +
+                              `Categorías:\n` +
+                              `- Shadow-Core: ${Object.keys(graph).filter(k => k.includes('Shadow-Core')).length}\n` +
+                              `- Physics: ${Object.keys(graph).filter(k => k.includes('physics_ui') || k.includes('antigravity')).length}\n` +
+                              `- Obsidian: ${Object.keys(graph).filter(k => k.includes('obsidian')).length}`);
+
+                    } catch (error) {
+                        console.error('Error al obtener información del grafo:', error);
+                        addLogEntry('❌ Error al obtener información del grafo de conocimiento', 'error');
+                    }
+                }
+
+                // Inicializar con algunos logs de ejemplo
+                addLogEntry('📡 Sistema AURA inicializado', 'info');
+                addLogEntry('🛡️ Security Shield: ACTIVADO', 'success');
+                addLogEntry('👤 Shadow-Core: CONECTADO', 'info');
+                addLogEntry('📡 OSINT Radar: LISTO', 'info');
+                addLogEntry('🌐 Knowledge Graph: ACTIVO', 'info');
+
+                console.log("🛡️ Panel de Control Táctico inicializado");
+            }
+
+            // ===== PANEL DE BÚSQUEDA DE CONOCIMIENTO =====
+            function initKnowledgeSearchPanel() {
+                const searchPanel = document.getElementById('knowledge-search-panel');
+                const searchInput = document.getElementById('knowledge-search-input');
+                const highlightBtn = document.getElementById('highlight-search-btn');
+                const resetBtn = document.getElementById('reset-search-btn');
+                const resultsContainer = document.getElementById('search-results');
+                const searchKnowledgeBtn = document.getElementById('search-knowledge-btn');
+
+                // Mostrar/ocultar panel
+                function toggleSearchPanel() {
+                    if (searchPanel.style.display === 'block') {
+                        searchPanel.style.display = 'none';
+                    } else {
+                        searchPanel.style.display = 'block';
+                        searchInput.focus();
+                    }
+                }
+
+                // Mostrar panel de búsqueda
+                function showKnowledgeSearchPanel() {
+                    toggleSearchPanel();
+                    addLogEntry('🔍 Mostrando panel de búsqueda de conocimiento', 'info');
+                }
+
+                // Botón de búsqueda de conocimiento
+                searchKnowledgeBtn.addEventListener('click', showKnowledgeSearchPanel);
+
+                // Evento de voz para búsqueda
+                document.addEventListener('voiceCommandEvent', (event) => {
+                    if (event.detail.type === 'searchKnowledge') {
+                        showKnowledgeSearchPanel();
+                    }
+                });
+
+                // Botón para resaltar resultados
+                highlightBtn.addEventListener('click', function() {
+                    const query = searchInput.value.trim();
+                    if (query.length === 0) {
+                        addLogEntry('❌ Por favor ingrese un término de búsqueda', 'warning');
+                        return;
+                    }
+
+                    if (!window.KnowledgeNodes) {
+                        addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                        return;
+                    }
+
+                    // Filtrar nodos por búsqueda
+                    window.KnowledgeNodes.filterBySearch(query);
+
+                    // Mostrar resultados de búsqueda
+                    showSearchResults(query);
+
+                    addLogEntry(`🔍 Resaltando nodos que contienen: "${query}"`, 'info');
+                });
+
+                // Botón para restaurar visibilidad
+                resetBtn.addEventListener('click', function() {
+                    if (!window.KnowledgeNodes) {
+                        addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                        return;
+                    }
+
+                    // Restaurar visibilidad de todos los nodos
+                    window.KnowledgeNodes.resetVisibility();
+
+                    // Limpiar resultados
+                    resultsContainer.innerHTML = '<div style="text-align: center; color: #666; font-style: italic;">Resultados de búsqueda aparecerán aquí...</div>';
+
+                    addLogEntry('🔄 Restaurando visibilidad de todos los nodos', 'info');
+                });
+
+                // Función para mostrar resultados de búsqueda
+                function showSearchResults(query) {
+                    if (!window.KnowledgeNodes || !window.KnowledgeNodes.getGraph()) {
+                        resultsContainer.innerHTML = '<div style="text-align: center; color: #666; font-style: italic;">No se pudo obtener información del grafo</div>';
+                        return;
+                    }
+
+                    try {
+                        // Buscar términos en el índice de búsqueda
+                        const searchTerms = query.toLowerCase().split(' ');
+                        const relevantNodes = new Set();
+
+                        // Buscar en el índice de términos
+                        for (const term of searchTerms) {
+                            if (window.KnowledgeNodes.config.search_index.terms[term]) {
+                                window.KnowledgeNodes.config.search_index.terms[term].nodes.forEach(nodePath => {
+                                    relevantNodes.add(nodePath);
+                                });
+                            }
+                        }
+
+                        // Si no se encontraron términos exactos, buscar en el contenido
+                        if (relevantNodes.size === 0) {
+                            for (const [nodePath, nodeData] of Object.entries(window.KnowledgeNodes.config.notes || {})) {
+                                const content = (nodeData.content || '').toLowerCase();
+                                for (const term of searchTerms) {
+                                    if (content.includes(term)) {
+                                        relevantNodes.add(nodePath);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Mostrar resultados
+                        if (relevantNodes.size > 0) {
+                            resultsContainer.innerHTML = '';
+
+                            // Convertir a array y ordenar por relevancia
+                            const sortedNodes = Array.from(relevantNodes).sort((a, b) => {
+                                const aNode = window.KnowledgeNodes.getNodeByPath(a);
+                                const bNode = window.KnowledgeNodes.getNodeByPath(b);
+
+                                if (!aNode || !bNode) return 0;
+
+                                // Priorizar nodos con más conexiones
+                                const aConnections = (window.KnowledgeNodes.getGraph()[a] || {}).connections || [];
+                                const bConnections = (window.KnowledgeNodes.getGraph()[b] || {}).connections || [];
+
+                                return bConnections.length - aConnections.length;
+                            });
+
+                            // Mostrar los 10 resultados más relevantes
+                            const resultsToShow = Math.min(sortedNodes.length, 10);
+                            for (let i = 0; i < resultsToShow; i++) {
+                                const nodePath = sortedNodes[i];
+                                const nodeData = window.KnowledgeNodes.getGraph()[nodePath] || {};
+                                const note = nodeData.node || {};
+
+                                if (note) {
+                                    const resultItem = document.createElement('div');
+                                    resultItem.className = 'search-result';
+                                    resultItem.addEventListener('click', () => {
+                                        const node = window.KnowledgeNodes.getNodeByPath(nodePath);
+                                        if (node) {
+                                            window.KnowledgeNodes.showPanel(node.userData);
+                                        }
+                                    });
+
+                                    resultItem.innerHTML = `
+                                        <div class="search-result-title">${note.title}</div>
+                                        <div class="search-result-path">${note.path}</div>
+                                        <div class="search-result-tags">
+                                            ${note.tags ? note.tags.map(tag => `<span class="search-result-tag">#${tag}</span>`).join('') : ''}
+                                        </div>
+                                    `;
+
+                                    resultsContainer.appendChild(resultItem);
+                                }
+                            }
+
+                            if (resultsContainer.children.length === 0) {
+                                resultsContainer.innerHTML = '<div style="text-align: center; color: #666; font-style: italic;">No se encontraron resultados para "' + query + '"</div>';
+                            }
+                        } else {
+                            resultsContainer.innerHTML = '<div style="text-align: center; color: #666; font-style: italic;">No se encontraron resultados para "' + query + '"</div>';
+                        }
+
+                    } catch (error) {
+                        console.error('Error al mostrar resultados de búsqueda:', error);
+                        resultsContainer.innerHTML = '<div style="text-align: center; color: #666; font-style: italic;">Error al mostrar resultados</div>';
+                    }
+                }
+
+                // Evento para buscar al presionar Enter
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        highlightBtn.click();
+                    }
+                });
+
+                console.log("🔍 Panel de búsqueda de conocimiento inicializado");
+            }
+
+            // ===== PANEL DE CONTROL DE AMENAZAS =====
+            function initThreatControlPanel() {
+                const threatPanel = document.getElementById('threat-control-panel');
+                const threatNodeList = document.getElementById('threat-node-list');
+                const clearThreatsBtn = document.getElementById('clear-threats-btn');
+                const propagateThreatBtn = document.getElementById('propagate-threat-btn');
+                const threatControlBtn = document.getElementById('threat-control-btn');
+
+                // Mostrar/ocultar panel
+                function toggleThreatPanel() {
+                    if (threatPanel.style.display === 'block') {
+                        threatPanel.style.display = 'none';
+                    } else {
+                        threatPanel.style.display = 'block';
+                        updateThreatNodeList();
+                    }
+                }
+
+                // Mostrar panel de control de amenazas
+                function showThreatControlPanel() {
+                    toggleThreatPanel();
+                    addLogEntry('🚨 Mostrando panel de control de amenazas', 'info');
+                }
+
+                // Botón de control de amenazas
+                threatControlBtn.addEventListener('click', showThreatControlPanel);
+
+                // Evento de voz para control de amenazas
+                document.addEventListener('voiceCommandEvent', (event) => {
+                    if (event.detail.type === 'threatControl') {
+                        showThreatControlPanel();
+                    }
+                });
+
+                // Botón para limpiar amenazas
+                clearThreatsBtn.addEventListener('click', function() {
+                    if (!window.KnowledgeNodes) {
+                        addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                        return;
+                    }
+
+                    // Limpiar todas las amenazas
+                    const threatNodes = window.KnowledgeNodes.getGraph() ? Object.keys(window.KnowledgeNodes.getGraph()) : [];
+
+                    threatNodes.forEach(nodePath => {
+                        window.KnowledgeNodes.updateThreatState(nodePath, false);
+                    });
+
+                    // Actualizar lista
+                    updateThreatNodeList();
+
+                    addLogEntry('🟢 Todas las amenazas han sido limpiadas', 'success');
+                });
+
+                // Botón para propagar amenaza
+                propagateThreatBtn.addEventListener('click', function() {
+                    if (!window.KnowledgeNodes) {
+                        addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                        return;
+                    }
+
+                    // Obtener nodos con amenaza
+                    const threatNodes = window.KnowledgeNodes.getGraph() ? Object.keys(window.KnowledgeNodes.getGraph()).filter(
+                        path => window.KnowledgeNodes.getNodeByPath(path) &&
+                                window.KnowledgeNodes.getNodeByPath(path).userData.path &&
+                                window.KnowledgeNodes.threatActiveNodes.includes(window.KnowledgeNodes.getNodeByPath(path).userData.path)
+                    ) : [];
+
+                    if (threatNodes.length === 0) {
+                        addLogEntry('❌ No hay amenazas activas para propagar', 'warning');
+                        return;
+                    }
+
+                    // Propagar amenaza a nodos relacionados
+                    threatNodes.forEach(nodePath => {
+                        window.KnowledgeNodes.updateThreatState(nodePath, true);
+                    });
+
+                    // Actualizar lista
+                    updateThreatNodeList();
+
+                    addLogEntry('🔥 Amenazas propagadas a nodos relacionados', 'warning');
+                });
+
+                // Función para actualizar la lista de nodos con amenaza
+                function updateThreatNodeList() {
+                    if (!window.KnowledgeNodes) {
+                        threatNodeList.innerHTML = '<div style="text-align: center; color: #ff3366; font-style: italic;">Sistema de nodos no disponible</div>';
+                        return;
+                    }
+
+                    try {
+                        const graph = window.KnowledgeNodes.getGraph();
+                        const threatNodes = window.KnowledgeNodes.threatActiveNodes || [];
+
+                        if (threatNodes.length === 0) {
+                            threatNodeList.innerHTML = '<div style="text-align: center; color: #ff3366; font-style: italic;">No hay amenazas activas</div>';
+                            return;
+                        }
+
+                        // Ordenar nodos por relevancia (más conexiones primero)
+                        const sortedThreats = threatNodes.sort((a, b) => {
+                            const aNode = graph[a];
+                            const bNode = graph[b];
+
+                            if (!aNode || !bNode) return 0;
+                            return (bNode.connections || []).length - (aNode.connections || []).length;
+                        });
+
+                        // Mostrar nodos con amenaza
+                        threatNodeList.innerHTML = '';
+                        sortedThreats.forEach(nodePath => {
+                            const nodeData = graph[nodePath] || {};
+                            const note = nodeData.node || {};
+
+                            if (note) {
+                                const threatItem = document.createElement('div');
+                                threatItem.className = 'threat-node-item';
+                                threatItem.addEventListener('click', () => {
+                                    const node = window.KnowledgeNodes.getNodeByPath(nodePath);
+                                    if (node) {
+                                        window.KnowledgeNodes.showPanel(node.userData);
+                                    }
+                                });
+
+                                threatItem.innerHTML = `
+                                    <div class="threat-node-title">${note.title}</div>
+                                    <div class="threat-node-path">${note.path}</div>
+                                    <div class="threat-node-tags">
+                                        ${note.tags ? note.tags.map(tag => `<span class="threat-node-tag">#${tag}</span>`).join('') : ''}
+                                    </div>
+                                `;
+
+                                threatNodeList.appendChild(threatItem);
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error al actualizar lista de amenazas:', error);
+                        threatNodeList.innerHTML = '<div style="text-align: center; color: #ff3366; font-style: italic;">Error al cargar amenazas</div>';
+                    }
+                }
+
+                // Actualizar lista cada 2 segundos
+                setInterval(updateThreatNodeList, 2000);
+
+                console.log("🚨 Panel de control de amenazas inicializado");
+            }
+
+            // ===== PANEL DE BÚSQUEDA AVANZADA =====
+            function initAdvancedSearchPanel() {
+                const advancedPanel = document.getElementById('advanced-search-panel');
+                const searchQuery = document.getElementById('advanced-search-query');
+                const searchCategory = document.getElementById('advanced-search-category');
+                const searchTags = document.getElementById('advanced-search-tags');
+                const highlightCheckbox = document.getElementById('advanced-search-highlight');
+                const connectionsCheckbox = document.getElementById('advanced-search-connections');
+                const depthCheckbox = document.getElementById('advanced-search-depth');
+                const searchBtn = document.getElementById('advanced-search-btn');
+                const resetBtn = document.getElementById('advanced-reset-btn');
+                const advancedSearchBtn = document.getElementById('advanced-search-btn');
+
+                // Mostrar/ocultar panel
+                function toggleAdvancedSearchPanel() {
+                    if (advancedPanel.style.display === 'block') {
+                        advancedPanel.style.display = 'none';
+                    } else {
+                        advancedPanel.style.display = 'block';
+                        searchQuery.focus();
+                    }
+                }
+
+                // Mostrar panel de búsqueda avanzada
+                function showAdvancedSearchPanel() {
+                    toggleAdvancedSearchPanel();
+                    addLogEntry('🔎 Mostrando panel de búsqueda avanzada', 'info');
+                }
+
+                // Botón de búsqueda avanzada
+                advancedSearchBtn.addEventListener('click', showAdvancedSearchPanel);
+
+                // Evento de voz para búsqueda avanzada
+                document.addEventListener('voiceCommandEvent', (event) => {
+                    if (event.detail.type === 'advancedSearch') {
+                        showAdvancedSearchPanel();
+                    }
+                });
+
+                // Botón para realizar búsqueda avanzada
+                searchBtn.addEventListener('click', function() {
+                    const query = searchQuery.value.trim();
+                    const category = searchCategory.value.trim();
+                    const tags = searchTags.value.trim().split(',').map(t => t.trim()).filter(t => t.length > 0);
+
+                    if (query.length === 0) {
+                        addLogEntry('❌ Por favor ingrese un término de búsqueda', 'warning');
+                        return;
+                    }
+
+                    if (!window.KnowledgeNodes) {
+                        addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                        return;
+                    }
+
+                    // Realizar búsqueda avanzada
+                    performAdvancedSearch({
+                        query: query,
+                        category: category,
+                        tags: tags,
+                        highlight: highlightCheckbox.checked,
+                        showConnections: connectionsCheckbox.checked,
+                        includeDepth: depthCheckbox.checked
+                    });
+
+                    addLogEntry(`🔍 Búsqueda avanzada: "${query}"`, 'info');
+                });
+
+                // Botón para restaurar visibilidad
+                resetBtn.addEventListener('click', function() {
+                    if (!window.KnowledgeNodes) {
+                        addLogEntry('❌ Sistema de nodos de conocimiento no disponible', 'error');
+                        return;
+                    }
+
+                    // Restaurar visibilidad de todos los nodos
+                    window.KnowledgeNodes.resetVisibility();
+
+                    addLogEntry('🔄 Restaurando visibilidad de todos los nodos', 'info');
+                });
+
+                // Función para realizar búsqueda avanzada
+                function performAdvancedSearch(options) {
+                    if (!window.KnowledgeNodes) return;
+
+                    try {
+                        const graph = window.KnowledgeNodes.getGraph();
+                        const allNodes = Object.keys(graph);
+                        const relevantNodes = new Set();
+
+                        // Buscar en el contenido de los nodos
+                        allNodes.forEach(nodePath => {
+                            const nodeData = graph[nodePath] || {};
+                            const note = nodeData.node || {};
+
+                            if (!note) return;
+
+                            // Verificar si coincide con la consulta
+                            const content = (note.content || '').toLowerCase();
+                            const queryTerms = options.query.toLowerCase().split(' ');
+
+                            // Verificar si todos los términos de búsqueda están en el contenido
+                            let matchesQuery = true;
+                            queryTerms.forEach(term => {
+                                if (!content.includes(term)) {
+                                    matchesQuery = false;
+                                }
+                            });
+
+                            // Verificar categoría si se especifica
+                            const matchesCategory = !options.category || note.path.toLowerCase().includes(options.category.toLowerCase());
+
+                            // Verificar tags si se especifican
+                            const matchesTags = options.tags.length === 0 ||
+                                               (note.tags || []).some(tag => options.tags.includes(tag.toLowerCase()));
+
+                            if (matchesQuery && matchesCategory && matchesTags) {
+                                relevantNodes.add(nodePath);
+                            }
+                        });
+
+                        // Si no se encontraron resultados exactos, buscar términos individuales
+                        if (relevantNodes.size === 0) {
+                            const queryTerms = options.query.toLowerCase().split(' ');
+                            allNodes.forEach(nodePath => {
+                                const nodeData = graph[nodePath] || {};
+                                const note = nodeData.node || {};
+
+                                if (!note) return;
+
+                                const content = (note.content || '').toLowerCase();
+                                const matchesCategory = !options.category || note.path.toLowerCase().includes(options.category.toLowerCase());
+                                const matchesTags = options.tags.length === 0 ||
+                                                   (note.tags || []).some(tag => options.tags.includes(tag.toLowerCase()));
+
+                                // Verificar si al menos un término coincide
+                                const matchesQuery = queryTerms.some(term => content.includes(term));
+
+                                if (matchesQuery && matchesCategory && matchesTags) {
+                                    relevantNodes.add(nodePath);
+                                }
+                            });
+                        }
+
+                        // Aplicar filtrado según opciones
+                        if (options.highlight) {
+                            window.KnowledgeNodes.filterBySearch(options.query);
+                        } else {
+                            // Si no se resalta, solo mostrar conexiones si está activado
+                            if (options.showConnections) {
+                                updateConnectionVisibility(relevantNodes);
+                            }
+                        }
+
+                        // Mostrar resultados en el log
+                        addLogEntry(`🔍 Búsqueda avanzada encontró ${relevantNodes.size} nodos relevantes`, 'info');
+
+                        // Si se incluye profundidad, buscar nodos relacionados
+                        if (options.includeDepth && relevantNodes.size > 0) {
+                            const depth = 2; // Profundidad de búsqueda
+                            const allRelevant = new Set(relevantNodes);
+
+                            // Buscar nodos relacionados recursivamente
+                            function findRelatedNodes(nodePath, currentDepth) {
+                                if (currentDepth >= depth) return;
+
+                                const nodeData = graph[nodePath];
+                                if (!nodeData || !nodeData.connections) return;
+
+                                nodeData.connections.forEach(connection => {
+                                    const targetPath = connection.target;
+                                    if (!allRelevant.has(targetPath)) {
+                                        allRelevant.add(targetPath);
+                                        findRelatedNodes(targetPath, currentDepth + 1);
+                                    }
+                                });
+                            }
+
+                            // Iniciar búsqueda desde cada nodo relevante
+                            relevantNodes.forEach(nodePath => {
+                                findRelatedNodes(nodePath, 0);
+                            });
+
+                            // Actualizar visibilidad con los nodos encontrados
+                            if (options.highlight) {
+                                window.KnowledgeNodes.filterBySearch(options.query);
+                            } else {
+                                updateConnectionVisibility(allRelevant);
+                            }
+
+                            addLogEntry(`🔍 Búsqueda con profundidad encontró ${allRelevant.size} nodos adicionales`, 'info');
+                        }
+
+                    } catch (error) {
+                        console.error('Error al realizar búsqueda avanzada:', error);
+                        addLogEntry('❌ Error al realizar búsqueda avanzada', 'error');
+                    }
+                }
+
+                // Función para actualizar visibilidad de conexiones (reutilizada)
+                function updateConnectionVisibility(relevantNodes) {
+                    if (!window.KnowledgeNodes || !window.KnowledgeNodes.connectionLines) return;
+
+                    window.KnowledgeNodes.connectionLines.forEach(line => {
+                        const node1Path = line.userData.node1.userData.path;
+                        const node2Path = line.userData.node2.userData.path;
+
+                        // Verificar si ambos nodos son relevantes o si al menos uno lo es
+                        const isRelevant = relevantNodes.has(node1Path) || relevantNodes.has(node2Path);
+
+                        // Mostrar u ocultar la conexión según relevancia
+                        line.userData.visible = isRelevant;
+                    });
+                }
+
+                console.log("🔎 Panel de búsqueda avanzada inicializado");
+            }
+
+            // Inicializar la integración cuando el DOM esté listo
+            setTimeout(() => {
+                initPhysicsDashboard();
+                initControlPanel();
+                initKnowledgeSearchPanel();
+                initThreatControlPanel();
+                initAdvancedSearchPanel();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

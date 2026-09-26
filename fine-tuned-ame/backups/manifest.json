@@ -1,0 +1,16 @@
+{
+  "backups": [
+    {
+      "name": "aura_finetuned_lora_20260810_175236",
+      "timestamp": "2026-08-10T17:52:37.018863",
+      "path": "C:\\Users\\User\\Downloads\\AURA\\fine-tuned-ame\\backups\\aura_finetuned_lora_20260810_175236",
+      "files": 6
+    },
+    {
+      "name": "aura_finetuned_lora_20260810_175321",
+      "timestamp": "2026-08-10T17:53:21.495177",
+      "path": "C:\\Users\\User\\Downloads\\AURA\\fine-tuned-ame\\backups\\aura_finetuned_lora_20260810_175321",
+      "files": 6
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+app:
+  name: AURA OS
+  version: "2.0.0"
+  debug: false
+
+core:
+  host: "127.0.0.1"
+  port: 8000
+  cors_origins:
+    - "http://localhost:5173"
+  max_history_events: 500
+
+jan:
+  url: "http://localhost:1337/v1"
+  model: "gemma-3-1b-it"
+  timeout_s: 10.0
+
+memory:
+  short_capacity: 20
+  medium_window_hours: 24
+
+security:
+  audit_log: "data/audit.log"
+  max_audit_mb: 50
+  zk_stub: true

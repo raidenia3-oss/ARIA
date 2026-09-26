@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://hello_world_plugin"]
+
+[ext_resource type="Script" path="res://plugins/hello_world/hello_world.gd" id="1_hello"]
+
+[node name="HelloWorldPlugin" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 400.0
+offset_bottom = 300.0
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 380.0
+offset_bottom = 50.0
+text = "Hello World desde el plugin AURA"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 160.0
+offset_bottom = 90.0
+text = "Saludar"
+
+[node name="Script" type="Script" parent="Button"]
+script = ExtResource("1_hello")

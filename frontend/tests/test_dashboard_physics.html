@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Física en Dashboard - PHYS-UI-ENGINE</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #0a0f1e;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 100;
+            max-width: 300px;
+        }
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            z-index: 100;
+            max-width: 800px;
+        }
+        .terminal {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            width: 300px;
+            height: 500px;
+            background: rgba(10, 15, 26, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            padding: 15px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            color: #00d4ff;
+        }
+        .terminal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff3366;
+            font-weight: bold;
+        }
+        .terminal-header::before {
+            content: "🔧";
+            margin-right: 10px;
+        }
+        .terminal-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2>PHYS-UI-ENGINE - Prueba en Dashboard</h2>
+        <p>Motor de física 3D integrado con elementos del dashboard</p>
+        <p>🖱️ Observa el cubo morado cayendo por gravedad</p>
+    </div>
+    <div id="instructions">
+        <p>📌 Instrucciones:</p>
+        <ul>
+            <li>El cubo 3D (morado) cae por gravedad</li>
+            <li>El terminal de evolución está en el fondo (z-index bajo)</li>
+            <li>El canvas 3D está detrás de los elementos HTML</li>
+            <li>Prueba el efecto de capas: el terminal debería verse por encima del cubo</li>
+        </ul>
+    </div>
+
+    <!-- Terminal de ejemplo -->
+    <div class="terminal">
+        <div class="terminal-header">
+            TERMINAL DE AUTO-EVOLUCIÓN
+        </div>
+        <div style="margin-bottom: 20px; color: #ccc;">
+            <div>📡 Sistema de telemetría iniciado</div>
+            <div>🔍 Escaneando sensores CSI y acústicos...</div>
+            <div style="margin-top: 10px; font-size: 12px;">
+                <div style="color: #00d4ff;">📡 ALERTA CSI: Fluctuación 45.2% (RSSI: -65dBm)</div>
+                <div style="color: #ffcc00;">⚠️  Advertencia: Nivel de señal bajo</div>
+            </div>
+        </div>
+        <div class="terminal-footer">
+            🔄 Actualizando cada 10 segundos
+        </div>
+    </div>
+
+    <!-- Librerías necesarias -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.min.js"></script>
+
+    <!-- Módulo de física -->
+    <script>
+        // Configuración global (copiada de physics_ui.js)
+        const PHYSICS_CONFIG = {
+            gravity: 0.98,
+            damping: 0.4,
+            massMultiplier: 0.5,
+            friction: 0.3,
+            restitution: 0.7
+        };
+
+        // Variables globales del motor
+        let physicsWorld;
+        let threeScene;
+        let threeCamera;
+        let threeRenderer;
+        let physicsObjects = [];
+        let animationId = null;
+        let canvasContainer = null;
+
+        // Inicializar el motor de física
+        function initPhysicsEngine() {
+            // Crear mundo físico con Cannon-es
+            physicsWorld = new CANNON.World();
+            physicsWorld.gravity.set(0, -PHYSICS_CONFIG.gravity, 0);
+            physicsWorld.broadphase = new CANNON.NaiveBroadphase();
+            physicsWorld.solver.iterations = 10;
+
+            // Crear escena Three.js
+            threeScene = new THREE.Scene();
+            threeScene.background = new THREE.Color(0x0a0f1e);
+
+            // Crear cámara
+            threeCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            threeCamera.position.set(0, 0, 50);
+            threeCamera.lookAt(0, 0, 0);
+
+            // Crear renderer
+            threeRenderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true
+            });
+            threeRenderer.setSize(window.innerWidth, window.innerHeight);
+            threeRenderer.setPixelRatio(window.devicePixelRatio);
+
+            // Crear contenedor para el canvas
+            canvasContainer = document.createElement('div');
+            canvasContainer.id = 'physics-ui-canvas';
+            canvasContainer.style.position = 'fixed';
+            canvasContainer.style.top = '0';
+            canvasContainer.style.left = '0';
+            canvasContainer.style.width = '100%';
+            canvasContainer.style.height = '100%';
+            canvasContainer.style.zIndex = '5';
+            canvasContainer.style.pointerEvents = 'none';
+            canvasContainer.style.overflow = 'hidden';
+
+            // Añadir renderer al contenedor
+            canvasContainer.appendChild(threeRenderer.domElement);
+
+            // Añadir luces
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+            threeScene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            threeScene.add(directionalLight);
+
+            // Añadir suelo (plano invisible)
+            const groundGeometry = new THREE.PlaneGeometry(100, 100);
+            const groundMaterial = new THREE.MeshStandardMaterial({
+                color: 0x1a1a2e,
+                side: THREE.DoubleSide
+            });
+            const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
+            groundMesh.rotation.x = -Math.PI / 2;
+            threeScene.add(groundMesh);
+
+            // Crear cuerpo físico para el suelo
+            const groundBody = new CANNON.Body({
+                mass: 0,
+                shape: new CANNON.Plane(),
+                position: new CANNON.Vec3(0, 0, 0)
+            });
+            physicsWorld.addBody(groundBody);
+
+            // Manejar redimensionamiento de ventana
+            window.addEventListener('resize', onWindowResize);
+
+            // Iniciar animación
+            startAnimation();
+
+            console.log("🚀 PHYSICS ENGINE INICIALIZADO");
+            return true;
+        }
+
+        // Crear un objeto físico con propiedades personalizables
+        function createPhysicsObject(options = {}) {
+            const defaults = {
+                mass: 1,
+                width: 5,
+                height: 5,
+                depth: 5,
+                color: 0x00d4ff,
+                position: { x: 0, y: 20, z: 0 },
+                velocity: { x: 0, y: 0, z: 0 },
+                angularVelocity: { x: 0, y: 0, z: 0 },
+                userData: {}
+            };
+
+            const config = { ...defaults, ...options };
+
+            // Crear cuerpo físico en Cannon
+            const shape = new CANNON.Box(new CANNON.Vec3(
+                config.width / 2,
+                config.height / 2,
+                config.depth / 2
+            ));
+
+            const body = new CANNON.Body({
+                mass: config.mass * PHYSICS_CONFIG.massMultiplier,
+                shape: shape,
+                position: new CANNON.Vec3(
+                    config.position.x,
+                    config.position.y,
+                    config.position.z
+                ),
+                velocity: new CANNON.Vec3(
+                    config.velocity.x,
+                    config.velocity.y,
+                    config.velocity.z
+                ),
+                angularVelocity: new CANNON.Vec3(
+                    config.angularVelocity.x,
+                    config.angularVelocity.y,
+                    config.angularVelocity.z
+                ),
+                linearDamping: PHYSICS_CONFIG.damping,
+                angularDamping: PHYSICS_CONFIG.damping,
+                material: new CANNON.Material({
+                    friction: PHYSICS_CONFIG.friction,
+                    restitution: PHYSICS_CONFIG.restitution
+                })
+            });
+
+            // Crear malla en Three.js
+            const geometry = new THREE.BoxGeometry(
+                config.width,
+                config.height,
+                config.depth
+            );
+
+            const material = new THREE.MeshStandardMaterial({
+                color: config.color,
+                metalness: 0.3,
+                roughness: 0.7,
+                transparent: true,
+                opacity: 0.9,
+                side: THREE.DoubleSide
+            });
+
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.userData = {
+                physicsBody: body,
+                originalConfig: config
+            };
+
+            // Añadir cuerpo físico al mundo
+            physicsWorld.addBody(body);
+
+            // Añadir malla a la escena
+            threeScene.add(mesh);
+
+            // Guardar referencia al objeto
+            const physicsObject = {
+                mesh: mesh,
+                body: body,
+                config: config,
+                update: function() {
+                    if (body.position) mesh.position.copy(body.position);
+                    if (body.quaternion) mesh.quaternion.copy(body.quaternion);
+                }
+            };
+
+            physicsObjects.push(physicsObject);
+            return physicsObject;
+        }
+
+        // Crear un cubo de prueba que caiga por gravedad
+        function createTestCube() {
+            return createPhysicsObject({
+                mass: 2,
+                width: 4,
+                height: 4,
+                depth: 4,
+                color: 0xff00aa, // Morado para destacar
+                position: { x: 0, y: 30, z: 0 }, // Posición inicial arriba
+                userData: {
+                    type: 'test_cube',
+                    description: 'Cubo de prueba con gravedad'
+                }
+            });
+        }
+
+        // Animación principal del motor de física
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+
+            // Actualizar física
+            const timeStep = 1/60;
+            physicsWorld.step(timeStep);
+
+            // Actualizar objetos en la escena
+            physicsObjects.forEach(object => {
+                object.update();
+            });
+
+            // Renderizar
+            threeRenderer.render(threeScene, threeCamera);
+        }
+
+        // Manejar redimensionamiento de ventana
+        function onWindowResize() {
+            threeCamera.aspect = window.innerWidth / window.innerHeight;
+            threeCamera.updateProjectionMatrix();
+            threeRenderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Iniciar la animación
+        function startAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            animate();
+        }
+
+        // Añadir el canvas al DOM
+        function mountPhysicsCanvas() {
+            if (!canvasContainer) return false;
+
+            // Añadir el canvas al body (detrás de otros elementos)
+            document.body.insertBefore(canvasContainer, document.body.firstChild);
+            return true;
+        }
+
+        // Inicializar el motor de física completo
+        function initPhysicsUI() {
+            // Verificar dependencias
+            if (!window.THREE || !window.CANNON) {
+                console.error("Error: Three.js o Cannon-es no están cargados");
+                return false;
+            }
+
+            // Inicializar el motor
+            const success = initPhysicsEngine();
+
+            if (success) {
+                // Crear cubo de prueba
+                createTestCube();
+
+                // Montar el canvas
+                mountPhysicsCanvas();
+
+                console.log("🎮 PHYSICS UI ENGINE LISTO");
+                console.log("   - Motor de física inicializado");
+                console.log("   - Cubo de prueba creado (cae por gravedad)");
+                console.log("   - Canvas montado en el DOM (z-index: 5)");
+
+                return true;
+            }
+
+            return false;
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar si Three.js y Cannon-es están disponibles
+            if (window.THREE && window.CANNON) {
+                initPhysicsUI();
+            } else {
+                console.warn("Esperando carga de Three.js y Cannon-es...");
+                const checkInterval = setInterval(() => {
+                    if (window.THREE && window.CANNON) {
+                        clearInterval(checkInterval);
+                        initPhysicsUI();
+                    }
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>

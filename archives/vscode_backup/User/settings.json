@@ -1,0 +1,50 @@
+{
+  "models": [
+    {
+      "title": "Qwen 2.5 Coder",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:1.5b",
+    },
+  ],
+  "tabAutocompleteModel": {
+    "title": "Qwen 2.5 Coder Autocomplete",
+    "provider": "ollama",
+    "model": "qwen2.5-coder:1.5b",
+  },
+  "comments.openView": "never",
+  "diffEditor.maxComputationTime": 0,
+  "redhat.telemetry.enabled": true,
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+      "path": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    },
+    "Command Prompt": {
+      "path": [
+        "${env:windir}\\Sysnative\\cmd.exe",
+        "${env:windir}\\System32\\cmd.exe",
+      ],
+      "args": [],
+      "icon": "terminal-cmd",
+    },
+    "Git Bash": {
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "args": ["--login", "-i"],
+    },
+  },
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-5-mini",
+  "gitlens.gitCommands.skipConfirmations": [
+    "fetch:command",
+    "stash-push:command",
+    "startWork:command",
+  ],
+  "workbench.colorTheme": "5ca2846d-31a9-40b3-8908-965dad3c127d",
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "*.vsix": "default",
+  },
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Acceso Bloqueado</title>
+    <link rel="stylesheet" href="../static/css/lock_screen.css">
+    <script src="../static/js/biometricAuth.js" defer></script>
+    <script src="../static/js/authInterceptor.js" defer></script>
+    <script src="../static/js/wsAuthInterceptor.js" defer></script>
+</head>
+<body>
+    <div class="lock-container">
+        <div class="lock-logo">
+            <img src="../static/images/aura-logo.png" alt="AURA Logo">
+        </div>
+        <div class="lock-message">
+            <h1>Acceso Bloqueado</h1>
+            <p>Su sesión ha expirado o no se pudo validar la autenticación.</p>
+            <p>Por favor autentíquese nuevamente con su biométrica.</p>
+        </div>
+        <div class="lock-button-container">
+            <button id="retryAuth" class="lock-button">Autenticarse con Biométrica</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('retryAuth').addEventListener('click', async () => {
+            try {
+                // Intentar autenticación biométrica
+                const token = await window.authenticateBiometrically();
+
+                if (token) {
+                    // Configurar interceptores de autenticación
+                    await window.configureWSAuthInterceptor();
+
+                    // Redirigir a la pantalla principal
+                    window.location.href = '/dashboard.html';
+                }
+            } catch (error) {
+                console.error('Error al intentar autenticación:', error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'aura-prod'
+
+scrape_configs:
+  - job_name: 'aura-cluster'
+    static_configs:
+      - targets:
+          - 'backend_1:8001'
+          - 'backend_2:8002'
+          - 'backend_3:8003'
+        labels:
+          cluster: 'aura-prod'
+
+  - job_name: 'redis-cluster'
+    static_configs:
+      - targets: ['redis:6379']
+
+  - job_name: 'nginx-lb'
+    static_configs:
+      - targets: ['nginx:80']
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []

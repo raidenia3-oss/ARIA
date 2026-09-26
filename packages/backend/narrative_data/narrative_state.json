@@ -1,0 +1,34 @@
+{
+  "characters": {
+    "Aria": {
+      "name": "Aria",
+      "personality": "curiosa, valiente, impulsiva",
+      "background": "Exploradora de galaxias perdidas",
+      "relationships": {},
+      "emotional_state": {
+        "joy": 0.5,
+        "anger": 0.0,
+        "fear": 0.0,
+        "sadness": 0.0,
+        "surprise": 0.0
+      },
+      "memories": [],
+      "voice_pattern": ""
+    }
+  },
+  "plots": {
+    "La Senda del Vacío": {
+      "title": "La Senda del Vacío",
+      "genre": "ciencia ficción",
+      "main_conflict": "Aria debe encontrar un planeta perdido antes de que una flota enemiga lo destruya",
+      "resolution": "",
+      "themes": [
+        "exploración",
+        "sacrificio",
+        "identidad"
+      ],
+      "pacing": "moderate",
+      "chapters": []
+    }
+  }
+}
