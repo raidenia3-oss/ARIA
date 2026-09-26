@@ -4,6 +4,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv('ARIA_APP/backend/.env')
 token = os.getenv('GITHUB_TOKEN')
+if not token:
+    raise RuntimeError("GITHUB_TOKEN environment variable is required. Set it before running this script.")
 from github import Github
 gh = Github(token)
 
@@ -59,6 +61,16 @@ issues = [
         'title': 'Research: Multi-agent swarms (from HashCortX, Pinvou-agent)',
         'body': '## Source Repositories\n- **Hash-7777/HashCortX** \u2b50153 \u2014 Local-first AI workspace with multi-agent swarms\n- **Pinvou/pinvou-agent** \u2b502,128 \u2014 Multi-agent desktop AI with skill marketplace\n\n## Why This Matters for ARIA\n- **Current**: Single agent with skills\n- **Future**: Swarm of specialized agents collaborating\n- **No backend**: Fully local, peer-to-peer agent communication\n- **3D visualization**: Agent swarms in Three.js space\n\n## Integration Plan\n1. Design agent communication protocol (MCP-based)\n2. Implement agent spawning/lifecycle management\n3. Create swarm coordinator for task decomposition\n4. Add 3D visualization of agent swarm in orb\n5. Implement consensus/voting for decisions\n\n## Swarm Architecture\n```\nUser Request\n    \u2193\nSwarm Coordinator (decomposes task)\n    \u2193\nAgent 1: Research \u2192 Agent 2: Code \u2192 Agent 3: Test \u2192 Agent 4: Review\n    \u2193\nConsensus \u2192 Result\n```\n\n## Acceptance Criteria\n- [ ] Multiple agents can spawn and communicate\n- [ ] Task decomposition working\n- [ ] Swarm visualization in Three.js orb\n- [ ] Consensus mechanism implemented\n- [ ] Benchmark: 3-agent swarm > single agent on complex tasks\n\n## Related Research\nSee: `ARIA_APP/github_research_report.md` (Tier 4, Items 13 & 1)',
         'labels': ['research', 'integration', 'multi-agent', 'swarm', 'architecture', 'low-priority']
+    },
+    {
+        'title': 'Feature: WebGPU Phase 2 — Post-processing & Compute Shaders',
+        'body': '## Objective\nImplement advanced WebGPU post-processing effects and compute shader pipelines for the orb visualization and HUD.\n\n## Scope\n1. Bloom/glow post-processing pass (HDR)\n2. Particle systems via compute shaders for orbital particles\n3. Real-time fluid simulation behind the orb (Smoothed Particle Hydrodynamics)\n4. Tone mapping — Serpantineum × Caelestia color palette\n5. WebGPU compute for brain orchestration state visualization\n\n## Reference\n- `v5/src/components/OrbVisual/OrbVisual.tsx` current implementation\n- `v5/src/components/OrbVisual/BackgroundShader.tsx` for shader patterns\n\n## Acceptance Criteria\n- [ ] Bloom post-processing pass (Three.js WebGLRenderer.toneMapping)\n- [ ] Compute shader particle system (8-12 orbital particles)\n- [ ] 60fps on integrated graphics\n- [ ] Color palette matches design system\n',
+        'labels': ['feature', 'webgpu', 'threejs', 'graphics', 'ui']
+    },
+    {
+        'title': 'Feature: Self-Improvement Loop Automation',
+        'body': '## Objective\nImplement an autonomous self-improvement loop that continuously evaluates, proposes, tests, and commits code changes.\n\n## Architecture\n```\n1. Evaluate: Run test suite + lint\n2. Plan: Identify failing tests / code quality issues\n3. Propose: Generate patches via Ollama\n4. Test: Run relevant tests on proposed changes\n5. Merge: Commit only if tests pass\n6. Reflect: Update improvement_state.json\n```\n\n## Integration Points\n- `backend/evolution/engine.py` — orchestrator\n- `backend/proactive/engine.py` — proactive task scheduling\n- `ai_providers.py` — Ollama for code generation\n- `ARIA_APP/memory/` — persistent improvement state\n\n## Acceptance Criteria\n- [ ] Automated test → patch → merge loop\n- [ ] Improvement state persisted in JSON\n- [ ] At least 1 improvement per 24h (auto or proposed)\n- [ ] Safety: no breaking changes without human approval\n',
+        'labels': ['feature', 'self-improvement', 'automation', 'evolution', 'medium-priority']
     }
 ]
 
@@ -72,3 +84,5 @@ for issue_data in issues:
         print('Created issue #' + str(issue.number) + ': ' + issue_data['title'][:60] + '...')
     except Exception as e:
         print('Failed: ' + issue_data['title'][:60] + '... - ' + str(e))
+
+print(f'\n✅ All {len(issues)} issues created!')
