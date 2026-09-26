@@ -26,6 +26,11 @@ _project_backend = str(APP_DIR.parent / "backend")
 if _project_backend not in sys.path:
     sys.path.insert(0, _project_backend)
 
+# Ensure ARIA_APP/backend is importable (github_admin, api modules live here)
+_aria_app_backend = str(APP_DIR)
+if _aria_app_backend not in sys.path:
+    sys.path.insert(0, _aria_app_backend)
+
 try:
     from ai_providers import AIProviderManager
 
