@@ -7,26 +7,27 @@ export default defineConfig(({ mode, command }) => {
   const isDev = mode === 'development' && command === 'serve'
 
   return {
+    root: '.',
     plugins: [
       react(),
-electron({
-            main: {
-              entry: 'electron/main.ts',
-              vite: {
-                build: {
-                  outDir: 'dist-electron',
-                  rollupOptions: {
-                    output: { format: 'cjs' },
-                    external: ['electron', 'electron/main'],
-                  },
-                },
-              },
-              onstart(args) {
-                if (process.env.VITE_DEV_SERVER_URL) {
-                  args.startupArgs = [process.env.VITE_DEV_SERVER_URL]
-                }
+      electron({
+        main: {
+          entry: 'electron/main.ts',
+          vite: {
+            build: {
+              outDir: 'dist-electron',
+              rollupOptions: {
+                output: { format: 'cjs' },
+                external: ['electron', 'electron/main'],
               },
             },
+          },
+          onstart(args) {
+            if (process.env.VITE_DEV_SERVER_URL) {
+              args.startupArgs = [process.env.VITE_DEV_SERVER_URL]
+            }
+          },
+        },
         preload: {
           input: 'electron/preload.ts',
           vite: {
@@ -35,7 +36,6 @@ electron({
             },
           },
         },
-        renderer: isDev ? {} : undefined,
       }),
     ],
     resolve: {

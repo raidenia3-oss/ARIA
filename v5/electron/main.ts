@@ -405,8 +405,50 @@ ipcMain.handle('self-improvement:status', async () => {
 })
 
 /* ------------------------------------------------------------------
-   IPC: settings
-   ------------------------------------------------------------------ */
+    IPC: Backend Test Hooks
+    ------------------------------------------------------------------ */
+ipcMain.handle('backend:test:chat', async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:${BACKEND_PORT}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'ping', mode: 'text' }),
+      signal: AbortSignal.timeout(30000),
+    })
+    const data = await response.json()
+    return { ok: true, response: data }
+  } catch (error) {
+    return { ok: false, error: String(error) }
+  }
+})
+
+ipcMain.handle('backend:test:memory', async () => {
+  try {
+    const [statusRes, memoryRes] = await Promise.all([
+      fetch(`http://127.0.0.1:${BACKEND_PORT}/api/system/status`),
+      fetch(`http://127.0.0.1:${BACKEND_PORT}/api/memory/recent?limit=5`),
+    ])
+    const statusData = await statusRes.json()
+    const memoryData = await memoryRes.json()
+    return { ok: true, systemStatus: statusData, memoryRecent: memoryData }
+  } catch (error) {
+    return { ok: false, error: String(error) }
+  }
+})
+
+ipcMain.handle('backend:test:ai', async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:${BACKEND_PORT}/api/ai/status`)
+    const data = await response.json()
+    return { ok: true, ...data }
+  } catch (error) {
+    return { ok: false, error: String(error) }
+  }
+})
+
+/* ------------------------------------------------------------------
+    IPC: settings
+    ------------------------------------------------------------------ */
 ipcMain.handle('settings:get', async () => readSettings())
 ipcMain.handle('settings:set', async (_event, settings: unknown) => writeSettings(settings))
 

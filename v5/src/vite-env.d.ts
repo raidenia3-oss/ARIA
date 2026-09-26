@@ -44,6 +44,10 @@ export interface ElectronAPI {
   selfImprovementCycle: () => Promise<unknown>
   selfImprovementStatus: () => Promise<unknown>
 
+  backendTestChat: () => Promise<{ ok: boolean; response?: unknown; error?: string }>
+  backendTestMemory: () => Promise<{ ok: boolean; systemStatus?: unknown; memoryRecent?: unknown; error?: string }>
+  backendTestAI: () => Promise<{ ok: boolean; enabled?: boolean; providers?: unknown; error?: string }>
+
   notificationShow: (title: string, body: string) => Promise<void>
 }
 

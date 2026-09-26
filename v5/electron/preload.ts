@@ -36,6 +36,11 @@ const api = {
   selfImprovementCycle: () => ipcRenderer.invoke('self-improvement:cycle'),
   selfImprovementStatus: () => ipcRenderer.invoke('self-improvement:status'),
 
+  // Backend Test Hooks
+  backendTestChat: () => ipcRenderer.invoke('backend:test:chat'),
+  backendTestMemory: () => ipcRenderer.invoke('backend:test:memory'),
+  backendTestAI: () => ipcRenderer.invoke('backend:test:ai'),
+
   // Notifications
   notificationShow: (title: string, body: string) => ipcRenderer.invoke('notification:show', title, body),
 }

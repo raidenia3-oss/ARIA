@@ -10,6 +10,7 @@ import { ControlCenter } from './components/Controls/ControlCenter'
 import { orbStates, useOrbState } from './hooks/useOrbState'
 import { useChat } from './hooks/useChat'
 import { useSettings } from './hooks/useSettings'
+import { useBackendTest } from './hooks/useBackendTest'
 
 /** Blip corto de confirmación (WebAudio, sin assets) */
 function blip() {
@@ -38,9 +39,11 @@ function blip() {
 export default function App() {
   const [showControl, setShowControl] = useState(false)
   const [showSkills, setShowSkills] = useState(true)
+  const [showDebug, setShowDebug] = useState(false)
   const { orbState, setOrbState } = useOrbState()
   const { settings, updateSettings } = useSettings()
   const chat = useChat(setOrbState, { stream: settings.streaming })
+  const backendTest = useBackendTest()
   const status = orbStates[orbState]
 
   useEffect(() => {
@@ -61,6 +64,23 @@ export default function App() {
     else setOrbState((prev) => (prev === 'listening' ? 'idle' : prev))
   }
 
+  const handleRunTests = () => {
+    console.log('🔬 [ARIA] Starting backend test hooks...')
+    void backendTest.testAll()
+  }
+
+  useEffect(() => {
+    if (backendTest.results.length > 0) {
+      for (const result of backendTest.results) {
+        if (result.success) {
+          console.log(`✅ ${result.name} response:`, JSON.stringify(result.data).substring(0, 200))
+        } else {
+          console.log(`❌ ${result.name} error:`, result.error)
+        }
+      }
+    }
+  }, [backendTest.results])
+
   return (
     <div className="relative flex h-screen w-full flex-col overflow-hidden chat-gradient select-none">
       <BackgroundShader />
@@ -73,6 +93,52 @@ export default function App() {
         onSkillsToggle={() => setShowSkills((value) => !value)}
         onControlClick={() => setShowControl((value) => !value)}
       />
+
+      {showDebug && (
+        <div className="absolute bottom-4 right-4 z-50 flex flex-col gap-2">
+          <div className="glass-panel rounded-lg p-3 text-xs">
+            <div className="mb-2 flex gap-2">
+              <button
+                onClick={handleRunTests}
+                disabled={backendTest.testing}
+                className="rounded-lg bg-cyan-500/20 px-3 py-1 font-medium text-cyan-400 hover:bg-cyan-500/30 disabled:opacity-50"
+              >
+                {backendTest.testing ? 'Testing...' : 'Test Backend'}
+              </button>
+              <button
+                onClick={backendTest.clear}
+                className="rounded-lg bg-gray-500/20 px-2 py-1 text-gray-400"
+              >
+                Clear
+              </button>
+              <button
+                onClick={() => setShowDebug(false)}
+                className="rounded-lg bg-gray-500/20 px-2 py-1 text-gray-400"
+              >
+                ✕
+              </button>
+            </div>
+            {backendTest.results.length > 0 && (
+              <div className="max-h-60 w-64 space-y-1 overflow-y-auto">
+                {backendTest.results.map((r, i) => (
+                  <div key={i} className={`rounded px-2 py-1 ${r.success ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                    {r.success ? '✅' : '❌'} {r.name} ({r.latency}ms)
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!showDebug && (
+        <button
+          onClick={() => setShowDebug(true)}
+          className="fixed bottom-4 right-4 z-50 rounded-full bg-gray-800/50 px-2 py-1 text-xs text-gray-500 opacity-30 hover:opacity-100"
+        >
+          🐛
+        </button>
+      )}
 
       <div className="relative z-10 flex min-h-0 flex-1 overflow-hidden">
         <AnimatePresence initial={false}>

@@ -2,17 +2,18 @@
   "name": "aria-os-v5",
   "version": "5.0.0",
   "description": "ARIA OS v5.0 — Electron + React + Three.js Desktop Assistant",
-  "main": "electron/main.js",
+  "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
-    "dev:electron": "concurrently -k \"npm:dev\" \"npm:start\"",
+    "dev:electron": "concurrently -k \"npm:dev\" \"npm:start:win\"",
     "typecheck": "tsc --noEmit",
     "build": "npm run build:renderer",
     "build:renderer": "vite build",
     "build:exe": "npm run build && electron-builder --win",
     "preview": "vite preview",
     "make": "npm run build && electron-builder",
-    "start": "electron electron/main.js"
+    "start": "electron dist-electron/main.js",
+    "start:win": "powershell -Command \"Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue; npx electron dist-electron/main.js\""
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.0",
@@ -29,10 +30,11 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.160.0",
-    "@vitejs/plugin-react": "^4.0.0",
+    "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.0",
     "concurrently": "^8.2.0",
     "electron": "^30.5.1",
