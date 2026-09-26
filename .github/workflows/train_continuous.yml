@@ -40,14 +40,14 @@ jobs:
           python training/scripts/orchestrator.py --skip-synthetic --epochs 1 --max-samples 100
 
       - name: Upload LoRA adapter as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aura-finetuned-lora
           path: fine-tuned-ame/aura_finetuned_lora/
           if-no-files-found: warn
 
       - name: Upload orchestrator report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: orchestrator-report
           path: training/output/orchestrator_report.json

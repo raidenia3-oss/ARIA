@@ -40,7 +40,7 @@ jobs:
       run: python tests/verify_all_systems.py || true
 
     - name: Upload verification report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v7
       with:
         name: verification-report
         path: verification_report.*
