@@ -30,7 +30,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "telegraf": "^4.16.3",
-    "zustand": "^5.0.14"
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@capacitor/android": "^6.1.0",
