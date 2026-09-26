@@ -125,7 +125,7 @@ jobs:
         run: pytest tests/test_omniroute.py -v -m "not integration"
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v7
         with:
           files: ./coverage.xml
 
