@@ -156,7 +156,7 @@ class ARIASelfImprovement:
 
             config = CommitConfig(
                 repo_path=self.repo_path,
-                branch="main",
+                branch="master",
                 push_after_commit=True
             )
             committed = self.auto_commit.auto_commit(

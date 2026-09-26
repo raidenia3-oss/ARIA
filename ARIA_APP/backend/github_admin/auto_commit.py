@@ -57,7 +57,9 @@ class AutoCommit:
             ["git", "-C", repo_path] + args,
             env=env,
             capture_output=True,
-            text=True
+            text=True,
+            encoding="utf-8",
+            errors="replace",
         )
 
     def is_git_repo(self, repo_path: str) -> bool:
