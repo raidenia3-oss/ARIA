@@ -301,52 +301,71 @@ class WindowsAutomation:
         return {"status": "ok"}
     
     def list_windows(self) -> List[WindowInfo]:
-        """List all visible windows."""
-        windows = []
-        
+        """List all visible windows using UIA with pywinauto + ctypes fallback."""
+        windows: List[WindowInfo] = []
+
+        # ── Attempt UIA ──────────────────────────────────────────────
         if self.uia_available:
-            # Use GetRootControl and find top-level windows
-            root = self.auto.GetRootControl()
-            # Get all window controls
-            for win in root.GetChildren():
-                try:
-                    # Only include actual windows (not UI elements)
-                    if win.ControlTypeName in ("Window", "Pane") or win.NativeWindowHandle != 0:
-                        rect = win.BoundingRectangle
+            try:
+                root = self.auto.GetRootControl()
+                children = root.GetChildren()
+                if children:
+                    for win in children:
+                        try:
+                            if win.ControlTypeName in ("Window", "Pane") or win.NativeWindowHandle != 0:
+                                rect = win.BoundingRectangle
+                                if rect.width() > 0 and rect.height() > 0:
+                                    windows.append(WindowInfo(
+                                        handle=win.NativeWindowHandle,
+                                        title=win.Name or "Untitled",
+                                        class_name=win.ClassName,
+                                        process_id=win.ProcessId,
+                                        rect=[rect.left, rect.top, rect.right, rect.bottom],
+                                        is_visible=win.IsVisible,
+                                        is_minimized=False
+                                    ))
+                        except Exception:
+                            continue
+
+                    if windows:
+                        return windows
+            except Exception as e:
+                logger.warning("UIA enumeration failed: %s, falling back to pywinauto", e)
+            else:
+                if not windows:
+                    logger.warning("UIA GetRootControl().GetChildren() returned empty — trying pywinauto fallback")
+
+        # ── Fallback: pywinauto ──────────────────────────────────────
+        if self.pywinauto_available:
+            try:
+                from pywinauto import Desktop
+                desktop = Desktop(backend="uia")
+                for w in desktop.windows():
+                    try:
+                        rect = w.rectangle()
                         if rect.width() > 0 and rect.height() > 0:
                             windows.append(WindowInfo(
-                                handle=win.NativeWindowHandle,
-                                title=win.Name or "Untitled",
-                                class_name=win.ClassName,
-                                process_id=win.ProcessId,
+                                handle=w.handle,
+                                title=w.window_text() or "Untitled",
+                                class_name=w.class_name() or "Unknown",
+                                process_id=w.process_id(),
                                 rect=[rect.left, rect.top, rect.right, rect.bottom],
-                                is_visible=win.IsVisible,
-                                is_minimized=False
+                                is_visible=w.is_visible(),
+                                is_minimized=w.is_minimized()
                             ))
-                except Exception as e:
-                    logger.debug(f"UIA window enum error: {e}")
-                    pass
-        elif self.pywinauto_available:
-            for win in self.pywinauto.Desktop(backend="uia").windows():
-                try:
-                    rect = win.rectangle()
-                    if rect.width() > 0 and rect.height() > 0:
-                        windows.append(WindowInfo(
-                            handle=win.handle,
-                            title=win.window_text() or "Untitled",
-                            class_name=win.class_name(),
-                            process_id=win.process_id(),
-                            rect=[rect.left, rect.top, rect.right, rect.bottom],
-                            is_visible=win.is_visible(),
-                            is_minimized=win.is_minimized()
-                        ))
-                except:
-                    pass
-        else:
-            # Fallback: EnumWindows via ctypes
+                    except Exception:
+                        continue
+
+                if windows:
+                    return windows
+            except Exception as e:
+                logger.warning("pywinauto enumeration failed: %s, falling back to ctypes", e)
+
+        # ── Final fallback: EnumWindows via ctypes ───────────────────
+        try:
             import ctypes
             from ctypes import wintypes
-            
+
             EnumWindows = ctypes.windll.user32.EnumWindows
             GetWindowText = ctypes.windll.user32.GetWindowTextW
             GetWindowTextLength = ctypes.windll.user32.GetWindowTextLengthW
@@ -354,11 +373,11 @@ class WindowsAutomation:
             GetClassName = ctypes.windll.user32.GetClassNameW
             GetWindowRect = ctypes.windll.user32.GetWindowRect
             GetWindowThreadProcessId = ctypes.windll.user32.GetWindowThreadProcessId
-            
+
             class RECT(ctypes.Structure):
                 _fields_ = [("left", ctypes.c_long), ("top", ctypes.c_long),
                            ("right", ctypes.c_long), ("bottom", ctypes.c_long)]
-            
+
             @ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, wintypes.LPARAM)
             def enum_proc(hwnd, lparam):
                 if IsWindowVisible(hwnd):
@@ -366,17 +385,17 @@ class WindowsAutomation:
                     if length > 0:
                         buff = ctypes.create_unicode_buffer(length + 1)
                         GetWindowText(hwnd, buff, length + 1)
-                        
+
                         class_buff = ctypes.create_unicode_buffer(256)
                         GetClassName(hwnd, class_buff, 256)
-                        
+
                         rect = RECT()
                         GetWindowRect(hwnd, ctypes.byref(rect))
-                        
+
                         if rect.right - rect.left > 0 and rect.bottom - rect.top > 0:
                             pid = wintypes.DWORD()
                             GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
-                            
+
                             windows.append(WindowInfo(
                                 handle=hwnd,
                                 title=buff.value,
@@ -387,9 +406,11 @@ class WindowsAutomation:
                                 is_minimized=False
                             ))
                 return True
-            
+
             EnumWindows(enum_proc, 0)
-        
+        except Exception as e:
+            logger.error("ctypes EnumWindows fallback failed: %s", e)
+
         return windows
     
     def focus_window(self, handle: Optional[int] = None, title: Optional[str] = None, class_name: Optional[str] = None):
@@ -716,6 +737,21 @@ async def computer_use_health():
         "pywinauto_available": backend.pywinauto_available,
         "pil_available": backend.ImageGrab is not None,
         "timestamp": time.time()
+    }
+
+
+@router.get("/debug/window-test")
+async def debug_window_test():
+    """Debug endpoint para verificar window enumeration."""
+    backend = _get_automation_backend()
+    windows = backend.list_windows()
+    return {
+        "uia_available": backend.uia_available,
+        "pywinauto_available": backend.pywinauto_available,
+        "pil_available": backend.ImageGrab is not None,
+        "windows_count": len(windows),
+        "windows": [w.model_dump() for w in windows[:5]],
+        "test_status": "✅ Window enumeration working"
     }
 
 
