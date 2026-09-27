@@ -9,6 +9,8 @@ import { SkillsSidebar } from './components/Skills/SkillsSidebar'
 import { ControlCenter } from './components/Controls/ControlCenter'
 import { NeuralBrain } from './components/NeuralBrain/NeuralBrain'
 import { SkillCircle } from './components/SkillCircle/SkillCircle'
+import { GodsEyeView } from './components/GodsEyeView/GodsEyeView'
+import { JarvisVoice } from './components/JarvisVoice/JarvisVoice'
 import { orbStates, useOrbState } from './hooks/useOrbState'
 import { useChat } from './hooks/useChat'
 import { useSettings } from './hooks/useSettings'
@@ -183,6 +185,14 @@ export default function App() {
               </span>
               <SkillCircle />
             </div>
+
+            {/* Phase O: Gods Eye View */}
+            <div className="glass-panel hidden h-[420px] w-[420px] flex-col items-center rounded-2xl p-3 2xl:flex">
+              <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-accent-orange">
+                ◎ God's Eye
+              </span>
+              <GodsEyeView />
+            </div>
           </div>
 
           <div className="glass-panel mb-3 flex min-h-0 w-full max-w-3xl flex-1 flex-col overflow-hidden">
@@ -197,6 +207,11 @@ export default function App() {
             />
           </div>
         </main>
+      </div>
+
+      {/* Phase Q: Jarvis Voice (floating) */}
+      <div className="fixed bottom-4 left-4 z-40">
+        <JarvisVoice />
       </div>
 
       <AnimatePresence>

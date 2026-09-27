@@ -65,8 +65,8 @@ export function GodsEyeView() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { points } = useGeospatial()
   const [zoom, setZoom] = useState(3)
-  const [center, setCenter] = useState<[number, number]>([0, 0])
-  const [selectedPoint, setSelectedPoint] = useState<GeoPoint | null>(null)
+  const [center] = useState<[number, number]>([0, 0])
+  const [selectedPoint] = useState<GeoPoint | null>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
