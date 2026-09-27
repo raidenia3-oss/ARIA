@@ -1,0 +1,39 @@
+graph TB
+    subgraph ARIA_v6[ARIA v6.0 Stack]
+        direction TB
+        
+        subgraph FRONTEND[Tauri + React 19]
+            NB[Neural Brain Dashboard - Phase N]
+            GE[God's Eye View - Phase O]
+            SP[Skill Progression - Phase P]
+            JV[Jarvis Voice - Phase Q]
+            ORB[Orb 3D - 7 layers]
+        end
+        
+        subgraph BACKEND[Axum Rust - Phase L.2.5]
+            ROUTER[API Router - 302 routes]
+            AGENTS[Agent Swarm - 4 agents]
+            SESSIONS[Session Manager]
+            HARNESS[Agent Harness]
+            GITHUB[GitHub Admin]
+            COMP[Computer Control]
+        end
+        
+        subgraph SERVICES[External Services]
+            OLLAMA[Ollama - dolphin-2_6-phi-2]
+            LM[LongMemory - episodic]
+            VDB[Vector DB]
+            SWARM[Multi-Agent Swarm]
+        end
+    end
+    
+    FRONTEND -->|IPC / REST| BACKEND
+    BACKEND -->|HTTP| OLLAMA
+    BACKEND -->|HTTP| LM
+    BACKEND -->|HTTP| VDB
+    AGENTS --> SWARM
+    
+    style ARIA_v6 fill:#0f172a,stroke:#38bdf8,stroke-width:3px
+    style FRONTEND fill:#1e293b,stroke:#a78bfa
+    style BACKEND fill:#1e293b,stroke:#38bdf8
+    style SERVICES fill:#0f172a,stroke:#64748b

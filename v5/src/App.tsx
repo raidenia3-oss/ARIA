@@ -7,6 +7,8 @@ import { ChatPanel } from './components/Chat/ChatPanel'
 import { ChatInput } from './components/Chat/ChatInput'
 import { SkillsSidebar } from './components/Skills/SkillsSidebar'
 import { ControlCenter } from './components/Controls/ControlCenter'
+import { NeuralBrain } from './components/NeuralBrain/NeuralBrain'
+import { SkillCircle } from './components/SkillCircle/SkillCircle'
 import { orbStates, useOrbState } from './hooks/useOrbState'
 import { useChat } from './hooks/useChat'
 import { useSettings } from './hooks/useSettings'
@@ -157,12 +159,30 @@ export default function App() {
         </AnimatePresence>
 
         <main className="flex min-h-0 flex-1 flex-col items-center px-4 py-3">
-          <div className="relative mb-1 h-[230px] w-[230px] shrink-0 md:h-[268px] md:w-[268px]">
-            <div
-              className="orb-halo"
-              style={{ background: `radial-gradient(circle, ${status.glow} 0%, transparent 68%)` }}
-            />
-            <OrbVisual phase={orbState} animated={settings.animations} />
+          <div className="relative mb-1 flex w-full max-w-5xl items-start justify-center gap-4">
+            <div className="flex flex-col items-center">
+              <div
+                className="orb-halo"
+                style={{ background: `radial-gradient(circle, ${status.glow} 0%, transparent 68%)` }}
+              />
+              <OrbVisual phase={orbState} animated={settings.animations} />
+            </div>
+
+            {/* Phase N: Neural Brain Dashboard */}
+            <div className="glass-panel hidden w-[420px] flex-col items-center rounded-2xl p-3 lg:flex">
+              <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-accent-purple">
+                ◈ Neural Brain
+              </span>
+              <NeuralBrain />
+            </div>
+
+            {/* Phase P: Skill Progression Circle */}
+            <div className="glass-panel hidden flex-col items-center rounded-2xl p-3 xl:flex">
+              <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-accent-green">
+                ◇ Skill Progression
+              </span>
+              <SkillCircle />
+            </div>
           </div>
 
           <div className="glass-panel mb-3 flex min-h-0 w-full max-w-3xl flex-1 flex-col overflow-hidden">

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ARIA")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b522ecfe9b69933398879b09fd401b1dda75002a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2648ecf57a095c39f2acfb910e6fe342b070aa3a")]
 [assembly: System.Reflection.AssemblyProductAttribute("ARIA")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ARIA")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

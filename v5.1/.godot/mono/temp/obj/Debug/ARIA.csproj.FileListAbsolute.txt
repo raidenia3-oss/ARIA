@@ -1,0 +1,6 @@
+C:\Users\User\Downloads\AURA\v5.1\.godot\mono\temp\obj\Debug\ARIA.csproj.AssemblyReference.cache
+C:\Users\User\Downloads\AURA\v5.1\.godot\mono\temp\obj\Debug\ARIA.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Downloads\AURA\v5.1\.godot\mono\temp\obj\Debug\ARIA.AssemblyInfoInputs.cache
+C:\Users\User\Downloads\AURA\v5.1\.godot\mono\temp\obj\Debug\ARIA.AssemblyInfo.cs
+C:\Users\User\Downloads\AURA\v5.1\.godot\mono\temp\obj\Debug\ARIA.csproj.CoreCompileInputs.cache
+C:\Users\User\Downloads\AURA\v5.1\.godot\mono\temp\obj\Debug\ARIA.sourcelink.json

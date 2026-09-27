@@ -1,5 +1,6 @@
 """ARIA Self-Improvement Skill -- Autonomous GitHub-driven improvement loop."""
 
+import asyncio
 import logging
 import os
 import subprocess
@@ -27,8 +28,111 @@ except ImportError:
 from github_admin import GitHubAdminClient, AutoCommit, AutoRelease, PRAnalyzer, IssueManager, DocGenerator
 from backend.skills.registry import SkillRegistry
 from api.agent_harness import harness
+from api.swarm_router import get_swarm, skill_registry
 
 logger = logging.getLogger(__name__)
+
+# Phase H.5: Pi Agent skill-to-agent dispatch map
+SKILL_AGENT_MAP = {
+    "code-review": "CodeAnalyzer",
+    "docs": "DocsWriter",
+    "test": "Tester",
+    "research": "ResearchAgent",
+}
+
+# Phase H.5: Custom prompt templates per skill (Pi Agent pattern)
+SKILL_PROMPTS = {
+    "code-review": "Review the following code changes for quality, security vulnerabilities, "
+                  "performance issues, and adherence to best practices. Be thorough and specific.",
+    "docs": "Generate comprehensive, well-structured documentation for the following changes. "
+            "Include clear headings, code examples, and usage instructions.",
+    "test": "Write and execute thorough tests for the following features. "
+            "Report test coverage percentage and any failures with detailed error messages.",
+    "research": "Research the given topic or URL across social media and web sources. "
+                "Analyze content importance, classify topics, and extract key insights.",
+}
+
+# Phase H.5: LongMemory session tracking
+_LM_SESSION_ID = None
+
+
+def _get_lm_session_id() -> str:
+    """Get or create a LongMemory session for this improvement cycle."""
+    global _LM_SESSION_ID
+    if _LM_SESSION_ID is None:
+        _LM_SESSION_ID = f"auto-improve-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+    return _LM_SESSION_ID
+
+
+async def _store_session_memory(results: Dict[str, Any]):
+    """Store improvement cycle results in LongMemory (Pi Agent session pattern)."""
+    try:
+        import urllib.request
+        import json as _json
+        lm_url = os.environ.get("LONGMEMORY_URL", "http://127.0.0.1:7331")
+        payload = _json.dumps({
+            "user_id": "aria",
+            "text": f"Auto-improvement cycle {_get_lm_session_id()}: {results.get('actions', [])}",
+            "metadata": {
+                "type": "session",
+                "session_id": _get_lm_session_id(),
+                "cycle_timestamp": results.get("timestamp", ""),
+            },
+            "facet_hint": "episodic",
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            f"{lm_url}/v1/ingest",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            urllib.request.urlopen(req, timeout=5)
+        except Exception:
+            pass  # Best-effort — LongMemory may not be running
+    except Exception:
+        pass
+
+
+def _detect_changed_skills(commits: List[str]) -> List[str]:
+    """Map changed files to skill categories for swarm dispatch."""
+    changed_skills = []
+    skill_keywords = {
+        "code-review": [".py", ".js", ".ts", ".tsx", ".jsx"],
+        "docs": [".md", "README", "docs/", "CHANGELOG"],
+        "test": ["test", "spec", "tests/"],
+        "research": ["research", "social", "video"],
+    }
+    for commit in commits:
+        for skill, extensions in skill_keywords.items():
+            if any(ext in commit.lower() for ext in extensions):
+                if skill not in changed_skills:
+                    changed_skills.append(skill)
+    return changed_skills
+
+
+async def _dispatch_swarm_agents(changed_skills: List[str], commit_hash: str = "") -> List[Dict]:
+    """Dispatch swarm agents based on detected changed skills (Phase H.5)."""
+    swarm = get_swarm()
+    tasks = []
+    for skill in changed_skills:
+        agent_name = skill_registry.get_agent_for_skill(skill)
+        if agent_name:
+            prompt = SKILL_PROMPTS.get(skill, "")
+            tasks.append({
+                "skill": skill,
+                "agent": agent_name,
+                "commit": commit_hash,
+                "system_prompt": prompt,
+            })
+    if not tasks:
+        return []
+    try:
+        results = await swarm.execute_parallel(tasks)
+        return results
+    except Exception as e:
+        logger.error(f"Swarm dispatch failed: {e}")
+        return [{"status": "error", "error": str(e)}]
 
 
 class ARIASelfImprovement:
@@ -149,6 +253,38 @@ class ARIASelfImprovement:
         # 6. Create improvement proposals
         proposals = self._create_improvement_proposals()
         results["actions"].append({"action": "improvement_proposals", "proposals": proposals})
+
+        # Phase H.5: Dispatch swarm agents based on changed skills
+        try:
+            # Get recent commits to detect changed skills
+            recent_commits = []
+            try:
+                commit_result = subprocess.run(
+                    ["git", "log", "--oneline", "-5"],
+                    cwd=self.repo_path, capture_output=True, text=True, timeout=5
+                )
+                if commit_result.returncode == 0:
+                    recent_commits = commit_result.stdout.strip().split("\n")
+            except Exception:
+                pass
+
+            changed_skills = _detect_changed_skills(recent_commits)
+            if changed_skills:
+                swarm_results = asyncio.run(_dispatch_swarm_agents(changed_skills))
+                results["actions"].append({
+                    "action": "swarm_dispatch",
+                    "skills_detected": changed_skills,
+                    "results": swarm_results,
+                })
+                logger.info(f"[H.5] Swarm dispatched for skills: {changed_skills}")
+        except Exception as e:
+            logger.warning(f"[H.5] Swarm dispatch skipped: {e}")
+
+        # Phase H.5: Store session in LongMemory
+        try:
+            asyncio.run(_store_session_memory(results))
+        except Exception:
+            pass
 
         logger.info(f"[OK] Self-improvement cycle complete: {len(results['actions'])} actions")
         return results
