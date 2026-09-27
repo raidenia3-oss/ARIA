@@ -11,11 +11,11 @@ export interface OrbPhaseTheme {
 
 /** Estados y colores del orbe (Serpantinum · Caelestia palette) */
 export const orbStates: Record<OrbPhase, OrbPhaseTheme> = {
-  idle: { primary: '#38bdf8', glow: 'rgba(56, 189, 248, 0.8)', label: 'Ready' },
-  thinking: { primary: '#f59e0b', glow: 'rgba(245, 158, 11, 0.8)', label: 'Processing' },
-  responding: { primary: '#00d4ff', glow: 'rgba(0, 212, 255, 1)', label: 'Speaking' },
-  listening: { primary: '#b066ff', glow: 'rgba(176, 102, 255, 0.8)', label: 'Listening' },
-  wisdom: { primary: '#ffffff', glow: 'rgba(167, 139, 234, 0.95)', label: 'Gran Sabio' },
+  idle: { primary: '#38bdf8', glow: 'rgba(56, 189, 248, 0.8)', label: 'Gran Sabio' },
+  thinking: { primary: '#f59e0b', glow: 'rgba(245, 158, 11, 0.8)', label: 'Calculando' },
+  responding: { primary: '#00d4ff', glow: 'rgba(0, 212, 255, 1)', label: 'Respuesta' },
+  listening: { primary: '#b066ff', glow: 'rgba(176, 102, 255, 0.8)', label: 'Escuchando' },
+  wisdom: { primary: '#ffffff', glow: 'rgba(245, 193, 108, 0.95)', label: 'Ciel' },
 }
 
 export interface OrbStateController {

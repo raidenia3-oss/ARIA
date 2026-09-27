@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useSkillStore, Ability, Race } from '../../store/skillStore'
+import { useState } from 'react'
+import { Ability } from '../../store/skillStore'
 import styles from './styles.module.css'
 
 interface SkillCircleProps {

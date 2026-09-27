@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useSkillStore, Ability, Race } from '../../store/skillStore'
 import { SkillCircle } from './SkillCircle'
 import styles from './styles.module.css'
