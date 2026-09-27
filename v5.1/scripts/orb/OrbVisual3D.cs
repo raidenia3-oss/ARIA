@@ -44,7 +44,7 @@ namespace ARIA.Orb
             sphereMesh.Rings = 32;
             _coreMesh.Mesh = sphereMesh;
 
-            var shader = GD.Load<Shader>("res://shaders/orb_shader.gdshader");
+            var shader = GD.Load<Shader>("res://assets/shaders/orb_shader.gdshader");
             var material = new ShaderMaterial();
             material.Shader = shader;
             material.SetShaderParameter("base_color", BaseColor);
@@ -65,7 +65,7 @@ namespace ARIA.Orb
             _orbitParticles.OneShot = false;
             _orbitParticles.ProcessMaterial = new ShaderMaterial();
             
-            var particleShader = GD.Load<Shader>("res://shaders/particle_shader.gdshader");
+            var particleShader = GD.Load<Shader>("res://assets/shaders/particle_shader.gdshader");
             (_orbitParticles.ProcessMaterial as ShaderMaterial).Shader = particleShader;
             (_orbitParticles.ProcessMaterial as ShaderMaterial).SetShaderParameter("particle_color", ParticleColor);
             (_orbitParticles.ProcessMaterial as ShaderMaterial).SetShaderParameter("trail_color", TrailColor);

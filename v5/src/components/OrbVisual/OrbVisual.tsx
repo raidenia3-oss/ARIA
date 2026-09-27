@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import type { OrbPhase } from '../../hooks/useOrbState'
-import { useEffectComposer } from './useEffectComposer'
+import { EffectComposer } from 'three-stdlib'
+import { RenderPass } from 'three-stdlib'
+import { UnrealBloomPass } from 'three-stdlib'
 
 /** Colores por estado — Serpantinum × Caelestia */
 const PHASE_COLORS: Record<OrbPhase, { core: string; glow: string }> = {
@@ -464,13 +466,15 @@ export interface OrbVisualProps {
 export function OrbVisual({ phase, animated = true }: OrbVisualProps) {
   const hostRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<OrbScene | null>(null)
-  const composerRef = useRef<ReturnType<typeof useEffectComposer>>(null)
+  const composerRef = useRef<EffectComposer | null>(null)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     const host = hostRef.current
     if (!host) return
     const scene = new OrbScene(host)
     sceneRef.current = scene
+    setReady(true)
     return () => {
       scene.dispose()
       sceneRef.current = null
@@ -478,14 +482,28 @@ export function OrbVisual({ phase, animated = true }: OrbVisualProps) {
   }, [])
 
   useEffect(() => {
-    if (sceneRef.current) {
-      composerRef.current = useEffectComposer(
-        sceneRef.current.renderer,
-        sceneRef.current.scene,
-        sceneRef.current.camera
-      )
+    if (!sceneRef.current || !ready) return
+    const renderer = sceneRef.current.renderer
+    const scene = sceneRef.current.scene
+    const camera = sceneRef.current.camera
+    const composer = new EffectComposer(renderer)
+    composer.setSize(window.innerWidth, window.innerHeight)
+    const renderPass = new RenderPass(scene, camera)
+    composer.addPass(renderPass)
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      1.5, 0.4, 0.85
+    )
+    composer.addPass(bloomPass)
+    composerRef.current = composer
+    const handleResize = () => composer.setSize(window.innerWidth, window.innerHeight)
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      composer.dispose()
+      composerRef.current = null
     }
-  }, [])
+  }, [ready])
 
   useEffect(() => {
     sceneRef.current?.setPhase(phase)
@@ -497,6 +515,7 @@ export function OrbVisual({ phase, animated = true }: OrbVisualProps) {
 
   // Animation loop using composer
   useEffect(() => {
+    if (!ready) return
     const animate = () => {
       requestAnimationFrame(animate)
       if (sceneRef.current) {
@@ -509,7 +528,7 @@ export function OrbVisual({ phase, animated = true }: OrbVisualProps) {
       }
     }
     animate()
-  }, [])
+  }, [ready])
 
   return <div ref={hostRef} className="orb-canvas" aria-hidden="true" />
 }
