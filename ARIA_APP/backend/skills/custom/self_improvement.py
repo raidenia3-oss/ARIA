@@ -26,6 +26,7 @@ except ImportError:
 
 from github_admin import GitHubAdminClient, AutoCommit, AutoRelease, PRAnalyzer, IssueManager, DocGenerator
 from backend.skills.registry import SkillRegistry
+from api.agent_harness import harness
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +102,12 @@ class ARIASelfImprovement:
             "auto_release": auto_release,
             "gen_docs": gen_docs,
         }
+
+        # NUEVO: Integrar Pi Agent harness
+        agent_config = harness.get_agent_config("self-improvement")
+        print(f"Agent running with skills: {[s['name'] for s in agent_config['skills']]}")
+        print(f"Custom prompt loaded: {agent_config['prompt'][:50]}...")
+        print(f"MCP servers available: {list(agent_config['mcp_servers'].keys())}")
 
         # 1. Auto-commit any pending changes
         if auto_commit:
@@ -279,8 +286,9 @@ class ARIASelfImprovement:
 
             return proposals
         except Exception as e:
-            logger.error(f"Improvement proposals failed: {e}")
-            return [{"error": str(e)}]
+            error_msg = str(e) if str(e) else repr(e)
+            logger.error(f"Improvement proposals failed: {error_msg}")
+            return [{"error": error_msg}]
 
     def trigger_from_webhook(self, event: str, payload: Dict) -> Dict[str, Any]:
         """Handle webhook events for reactive improvements"""

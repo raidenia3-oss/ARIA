@@ -439,13 +439,16 @@ class GitHubAdminClient:
             if not repo:
                 return None
 
-            issue = repo.create_issue(
+            kwargs = dict(
                 title=title,
                 body=body,
                 labels=labels or [],
                 assignees=assignees or [],
-                milestone=repo.get_milestone_by_title(milestone) if milestone else None
             )
+            if milestone:
+                kwargs["milestone"] = repo.get_milestone_by_title(milestone)
+
+            issue = repo.create_issue(**kwargs)
             logger.info(f"✅ Issue created: {repo_name}#{issue.number}")
             return {
                 "number": issue.number,

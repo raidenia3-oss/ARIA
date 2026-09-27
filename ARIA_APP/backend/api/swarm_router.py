@@ -19,7 +19,9 @@ from pydantic import BaseModel, Field
 from agents.base import Agent, AgentSwarm
 from agents.code_analyzer import CodeAnalyzerAgent
 from agents.docs_writer import DocsWriterAgent
+from agents.research import ResearchAgent
 from agents.tester import TesterAgent
+from skills.registry import harness
 
 logger = logging.getLogger("ARIA.Swarm")
 
@@ -32,6 +34,7 @@ router = APIRouter(prefix="/api/agents", tags=["agents"])
 swarm = AgentSwarm(name="ARIA-Swarm")
 swarm.register_agent(CodeAnalyzerAgent())
 swarm.register_agent(DocsWriterAgent())
+swarm.register_agent(ResearchAgent())
 swarm.register_agent(TesterAgent())
 
 
@@ -70,6 +73,11 @@ async def execute_parallel_tasks(request: SwarmTaskRequest):
                 swarm.execute_sequential(request.tasks),
                 timeout=60,
             )
+
+        # NUEVO: Log with harness config
+        for agent in swarm.agents:
+            config = harness.get_agent_config(agent.name)
+            print(f"Agent {agent.name} skills: {len(config['skills'])}")
 
         completed = len([r for r in results if r.get("status") == "success"])
         failed = len([r for r in results if r.get("status") == "error"])
@@ -188,6 +196,8 @@ skill_registry.register("docs", "DocsWriter",
     "Generate comprehensive, well-structured documentation. Include examples.")
 skill_registry.register("test", "Tester",
     "Write and execute thorough tests. Report coverage and any failures.")
+skill_registry.register("research", "ResearchAgent",
+    "Research social media content, videos, and web topics. Analyze importance and classify.")
 
 
 @router.get("/skills")
@@ -220,6 +230,43 @@ async def dispatch_skill_task(skill_name: str, task: Dict[str, Any]):
         return result
     except Exception as e:
         logger.error(f"Skill dispatch failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/research")
+async def research_task(task: Dict[str, Any]):
+    """Execute a social media / video research task via ResearchAgent."""
+    agent = swarm.get_agent("ResearchAgent")
+    if agent is None:
+        raise HTTPException(status_code=503, detail="ResearchAgent not available")
+    try:
+        return await agent.work(task)
+    except Exception as e:
+        logger.error(f"Research task failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/research/batch")
+async def research_batch(urls: List[str]):
+    """Analyze multiple URLs in parallel via ResearchAgent."""
+    agent = swarm.get_agent("ResearchAgent")
+    if agent is None:
+        raise HTTPException(status_code=503, detail="ResearchAgent not available")
+    tasks = [{"url": u} for u in urls[:10]]
+    try:
+        results = await asyncio.wait_for(
+            swarm.execute_parallel(tasks), timeout=120
+        )
+        success = len([r for r in results if r.get("status") == "success"])
+        return {
+            "status": "success",
+            "results": results,
+            "total": len(urls),
+            "completed": success,
+        }
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Batch research timed out")
+    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 

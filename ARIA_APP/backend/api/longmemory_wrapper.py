@@ -16,6 +16,7 @@ import json
 import logging
 import os
 import time
+from datetime import datetime
 import urllib.request
 import urllib.error
 from typing import Any, Dict, List, Optional
@@ -104,6 +105,70 @@ class RetrieveResponse(BaseModel):
 
 
 # ============================================================================
+# Session Management (Pi Agent harness pattern)
+# ============================================================================
+
+class SessionCreateRequest(BaseModel):
+    user_id: str = Field(default=LM_USER_ID)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+    title: str = Field(default="New Session")
+
+
+class SessionResponse(BaseModel):
+    session_id: str
+    user_id: str
+    title: str
+    created_at: str
+    metadata: Dict[str, Any]
+    message_count: int = 0
+
+
+class SessionListResponse(BaseModel):
+    sessions: List[SessionResponse]
+    total: int
+
+
+class SessionMessageRequest(BaseModel):
+    role: str  # "user" or "assistant"
+    content: str
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+# In-memory session store (fallback when LongMemory doesn't support sessions)
+_session_store: Dict[str, Dict[str, Any]] = {}
+
+
+def _create_session_id() -> str:
+    """Generate a unique session ID."""
+    import secrets
+    return f"sess_{secrets.token_hex(12)}"
+
+
+def _store_session(session_id: str, data: Dict[str, Any]):
+    """Store session data in memory (and LongMemory if available)."""
+    _session_store[session_id] = data
+    # Also store in LongMemory for persistence
+    try:
+        _lm_request("POST", "/v1/ingest", {
+            "user_id": data.get("user_id", LM_USER_ID),
+            "text": f"Session: {data.get('title', 'New Session')}",
+            "metadata": {
+                "type": "session",
+                "session_id": session_id,
+                **data.get("metadata", {}),
+            },
+            "facet_hint": "episodic",
+        })
+    except Exception:
+        pass  # Best-effort persistence
+
+
+def _load_session(session_id: str) -> Optional[Dict[str, Any]]:
+    """Load session data from memory store."""
+    return _session_store.get(session_id)
+
+
+# ============================================================================
 # Endpoints
 # ============================================================================
 
@@ -183,3 +248,134 @@ def init_longmemory():
         logger.info(f"LongMemory integration ready at {LM_BASE_URL}")
     else:
         logger.warning(f"LongMemory server not available at {LM_BASE_URL}")
+
+
+# ============================================================================
+# Session Endpoints (Pi Agent harness pattern)
+# ============================================================================
+
+@router.post("/sessions", response_model=SessionResponse)
+async def create_session(req: SessionCreateRequest):
+    """Create a new conversation session (Pi Agent pattern)."""
+    session_id = _create_session_id()
+    now = datetime.now().isoformat()
+    session_data = {
+        "session_id": session_id,
+        "user_id": req.user_id,
+        "title": req.title,
+        "created_at": now,
+        "metadata": req.metadata,
+        "messages": [],
+    }
+    _store_session(session_id, session_data)
+    return SessionResponse(
+        session_id=session_id,
+        user_id=req.user_id,
+        title=req.title,
+        created_at=now,
+        metadata=req.metadata,
+        message_count=0,
+    )
+
+
+@router.get("/sessions", response_model=SessionListResponse)
+async def list_sessions(user_id: str = ""):
+    """List all sessions for a user."""
+    uid = user_id or LM_USER_ID
+    sessions = [
+        SessionResponse(
+            session_id=sid,
+            user_id=data.get("user_id", uid),
+            title=data.get("title", "Untitled"),
+            created_at=data.get("created_at", ""),
+            metadata=data.get("metadata", {}),
+            message_count=len(data.get("messages", [])),
+        )
+        for sid, data in _session_store.items()
+        if data.get("user_id") == uid
+    ]
+    return SessionListResponse(sessions=sessions, total=len(sessions))
+
+
+@router.get("/sessions/{session_id}", response_model=SessionResponse)
+async def get_session(session_id: str):
+    """Get session details by ID."""
+    data = _load_session(session_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Session not found")
+    return SessionResponse(
+        session_id=session_id,
+        user_id=data.get("user_id", LM_USER_ID),
+        title=data.get("title", "Untitled"),
+        created_at=data.get("created_at", ""),
+        metadata=data.get("metadata", {}),
+        message_count=len(data.get("messages", [])),
+    )
+
+
+@router.post("/sessions/{session_id}/messages")
+async def add_session_message(session_id: str, req: SessionMessageRequest):
+    """Add a message to a session (Pi Agent pattern)."""
+    data = _load_session(session_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Session not found")
+    message = {
+        "role": req.role,
+        "content": req.content,
+        "timestamp": datetime.now().isoformat(),
+        "metadata": req.metadata,
+    }
+    data.setdefault("messages", []).append(message)
+    _store_session(session_id, data)
+    return {"status": "success", "session_id": session_id, "message_count": len(data["messages"])}
+
+
+@router.get("/sessions/{session_id}/messages")
+async def get_session_messages(session_id: str, limit: int = 50):
+    """Get messages from a session."""
+    data = _load_session(session_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Session not found")
+    messages = data.get("messages", [])
+    return {
+        "session_id": session_id,
+        "messages": messages[-limit:],
+        "total": len(messages),
+    }
+
+
+@router.delete("/sessions/{session_id}")
+async def delete_session(session_id: str):
+    """Delete a session."""
+    if session_id not in _session_store:
+        raise HTTPException(status_code=404, detail="Session not found")
+    del _session_store[session_id]
+    return {"status": "deleted", "session_id": session_id}
+
+
+@router.post("/sessions/{session_id}/recall")
+async def session_recall(session_id: str, req: RetrieveRequest):
+    """Retrieve memories associated with a session (Pi Agent pattern)."""
+    data = _load_session(session_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Session not found")
+    # Enhance query with session context
+    session_context = " ".join(
+        m["content"] for m in data.get("messages", [])[-5:]
+    )
+    enhanced_query = f"{req.query} {session_context}".strip()
+    # Use the standard retrieve with enhanced query
+    payload = {
+        "text": enhanced_query,
+        "mode": req.mode,
+        "user_id": req.user_id,
+        "k": req.top_k,
+    }
+    result = _lm_request("POST", "/v1/recall", payload)
+    memories = result.get("data", {}).get("items", result.get("data", {}).get("results", []))
+    return {
+        "session_id": session_id,
+        "status": "success",
+        "results": memories,
+        "total": len(memories),
+    }
