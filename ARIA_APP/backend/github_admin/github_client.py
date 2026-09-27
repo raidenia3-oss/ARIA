@@ -380,15 +380,29 @@ class GitHubAdminClient:
                 return []
 
             checks = []
-            for check in pr.get_check_runs():
-                checks.append({
-                    "name": check.name,
-                    "status": check.status,
-                    "conclusion": check.conclusion,
-                    "started_at": check.started_at.isoformat() if check.started_at else None,
-                    "completed_at": check.completed_at.isoformat() if check.completed_at else None,
-                    "url": check.html_url,
-                })
+            try:
+                for check in pr.checks:
+                    checks.append({
+                        "name": check.get("name", ""),
+                        "status": check.get("status", ""),
+                        "conclusion": check.get("conclusion", ""),
+                        "started_at": check.get("started_at"),
+                        "completed_at": check.get("completed_at"),
+                        "url": check.get("html_url", ""),
+                    })
+            except Exception:
+                headers, data = pr._requester.requestJsonAndCheck(
+                    "GET", f"/repos/{self.owner.login}/{repo_name}/commits/{pr.head.sha}/check-runs"
+                )
+                for item in data.get("check_runs", []):
+                    checks.append({
+                        "name": item.get("name", ""),
+                        "status": item.get("status", ""),
+                        "conclusion": item.get("conclusion", ""),
+                        "started_at": item.get("started_at"),
+                        "completed_at": item.get("completed_at"),
+                        "url": item.get("html_url", ""),
+                    })
             return checks
         except GithubException as e:
             logger.error(f"❌ get_pr_checks failed: {e}")
