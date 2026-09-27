@@ -329,3 +329,54 @@ class SkillRegistry:
             scored.append((score, item))
         scored.sort(key=lambda x: x[0], reverse=True)
         return [item for _, item in scored[:top_k]]
+
+
+class AgentSkill:
+    """Pi Agent-style skill descriptor"""
+
+    def __init__(self, name: str, description: str, actions: List[str]):
+        self.name = name
+        self.description = description
+        self.actions = actions  # ["run", "status", "reset"]
+        self.enabled = True
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "description": self.description,
+            "actions": self.actions,
+            "enabled": self.enabled,
+        }
+
+
+class AgentHarness:
+    """Pi Agent harness compatible with ARIA agents"""
+
+    def __init__(self):
+        self.skills: Dict[str, AgentSkill] = {}
+        self.prompts: Dict[str, str] = {}  # custom prompts
+        self.mcp_servers: Dict[str, str] = {}  # MCP connections
+
+    def register_skill(self, skill: AgentSkill):
+        self.skills[skill.name] = skill
+
+    def set_prompt(self, agent_name: str, prompt: str):
+        """Set custom prompt for agent (AGENTS.md style)"""
+        self.prompts[agent_name] = prompt
+
+    def register_mcp(self, name: str, url: str):
+        """Register MCP server (like Pi Agent)"""
+        self.mcp_servers[name] = url
+
+    def get_agent_config(self, agent_name: str) -> Dict:
+        """Return config for agent (Pi Agent harness format)"""
+        return {
+            "name": agent_name,
+            "skills": [s.to_dict() for s in self.skills.values()],
+            "prompt": self.prompts.get(agent_name, "default"),
+            "mcp_servers": self.mcp_servers,
+        }
+
+
+# Global harness instance
+harness = AgentHarness()

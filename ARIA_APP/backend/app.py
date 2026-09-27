@@ -12,6 +12,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
+# Load .env BEFORE any router imports so GITHUB_TOKEN etc. are available at module init
+try:
+    from dotenv import load_dotenv
+    _env_path = Path(__file__).resolve().parent / ".env"
+    if _env_path.exists():
+        load_dotenv(_env_path, override=True)
+except Exception:
+    pass
+
 from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -118,6 +127,7 @@ from backend.social_research.memory_bridge import MemoryBridge, SavedContent
 from backend.social_research.transcriber import WhisperTranscriber
 from backend.swarm.swarm_routes import router as swarm_router
 from backend.api.swarm_router import router as agent_swarm_router
+from api.agent_harness import router as harness_router
 from backend.video_analyzer.pipeline import VideoAnalysisPipeline
 from backend.vision.screen import ScreenIntelligence
 from github_admin.router import router as github_admin_router
@@ -359,6 +369,7 @@ app.include_router(evolution_router)
 app.include_router(planner_router)
 app.include_router(swarm_router)
 app.include_router(agent_swarm_router)
+app.include_router(harness_router)
 app.include_router(zk_router)
 app.include_router(github_admin_router)
 enable_autostart()

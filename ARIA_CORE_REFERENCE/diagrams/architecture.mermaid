@@ -1,0 +1,63 @@
+graph TD
+    subgraph ARIA[Núcleo ARIA v5.0]
+        direction TB
+        
+        subgraph UI[Interfaz de Usuario]
+            HUD[HUD Glassmorphic]
+            ORB[Orb 3D - 7 capas]
+            CHAT[Chat Markdown]
+            SKILLS[Skills Sidebar]
+        end
+        
+        subgraph API[Capa de API - FastAPI 302 rutas]
+            ROUTER[Router Principal]
+            SWARM[Swarm Agentes]
+            SESSIONS[Sessions LongMemory]
+            HARNESS[Agent Harness]
+            GITHUB[GitHub Admin]
+            COMPUTER[Computer Control]
+        end
+        
+        subgraph AGENTS[Agentes Especializados]
+            CODE[CodeAnalyzer]
+            DOCS[DocsWriter]
+            TEST[Tester]
+            RESSEARCH[ResearchAgent]
+        end
+        
+        subgraph MEMORY[Memoria 3 Capas]
+            WORKING[Working Memory]
+            EPISODIC[Episodic - LongMemory]
+            LONG[Long-term SQLite]
+        end
+        
+        subgraph AI[Proveedores AI]
+            OLLAMA[Ollama Local]
+            CANDLE[Candle.rs - Futuro]
+            AXUM[Axum - Futuro]
+        end
+        
+        subgraph EXTERNAL[Externo]
+            LM[LongMemory Server]
+            GH[GitHub API]
+            OLL[Ollama Server]
+        end
+    end
+    
+    UI --> API
+    API --> AGENTS
+    API --> MEMORY
+    API --> AI
+    AGENTS --> MEMORY
+    AI --> OLLAMA
+    AI --> LM
+    API --> GH
+    LM --> LONG
+    
+    style ARIA fill:#1a1a2e,stroke:#00d4ff,stroke-width:3px
+    style UI fill:#16213e,stroke:#00d4ff
+    style API fill:#16213e,stroke:#a855f7
+    style AGENTS fill:#16213e,stroke:#a855f7
+    style MEMORY fill:#16213e,stroke:#00d4ff
+    style AI fill:#16213e,stroke:#f59e0b
+    style EXTERNAL fill:#0f0f1e,stroke:#64748b
