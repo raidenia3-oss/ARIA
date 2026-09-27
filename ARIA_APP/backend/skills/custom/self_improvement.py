@@ -25,10 +25,24 @@ try:
 except ImportError:
     pass
 
-from github_admin import GitHubAdminClient, AutoCommit, AutoRelease, PRAnalyzer, IssueManager, DocGenerator
+# Phase H.5: Graceful imports — modules may not exist in all deployments
+try:
+    from github_admin import GitHubAdminClient, AutoCommit, AutoRelease, PRAnalyzer, IssueManager, DocGenerator
+except ImportError:
+    GitHubAdminClient = AutoCommit = AutoRelease = PRAnalyzer = IssueManager = DocGenerator = None
+
 from backend.skills.registry import SkillRegistry
-from api.agent_harness import harness
-from api.swarm_router import get_swarm, skill_registry
+
+try:
+    from api.agent_harness import harness
+except ImportError:
+    harness = None
+
+try:
+    from api.swarm_router import get_swarm, skill_registry
+except ImportError:
+    get_swarm = None
+    skill_registry = None
 
 logger = logging.getLogger(__name__)
 
@@ -162,6 +176,9 @@ class ARIASelfImprovement:
 
     def initialize(self):
         """Initialize GitHub clients"""
+        if GitHubAdminClient is None:
+            logger.warning("[WARN] github_admin module not available - self-improvement disabled")
+            return False
         if not self.github_token:
             logger.warning("[WARN] GITHUB_TOKEN not set - self-improvement disabled")
             return False
