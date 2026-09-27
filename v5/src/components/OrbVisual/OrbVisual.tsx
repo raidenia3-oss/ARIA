@@ -5,17 +5,20 @@ import { EffectComposer } from 'three-stdlib'
 import { RenderPass } from 'three-stdlib'
 import { UnrealBloomPass } from 'three-stdlib'
 
-/** Colores por estado — Serpantinum × Caelestia */
-const PHASE_COLORS: Record<OrbPhase, { core: string; glow: string }> = {
-  idle: { core: '#38bdf8', glow: '#0284c7' },
-  thinking: { core: '#f59e0b', glow: '#b45309' },
-  responding: { core: '#00d4ff', glow: '#0e7490' },
-  listening: { core: '#b066ff', glow: '#7c3aed' },
+/** Colores por estado — Gran Sabio / Raphael / Ciel inspired palette */
+const PHASE_COLORS: Record<OrbPhase, { core: string; glow: string; fractal: string }> = {
+  idle: { core: '#38bdf8', glow: '#0284c7', fractal: '#1e40af' },
+  thinking: { core: '#f59e0b', glow: '#b45309', fractal: '#7c2d12' },
+  responding: { core: '#00d4ff', glow: '#0e7490', fractal: '#083344' },
+  listening: { core: '#b066ff', glow: '#7c3aed', fractal: '#311b92' },
+  wisdom: { core: '#ffffff', glow: '#a78bfa', fractal: '#4c1d99' },
 }
 
 const PARTICLE_COUNT = 12
 const BREATH_PERIOD = 1.5
 const PULSE_PERIOD = 2.0
+const FRACTAL_LAYERS = 4  // Anillos concéntricos del Gran Sabio
+const DATA_STREAM_COUNT = 24  // Partículas de datos que fluyen al núcleo
 
 interface LayerConfig {
   radius: number
@@ -63,6 +66,39 @@ const FRAGMENT_SHADER = `
   }
 `
 
+/** Shader fractal inspirado en el ojo del Gran Sabio — patrón infinitamente detallado */
+const FRACTAL_FRAGMENT_SHADER = `
+  uniform vec3 uFractalColor;
+  uniform float uTime;
+  uniform float uPulse;
+  varying vec3 vNormal;
+  varying vec3 vView;
+  varying vec3 vPosition;
+  
+  void main() {
+    float facing = abs(dot(normalize(vNormal), normalize(vView)));
+    float fres = pow(1.0 - facing, 1.5);
+    
+    // Coordenadas fractales en la esfera
+    vec2 uv = vec2(
+      atan(vPosition.z, vPosition.x) / (3.14159 * 2.0),
+      acos(vPosition.y / length(vPosition)) / 3.14159
+    );
+    
+    // Patrón de ojo — espiral logarítmica infinita
+    float angle = uTime * 0.3 + uv.x * 3.14159 * 4.0;
+    float spiral = sin(length(vPosition) * 12.0 - angle) * cos(uv.y * 3.14159 * 6.0);
+    
+    // Efecto de iris pulsante
+    float iris = 0.7 + 0.3 * sin(uTime * 2.0) * uPulse;
+    float depth = pow(spiral * 0.5 + 0.5, 5.0) * iris;
+    
+    vec3 col = uFractalColor * (0.4 + 0.6 * depth * fres);
+    float alpha = 0.75 * (0.3 + 0.7 * depth) * (0.2 + 0.8 * fres);
+    gl_FragColor = vec4(col, alpha);
+  }
+`
+
 /** Textura radial (sprite de partícula / halo suave) generada en canvas */
 function radialTexture(size = 128, power = 2.2): THREE.Texture {
   const canvas = document.createElement('canvas')
@@ -105,6 +141,20 @@ interface PulseRing {
   offset: number
 }
 
+/** Partículas de dato que fluyen hacia el núcleo (inspirado en Ciel) */
+interface DataStream {
+  geometry: THREE.BufferGeometry
+  material: THREE.LineBasicMaterial
+  positions: Float32Array
+  speeds: number[]
+}
+
+/** Anillos concéntricos que representan capas de conocimiento (Gran Sabio) */
+interface FractalRing {
+  mesh: THREE.Mesh
+  material: THREE.ShaderMaterial
+}
+
 interface Burst {
   lines: THREE.LineSegments
   material: THREE.LineBasicMaterial
@@ -127,10 +177,14 @@ interface Burst {
     private rings: PulseRing[] = []
     private bursts: Burst[] = []
     private glowSprite: THREE.Sprite
+    private dataStreams: DataStream[] = []
+    private fractalRings: FractalRing[] = []
     private targetCore = new THREE.Color(PHASE_COLORS.idle.core)
     private targetGlow = new THREE.Color(PHASE_COLORS.idle.glow)
+    private targetFractal = new THREE.Color(PHASE_COLORS.idle.fractal)
     private currentCore = new THREE.Color(PHASE_COLORS.idle.core)
     private currentGlow = new THREE.Color(PHASE_COLORS.idle.glow)
+    private currentFractal = new THREE.Color(PHASE_COLORS.idle.fractal)
     private animated = true
     private phase: OrbPhase = 'idle'
 
@@ -170,6 +224,8 @@ interface Burst {
     this.pointPositions = (this.points.geometry.getAttribute('position') as THREE.BufferAttribute)
       .array as Float32Array
     this.createPulseRings()
+    this.createDataStreams()
+    this.createFractalRings()
 
     this.resize()
     this.observer = new ResizeObserver(() => this.resize())
@@ -237,6 +293,69 @@ interface Burst {
     }
   }
 
+  /** 24 partículas de datos que fluyen espiralmente hacia el núcleo (inspirado en Ciel) */
+  private createDataStreams(): void {
+    for (let i = 0; i < DATA_STREAM_COUNT; i++) {
+      const positions = new Float32Array(6)
+      const angle = (i / DATA_STREAM_COUNT) * Math.PI * 2
+      const radius = 1.5 + (i % 5) * 0.3
+      const x = Math.cos(angle) * radius
+      const z = Math.sin(angle) * radius
+      const y = 0
+
+      positions.set([x, y, z, x * 0.5, y * 0.5, z * 0.5])
+
+      const geometry = new THREE.BufferGeometry()
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+      const material = new THREE.LineBasicMaterial({
+        color: this.currentCore.clone(),
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+
+      const line = new THREE.LineSegments(geometry, material)
+      this.scene.add(line)
+
+      this.dataStreams.push({
+        geometry,
+        material,
+        positions,
+        speeds: [0.3 + (i % 3) * 0.2],
+      })
+    }
+  }
+
+  /** Anillos concéntricos fractales que representan capas de conocimiento (Gran Sabio) */
+  private createFractalRings(): void {
+    for (let i = 0; i < FRACTAL_LAYERS; i++) {
+      const ringRadius = 0.5 + i * 0.35
+      const geometry = new THREE.RingGeometry(ringRadius - 0.03, ringRadius + 0.03, 128)
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          uFractalColor: { value: this.currentFractal.clone() },
+          uTime: { value: 0 },
+          uPulse: { value: 0 },
+        },
+        vertexShader: VERTEX_SHADER,
+        fragmentShader: FRACTAL_FRAGMENT_SHADER,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        depthTest: false,
+      })
+
+      const mesh = new THREE.Mesh(geometry, material)
+      mesh.rotation.x = (i * Math.PI) / FRACTAL_LAYERS
+      mesh.rotation.z = (i * Math.PI) / (FRACTAL_LAYERS * 2)
+      this.scene.add(mesh)
+      this.fractalRings.push({ mesh, material })
+    }
+  }
+
   /** Rayos radiales que salen del orbe al hablar/pensar */
   private spawnBurst(): void {
     const count = 28
@@ -271,6 +390,7 @@ interface Burst {
     this.phase = phase
     this.targetCore.set(PHASE_COLORS[phase].core)
     this.targetGlow.set(PHASE_COLORS[phase].glow)
+    this.targetFractal.set(PHASE_COLORS[phase].fractal)
     if (previous !== phase && (phase === 'thinking' || phase === 'responding')) this.spawnBurst()
   }
 
@@ -295,6 +415,7 @@ interface Burst {
     // Transición suave de color entre estados
     this.currentCore.lerp(this.targetCore, 1 - Math.pow(0.0015, dt))
     this.currentGlow.lerp(this.targetGlow, 1 - Math.pow(0.0015, dt))
+    this.currentFractal.lerp(this.targetFractal, 1 - Math.pow(0.0025, dt))
 
     // Respiración (ciclo 1.5s)
     const breathe = 1 + Math.sin((t / BREATH_PERIOD) * Math.PI * 2) * 0.045 * motion
@@ -353,6 +474,31 @@ interface Burst {
       burst.lines.scale.setScalar(1 + progress * 0.9)
       burst.material.opacity = burst.life * 0.9
       burst.material.color.copy(this.currentCore)
+    }
+
+    // Partículas de datos fluyendo espiralmente (inspirado en Ciel)
+    for (const stream of this.dataStreams) {
+      const speed = stream.speeds[0] * motion
+      const pos = stream.positions
+      const angle = t * speed
+      const r = Math.sqrt(pos[0] * pos[0] + pos[2] * pos[2])
+      const theta = Math.atan2(pos[2], pos[0]) + angle
+      pos[0] = Math.cos(theta) * r * (0.5 + 0.5 * Math.sin(t + speed))
+      pos[2] = Math.sin(theta) * r * (0.5 + 0.5 * Math.sin(t + speed))
+      pos[1] = Math.sin(angle * 2) * 0.3
+      ;(stream.geometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
+      ;(stream.material as THREE.LineBasicMaterial).color.copy(this.currentCore)
+    }
+
+    // Anillos fractales girando y pulsando (Gran Sabio)
+    for (let i = 0; i < this.fractalRings.length; i++) {
+      const ring = this.fractalRings[i]
+      ring.mesh.rotation.x += 0.05 * dt * motion
+      ring.mesh.rotation.z += 0.03 * dt * motion
+      const uniforms = ring.material.uniforms
+      ;(uniforms.uTime.value as any) = t
+      ;(uniforms.uPulse.value as any) = 0.7 + 0.3 * Math.sin(t * 1.3 + i)
+      ;(uniforms.uFractalColor.value as THREE.Color).copy(this.currentFractal)
     }
 
     this.renderer.render(this.scene, this.camera)
@@ -367,6 +513,7 @@ interface Burst {
     // Transición suave de color entre estados
     this.currentCore.lerp(this.targetCore, 1 - Math.pow(0.0015, dt))
     this.currentGlow.lerp(this.targetGlow, 1 - Math.pow(0.0015, dt))
+    this.currentFractal.lerp(this.targetFractal, 1 - Math.pow(0.0025, dt))
 
     // Respiración (ciclo 1.5s)
     const breathe = 1 + Math.sin((t / BREATH_PERIOD) * Math.PI * 2) * 0.045 * motion
@@ -425,6 +572,31 @@ interface Burst {
       burst.lines.scale.setScalar(1 + progress * 0.9)
       burst.material.opacity = burst.life * 0.9
       burst.material.color.copy(this.currentCore)
+    }
+
+    // Partículas de datos fluyendo espiralmente (inspirado en Ciel)
+    for (const stream of this.dataStreams) {
+      const speed = stream.speeds[0] * motion
+      const pos = stream.positions
+      const angle = t * speed
+      const r = Math.sqrt(pos[0] * pos[0] + pos[2] * pos[2])
+      const theta = Math.atan2(pos[2], pos[0]) + angle
+      pos[0] = Math.cos(theta) * r * (0.5 + 0.5 * Math.sin(t + speed))
+      pos[2] = Math.sin(theta) * r * (0.5 + 0.5 * Math.sin(t + speed))
+      pos[1] = Math.sin(angle * 2) * 0.3
+      ;(stream.geometry.getAttribute('position') as THREE.BufferAttribute).needsUpdate = true
+      ;(stream.material as THREE.LineBasicMaterial).color.copy(this.currentCore)
+    }
+
+    // Anillos fractales girando y pulsando (Gran Sabio)
+    for (let i = 0; i < this.fractalRings.length; i++) {
+      const ring = this.fractalRings[i]
+      ring.mesh.rotation.x += 0.05 * dt * motion
+      ring.mesh.rotation.z += 0.03 * dt * motion
+      const uniforms = ring.material.uniforms
+      ;(uniforms.uTime.value as any) = t
+      ;(uniforms.uPulse.value as any) = 0.7 + 0.3 * Math.sin(t * 1.3 + i)
+      ;(uniforms.uFractalColor.value as THREE.Color).copy(this.currentFractal)
     }
   }
 

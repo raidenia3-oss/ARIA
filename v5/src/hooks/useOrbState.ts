@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
 
-export type OrbPhase = 'idle' | 'thinking' | 'responding' | 'listening'
+export type OrbPhase = 'idle' | 'thinking' | 'responding' | 'listening' | 'wisdom'
 
 export interface OrbPhaseTheme {
   primary: string
@@ -15,6 +15,7 @@ export const orbStates: Record<OrbPhase, OrbPhaseTheme> = {
   thinking: { primary: '#f59e0b', glow: 'rgba(245, 158, 11, 0.8)', label: 'Processing' },
   responding: { primary: '#00d4ff', glow: 'rgba(0, 212, 255, 1)', label: 'Speaking' },
   listening: { primary: '#b066ff', glow: 'rgba(176, 102, 255, 0.8)', label: 'Listening' },
+  wisdom: { primary: '#ffffff', glow: 'rgba(167, 139, 234, 0.95)', label: 'Gran Sabio' },
 }
 
 export interface OrbStateController {
