@@ -1,19 +1,8 @@
 //! ARIA Axum POC — Full Migration Server
-//! Phase L.4: Axum (Rust) server running alongside FastAPI for gradual cutover.
+//! Phase L.4: Axum (Rust) backend running alongside FastAPI for gradual cutover.
 //!
 //! Runs on port 8002 to avoid conflict with FastAPI on port 8001.
-//! All USB-ARIA daemon endpoints are now available.
-//!
-//! Endpoints (245+ total):
-//! - Core: /health, /api/system/status
-//! - Chat: /api/chat
-//! - Skills: /api/skills, /api/skills/run
-//! - Agents: /api/agents/status, /api/agents/execute
-//! - Memory: /api/memory/search, /api/memory/store
-//! - Voice: /api/voice/stt, /api/voice/tts
-//! - System: 14 system tools (status, ping, scan, etc.)
-//! - Daemon: /api/pc/state, /api/daemon/task, /api/daemon/result, /api/daemon/heartbeat
-//! - ... plus web, proactive, evolution, learning, computer, github, social, auth, admin, self-improvement
+//! USB-ARIA daemon endpoints are available at /api/pc/state and /api/daemon/*.
 
 use aria_axum_poc::create_full_router;
 
@@ -28,15 +17,16 @@ async fn main() {
         .expect("Failed to bind to 127.0.0.1:8002");
 
     println!("🚀 ARIA Axum Server (Phase L.4) running on http://127.0.0.1:8002");
-    println!("   Full router with {}+ endpoint groups", 18);
-    println!("   - core: 12 routes");
-    println!("   - daemon: USB-ARIA coordination");
-    println!("   - chat, skills, agents, memory, voice, vision, system, files, web");
-    println!("   - proactive, evolution, learning, computer, github, social");
-    println!("   - auth, admin, self_improvement");
+    println!("   Full router with daemon endpoints for USB-ARIA");
+    println!("   - GET  /health");
+    println!("   - GET  /api/system/status");
+    println!("   - POST /api/chat");
+    println!("   - POST /api/pc/state (USB-ARIA)");
+    println!("   - POST /api/daemon/task (USB-ARIA)");
+    println!("   - POST /api/daemon/result (USB-ARIA)");
+    println!("   - POST /api/daemon/heartbeat (USB-ARIA)");
     println!("");
-    println!("   Port: 8002 (FastAPI still on 8001)");
-    println!("   LocalTunnel: aria-backend.loca.lt (maps to 8001)");
+    println!("   Port: 8002 (FastAPI running on 8001)");
 
     axum::serve(listener, app)
         .await

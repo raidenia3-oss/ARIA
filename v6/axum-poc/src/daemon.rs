@@ -216,19 +216,28 @@ async fn daemon_heartbeat(Json(req): Json<DaemonRequest>) -> Json<HeartbeatRespo
     let agent_id = req.agent_id.clone();
     let agent_status = req.status.clone().unwrap_or_else(|| "alive".to_string());
 
-    if let agent_id = agent_id {
+    if let Some(agent_id) = agent_id {
         let mut registry = state.agent_registry.lock().await;
-        if let Some(agent) = registry.get_mut(&agent_id) {
+        if let Some(agent) = registry.get_mut(&agent_id.clone()) {
             agent.last_heartbeat = now;
             agent.status = agent_status;
         } else {
-            registry.insert(agent_id.clone(), AgentInfo {
-                agent_id: agent_id.clone(),
+            let id = agent_id.clone();
+            registry.insert(agent_id, AgentInfo {
+                agent_id: id,
                 last_heartbeat: now,
                 status: agent_status,
                 current_task: None,
             });
         }
+    } else {
+        let mut registry = state.agent_registry.lock().await;
+        registry.insert("unknown".to_string(), AgentInfo {
+            agent_id: "unknown".to_string(),
+            last_heartbeat: now,
+            status: agent_status,
+            current_task: None,
+        });
     }
 
     Json(HeartbeatResponse {

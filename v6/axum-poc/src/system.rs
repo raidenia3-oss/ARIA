@@ -4,7 +4,6 @@ use axum::Router;
 
 pub fn router() -> Router<()> {
     Router::new()
-        .route("/api/system/status", get(status))
         .route("/api/system/ping", get(ping))
         .route("/api/system/scan", get(scan))
         .route("/api/system/whois", get(whois))

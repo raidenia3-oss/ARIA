@@ -12,9 +12,8 @@
 
 use axum::{
     routing::{get, post, put, delete},
-    Router, middleware,
+    Router,
 };
-use tower::ServiceBuilder;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
 
 pub mod core;
@@ -63,13 +62,11 @@ pub fn create_full_router() -> Router {
         .merge(self_improvement::router())
         .merge(daemon::router());
 
-    // Middleware stack
     app.layer(
-        ServiceBuilder::new()
-            .layer(TraceLayer::new_for_http())
-            .layer(CorsLayer::permissive())
-            .build(),
+        TraceLayer::new_for_http()
+            .on_request(())
     )
+    .layer(CorsLayer::permissive())
 }
 
 /// Route count estimate by module (mirrors FastAPI structure).

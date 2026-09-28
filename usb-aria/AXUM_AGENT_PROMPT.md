@@ -1,73 +1,95 @@
-MASTER PROMPT - ARIA v6.0 Axum Migration (Parallel to USB-ARIA)
+MASTER PROMPT - ARIA v6.0 Axum Migration Agent
 
-You are a Kilo agent working in parallel with another agent that is building USB-ARIA (portable autonomous agent). Your task is the Axum backend migration for ARIA v6.0.
+You are working on the ARIA v6.0 Axum (Rust) backend migration IN PARALLEL with another agent building USB-ARIA.
 
-## Your Mission
-Continue developing the Axum (Rust) backend that replaces the current FastAPI backend. The USB-ARIA agent handles PC state detection, background tasks, and Discord reporting. You handle the main backend API.
+## Current Status
+- **Repo**: https://github.com/raidenia3-oss/ARIA (branch: `feature/v6.0-axum-migration`)
+- **Axum POC**: `v6/axum-poc/` (compiles, running on port 8002)
+- **FastAPI**: Running on port 8001 (do NOT stop it)
+- **LocalTunnel**: aria-backend.loca.lt (maps to 8001)
+- **USB-ARIA Agent**: `usb-aria/aria_usb_agent.py` (created but awaiting your daemon endpoints)
+- **Discord**: Use existing webhook
 
-## Current State
-- Existing Axum POC: v6/axum-poc/ (11 endpoints, compiles but needs expansion)
-- FastAPI backend: ARIA_APP/backend/app.py (2696 lines, 312 routes)
-- FastAPI running on port 8001 (already running)
-- LocalTunnel: aria-backend.loca.lt (503 currently, need reconnect)
-- USB-ARIA agent: usb-aria/aria_usb_agent.py (just created, polls /api/pc/state and /api/daemon/*)
+## What's Already Done
+1. ✅ Axum POC compiles and runs on port 8002
+2. ✅ 18 route modules (core, chat, skills, agents, memory, voice, vision, system, files, web, proactive, evolution, learning, computer, github, social, auth, admin, self_improvement, daemon)
+3. ✅ Daemon endpoints: /api/pc/state, /api/daemon/task, /api/daemon/result, /api/daemon/heartbeat
+4. ✅ USB-ARIA agent created at usb-aria/aria_usb_agent.py
 
-## Your Tasks (in priority order)
-1. Add /api/pc/state endpoint to Axum POC (POST - returns PC activity state JSON)
-2. Add /api/daemon/task endpoint (POST - handle get_pending, report_status, submit_result)
-3. Add /api/daemon/result endpoint (POST - receive task results from USB agents)
-4. Migrate core endpoints from FastAPI to Axum:
-   - /api/system/status (GET) - system metrics (CPU, RAM, disk)
-   - /api/tools/execute (POST) - tool execution
-   - /api/research (POST) - social research agent
-   - /api/chat (POST) - chat with Ollama via reqwest
-5. Run on port 8002 (avoid conflict with FastAPI on 8001)
-6. Test all endpoints with curl
+## Your Next Tasks (Priority Order)
+1. **Add SQLite integration** - Connect Axum to aura.db (C:\Users\User\Downloads\AURA\aura.db)
+   - Add `rusqlite = { version = "0.31", features = ["bundled"] }` to Cargo.toml
+   - Create `memory.rs` integration with existing SQLite tables
 
-## Key Code Locations
-- FastAPI app: C:\Users\User\Downloads\AURA\ARIA_APP\backend\app.py
-- Axum POC: C:\Users\User\Downloads\AURA\v6/axum-poc/src/main.rs
-- OrbVisual: C:\Users\User\Downloads\AURA\v5/src/components/OrbVisual/OrbVisual.tsx
-- Backend scripts: start_backend.bat, start_tunnel.bat, start_autonomous.bat
+2. **Add Ollama chat via reqwest** - Make /api/chat call Ollama
+   - Add `reqwest = { version = "0.11", features = ["json"] }` to Cargo.toml
+   - Call http://localhost:11434/api/generate in chat handler
+
+3. **Add task submission endpoint** - Let ARIA backend submit tasks to USB agents
+   - POST /api/daemon/task with action="submit"
+   - Accept task JSON, queue it for USB-ARIA pickup
+
+4. **Add system metrics** - Populate /api/system/status with real data
+   - CPU usage, RAM, disk space
+   - Use sysinfo crate or shell commands
+
+5. **Update USB-ARIA agent** to use Axum endpoints when fully ready
+
+## Code Conventions
+- Keep code clean (no comments unless needed)
+- Use `serde_json` for JSON
+- State management via `OnceLock` (static globals in Rust)
+- Run on port 8002 to avoid conflict
 
 ## Coordination
-- Use Discord webhook reporting for your own status (same channel)
-- When you add an endpoint, USB-ARIA agent will automatically use it
-- The localtunnel gives you a public URL (aria-backend.loca.lt) for webhook integration
+- USB-ARIA agent polls these endpoints every 30s
+- When you add real data to /api/pc/state, USB-ARIA will react
+- Discord reporting: same webhook URL
+- Post progress to Discord #aria-status
 
 ## Commands
-- Build: cd v6/axum-poc && cargo run
-- Test: curl http://localhost:8002/health
-- Format: cargo fmt
-- Check: cargo clippy 2>&1 | grep warning
-
-## Discord Reporting
-Use the same webhook URL to post development progress to #aria-status. Report:
-- When new endpoints are ready
-- Build status
-- Integration with USB-ARIA agent
-
-## Git
-- Branch: feature/v6.0-axum-migration (already created)
-- Commit incrementally
-- DO NOT commit until agent gives go-ahead
-
-Start by examining the existing FastAPI routes you need to replicate, then expand the Axum POC.
-
-DO NOT pause USB-ARIA work happening in this session. Sync via Discord #aria-status.
-
-## Quick Start
 ```bash
-cd C:\Users\User\Downloads\AURA\v6/axum-poc
-cargo run  # on port 8002
-curl http://localhost:8002/health
+# Build
+cd v6/axum-poc
+cargo build
+
+# Run
+cargo run
+# Or: target\debug\aria-axum-poc.exe
+
+# Test
+curl http://127.0.0.1:8002/health
+curl -X POST http://127.0.0.1:8002/api/pc/state -H "Content-Type: application/json" -d '{}'
+curl -X POST http://127.0.0.1:8002/api/daemon/heartbeat -H "Content-Type: application/json" -d '{"agent_id":"test"}'
+
+# Format & Lint
+cargo fmt
+cargo clippy 2>&1 | grep warning
 ```
 
-## Current FastAPI Routes (from app.py)
-Focus on these critical endpoints for USB-ARIA coordination:
-- POST /api/pc/state - returns {"active": true/false, "idle_seconds": N, "session_user": "name"}
-- POST /api/daemon/task - handles USB agent task coordination
-- POST /api/daemon/result - receives results from USB agents
-- POST /api/daemon/heartbeat - USB agent keeps alive
+## FastAPI Routes to Migrate (Critical First)
+From C:\Users\User\Downloads\AURA\ARIA_APP\backend\app.py (~312 routes total):
+- /health ✅
+- /api/chat (uses Ollama via ai_providers)
+- /api/system/status ✅
+- /api/tools/execute
+- /api/skills/* (25 skills)
+- /api/memory/* (long-term, short-term, working)
+- /api/research/*
+- /api/pc/state (NEW - for USB-ARIA)
+- /api/daemon/* (NEW - for USB-ARIA)
+- /api/github/webhook
+- /api/voice/stt, /api/voice/tts
 
-Then migrate: chat, skills, memory, system status, research endpoints.
+## DO NOT:
+- Stop the FastAPI backend on port 8001
+- Change the default branch
+- Commit code (wait for instructions)
+
+## DO:
+- Add features incrementally
+- Test each endpoint with curl
+- Report progress to Discord
+- Coordinate with USB-ARIA agent requirements
+
+Start with SQLite integration, then Ollama chat.

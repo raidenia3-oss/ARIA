@@ -26,7 +26,7 @@ import uuid
 from datetime import datetime
 
 # Configuration
-ARIA_BACKEND_URL = os.environ.get("ARIA_BACKEND_URL", "http://host.docker.internal:8001")
+ARIA_BACKEND_URL = os.environ.get("ARIA_BACKEND_URL", "http://127.0.0.1:8002")
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL", "")
 AGENT_ID = f"usb-aria-{socket.gethostname()[:8]}-{uuid.uuid4().hex[:8]}"
 CHECK_INTERVAL = 30  # seconds between health checks
