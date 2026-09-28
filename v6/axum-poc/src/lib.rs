@@ -36,49 +36,32 @@ pub mod social;
 pub mod auth;
 pub mod admin;
 pub mod self_improvement;
+pub mod daemon;
 
 /// Build the complete Axum router with all route groups.
 /// Phase L.4: Full migration architecture.
 pub fn create_full_router() -> Router {
     let app = Router::new()
-        // ── Core ──
         .merge(core::router())
-        // ── Chat ──
         .merge(chat::router())
-        // ── Skills ──
         .merge(skills::router())
-        // ── Agents ──
         .merge(agents::router())
-        // ── Memory ──
         .merge(memory::router())
-        // ── Voice ──
         .merge(voice::router())
-        // ── Vision ──
         .merge(vision::router())
-        // ── System ──
         .merge(system::router())
-        // ── Files ──
         .merge(files::router())
-        // ── Web ──
         .merge(web::router())
-        // ── Proactive ──
         .merge(proactive::router())
-        // ── Evolution ──
         .merge(evolution::router())
-        // ── Learning ──
         .merge(learning::router())
-        // ── Computer ──
         .merge(computer::router())
-        // ── GitHub ──
         .merge(github::router())
-        // ── Social ──
         .merge(social::router())
-        // ── Auth ──
         .merge(auth::router())
-        // ── Admin ──
         .merge(admin::router())
-        // ── Self-Improvement ──
-        .merge(self_improvement::router());
+        .merge(self_improvement::router())
+        .merge(daemon::router());
 
     // Middleware stack
     app.layer(
