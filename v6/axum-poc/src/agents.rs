@@ -1,5 +1,5 @@
 //! Agent swarm routes: status, execute, research, harness.
-use axum::{routing::get, Router, Json};
+use axum::{routing::{get, post}, Router, Json};
 use serde::Serialize;
 
 #[derive(Serialize)]

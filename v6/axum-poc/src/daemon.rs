@@ -1,21 +1,18 @@
 //! Daemon routes: USB-ARIA coordination endpoints.
 //! Phase L.4: USB-ARIA distributed autonomous infrastructure.
-//!
-//! These endpoints are polled by USB-side agents running on portable USB drives.
-//! - /api/pc/state: Query PC activity state
-//! - /api/daemon/task: Task coordination (get_pending, report_status, submit_result)
-//! - /api/daemon/result: Receive task results from USB agents
-//! - /api/daemon/heartbeat: USB agent keeps alive
 use axum::{
     extract::Json,
-    routing::{get, post},
+    routing::post,
     Router,
 };
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
-use tokio::sync::Mutex;
 use std::collections::{HashMap, VecDeque};
+use std::sync::{Arc, OnceLock};
+use tokio::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
+
+// Static state using OnceLock
+static DAEMON_STATE: OnceLock<DaemonState> = OnceLock::new();
 
 #[derive(Clone)]
 struct DaemonState {
@@ -85,28 +82,29 @@ struct HeartbeatResponse {
     timestamp: u64,
 }
 
-pub fn router() -> Router<DaemonState> {
-    let state = DaemonState {
+fn get_state() -> &'static DaemonState {
+    DAEMON_STATE.get_or_init(|| DaemonState {
         pc_active: Arc::new(Mutex::new(false)),
         idle_seconds: Arc::new(Mutex::new(0)),
         session_user: Arc::new(Mutex::new("unknown".to_string())),
         task_queue: Arc::new(Mutex::new(VecDeque::new())),
         agent_registry: Arc::new(Mutex::new(HashMap::new())),
         task_results: Arc::new(Mutex::new(Vec::new())),
-    };
+    })
+}
 
+pub fn router() -> Router<()> {
+    let _ = get_state();
+    
     Router::new()
         .route("/api/pc/state", post(pc_state))
         .route("/api/daemon/task", post(daemon_task))
         .route("/api/daemon/result", post(daemon_result))
         .route("/api/daemon/heartbeat", post(daemon_heartbeat))
-        .with_state(state)
 }
 
-async fn pc_state(
-    mut state: axum::extract::State<DaemonState>,
-    Json(_req): Json<DaemonRequest>,
-) -> Json<PCStateResponse> {
+async fn pc_state(Json(_req): Json<DaemonRequest>) -> Json<PCStateResponse> {
+    let state = get_state();
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -120,10 +118,8 @@ async fn pc_state(
     })
 }
 
-async fn daemon_task(
-    mut state: axum::extract::State<DaemonState>,
-    Json(req): Json<DaemonRequest>,
-) -> Json<TaskResponse> {
+async fn daemon_task(Json(req): Json<DaemonRequest>) -> Json<TaskResponse> {
+    let state = get_state();
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -134,7 +130,6 @@ async fn daemon_task(
             let agent_id = req.agent_id.clone();
             let mut queue = state.task_queue.lock().await;
             
-            // Find task not assigned or assigned to this agent
             let task = queue.iter_mut().find(|t| {
                 t.status == "pending" && 
                 (t.assigned_to.is_none() || t.assigned_to.as_ref() == agent_id.as_ref())
@@ -142,7 +137,7 @@ async fn daemon_task(
 
             if let Some(task) = task {
                 task.status = "assigned".to_string();
-                task.assigned_to = agent_id.clone();
+                task.assigned_to = agent_id;
                 Json(TaskResponse {
                     available: true,
                     task: Some(task.clone()),
@@ -161,8 +156,9 @@ async fn daemon_task(
             let agent_status = req.status.clone().unwrap_or_else(|| "idle".to_string());
             
             let mut registry = state.agent_registry.lock().await;
-            registry.insert(agent_id.unwrap_or_else(|| "unknown".to_string()), AgentInfo {
-                agent_id: agent_id.unwrap_or_else(|| "unknown".to_string()),
+            let id = agent_id.clone().unwrap_or_else(|| "unknown".to_string());
+            registry.insert(id.clone(), AgentInfo {
+                agent_id: id,
                 last_heartbeat: now,
                 status: agent_status,
                 current_task: None,
@@ -184,10 +180,8 @@ async fn daemon_task(
     }
 }
 
-async fn daemon_result(
-    mut state: axum::extract::State<DaemonState>,
-    Json(req): Json<DaemonRequest>,
-) -> Json<serde_json::Value> {
+async fn daemon_result(Json(req): Json<DaemonRequest>) -> Json<serde_json::Value> {
+    let state = get_state();
     if let (Some(agent_id), Some(result)) = (req.agent_id, req.result) {
         let task_result = TaskResult {
             task_id: result.get("task_id").and_then(|v| v.as_str()).unwrap_or("unknown").to_string(),
@@ -212,10 +206,8 @@ async fn daemon_result(
     }
 }
 
-async fn daemon_heartbeat(
-    mut state: axum::extract::State<DaemonState>,
-    Json(req): Json<DaemonRequest>,
-) -> Json<HeartbeatResponse> {
+async fn daemon_heartbeat(Json(req): Json<DaemonRequest>) -> Json<HeartbeatResponse> {
+    let state = get_state();
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
@@ -224,7 +216,7 @@ async fn daemon_heartbeat(
     let agent_id = req.agent_id.clone();
     let agent_status = req.status.clone().unwrap_or_else(|| "alive".to_string());
 
-    if let Some(agent_id) = agent_id {
+    if let agent_id = agent_id {
         let mut registry = state.agent_registry.lock().await;
         if let Some(agent) = registry.get_mut(&agent_id) {
             agent.last_heartbeat = now;

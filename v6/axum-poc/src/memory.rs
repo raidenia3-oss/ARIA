@@ -1,5 +1,5 @@
 //! Memory routes: store, retrieve, sessions, vector, longterm.
-use axum::{routing::get, Router, Json};
+use axum::{routing::{get, post}, Router, Json};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
