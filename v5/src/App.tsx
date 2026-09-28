@@ -8,7 +8,7 @@ import { ChatInput } from './components/Chat/ChatInput'
 import { SkillsSidebar } from './components/Skills/SkillsSidebar'
 import { ControlCenter } from './components/Controls/ControlCenter'
 import { NeuralBrain } from './components/NeuralBrain/NeuralBrain'
-import { SkillCircle } from './components/SkillCircle/SkillCircle'
+import { SkillProgression } from './components/SkillProgression/SkillProgression'
 import { GodsEyeView } from './components/GodsEyeView/GodsEyeView'
 import { JarvisVoice } from './components/JarvisVoice/JarvisVoice'
 import { orbStates, useOrbState } from './hooks/useOrbState'
@@ -183,7 +183,7 @@ export default function App() {
               <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-accent-green">
                 ◇ Skill Progression
               </span>
-              <SkillCircle />
+              <SkillProgression />
             </div>
 
             {/* Phase O: Gods Eye View */}
