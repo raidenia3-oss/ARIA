@@ -1,8 +1,17 @@
 //! Core routes: health, status, system info.
-use axum::{routing::get, Router, Json};
+//! Phase L.4: Enhanced with SharedState for real metrics.
+
+use axum::{
+    routing::get,
+    Router,
+    Extension,
+    Json,
+};
 use serde::Serialize;
-use std::time::Instant;
-use std::sync::OnceLock;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+
+use crate::state::SharedState;
 
 #[derive(Serialize)]
 struct HealthResponse {
@@ -12,35 +21,48 @@ struct HealthResponse {
     uptime_ms: u64,
 }
 
-static START_TIME: OnceLock<Instant> = OnceLock::new();
-
 pub fn router() -> Router<()> {
-    START_TIME.get_or_init(Instant::now);
-    
     Router::new()
         .route("/health", get(health))
         .route("/api/system/status", get(system_status))
         .route("/api/system/health", get(health))
 }
 
-async fn health() -> Json<HealthResponse> {
-    let start = START_TIME.get().unwrap();
+async fn health(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+) -> Json<HealthResponse> {
+    let state = state.lock().await;
     Json(HealthResponse {
         status: "ok".into(),
         framework: "Axum (Rust)".into(),
         version: "0.1.0-POC".into(),
-        uptime_ms: start.elapsed().as_millis() as u64,
+        uptime_ms: state.uptime_ms(),
     })
 }
 
-async fn system_status() -> Json<serde_json::Value> {
-    let start = START_TIME.get().unwrap();
+async fn system_status(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+) -> Json<serde_json::Value> {
+    let state = state.lock().await;
+    let req_count = *state.request_count.lock().await;
+    let chat_count = *state.chat_count.lock().await;
+    let agent_count = state.daemon_agents.lock().await.len();
+    let task_count = state.task_queue.lock().await.len();
+    let result_count = state.task_results.lock().await.len();
+
     Json(serde_json::json!({
         "status": "ok",
         "framework": "Axum (Rust)",
         "version": "0.1.0-POC",
-        "uptime_ms": start.elapsed().as_millis(),
+        "uptime_ms": state.uptime_ms(),
         "memory_safety": "compile-time guaranteed",
         "gc_pauses": "0ms (deterministic)",
+        "requests_served": req_count,
+        "chats_processed": chat_count,
+        "daemon_agents": agent_count,
+        "pending_tasks": task_count,
+        "completed_results": result_count,
+        "port": 8002,
+        "mode": "ARIA-Axum-v6.0",
     }))
 }

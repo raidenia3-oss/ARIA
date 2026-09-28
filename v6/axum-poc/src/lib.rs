@@ -5,13 +5,13 @@
 //!
 //! Migration strategy:
 //! 1. Route groups extracted as separate modules
-//! 2. Shared state via Arc<Mutex<...>> or DashMap
+//! 2. Shared state via Arc<Mutex<...>>
 //! 3. Type-safe extractors (Json, Path, Query)
 //! 4. Middleware: tracing, auth, rate limiting
 //! 5. Gradual cutover: FastAPI (8000) → Axum (8001) → Axum (8000)
 
 use axum::{
-    routing::{get, post, put, delete},
+    routing::{get, post},
     Router,
 };
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
@@ -36,6 +36,7 @@ pub mod auth;
 pub mod admin;
 pub mod self_improvement;
 pub mod daemon;
+pub mod state;
 
 /// Build the complete Axum router with all route groups.
 /// Phase L.4: Full migration architecture.
@@ -60,39 +61,12 @@ pub fn create_full_router() -> Router {
         .merge(auth::router())
         .merge(admin::router())
         .merge(self_improvement::router())
-        .merge(daemon::router());
+        .merge(daemon::router())
+        .route("/ws", get(state::websocket_handler));
 
     app.layer(
         TraceLayer::new_for_http()
             .on_request(())
     )
     .layer(CorsLayer::permissive())
-}
-
-/// Route count estimate by module (mirrors FastAPI structure).
-pub const ROUTE_ESTIMATE: &[(&str, usize)] = &[
-    ("core", 12),
-    ("chat", 8),
-    ("skills", 15),
-    ("agents", 25),
-    ("memory", 20),
-    ("voice", 8),
-    ("vision", 6),
-    ("system", 18),
-    ("files", 12),
-    ("web", 10),
-    ("proactive", 8),
-    ("evolution", 6),
-    ("learning", 8),
-    ("computer", 15),
-    ("github", 12),
-    ("social", 10),
-    ("auth", 10),
-    ("admin", 8),
-    ("self_improvement", 6),
-];
-
-/// Total estimated routes: ~237 (plus health/status = ~245)
-pub fn total_routes() -> usize {
-    ROUTE_ESTIMATE.iter().map(|(_, n)| n).sum()
 }

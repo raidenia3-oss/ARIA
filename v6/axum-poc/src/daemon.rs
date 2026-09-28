@@ -1,28 +1,19 @@
 //! Daemon routes: USB-ARIA coordination endpoints.
 //! Phase L.4: USB-ARIA distributed autonomous infrastructure.
+//! Uses SharedState for cross-module state sharing.
+
 use axum::{
     extract::Json,
     routing::post,
     Router,
+    Extension,
 };
 use serde::{Deserialize, Serialize};
-use std::collections::{HashMap, VecDeque};
-use std::sync::{Arc, OnceLock};
+use std::sync::Arc;
 use tokio::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-// Static state using OnceLock
-static DAEMON_STATE: OnceLock<DaemonState> = OnceLock::new();
-
-#[derive(Clone)]
-struct DaemonState {
-    pc_active: Arc<Mutex<bool>>,
-    idle_seconds: Arc<Mutex<u64>>,
-    session_user: Arc<Mutex<String>>,
-    task_queue: Arc<Mutex<VecDeque<Task>>>,
-    agent_registry: Arc<Mutex<HashMap<String, AgentInfo>>>,
-    task_results: Arc<Mutex<Vec<TaskResult>>>,
-}
+use crate::state::{SharedState, AgentInfo};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Task {
@@ -32,14 +23,6 @@ struct Task {
     assigned_to: Option<String>,
     status: String,
     created_at: u64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-struct AgentInfo {
-    agent_id: String,
-    last_heartbeat: u64,
-    status: String,
-    current_task: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -82,20 +65,7 @@ struct HeartbeatResponse {
     timestamp: u64,
 }
 
-fn get_state() -> &'static DaemonState {
-    DAEMON_STATE.get_or_init(|| DaemonState {
-        pc_active: Arc::new(Mutex::new(false)),
-        idle_seconds: Arc::new(Mutex::new(0)),
-        session_user: Arc::new(Mutex::new("unknown".to_string())),
-        task_queue: Arc::new(Mutex::new(VecDeque::new())),
-        agent_registry: Arc::new(Mutex::new(HashMap::new())),
-        task_results: Arc::new(Mutex::new(Vec::new())),
-    })
-}
-
 pub fn router() -> Router<()> {
-    let _ = get_state();
-    
     Router::new()
         .route("/api/pc/state", post(pc_state))
         .route("/api/daemon/task", post(daemon_task))
@@ -103,27 +73,34 @@ pub fn router() -> Router<()> {
         .route("/api/daemon/heartbeat", post(daemon_heartbeat))
 }
 
-async fn pc_state(Json(_req): Json<DaemonRequest>) -> Json<PCStateResponse> {
-    let state = get_state();
-    let now = SystemTime::now()
+fn now_secs() -> u64 {
+    SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
-        .as_secs();
+        .as_secs()
+}
 
+async fn pc_state(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Json(_req): Json<DaemonRequest>,
+) -> Json<PCStateResponse> {
+    let state = state.lock().await;
+    let now = now_secs();
+    
     Json(PCStateResponse {
-        active: *state.pc_active.lock().await,
-        idle_seconds: *state.idle_seconds.lock().await,
-        session_user: state.session_user.lock().await.clone(),
+        active: true,
+        idle_seconds: 0,
+        session_user: "ARIA-USB".to_string(),
         timestamp: now,
     })
 }
 
-async fn daemon_task(Json(req): Json<DaemonRequest>) -> Json<TaskResponse> {
-    let state = get_state();
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs();
+async fn daemon_task(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Json(req): Json<DaemonRequest>,
+) -> Json<TaskResponse> {
+    let mut state = state.lock().await;
+    let now = now_secs();
 
     match req.action.as_deref() {
         Some("get_pending") => {
@@ -140,7 +117,14 @@ async fn daemon_task(Json(req): Json<DaemonRequest>) -> Json<TaskResponse> {
                 task.assigned_to = agent_id;
                 Json(TaskResponse {
                     available: true,
-                    task: Some(task.clone()),
+                    task: Some(Task {
+                        id: task.get("id").and_then(|v| v.as_str()).unwrap_or("unknown").to_string(),
+                        task_type: task.get("task_type").and_then(|v| v.as_str()).unwrap_or("generic").to_string(),
+                        payload: task.get("payload").cloned().unwrap_or(serde_json::json!({})),
+                        assigned_to: task.get("assigned_to").and_then(|v| v.as_str().map(String::from)),
+                        status: "assigned".to_string(),
+                        created_at: now,
+                    }),
                     status: "task_assigned".to_string(),
                 })
             } else {
@@ -152,13 +136,12 @@ async fn daemon_task(Json(req): Json<DaemonRequest>) -> Json<TaskResponse> {
             }
         }
         Some("report_status") => {
-            let agent_id = req.agent_id.clone();
+            let agent_id = req.agent_id.clone().unwrap_or_else(|| "unknown".to_string());
             let agent_status = req.status.clone().unwrap_or_else(|| "idle".to_string());
             
-            let mut registry = state.agent_registry.lock().await;
-            let id = agent_id.clone().unwrap_or_else(|| "unknown".to_string());
-            registry.insert(id.clone(), AgentInfo {
-                agent_id: id,
+            let mut registry = state.daemon_agents.lock().await;
+            registry.insert(agent_id.clone(), AgentInfo {
+                agent_id: agent_id.clone(),
                 last_heartbeat: now,
                 status: agent_status,
                 current_task: None,
@@ -180,8 +163,11 @@ async fn daemon_task(Json(req): Json<DaemonRequest>) -> Json<TaskResponse> {
     }
 }
 
-async fn daemon_result(Json(req): Json<DaemonRequest>) -> Json<serde_json::Value> {
-    let state = get_state();
+async fn daemon_result(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Json(req): Json<DaemonRequest>,
+) -> Json<serde_json::Value> {
+    let mut state = state.lock().await;
     if let (Some(agent_id), Some(result)) = (req.agent_id, req.result) {
         let task_result = TaskResult {
             task_id: result.get("task_id").and_then(|v| v.as_str()).unwrap_or("unknown").to_string(),
@@ -192,7 +178,13 @@ async fn daemon_result(Json(req): Json<DaemonRequest>) -> Json<serde_json::Value
         };
 
         let mut results = state.task_results.lock().await;
-        results.push(task_result);
+        results.push(serde_json::json!({
+            "task_id": task_result.task_id,
+            "agent_id": task_result.agent_id,
+            "status": task_result.status,
+            "output": task_result.output,
+            "executed_at": task_result.executed_at,
+        }));
 
         Json(serde_json::json!({
             "status": "result_recorded",
@@ -206,34 +198,23 @@ async fn daemon_result(Json(req): Json<DaemonRequest>) -> Json<serde_json::Value
     }
 }
 
-async fn daemon_heartbeat(Json(req): Json<DaemonRequest>) -> Json<HeartbeatResponse> {
-    let state = get_state();
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs();
+async fn daemon_heartbeat(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Json(req): Json<DaemonRequest>,
+) -> Json<HeartbeatResponse> {
+    let mut state = state.lock().await;
+    let now = now_secs();
 
-    let agent_id = req.agent_id.clone();
+    let agent_id = req.agent_id.clone().unwrap_or_else(|| "unknown".to_string());
     let agent_status = req.status.clone().unwrap_or_else(|| "alive".to_string());
 
-    if let Some(agent_id) = agent_id {
-        let mut registry = state.agent_registry.lock().await;
-        if let Some(agent) = registry.get_mut(&agent_id.clone()) {
-            agent.last_heartbeat = now;
-            agent.status = agent_status;
-        } else {
-            let id = agent_id.clone();
-            registry.insert(agent_id, AgentInfo {
-                agent_id: id,
-                last_heartbeat: now,
-                status: agent_status,
-                current_task: None,
-            });
-        }
+    let mut registry = state.daemon_agents.lock().await;
+    if let Some(agent) = registry.get_mut(&agent_id) {
+        agent.last_heartbeat = now;
+        agent.status = agent_status;
     } else {
-        let mut registry = state.agent_registry.lock().await;
-        registry.insert("unknown".to_string(), AgentInfo {
-            agent_id: "unknown".to_string(),
+        registry.insert(agent_id.clone(), AgentInfo {
+            agent_id: agent_id.clone(),
             last_heartbeat: now,
             status: agent_status,
             current_task: None,

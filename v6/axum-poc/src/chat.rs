@@ -1,8 +1,18 @@
 //! Chat routes: message, streaming, history.
-//! Phase L.4: Connects to Ollama for AI inference.
-use axum::{routing::{get, post}, Router, Json};
+//! Phase L.4: Connects to Ollama for AI inference, tracks via SharedState.
+
+use axum::{
+    routing::{get, post},
+    Router,
+    Extension,
+    Json,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+
+use crate::state::SharedState;
 
 #[derive(Deserialize)]
 struct ChatRequest {
@@ -40,13 +50,22 @@ pub fn router() -> Router<()> {
         .route("/api/chat/history", get(chat_history))
 }
 
-async fn chat(Json(req): Json<ChatRequest>) -> Json<ChatResponse> {
+async fn chat(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Json(req): Json<ChatRequest>,
+) -> Json<ChatResponse> {
     let start = std::time::Instant::now();
     let provider = req.provider.clone().unwrap_or_else(|| "dolphin-2_6-phi-2".to_string());
 
     // Call Ollama
     let ollama_response = call_ollama(&req.message, &provider).await;
     
+    // Increment chat counter
+    {
+        let state = state.lock().await;
+        state.increment_chats().await;
+    }
+
     Json(ChatResponse {
         response: ollama_response,
         provider: format!("ollama:{}", provider),
@@ -67,7 +86,7 @@ async fn call_ollama(message: &str, model: &str) -> String {
     match client
         .post("http://localhost:11434/api/generate")
         .json(&payload)
-        .timeout(std::time::Duration::from_secs(30))
+        .timeout(std::time::Duration::from_secs(60))
         .send()
         .await
     {
@@ -86,9 +105,24 @@ async fn call_ollama(message: &str, model: &str) -> String {
     }
 }
 
-async fn chat_stream(Json(req): Json<ChatRequest>) -> &'static str {
-    let _ = req;
-    "streaming endpoint - use /api/chat without stream=false"
+async fn chat_stream(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Json(req): Json<ChatRequest>,
+) -> Json<ChatResponse> {
+    // For streaming, just call non-streaming and return
+    let response = call_ollama(&req.message, "dolphin-2_6-phi-2").await;
+    
+    {
+        let state = state.lock().await;
+        state.increment_chats().await;
+    }
+    
+    Json(ChatResponse {
+        response,
+        provider: "ollama:stream".to_string(),
+        latency_ms: 0,
+        session_id: req.session_id,
+    })
 }
 
 async fn chat_history() -> Json<ChatHistoryResponse> {

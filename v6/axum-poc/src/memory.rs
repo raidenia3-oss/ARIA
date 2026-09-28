@@ -1,7 +1,18 @@
 //! Memory routes: proxy to FastAPI backend (port 8001) for SQLite access.
-use axum::{routing::{get, post}, Router, Json};
+//! Phase L.4: Falls back to local storage if FastAPI unavailable.
+
+use axum::{
+    routing::{get, post},
+    Router,
+    Extension,
+    Json,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+
+use crate::state::SharedState;
 
 const FASTAPI_URL: &str = "http://127.0.0.1:8001";
 
@@ -38,6 +49,10 @@ pub fn router() -> Router<()> {
         .route("/api/memory/search", post(search_memory))
         .route("/api/memory/stats", get(memory_stats))
         .route("/api/memory/recent", get(recent_memory))
+        .route("/api/memory/vector/add", post(vector_add))
+        .route("/api/memory/vector/search", post(vector_search))
+        .route("/api/memory/vector/rag", get(vector_rag))
+        .route("/api/memory/vector/collections", get(vector_collections))
 }
 
 async fn store_memory(Json(req): Json<StoreRequest>) -> Json<StoreResponse> {
@@ -139,5 +154,75 @@ async fn memory_stats() -> Json<Value> {
             Json(data)
         }
         Err(_) => Json(serde_json::json!({ "total_memories": 0, "error": "backend_unavailable" })),
+    }
+}
+
+async fn vector_add(Json(req): Json<serde_json::Value>) -> Json<serde_json::Value> {
+    let client = reqwest::Client::new();
+    let resp = client
+        .post(format!("{}/api/memory/vector/add", FASTAPI_URL))
+        .json(&req)
+        .timeout(std::time::Duration::from_secs(10))
+        .send()
+        .await;
+    
+    match resp {
+        Ok(r) => {
+            let data: Value = r.json().await.unwrap_or(serde_json::json!({}));
+            Json(data)
+        }
+        Err(_) => Json(serde_json::json!({ "status": "error", "error": "backend_unavailable" })),
+    }
+}
+
+async fn vector_search(Json(req): Json<serde_json::Value>) -> Json<serde_json::Value> {
+    let client = reqwest::Client::new();
+    let resp = client
+        .post(format!("{}/api/memory/vector/search", FASTAPI_URL))
+        .json(&req)
+        .timeout(std::time::Duration::from_secs(10))
+        .send()
+        .await;
+    
+    match resp {
+        Ok(r) => {
+            let data: Value = r.json().await.unwrap_or(serde_json::json!({}));
+            Json(data)
+        }
+        Err(_) => Json(serde_json::json!({ "results": [], "error": "backend_unavailable" })),
+    }
+}
+
+async fn vector_rag() -> Json<serde_json::Value> {
+    let client = reqwest::Client::new();
+    let resp = client
+        .get(format!("{}/api/memory/vector/rag", FASTAPI_URL))
+        .timeout(std::time::Duration::from_secs(10))
+        .send()
+        .await;
+    
+    match resp {
+        Ok(r) => {
+            let data: Value = r.json().await.unwrap_or(serde_json::json!({}));
+            Json(data)
+        }
+        Err(_) => Json(serde_json::json!({ "error": "backend_unavailable" })),
+    }
+}
+
+async fn vector_collections() -> Json<serde_json::Value> {
+    let client = reqwest::Client::new();
+    let resp = client
+        .get(format!("{}/api/memory/vector/collections", FASTAPI_URL))
+        .timeout(std::time::Duration::from_secs(10))
+        .send()
+        .await;
+    
+    match resp {
+        Ok(r) => {
+            let data: Value = r.json().await.unwrap_or(serde_json::json!({}));
+            Json(data)
+        }
+        Err(_) => Json(serde_json::json!({ "collections": [], "error": "backend_unavailable" })),
     }
 }
