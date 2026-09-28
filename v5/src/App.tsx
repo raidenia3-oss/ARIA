@@ -15,6 +15,7 @@ import { orbStates, useOrbState } from './hooks/useOrbState'
 import { useChat } from './hooks/useChat'
 import { useSettings } from './hooks/useSettings'
 import { useBackendTest } from './hooks/useBackendTest'
+import { useAriaBackend } from './hooks/useAriaBackend'
 
 /** Blip corto de confirmación (WebAudio, sin assets) */
 function blip() {
@@ -48,7 +49,13 @@ export default function App() {
   const { settings, updateSettings } = useSettings()
   const chat = useChat(setOrbState, { stream: settings.streaming })
   const backendTest = useBackendTest()
-  const status = orbStates[orbState]
+  const aria = useAriaBackend()
+
+  // La conexión con Axum (8002) sólo dirige el orbe cuando no hay una
+  // fase local activa (chat, escritura, voz). Si el usuario está interactuando,
+  // la fase local tiene prioridad.
+  const effectivePhase = orbState === 'idle' ? aria.connectionPhase : orbState
+  const status = orbStates[effectivePhase]
 
   useEffect(() => {
     window.electronAPI
@@ -56,6 +63,10 @@ export default function App() {
       .then((payload) => console.log('[ARIA] system status', payload))
       .catch(() => undefined)
   }, [])
+
+  useEffect(() => {
+    console.log(`[ARIA-Axum] ${aria.connection}`, aria.health ?? aria.lastError)
+  }, [aria.connection, aria.health, aria.lastError])
 
   const handleSend = (text: string) => {
     if (settings.soundEnabled) blip()
@@ -92,7 +103,7 @@ export default function App() {
       <div className="hud-grid pointer-events-none absolute inset-0 opacity-[0.10]" />
 
       <Header
-        orbState={orbState}
+        orbState={effectivePhase}
         showSkills={showSkills}
         onSkillsToggle={() => setShowSkills((value) => !value)}
         onControlClick={() => setShowControl((value) => !value)}
@@ -167,7 +178,7 @@ export default function App() {
                 className="orb-halo"
                 style={{ background: `radial-gradient(circle, ${status.glow} 0%, transparent 68%)` }}
               />
-              <OrbVisual phase={orbState} animated={settings.animations} />
+              <OrbVisual phase={effectivePhase} animated={settings.animations} />
             </div>
 
             {/* Phase N: Neural Brain Dashboard */}

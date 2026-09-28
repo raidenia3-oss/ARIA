@@ -8,7 +8,7 @@ const FASTAPI_URL: &str = "http://127.0.0.1:8001";
 #[derive(Deserialize)]
 struct StoreRequest {
     query: String,
-    response: String,
+    content: String,
     metadata: Option<Value>,
 }
 
@@ -46,12 +46,12 @@ async fn store_memory(Json(req): Json<StoreRequest>) -> Json<StoreResponse> {
 
     let payload = serde_json::json!({
         "query": req.query,
-        "response": req.response,
+        "content": req.content,
         "metadata": req.metadata.unwrap_or(serde_json::json!({}))
     });
 
     let resp = client
-        .post(format!("{}/api/memory/store", FASTAPI_URL))
+        .post(format!("{}/api/memory/save", FASTAPI_URL))
         .json(&payload)
         .timeout(std::time::Duration::from_secs(10))
         .send()

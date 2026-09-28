@@ -57,5 +57,13 @@
     "meta": {
       "type": "test"
     }
+  },
+  {
+    "id": "2083311599721623416",
+    "timestamp": "2026-09-28T22:37:36.913691Z",
+    "content": "test response",
+    "meta": {
+      "type": "fact"
+    }
   }
 ]

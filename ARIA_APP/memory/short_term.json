@@ -57,5 +57,13 @@
     "meta": {
       "type": "test"
     }
+  },
+  {
+    "timestamp": "2026-09-28T22:37:36.903992Z",
+    "user": "test response",
+    "response": "test response",
+    "meta": {
+      "type": "fact"
+    }
   }
 ]
