@@ -21,6 +21,7 @@ pub fn router() -> Router<()> {
         .route("/api/proactive/alerts", get(alerts))
         .route("/api/proactive/reminders", get(reminders))
         .route("/api/proactive/trigger", post(trigger_proactive))
+        .route("/api/proactive/pending", get(pending))
 }
 
 async fn alert() -> Json<serde_json::Value> {
@@ -52,6 +53,15 @@ async fn alerts() -> Json<serde_json::Value> {
     Json(json!({
         "status": "ok",
         "alerts": [],
+        "server": "ARIA-Axum-8002",
+    }))
+}
+
+async fn pending() -> Json<serde_json::Value> {
+    Json(json!({
+        "status": "ok",
+        "pending": [],
+        "count": 0,
         "server": "ARIA-Axum-8002",
     }))
 }

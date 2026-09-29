@@ -315,13 +315,15 @@ async fn login(
 ) -> Json<serde_json::Value> {
     let state = state.lock().await;
     state.increment_requests().await;
-    
+
     let username = req.get("username").and_then(|v| v.as_str()).unwrap_or("");
-    
+    let token = state.api_key().to_string();
+
     Json(json!({
         "status": "ok",
         "username": username,
-        "token": "axum-jwt-token-placeholder",
+        "token": token,
+        "token_type": "Bearer",
         "server": "ARIA-Axum-8002",
     }))
 }

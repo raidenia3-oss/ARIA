@@ -1,5 +1,5 @@
-appId: com.aria.os.v5
-productName: ARIA OS v5.0
+appId: com.aria.os.v6
+productName: ARIA OS v6.0
 copyright: ARIA OS
 
 directories:
@@ -12,8 +12,25 @@ files:
   - assets/**/*
   - package.json
 
-# Backend FastAPI v4 empaquetado (2MB) -> resources/backend
+# ---------------------------------------------------------------------------
+# Backend binaries
+# ---------------------------------------------------------------------------
+# v6.0 core = Axum (Rust). The compiled binary ships inside the installer and
+# is unpacked to <resourcesPath>/axum/aria-axum-poc.exe at install/run time.
+# The Electron main process resolves it via process.resourcesPath and spawns it
+# on 127.0.0.1:8002.
+#
+# Build it before packaging (produces target/release/aria-axum-poc.exe):
+#   cd ../v6/axum-poc && cargo build --release
+#
+# The FastAPI v4 backend is still listed because dist-electron/main.js falls
+# back to spawning uvicorn when the Axum binary is absent. Remove this entry
+# once the Axum-only cutover lands.
 extraResources:
+  - from: ../v6/axum-poc/target/release/aria-axum-poc.exe
+    to: axum/aria-axum-poc.exe
+  - from: ../v6/axum-poc/start-aria-auto.bat
+    to: axum/start-aria-auto.bat
   - from: ../ARIA_APP/backend
     to: backend
     filter:
@@ -26,19 +43,28 @@ extraResources:
 
 win:
   target:
-    - nsis
-    - portable
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
   icon: assets/icon.ico
+  artifactName: ${productName}-${version}-${arch}.${ext}
 
 nsis:
   oneClick: false
   perMachine: false
+  allowElevation: true
   allowToChangeInstallationDirectory: true
-  installerIcon: assets/icon.ico
-  uninstallerIcon: assets/icon.ico
   createDesktopShortcut: true
   createStartMenuShortcut: true
-  shortcutName: ARIA OS v5.0
+  installerIcon: assets/icon.ico
+  uninstallerIcon: assets/icon.ico
+  shortcutName: ARIA OS v6.0
+
+portable:
+  artifactName: ${productName}-${version}-portable.${ext}
 
 asar: true
 compression: maximum

@@ -1,7 +1,7 @@
 {
-  "name": "aria-os-v5",
-  "version": "5.0.0",
-  "description": "ARIA OS v5.0 — Electron + React + Three.js Desktop Assistant",
+  "name": "aria-os-v6",
+  "version": "6.0.0",
+  "description": "ARIA OS v6.0 — Electron + React + Three.js shell with Rust/Axum core",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
@@ -9,9 +9,11 @@
     "typecheck": "tsc --noEmit",
     "build": "npm run build:renderer",
     "build:renderer": "vite build",
-    "build:exe": "npm run build && electron-builder --win",
+    "build:axum": "cd ../v6/axum-poc && cargo build --release",
+    "build:exe": "npm run build:axum && npm run build && electron-builder --win",
+    "build:portable": "npm run build:axum && npm run build && electron-builder --win portable",
     "preview": "vite preview",
-    "make": "npm run build && electron-builder",
+    "make": "npm run build:axum && npm run build && electron-builder",
     "start": "electron dist-electron/main.js",
     "start:win": "powershell -Command \"Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue; npx electron dist-electron/main.js\""
   },

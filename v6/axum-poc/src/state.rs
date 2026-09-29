@@ -318,6 +318,11 @@ impl SharedState {
         constant_time_eq(token, &self.auth.api_key)
     }
 
+    /// Return the active API key (for login/refresh responses).
+    pub fn api_key(&self) -> &str {
+        &self.auth.api_key
+    }
+
     /// True when the active key was randomly generated at startup.
     pub fn is_generated_key(&self) -> bool {
         self.auth.is_generated()

@@ -153,10 +153,10 @@ async fn daemon_task(
         Some("get_pending") => {
             let agent_id = req.agent_id.clone();
             let mut queue = state.task_queue.lock().await;
-            
+
             let task_idx = queue.iter().position(|t| {
-                t.get("status").and_then(|v| v.as_str()) == Some("pending") && 
-                (t.get("assigned_to").is_none() || t.get("assigned_to").and_then(|v| v.as_str()) == agent_id.as_deref())
+                t.get("status").and_then(|v| v.as_str()) == Some("pending") &&
+                (t.get("assigned_to").map(|v| v.is_null()).unwrap_or(true))
             });
 
             if let Some(idx) = task_idx {
@@ -168,9 +168,9 @@ async fn daemon_task(
                         *assigned = serde_json::Value::String(agent_id.clone().unwrap_or_default());
                     }
                 }
-                
+
                 let task_data = queue.get(idx).unwrap().clone();
-                
+
                 Json(TaskResponse {
                     available: true,
                     task: Some(Task {
@@ -190,6 +190,41 @@ async fn daemon_task(
                     status: "no_tasks".to_string(),
                 })
             }
+        }
+        Some("create") => {
+            let task_id = format!("task_{}", now);
+            let task_type = req.task.as_ref()
+                .and_then(|t| t.get("task_type"))
+                .and_then(|v| v.as_str())
+                .unwrap_or("generic")
+                .to_string();
+            let payload = req.task.as_ref()
+                .and_then(|t| t.get("payload"))
+                .cloned()
+                .unwrap_or(serde_json::json!({}));
+
+            let mut queue = state.task_queue.lock().await;
+            queue.push_back(serde_json::json!({
+                "id": task_id,
+                "task_type": task_type,
+                "payload": payload,
+                "assigned_to": null,
+                "status": "pending",
+                "created_at": now,
+            }));
+
+            Json(TaskResponse {
+                available: true,
+                task: Some(Task {
+                    id: task_id,
+                    task_type,
+                    payload,
+                    assigned_to: None,
+                    status: "pending".to_string(),
+                    created_at: now,
+                }),
+                status: "task_created".to_string(),
+            })
         }
         Some("report_status") => {
             let agent_id = req.agent_id.clone().unwrap_or_else(|| "unknown".to_string());

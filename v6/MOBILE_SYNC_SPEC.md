@@ -1,9 +1,14 @@
 # ARIA v6.0 — Phase Airi (Mobile Sync) Specification
 
-Status: Draft / Phase Airi
+Status: Draft / Phase Airi — **verified against source on 2026-09-29**
 Backend: `v6/axum-poc` (Rust + Axum), bound to `127.0.0.1:8002`
 Client: `v6/airi_mobile` (Flutter 3.x)
-Source of truth: `v6/axum-poc/src/{state.rs,daemon.rs,core.rs,system.rs,computer.rs,auth.rs,agents.rs,skills.rs,chat.rs}`
+Source of truth: `v6/axum-poc/src/{state.rs,daemon.rs,core.rs,system.rs,computer.rs,auth.rs,agents.rs,skills.rs,chat.rs,lib.rs}`
+
+> **Auth is enforced and rate limiting is live.** Earlier revisions of this document
+> described both as absent and flagged a non-compiling `daemon.rs`. All three statements
+> were stale — the fixes landed before this pass. See §0.1–§0.2 for the corrected
+> picture and for the defects that are *actually* still open.
 
 ---
 
@@ -17,21 +22,29 @@ implement before production mobile sync.
 
 | Concern | Reality | Source |
 | --- | --- | --- |
-| WebSocket | `GET /ws` is an **echo loop**. Sends one `connected` welcome, echoes every text frame as `{"type":"echo",...}`, answers binary with `{"type":"ack"}`, relays `Ping`→`Pong`. | `state.rs:14-69` |
-| Auth | None. `CorsLayer::permissive()`, no auth middleware layer. `/api/auth/login` returns a **hardcoded placeholder token** `"axum-jwt-token-placeholder"`. | `auth.rs:30-45`, `lib.rs:68-72` |
-| Rate limiting | None. | `lib.rs:44-73` |
+| WebSocket | `GET /ws` is an **echo loop**. Sends one `connected` welcome, echoes every text frame as `{"type":"echo",...}`, answers binary with `{"type":"ack"}`, relays `Ping`→`Pong`. | `state.rs:160-211` |
+| Auth | **Enforced.** The `auth::guard` middleware runs on every path and requires a bearer token on all non-public routes. Key comes from `ARIA_API_KEY`; a random key is generated and printed if that variable is unset. Comparison is constant time. | `auth.rs:214-287`, `state.rs:47-88` |
+| Public paths | `/`, `/health`, `/ws`, `/api/auth/login`, `/api/auth/register`, `/api/auth/refresh` — the rest require a token. | `auth.rs:35-45` |
+| Token transports | `Authorization: Bearer <t>` **or** `X-API-Key: <t>`. A `?token=` query param is **not** read by the server. | `auth.rs:161-176` |
+| Rate limiting | **Implemented.** Fixed window, 100 requests / 60 s per client IP, on every path including public ones. Returns `429` + `Retry-After`, and stamps `X-RateLimit-Limit` / `X-RateLimit-Remaining` on every response. | `state.rs:20-22, 125-153`, `auth.rs:125-132, 290-296` |
 | Push | None. | — |
-| Task queue | `VecDeque<Value>` in `SharedState` (`state.rs:79`). Nothing currently enqueues into it. | `daemon.rs:127` |
-| Daemon protocol | Functional: `get_pending`, `report_status`, `report_result`, `heartbeat`. | `daemon.rs:140-279` |
-| PC state | `POST /api/pc/state` returns a **hardcoded stub** (`active: true`, `idle_seconds: 0`, `session_user: "ARIA-USB"`). Request body is discarded. | `daemon.rs:109-121` |
+| Task queue | `VecDeque<Value>` in `SharedState` (`state.rs:256`). Read by `daemon.rs:132,155` and `core.rs:50`; **nothing ever pushes onto it.** | `daemon.rs:128-143` |
+| Daemon protocol | Functional: `get_pending`, `report_status`, `report_result`, `heartbeat`. | `daemon.rs:140-284` |
+| PC state | `POST /api/pc/state` returns a **hardcoded stub** (`active: true`, `idle_seconds: 0`, `session_user: "ARIA-USB"`). Request body is discarded. | `daemon.rs:114-126` |
 | Memory / system info | Hardcoded constants (16 GB total, 50% used, 75 volume, fixed app list). | `system.rs`, `computer.rs` |
 | CPU | **No CPU endpoint exists.** `/api/computer/status` returns `cpu: "x86_64"` (the architecture string), not a load percentage. | `computer.rs:112-120` |
+| Orb state | `/api/orb/{state,phase,start,stop}` exist and control the native wgpu orb window. Not mobile-relevant yet, but a second WS client can read it. | `daemon.rs:101-104, 286-349` |
 
 ### 0.2 Blocking backend defects found during this phase
 
-1. **`daemon.rs` does not compile.** `HeartbeatResponse` is used at `daemon.rs:255` and
-   `daemon.rs:275` but is never defined anywhere in `src/` (`grep HeartbeatResponse` → 2
-   hits, both in `daemon.rs`). The struct must be added:
+> **Status as of 2026-09-29: items 1 and 3 are RESOLVED — the spec previously reported
+> them as outstanding. Verified against the tree and against a successful
+> `cargo build --release` (`target/release/aria-axum-poc.exe`, built after both
+> fixes landed).**
+
+1. ~~**`daemon.rs` does not compile.** `HeartbeatResponse` is used at `daemon.rs:255`
+   and `daemon.rs:275` but is never defined.~~ **RESOLVED** — the struct is defined at
+   `daemon.rs:78-82`:
    ```rust
    #[derive(Serialize)]
    struct HeartbeatResponse {
@@ -40,10 +53,24 @@ implement before production mobile sync.
    }
    ```
 2. **No CPU telemetry endpoint.** Mobile dashboard cannot show CPU load until
-   `GET /api/system/cpu` exists (see §4.3).
-3. **No auth enforcement.** The mobile client sends `Authorization: Bearer <token>` from the
-   moment it exists, but the server ignores it. This is fail-open and must be closed before
-   the backend binds to a non-loopback interface.
+   `GET /api/system/cpu` exists (see §4.3). *Still outstanding.*
+3. ~~**No auth enforcement.**~~ **RESOLVED** — `auth::guard` is layered in
+   `create_full_router` (`lib.rs:96-99`) and rejects unauthenticated requests on every
+   non-public path with `401 {"error":"unauthorized","status":401}` plus
+   `WWW-Authenticate: Bearer realm="aria"`. *Still outstanding, by design:*
+4. **`/api/auth/login` mints a useless token.** It still returns the hardcoded
+   literal `"axum-jwt-token-placeholder"` (`auth.rs:312-327`) instead of the real
+   `ARIA_API_KEY`. A client that follows the documented "POST /api/auth/login, store
+   the token" flow will get a token the server rejects. The client must **not** rely
+   on login; the operator supplies the key out of band and the user pastes it into
+   Settings. Same for `POST /api/auth/refresh`, which returns
+   `"axum-jwt-refreshed-token"` (`auth.rs:354-360`) — the client cannot refresh and
+   must treat a `401` as "re-prompt for the key", not "refresh and retry".
+5. **`/ws` is completely unauthenticated.** It is in `PUBLIC_PATHS` and the handler
+   never calls `verify_token`, so a `?token=` on the WS URL is ignored and any LAN host
+   can drive the echo loop. Acceptable while loopback-only; must be closed before LAN
+   exposure.
+
 
 ### 0.3 Gaps the mobile client must bridge (client-side workarounds)
 
@@ -53,10 +80,13 @@ The Flutter client in this phase is written to be **forward compatible**:
   server emits typed frames (`task_available`, `pc_state_change`, …) the same parser handles
   them with no client change. See `lib/models/message.dart` → `Message.fromWire`.
 - It derives "agents online" from `/api/agents/status`, since the server exposes no
-  `daemon_agents` list endpoint.
+  `daemon_agents` list endpoint. Daemon agents do appear there, appended to the four static
+  swarm agents with `role: "USB-ARIA Daemon"` (`agents.rs:58-67`).
 - It treats `uptime_ms` from `/health` as the uptime source and refines it locally between
   polls (the counter is a snapshot, not a stream).
 - It shows `CPU —` until §0.2.2 is resolved.
+- It falls back to `X-API-Key` when it cannot attach an `Authorization` header, and treats a
+  `401` as fatal — there is no working refresh (§0.2.4).
 
 ---
 
@@ -100,19 +130,24 @@ negotiate one, so the client sends none.
 
 1. **Resolve endpoint** from `SettingsService.baseUrl`
    (`http://host:8002` → `ws://host:8002/ws`; `https://…` → `wss://…/ws`).
-2. **Attach credentials.** Query param `?token=<jwt>` **and** header
-   `Authorization: Bearer <jwt>`. Browsers/WS clients that cannot set headers rely on the
-   query param. Tokens live in the `airi_settings` Hive box; the server must accept either.
+2. **Attach credentials to REST only.** For HTTP the client sends
+   `Authorization: Bearer <jwt>` (fallback `X-API-Key: <jwt>`). For the socket it appends
+   `?token=<jwt>` purely as a future-proofing measure — **the current server ignores it**
+   (`/ws` is in `PUBLIC_PATHS` and the handler never calls `verify_token`; see §0.2.5).
+   Tokens live in the `airi_settings` Hive box. Once auth covers `/ws`, the server will
+   read the same query param and no client change is required.
 3. **Identify the client** with a first frame:
    ```json
    { "type": "identify", "client": "airi_mobile", "client_version": "0.1.0",
      "device_id": "<uuid v4 persisted in Hive>", "user_agent": "Flutter/iOS" }
    ```
-4. **Server sends `connected`** (§3.1). This frame is the app's "backend is live" signal.
+   The current server treats this as an ordinary frame and echoes it back (§3.8).
+4. **Server sends `connected`** (§3.2). This frame is the app's "backend is live" signal.
 5. **Client subscribes to channels** (§2).
 6. **Client starts ping loop** — a WebSocket control-frame `Ping` every 30 s. The server
-   already relays `Ping`→`Pong` (`state.rs:53-55`), so this works with the POC unchanged.
+   already relays `Ping`→`Pong` (`state.rs:195-199`), so this works with the POC unchanged.
 7. **On reconnect**, the client re-runs steps 3–6 and then replays the offline queue (§5).
+
 
 ### 1.4 Backoff policy
 
@@ -186,24 +221,26 @@ treat it as optional.
 
 ### 3.2 `connected` — server → client, on connect
 
-Emitted by the current server (`state.rs:22-26`):
+Emitted by the current server (`state.rs:164-168`). **The frame carries only three keys** —
+`server`, `version`, `uptime_ms` and `ts` are *not* sent and the client must not wait for
+them:
 
 ```json
 {
   "type": "connected",
   "message": "ARIA Axum WebSocket ready",
-  "agents": ["CodeAnalyzer", "DocsWriter", "Tester", "ResearchAgent"],
-  "server": "ARIA-Axum-8002",
-  "version": "0.1.0-POC",
-  "uptime_ms": 918273,
-  "ts": 1756400000
+  "agents": ["CodeAnalyzer", "DocsWriter", "Tester", "ResearchAgent"]
 }
 ```
 
-`agents` is the swarm roster. It is **not** a live status list — the client must call
-`GET /api/agents/status` for per-agent state.
+Until the backend enriches this frame, the client fills the gaps from `GET /health`
+(`version`, `uptime_ms`) and stamps `ts` locally from the phone clock.
 
-### 3.3 `heartbeat` — server → client, every 15 s
+`agents` is the swarm roster. It is **not** a live status list — the client must call
+`GET /api/agents/status` for per-agent state. The frame also carries no `capabilities` key,
+so per §3.9 `command` frames are unavailable and the client uses REST.
+
+### 3.3 `heartbeat` — server → client, every 15 s (TARGET — not yet emitted)
 
 ```json
 { "type": "heartbeat", "ts": 1756400000, "data": {
@@ -215,14 +252,17 @@ Emitted by the current server (`state.rs:22-26`):
 } }
 ```
 
-Field names mirror `/api/system/status` (`core.rs:53-67`) so a single Dart model
-(`SystemStatus`) decodes both. The client's independent 30 s control-frame `Ping` is a
+Field names mirror `/api/system/status` (`core.rs:54-70`) so a single Dart model
+(`SystemStatus`) decodes both. The REST route also returns `memory_safety`, `gc_pauses`,
+`auth_failures`, `security` and `mode`; the WS frame is a subset and the model must tolerate
+their absence. The client's independent 30 s control-frame `Ping` is a
 transport keepalive; the server's 15 s `heartbeat` is a *data* keepalive. Both are needed:
 the first detects a dead TCP socket, the second refreshes the UI without a REST round-trip.
+Until the frame ships, the client gets the same data from a 5 s `GET /api/system/status`.
 
 ### 3.4 `task_available` — server → client
 
-Fired when `daemon_task_get` (`daemon.rs:123-138`) would report `available: true`.
+Fired when `daemon_task_get` (`daemon.rs:128-143`) would report `available: true`.
 
 ```json
 { "type": "task_available", "ts": 1756400000, "data": {
@@ -241,7 +281,7 @@ known vocabulary is `system_control`, `apps`, `screenshot`, `volume`, `lock`, `o
 
 ### 3.5 `task_result` — server → client
 
-Fired after `POST /api/daemon/result` records a result (`daemon.rs:217-250`).
+Fired after `POST /api/daemon/result` records a result (`daemon.rs:222-255`).
 
 ```json
 { "type": "task_result", "ts": 1756400000, "data": {
@@ -271,7 +311,7 @@ Fired when the PC's activity state flips, or on the first poll after a change.
 ```
 
 Shape matches `struct PCStateResponse` in `daemon.rs:51-57`. **Caveat:** the current
-handler returns hardcoded values and ignores the request body (`daemon.rs:109-121`). Until
+handler returns hardcoded values and ignores the request body (`daemon.rs:114-126`). Until
 that is fixed, the client treats this frame as a liveness signal only and never renders
 `idle_seconds` as ground truth — it shows "state reporting is stubbed on this backend".
 
@@ -320,38 +360,53 @@ in its `connected` frame. Otherwise the client uses REST.
 
 ## 4. REST API surface for mobile
 
-### 4.1 Connectivity and status (unauthenticated in POC)
+### 4.1 Connectivity and status
+
+**Every route in this table except `/health` requires a bearer token** (§0.1). A missing or
+wrong token is `401` before the handler runs.
 
 | Method | Path | Returns | Mobile use |
 | --- | --- | --- | --- |
-| GET | `/health` | `{status, framework, version, uptime_ms}` | reachability probe, uptime |
-| GET | `/api/system/status` | `{status, framework, version, uptime_ms, requests_served, chats_processed, daemon_agents, pending_tasks, completed_results, port, mode}` | dashboard primary poll |
+| GET | `/health` | `{status, framework, version, uptime_ms}` — **public, no token** | reachability probe, uptime, `version` for the `connected` frame |
+| GET | `/api/system/status` | `{status, framework, version, uptime_ms, memory_safety, gc_pauses, requests_served, chats_processed, daemon_agents, pending_tasks, completed_results, auth_failures, security{scheme, env_var, key_source, rate_limit_per_minute}, port, mode}` | dashboard primary poll |
+| GET | `/api/system/health` | same as `/health` | alias |
 | GET | `/api/system/ping` | `{status, latency_ms, server, framework}` | latency badge |
 | GET | `/api/system/whois` | `{status, hostname, os, arch, framework}` | header device info |
 | GET | `/api/system/time` | `{status, timestamp, server}` | clock skew check for `ts` fields |
 | GET | `/api/system/memory` | `{status, total, used, available, usage_percent, server}` | memory gauge |
 | GET | `/api/system/log` | `{status, entries[], server}` | mobile log view |
-| GET | `/api/system/scan` | `{status, network{…}, server}` | reachability of sibling services |
+| GET | `/api/system/scan` | `{status, network{interfaces, ip, port_8002, port_8001}, server}` | reachability of sibling services |
+| GET | `/api/system/control` \| `/volume` \| `/lock` \| `/apps` \| `/screenshot` \| `/open` | status stubs / constants | see §4.2 |
+| GET | `/api/system/explorer` \| `/code_exec` | status stubs | desktop-only, not surfaced on mobile |
+
+`daemon_agents` and `pending_tasks` in `/api/system/status` are `len()` of the live maps, so
+`pending_tasks` counts **all** queued tasks regardless of status, not just `pending` ones.
+Do not present it as a "ready work" count.
 
 ### 4.2 Computer control (the Command screen)
 
-All are `GET` in the current backend.
+Not all GET — `/api/computer/open` and `/api/computer/execute` are `POST`.
 
 | Method | Path | Notes |
 | --- | --- | --- |
 | GET | `/api/computer/control` | generic system-control ping |
 | GET | `/api/computer/apps` | `{running: string[]}` |
-| GET | `/api/computer/screenshot` | returns a status stub; **no image payload yet** (§0.2) |
+| GET | `/api/computer/screenshot` | returns a status stub; **no image payload yet** (§4.3) |
 | GET | `/api/computer/volume` | `{volume, muted}` |
 | GET | `/api/computer/lock` | locks the PC — confirm dialog required |
 | POST | `/api/computer/open` | `{target: string}` |
 | POST | `/api/computer/execute` | `{command: string}` — **dangerous; UI gates this** |
 | GET | `/api/computer/processes` | `{processes: string[]}` |
 | GET | `/api/computer/status` | `{cpu: "<arch>", os, memory}` — `cpu` is **not** a load value |
+| GET | `/api/computer/memory` \| `/scan` \| `/time` \| `/ping` | mirrors of the `/api/system/*` pair |
+| GET | `/api/computer/whois` | **degraded**: `{status, hostname, server}` only — no `os`, no `arch`, unlike `/api/system/whois` |
+| GET | `/api/computer/explorer` | status stub |
 
-`/api/system/*` mirrors `/api/computer/*` (`system.rs` vs `computer.rs`) with identical
+`/api/system/*` mirrors `/api/computer/*` (`system.rs` vs `computer.rs`) with near-identical
 bodies. The mobile client uses `/api/computer/*` as canonical and falls back to
 `/api/system/*` on 404, since one of the two module sets may be retired during migration.
+The one exception is `whois`, where `/api/system/whois` is strictly richer — prefer it for
+the header device tile.
 
 ### 4.3 Phase Airi backend additions (required, not yet implemented)
 
@@ -360,9 +415,29 @@ bodies. The mobile client uses `/api/computer/*` as canonical and falls back to
 | GET | `/api/system/cpu` | `{usage_percent, per_core[], temp_c, load_avg}` — unblocks the CPU tile |
 | GET | `/api/system/disk` | `{total, used, available, usage_percent}` |
 | GET | `/api/pc/state` | `GET` variant of the existing `POST` returning real idle time |
-| GET | `/api/agents` | list with live `status` per agent (currently `/api/agents` is static) |
+| GET | `/api/agents` | **exists but static** (`agents.rs:76-82`) — returns a hardcoded 4-name array with no per-agent status. Needs live `status` per agent |
 | GET | `/api/tasks/pending` | queue depth + next task, for polling fallback |
 | POST | `/api/daemon/task` | already exists — mobile uses it as an agent would (§4.4) |
+
+### 4.3.1 Routes that exist but are not yet in this spec
+
+Listed so the next revision does not rediscover them. None are on the mobile critical path.
+
+| Method | Path | Source | Note |
+| --- | --- | --- | --- |
+| GET | `/api/system/health` | `core.rs:28` | alias of `/health` |
+| GET | `/api/system/explorer`, `/api/system/code_exec` | `system.rs:29-30` | status stubs, desktop-only |
+| GET | `/api/computer/explorer` | `computer.rs:31` | status stub |
+| GET | `/api/skills/scan`, `/api/skills/search` | `skills.rs:26-27` | search/scan skills |
+| POST | `/api/agents/research/batch` | `agents.rs:39` | batched research |
+| GET | `/api/agents/geospatial/status` | `agents.rs:41` | God's-Eye view state |
+| POST | `/api/agents/voice/process` | `agents.rs:42` | server-side voice |
+| GET/POST | `/api/orb/state`, `/api/orb/phase`, `/api/orb/start`, `/api/orb/stop` | `daemon.rs:101-104` | drive the native wgpu orb. `POST /api/orb/phase` takes `{phase: idle\|thinking\|responding\|listening\|wisdom}` and returns `{status:"error", error:"Unknown phase: x"}` on a bad value |
+
+The remaining modules merged into the router (`memory.rs`, `voice.rs`, `vision.rs`,
+`files.rs`, `web.rs`, `proactive.rs`, `evolution.rs`, `learning.rs`, `github.rs`,
+`social.rs`, `admin.rs`, `self_improvement.rs`, `lib.rs:25-46`) add further `/api/*` routes
+that Phase Airi does not consume.
 
 ### 4.4 Daemon / agent protocol (mobile acting as a USB-ARIA node)
 
@@ -376,7 +451,7 @@ POST /api/daemon/heartbeat
 → { "status": "alive", "timestamp": 1756400000 }
 ```
 Send every 30 s. The server upserts into `SharedState.daemon_agents`
-(`daemon.rs:252-279`), which is what `/api/agents/status` reads
+(`daemon.rs:257-284`), which is what `/api/agents/status` reads
 (`agents.rs:58-67`) — this is how the phone becomes visible on the dashboard.
 
 **Claim work**
@@ -388,8 +463,8 @@ POST /api/daemon/task
     "status": "task_assigned" }
 ```
 `get_pending` atomically flips the task to `assigned` and stamps `assigned_to`
-(`daemon.rs:157-180`). **Claiming is not optional** — polling `GET /api/daemon/task`
-(`daemon.rs:123-138`) never assigns, so a mobile client using GET would loop forever on the
+(`daemon.rs:162-185`). **Claiming is not optional** — polling `GET /api/daemon/task`
+(`daemon.rs:128-143`) never assigns, so a mobile client using GET would loop forever on the
 same pending task.
 
 **Report status**
@@ -437,24 +512,58 @@ client timeout > 60 s (default 70 s) or it will abort before the backend does.
 
 ### 4.6 Auth
 
-| Method | Path | Notes |
-| --- | --- | --- |
-| POST | `/api/auth/login` | `{username}` → `{status, username, token, server}` — token is a **placeholder** |
-| POST | `/api/auth/refresh` | → `{status, token, server}` |
-| GET | `/api/auth/validate` | → `{status, valid}` |
-| GET | `/api/auth/profile` | → `{user, role}` |
-| GET | `/api/auth/permissions` | → `{permissions: ["read","write","execute","admin"]}` |
-| GET | `/api/auth/sessions` | → `{sessions: []}` |
+The server key is `ARIA_API_KEY` (`state.rs:27`). If the variable is unset or blank the
+server **generates a random key at startup and prints it to stdout** — a token issued in a
+previous session stops working, and the mobile client sees an unexplained `401`. Settings
+must therefore surface the "backend is using an ephemeral key" state, which is reported as
+`security.key_source: "generated"` in `/api/system/status` and `ephemeral_key: true` in
+`/api/auth/validate`.
 
-The client stores the token in the `airi_settings` Hive box and sends
-`Authorization: Bearer <token>` on every request plus `?token=` on the WS URL. Because the
-POC does not validate it, the client shows a clear **"backend is not enforcing auth"**
-warning in Settings until a real JWT middleware exists.
+| Method | Path | Token required | Notes |
+| --- | --- | --- | --- |
+| POST | `/api/auth/login` | no (public) | returns the **placeholder** `"axum-jwt-token-placeholder"` — not a usable token (§0.2.4) |
+| POST | `/api/auth/register` | no (public) | `{status, username, registered, server}`; no account is actually created |
+| POST | `/api/auth/refresh` | no (public) | returns the placeholder `"axum-jwt-refreshed-token"` — the client cannot recover a `401` this way |
+| POST | `/api/auth/logout` | **yes** | `{status, logged_out}`; no server-side session to revoke |
+| GET | `/api/auth/validate` | **yes** | `{status, valid, method:"header", user{subject, role, scopes, ephemeral_key}, server}` |
+| POST | `/api/auth/validate` | **yes** | also accepts `{token}` in the body and reports whether *that* token matches — the endpoint the mobile client uses to test a key pasted from Settings |
+| GET | `/api/auth/profile` | **yes** | `{status, user, role, server}` |
+| GET | `/api/auth/permissions` | **yes** | `{status, permissions: ["read","write","execute","admin"], server}` |
+| GET | `/api/auth/roles` | **yes** | `{status, roles: ["admin","user","viewer"], server}` |
+| GET | `/api/auth/sessions` | **yes** | `{status, sessions: []}` |
+| GET | `/api/auth/webhooks` | **yes** | `{status, webhooks: []}` |
+
+The client stores the key in the `airi_settings` Hive box and sends `Authorization: Bearer
+<key>` (fallback `X-API-Key: <key>`) on every request. **Do not implement a login screen
+against `/api/auth/login`** — it cannot produce a working token. The Settings screen should
+instead offer a "paste ARIA API key" field, validate it with `POST /api/auth/validate`,
+and show a warning whenever `security.key_source == "generated"` because the key will
+change on the next backend restart.
 
 ### 4.7 Rate limits
 
-**No rate limiting is implemented.** The client enforces a local budget so it is a good
-citizen and is not the thing that breaks when the server adds limits:
+**The server does enforce limits**, and has since `auth::guard` landed. The client must
+still keep a local budget, but now because the server's is coarse enough to be disruptive
+to a polling dashboard, not because the server is unlimited.
+
+**Server-side (as implemented):**
+
+| Property | Value |
+| --- | --- |
+| Algorithm | fixed window, keyed by client IP (`x-forwarded-for` → `x-real-ip` → socket peer) |
+| Budget | **100 requests / 60 s, one flat limit for every path** — not per class |
+| Public paths | counted too, so a `/health` probe loop can exhaust the window |
+| On breach | `429` `{"error":"rate_limited","status":429}` + `Retry-After: <seconds>` |
+| Every response | `X-RateLimit-Limit: 100`, `X-RateLimit-Remaining: <n>` |
+| 401 responses | counted in `auth_failures`, surfaced in `/api/system/status` |
+
+A per-class scheme (the 60/30/10 split below) is a *target*, not current behaviour. The
+flat 100/min budget is the real constraint the client is written against: a 5 s dashboard
+poll plus 3 s memory poll plus 5 s agents poll is ~48 req/min, which fits — but adding
+`/api/computer/status` at 1 s does not, and the client will start seeing `429`s it did not
+expect.
+
+**Client-side budget (unchanged intent):**
 
 | Class | Budget | Behaviour on breach |
 | --- | --- | --- |
@@ -465,29 +574,42 @@ citizen and is not the thing that breaks when the server adds limits:
 | `daemon` (heartbeat/task/result) | 1 per 30 s | drop, never queue |
 | `login` | 5 per 15 min | hard block |
 
-The server-side limits this client is written to tolerate: 60 req/min per client for
-`poll`, 30 req/min for `command`, 10/min for `execute`, 429 with
-`Retry-After: <seconds>` on breach, and `401` with `{"error":"token_expired"}` on a stale
-token. The client honours `Retry-After` verbatim.
+The client honours `Retry-After` verbatim and should also read `X-RateLimit-Remaining` to
+throttle *before* the `429` arrives. A `401` is **not** refreshable here (§0.2.4) — the
+client must stop the replay loop and prompt the user for the key.
 
 ### 4.8 Error contract
 
-Target shape — the current handlers return HTTP 200 with an in-body status string
-(`{"status":"error","error":"..."}`), e.g. `daemon.rs:247`. The client decodes **both**:
+Target shape — the middleware and most handlers currently return a **flat** error body, not
+the nested object below. The client decodes **both**:
 
 ```json
+// as implemented by the middleware (auth.rs:135-157)
+{ "error": "unauthorized", "status": 401 }
+
+// as implemented by body-level handler failures, e.g. daemon.rs:250-254
+{ "status": "error", "error": "Missing agent_id or result" }
+
+// TARGET shape
 { "error": { "code": "unknown_action", "message": "…", "retryable": false },
   "status": "error" }
 ```
 
+Note that `status` is polymorphic in the current backend: the middleware puts an **integer
+HTTP status** in it, handlers put the **string** `"error"`. `SystemStatus.status` therefore
+cannot be a single typed field across both sources — decode it loosely.
+
 | Code | HTTP | Retryable |
 | --- | --- | --- |
-| `unauthorized` / `token_expired` | 401 | after refresh |
+| `unauthorized` (missing or invalid token) | 401 | **no** — cannot refresh (§0.2.4); re-prompt for the key |
 | `forbidden` | 403 | no |
 | `rate_limited` | 429 | yes, after `Retry-After` |
 | `backend_offline` | — (transport) | yes, backoff |
-| `unknown_action` | 200 | no — protocol mismatch |
+| `unknown_action` (in-body, HTTP 200) | 200 | no — protocol mismatch |
 | `internal` | 5xx | yes, exponential |
+
+The server never emits a `token_expired` code — an expired and a malformed token are both
+`unauthorized`. The client must not branch on a `token_expired` string.
 
 The client never throws on a body-level `status: "error"`; it returns a typed
 `BackendResult.err`.
@@ -593,7 +715,7 @@ in practice.
 
 There is no multi-writer conflict on PC state — the phone never writes the PC's state, and
 the PC never writes the phone's queue. The only overlap is the task assignment
-(`assigned_to` in `daemon.rs:157-180`): if the WS pushes `task_available` for a task the
+(`assigned_to` in `daemon.rs:162-185`): if the WS pushes `task_available` for a task the
 phone already claimed and completed, the server's assignment wins and the client discards
 its local copy of that task's state, keeping only the result.
 
@@ -673,11 +795,13 @@ implement.
 | --- | --- |
 | Transport | Loopback/LAN only in Phase Airi. Any remote host **must** be `https`/`wss`. The client refuses plaintext to a non-loopback host unless the user explicitly overrides in Settings. |
 | Token storage | Hive, unencrypted, in the app sandbox. Acceptable for a debug build; a release build needs `flutter_secure_storage`. |
+| Key distribution | The key is **not** discoverable by the client. It comes from `ARIA_API_KEY` on the PC, or from the random key the backend prints at startup. Shipping it inside the APK would make every install identical. |
 | PIN / biometric | out of scope |
 | Dangerous commands | `execute` and `lock` require an in-app confirmation dialog. `execute` is additionally rate-limited to 1/30 s. |
 | Command allowlist | the Command screen only offers the kinds in §5.4; no arbitrary-path requests from the UI. |
 | Logs | command bodies may contain user text; the log box is capped at 500 entries and truncates bodies to 200 chars. |
-| CORS | `CorsLayer::permissive()` (`lib.rs:72`) is acceptable for a loopback-bound POC and must be replaced with an explicit origin list before LAN exposure. |
+| CORS | `cors_layer()` in `lib.rs:52-64` allows **any** origin, any method, any header. Acceptable for a loopback-bound POC and must be replaced with an explicit origin list before LAN exposure. It is not, as previously stated, a bare `CorsLayer::permissive()`. |
+| WS auth | `/ws` is public and unauthenticated (§0.2.5). Nothing on the current socket is sensitive — it is an echo loop — but the exemption must be removed before typed frames carry task data. |
 
 ---
 
@@ -685,21 +809,53 @@ implement.
 
 | Item | Status |
 | --- | --- |
-| `v6/MOBILE_SYNC_SPEC.md` | this document |
-| `v6/airi_mobile/pubspec.yaml` | created |
+| `v6/MOBILE_SYNC_SPEC.md` | this document — verified against `src/` on 2026-09-29 |
+| `v6/airi_mobile/pubspec.yaml` | created; dependencies verified, **platform folders missing** (see §8.1) |
 | `v6/airi_mobile/lib/main.dart` | created |
 | `v6/airi_mobile/lib/models/{pc_state,task,message}.dart` | created |
 | `v6/airi_mobile/lib/services/{backend_service,offline_queue,settings_service,notification_service}.dart` | created |
 | `v6/airi_mobile/lib/screens/{dashboard,command,settings}.dart` | created |
 | Flutter SDK | **not installed** — source only |
-| `HeartbeatResponse` compile fix (`daemon.rs`) | **outstanding backend blocker** |
-| Real auth middleware | outstanding |
-| Rate limiting (server) | outstanding |
+| `HeartbeatResponse` compile fix (`daemon.rs:78-82`) | **RESOLVED** — `cargo build --release` succeeds |
+| Real auth middleware | **RESOLVED** — `auth::guard`, bearer + `X-API-Key`, constant-time |
+| Rate limiting (server) | **RESOLVED** — 100 req/min per IP, 429 + `Retry-After` |
 | `GET /api/system/cpu` | outstanding |
-| Real `POST /api/pc/state` | outstanding |
+| `GET /api/system/disk` | outstanding |
+| Real `POST /api/pc/state` | outstanding (still hardcoded) |
+| `/api/auth/login` returning the real key | outstanding (still a placeholder) |
+| Auth on `/ws` | outstanding |
 | WS broadcast of `task_available` / `task_result` | outstanding |
+| WS `heartbeat` frame (§3.3) | outstanding |
+| Anything enqueuing into `task_queue` | outstanding — the queue is always empty, so the whole task flow is inert |
 | FCM sender | outstanding |
 | Screenshot image payload | outstanding |
+
+### 8.1 Build blockers for the Flutter client
+
+1. **No `android/` or `ios/` directory exists.** `v6/airi_mobile` contains only
+   `pubspec.yaml`, `analysis_options.yaml` and `lib/`. Run
+   `flutter create --platforms=android,ios .` before the project will build, otherwise
+   `flutter run` has no target and FCM cannot initialise.
+2. **No FCM configuration.** `firebase_core` + `firebase_messaging` are declared but
+   `google-services.json` / `GoogleService-Info.plist` are absent. Android additionally
+   needs `com.google.gms.google-services` in `android/build.gradle`.
+3. **`flutter_local_notifications` ≥ 15 requires core library desugaring** on Android:
+   `android/app/build.gradle` needs
+   `compileOptions { coreLibraryDesugaringEnabled true }` plus
+   `coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'` and the matching
+   `dependencies` entry. Without it the Android build fails at compile time.
+4. **`intl` is pinned to `^0.19.0`** because `flutter_local_notifications` does not yet
+   support `intl` 0.20. Do not bump it.
+5. **`hive` 2.2.3 needs no code generation** here — all three boxes
+   (`airi_settings`, `airi_offline_queue`, `airi_cache`, `airi_log`) store
+   primitives/`Map`s, so `hive_generator` is correctly absent from `dev_dependencies`.
+   If a `QueuedCommand` type adapter is introduced later, add `hive_generator` +
+   `build_runner`.
+6. **Android cleartext HTTP** to `http://<lan-ip>:8002` is blocked by default from API 28.
+   The app needs a `network_security_config.xml` permitting cleartext for the specific
+   backend host, otherwise every connection fails with a confusing socket error. See the
+   transport rule in §7 — cleartext to a non-loopback host should be an explicit,
+   user-visible opt-in, not a blanket manifest flag.
 
 ### Dependency note
 
