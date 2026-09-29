@@ -185,38 +185,97 @@ fn opSmoothUnion(p: vec3<f32>, s: f32) -> f32 {
     return min(r1, r2) - h * h * k * 0.5;
 }
 
+fn hash11(p: f32) -> f32 {
+    return fract(sin(p * 12.9898) * 43758.5453);
+}
+
+fn hash22(p: vec2<f32>) -> vec2<f32> {
+    var q = vec2<f32>(dot(p, vec2<f32>(127.1, 311.7)), dot(p, vec2<f32>(269.5, 183.3)));
+    return fract(sin(q) * 43758.5453);
+}
+
+fn gold_noise(p: vec2<f32>, seed: f32) -> f32 {
+    return fract(sin(dot(p, vec2<f32>(12.9898, 78.233)) + seed) * 43758.5453);
+}
+
 @fragment
 fn fs_main(@builtin(position) coord: vec4<f32>) -> @location(0) var out: vec4<f32> {
     let uv = coord.xy / u.screen_size.xy;
     let ndc = uv * 2.0 - 1.0;
-    
+
     let center = vec2<f32>(0.0, 0.0);
-    let p = ndc * 0.9;
-    
+    let p = ndc;
+
     let r = length(p);
     let theta = atan2(p.y, p.x);
-    
+
     let phase_idx = u.evolution_phase;
-    
-    let spiral = sin(theta * 8.0 - u.time * 0.5 - r * 12.0) * 0.5 + 0.5;
+
+    // === Core breathing sphere ===
     let breath_scale = 1.0 + sin(u.time * (3.14159 * 2.0 / 1.5)) * 0.035;
+    let spiral = sin(theta * 8.0 - u.time * 0.5 - r * 12.0) * 0.5 + 0.5;
     let layer_intensity = 0.92 + 0.08 * sin(u.time * (3.14159 * 2.0 / 1.5) + theta * 3.0);
     let fres = pow(max(0.0, 1.0 - r), 2.2);
-    
+
     let fractal = spiral * breath_scale * fres;
-    
+
+    // === Multi-layer glow rings ===
+    let ring_glow = exp(-r * 3.0) * (0.5 + 0.5 * sin(u.time * 4.0 + theta * 20.0));
+
+    // === Fibonacci particle field ===
+    var particle_mask: f32 = 0.0;
+    let phi_gold = 2.39996362874195264437;
+    for (var i: i32 = 0; i < 89; i = i + 1) {
+        let fi = f32(i);
+        let lat = acos(1.0 - 2.0 * (fi / 89.0));
+        let lon = fi * phi_gold;
+        let px = sin(lat) * cos(lon);
+        let py = sin(lat) * sin(lon);
+
+        let proj_x = px * sqrt(1.0 - py * py * 0.5);
+        let proj_y = py * 0.866;
+
+        let pd = length(vec2<f32>(proj_x, proj_y) * 0.7 - p);
+        let sz = (70.0 - r * 70.0) / (pd * 8.0 + 0.5);
+        let sz_clamped = max(sz, 0.0);
+        particle_mask = particle_mask + sz_clamped;
+    }
+
+    // === Burst rays ===
+    let burst = pow(max(0.0, sin(theta * 24.0 + u.time * 8.0)), 8.0);
+    let burst2 = pow(max(0.0, sin(theta * 12.0 - u.time * 5.0)), 12.0);
+    let burst_total = (burst + burst2) * (1.0 - r) * 0.3;
+
+    // === Energy field ===
+    let energy = exp(-r * 2.0) * 0.8 + ring_glow * 0.4 + burst_total;
+
     let core = u.core_color;
     let glow = u.glow_color;
     let eye = u.eye_color;
     let fractal_c = u.fractal_color;
-    
-    let col = core * (0.6 + fractal * 0.4) + glow * fractal * 0.5;
-    let alpha = clamp(fractal * (0.3 + 0.7 * fres) * u.pulse * 0.8 + 0.2, 0.0, 0.9);
-    
-    let burst = sin(u.time * 10.0 + theta * 15.0) * 0.1;
-    let final_col = col + eye * burst * 0.3;
-    
-    out = vec4<f32>(final_col.rgb * alpha, alpha * 0.9);
+
+    // === Composite layers ===
+    let core_bright = core * (0.4 + fractal * 0.3 + energy * 0.3);
+    let glow_add = glow * (ring_glow * 0.3 + energy * 0.5);
+    let particle_add = eye * (particle_mask * 0.003);
+
+    let col = core_bright + glow_add + particle_add;
+    let alpha = clamp(
+        fractal * (0.3 + 0.7 * fres) * u.pulse * 0.8
+        + energy * 0.5 * (1.0 - r)
+        + burst_total * 0.3
+        + particle_mask * 0.002
+        + 0.15,
+        0.0,
+        0.85
+    );
+
+    // === Chromatic aberration glow ===
+    let aberration = vec3<f32>(0.02, -0.01, 0.03) * (1.0 - r) * fres;
+    let final_color = col.rgb + aberration;
+    let final_alpha = alpha * 0.92;
+
+    out = vec4<f32>(final_color, final_alpha);
     return out;
 }
 "#;
@@ -696,11 +755,11 @@ pub fn run_orb_window(initial_state: Arc<AtomicBool>) {
     };
 
     let window = match WindowBuilder::new()
-        .with_title("ARIA OS - Neural Core")
+        .with_title("ARIA OS")
         .with_inner_size(PhysicalSize::new(600, 600))
         .with_resizable(false)
         .with_decorations(false)
-        .with_transparent(false)
+        .with_transparent(true)
         .build(&event_loop)
     {
         Ok(w) => w,
@@ -732,6 +791,16 @@ pub fn run_orb_window(initial_state: Arc<AtomicBool>) {
                 let dt = now.duration_since(last_frame).as_secs_f32().min(0.05);
                 let t = now.elapsed().as_secs_f32();
                 last_frame = now;
+
+                // Poll phase from shared state to sync orb behavior
+                {
+                    let phase_guard = crate::daemon::orb_phase();
+                    let phase = *phase_guard.lock().unwrap();
+                    let scene = renderer.get_scene_mut();
+                    if scene.phase != phase {
+                        scene.set_phase(phase);
+                    }
+                }
 
                 renderer.update(dt, t);
                 match renderer.render(&win) {

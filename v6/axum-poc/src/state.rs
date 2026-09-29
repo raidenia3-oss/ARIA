@@ -6,7 +6,11 @@ use axum::{
     response::Response,
 };
 use futures::StreamExt;
+use std::str::FromStr;
 use std::sync::Arc;
+use std::time::Duration;
+use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
+use sqlx::SqlitePool;
 use tokio::sync::Mutex;
 use serde_json::json;
 
@@ -68,10 +72,45 @@ async fn handle_socket(mut socket: WebSocket) {
     }
 }
 
+/// Build a lazy SQLite pool for `path`.
+/// Connections are established on first use; short busy/acquire timeouts keep
+/// route latency well under 2s even if another process holds the write lock.
+/// `None` signals routes to emit fallback JSON.
+pub fn open_pool(path: &str) -> Option<SqlitePool> {
+    if path.starts_with("memory:") {
+        return None;
+    }
+    let url = format!("sqlite://{}?mode=rwc", path.replace('\\', "/"));
+
+    let connect_opts = match SqliteConnectOptions::from_str(&url) {
+        Ok(o) => o
+            .create_if_missing(true)
+            .busy_timeout(Duration::from_millis(800)),
+        Err(e) => {
+            eprintln!("   SQLite URL error: {}", e);
+            return None;
+        }
+    };
+
+    let pool = SqlitePoolOptions::new()
+        .max_connections(4)
+        .min_connections(0)
+        .acquire_timeout(Duration::from_millis(800))
+        .idle_timeout(Duration::from_secs(60))
+        .max_lifetime(Duration::from_secs(300))
+        .connect_lazy_with(connect_opts);
+
+    Some(pool)
+}
+
 /// Shared state struct for the entire application.
 #[derive(Clone)]
 pub struct SharedState {
     pub db_path: String,
+    /// Direct SQLite pool — replaces the FastAPI memory proxy.
+    /// `None` when the pool could not be created (no runtime / invalid path);
+    /// routes must degrade to fallback JSON in that case.
+    pub db: Option<SqlitePool>,
     pub start_time: std::time::Instant,
     pub request_count: Arc<Mutex<u64>>,
     pub chat_count: Arc<Mutex<u64>>,
@@ -90,8 +129,14 @@ pub struct AgentInfo {
 
 impl SharedState {
     pub fn new(db_path: &str) -> Self {
+        let db = open_pool(db_path);
+        match &db {
+            Some(_) => println!("   SQLite pool ready: {}", db_path),
+            None => eprintln!("   ⚠️  SQLite pool unavailable: {}", db_path),
+        }
         SharedState {
             db_path: db_path.to_string(),
+            db,
             start_time: std::time::Instant::now(),
             request_count: Arc::new(Mutex::new(0)),
             chat_count: Arc::new(Mutex::new(0)),
@@ -113,5 +158,10 @@ impl SharedState {
     pub async fn increment_chats(&self) {
         let mut count = self.chat_count.lock().await;
         *count += 1;
+    }
+
+    /// Clone the pool handle so callers can release the state lock before querying.
+    pub fn pool(&self) -> Option<SqlitePool> {
+        self.db.clone()
     }
 }

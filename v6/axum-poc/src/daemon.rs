@@ -14,7 +14,7 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Mutex as StdMutex, OnceLock};
 use tokio::sync::Mutex;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use crate::state::{SharedState, AgentInfo};
 use crate::orb::OrbPhase;
@@ -84,11 +84,11 @@ struct HeartbeatResponse {
 static ORB_RUNNING: OnceLock<AtomicBool> = OnceLock::new();
 static ORB_PHASE: OnceLock<StdMutex<OrbPhase>> = OnceLock::new();
 
-fn orb_running() -> &'static AtomicBool {
+pub fn orb_running() -> &'static AtomicBool {
     ORB_RUNNING.get_or_init(|| AtomicBool::new(false))
 }
 
-fn orb_phase() -> &'static StdMutex<OrbPhase> {
+pub fn orb_phase() -> &'static StdMutex<OrbPhase> {
     ORB_PHASE.get_or_init(|| StdMutex::new(OrbPhase::Idle))
 }
 
@@ -346,4 +346,82 @@ async fn stop_orb() -> Json<serde_json::Value> {
     Json(serde_json::json!({
         "status": "orb_stopped"
     }))
+}
+
+const AUTONOMY_INTERVAL_SECS: u64 = 300;
+const IDLE_THRESHOLD_SECS: u64 = 120;
+
+struct AutonomyState {
+    last_check: u64,
+    last_idle_check: u64,
+    is_idle: bool,
+}
+
+static AUTONOMY_STATE: OnceLock<StdMutex<AutonomyState>> = OnceLock::new();
+
+fn autonomy_state() -> &'static StdMutex<AutonomyState> {
+    AUTONOMY_STATE.get_or_init(|| StdMutex::new(AutonomyState {
+        last_check: 0,
+        last_idle_check: 0,
+        is_idle: false,
+    }))
+}
+
+pub async fn start_autonomy_daemon() {
+    start_autonomy_daemon_inner(Arc::new(tokio::sync::Mutex::new(SharedState::new("memory::auto")))).await;
+}
+
+pub async fn start_autonomy_daemon_inner(_state: Arc<tokio::sync::Mutex<SharedState>>) {
+    let mut last = {
+        let s = autonomy_state();
+        s.lock().unwrap().last_check
+    };
+
+    loop {
+        tokio::time::sleep(Duration::from_secs(30)).await;
+        let now = now_secs();
+
+        let idle_check = {
+            let s = autonomy_state();
+            let mut state = s.lock().unwrap();
+            let idle = (now - state.last_idle_check) > IDLE_THRESHOLD_SECS;
+            state.last_idle_check = now;
+            idle
+        };
+
+        if idle_check {
+            {
+                let mut p = orb_phase().lock().unwrap();
+                *p = crate::orb::OrbPhase::Wisdom;
+            }
+        }
+
+        if now - last > AUTONOMY_INTERVAL_SECS {
+            last = now;
+            {
+                let s = autonomy_state();
+                let mut state = s.lock().unwrap();
+                state.last_check = now;
+            }
+
+            let client = reqwest::Client::new();
+            if let Ok(resp) = client
+                .post("http://127.0.0.1:8000/api/chat")
+                .json(&serde_json::json!({
+                    "message": "Autonomous self-reflection: Analyze current capabilities and suggest improvements",
+                    "model": "dolphin-2_6-phi-2",
+                    "stream": false
+                }))
+                .timeout(Duration::from_secs(30))
+                .send()
+                .await
+            {
+                if let Ok(json) = resp.json::<serde_json::Value>().await {
+                    if let Some(response) = json.get("response").and_then(|v| v.as_str()) {
+                        println!("Autonomous reflection result: {}...", &response[..response.len().min(100)]);
+                    }
+                }
+            }
+        }
+    }
 }
