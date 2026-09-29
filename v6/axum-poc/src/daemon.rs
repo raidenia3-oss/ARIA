@@ -68,7 +68,7 @@ struct HeartbeatResponse {
 pub fn router() -> Router<()> {
     Router::new()
         .route("/api/pc/state", post(pc_state))
-        .route("/api/daemon/task", post(daemon_task).get(daemon_task))
+        .route("/api/daemon/task", post(daemon_task).get(daemon_task_get))
         .route("/api/daemon/result", post(daemon_result))
         .route("/api/daemon/heartbeat", post(daemon_heartbeat))
 }
@@ -91,6 +91,23 @@ async fn pc_state(
         idle_seconds: 0,
         session_user: "ARIA-USB".to_string(),
         timestamp: now,
+    })
+}
+
+async fn daemon_task_get(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+) -> Json<TaskResponse> {
+    let state = state.lock().await;
+    let queue = state.task_queue.lock().await;
+
+    let pending = queue.iter().filter(|t| {
+        t.get("status").and_then(|v| v.as_str()) == Some("pending")
+    }).count();
+
+    Json(TaskResponse {
+        available: pending > 0,
+        task: None,
+        status: if pending > 0 { format!("{}_pending", pending) } else { "no_tasks".to_string() },
     })
 }
 
