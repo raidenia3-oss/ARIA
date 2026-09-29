@@ -11,10 +11,16 @@
 //! 5. Gradual cutover: FastAPI (8000) → Axum (8001) → Axum (8000)
 
 use axum::{
-    routing::{get, post},
+    extract::State,
+    middleware,
+    routing::get,
     Router,
 };
+use std::sync::Arc;
+use tokio::sync::Mutex;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
+
+use crate::state::SharedState;
 
 pub mod core;
 pub mod chat;
@@ -39,9 +45,31 @@ pub mod daemon;
 pub mod state;
 pub mod orb;
 
+/// CORS policy for the native orb and the desktop shell.
+///
+/// Auth is a bearer header rather than a cookie, so credentials stay off; the
+/// rate-limit headers are exposed so clients can back off before a 429.
+fn cors_layer() -> CorsLayer {
+    use axum::http::HeaderName;
+    use tower_http::cors::Any;
+    CorsLayer::new()
+        .allow_origin(Any)
+        .allow_methods(Any)
+        .allow_headers(Any)
+        .expose_headers([
+            HeaderName::from_static("x-ratelimit-limit"),
+            HeaderName::from_static("x-ratelimit-remaining"),
+            HeaderName::from_static("retry-after"),
+        ])
+}
+
 /// Build the complete Axum router with all route groups.
 /// Phase L.4: Full migration architecture.
-pub fn create_full_router() -> Router {
+///
+/// `state` is handed to the security middleware (see [`auth::guard`]) for token
+/// verification and per-IP rate limiting, and is also layered as an `Extension`
+/// so route handlers can reach it through their existing signature.
+pub fn create_full_router(state: Arc<Mutex<SharedState>>) -> Router {
     let app = Router::new()
         .merge(core::router())
         .merge(chat::router())
@@ -65,9 +93,10 @@ pub fn create_full_router() -> Router {
         .merge(daemon::router())
         .route("/ws", get(state::websocket_handler));
 
-    app.layer(
-        TraceLayer::new_for_http()
-            .on_request(())
-    )
-    .layer(CorsLayer::permissive())
+    app.layer(middleware::from_fn(move |request, next| {
+        let state = state.clone();
+        async move { auth::guard(State(state), request, next).await }
+    }))
+    .layer(TraceLayer::new_for_http())
+    .layer(cors_layer())
 }

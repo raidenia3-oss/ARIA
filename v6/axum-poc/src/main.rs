@@ -10,12 +10,27 @@ use aria_axum_poc::state::SharedState;
 use aria_axum_poc::daemon::orb_running;
 use aria_axum_poc::orb::OrbPhase;
 use axum::Extension;
+use std::net::SocketAddr;
 use std::sync::Arc;
 use std::sync::atomic::Ordering;
 use tokio::sync::Mutex;
 
 #[tokio::main]
 async fn main() {
+    // ARIA runs headlessly in the background, so keep the global level at INFO
+    // and only raise verbosity for ARIA's own targets. tower_http stays at INFO
+    // to avoid a trace line per request.
+    tracing_subscriber::fmt()
+        .with_target(true)
+        .with_level(true)
+        .with_max_level(tracing::Level::INFO)
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::builder()
+                .with_default_directive(tracing::Level::INFO.into())
+                .parse_lossy("aria=debug,aria::auth=debug,aria::ratelimit=debug"),
+        )
+        .init();
+
     println!("🚀 ARIA Axum Server (Phase L.4) starting...");
     
     // Initialize shared state
@@ -24,8 +39,10 @@ async fn main() {
     
     let shared_state = Arc::new(Mutex::new(SharedState::new(&db_path)));
     println!("   DB Path: {}", db_path);
-    
-    let app = create_full_router()
+
+    // The security middleware needs the state before the Extension layer exists,
+    // so hand it a clone.
+    let app = create_full_router(shared_state.clone())
         .layer(Extension(shared_state.clone()));
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:8002")
@@ -68,7 +85,10 @@ async fn main() {
     });
     println!("   Autonomy daemon started (idle detection + self-improvement)");
 
-    axum::serve(listener, app)
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
         .await
         .expect("Failed to serve Axum app");
 }

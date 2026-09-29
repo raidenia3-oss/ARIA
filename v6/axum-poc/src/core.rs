@@ -49,6 +49,7 @@ async fn system_status(
     let agent_count = state.daemon_agents.lock().await.len();
     let task_count = state.task_queue.lock().await.len();
     let result_count = state.task_results.lock().await.len();
+    let auth_failures = state.auth_failure_count().await;
 
     Json(serde_json::json!({
         "status": "ok",
@@ -62,6 +63,8 @@ async fn system_status(
         "daemon_agents": agent_count,
         "pending_tasks": task_count,
         "completed_results": result_count,
+        "auth_failures": auth_failures,
+        "security": crate::auth::auth_summary(&state.auth),
         "port": 8002,
         "mode": "ARIA-Axum-v6.0",
     }))
