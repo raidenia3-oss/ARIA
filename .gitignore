@@ -27,6 +27,13 @@ venv/
 .env
 .env.local
 .env.*.local
+*.key
+*.pem
+*.secret
+discord_token
+DISCORD_TOKEN
+test_discord*
+secrets.json
 *.log
 
 # IDE

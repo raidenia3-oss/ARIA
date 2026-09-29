@@ -23,7 +23,7 @@ load_dotenv('ARIA_APP/backend/.env')
 
 from skills.custom.self_improvement import get_self_improvement
 
-BASE_URL = "http://127.0.0.1:8001"
+BASE_URL = os.environ.get("ARIA_BACKEND_URL", "http://127.0.0.1:8002")
 TUNNEL_URL = "https://aria-backend.loca.lt"
 CHECK_INTERVAL = 300  # 5 minutos
 

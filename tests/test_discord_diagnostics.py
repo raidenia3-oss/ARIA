@@ -48,7 +48,7 @@ class TestMaskToken:
         assert _mask_token("12345") == "****"
 
     def test_long_keeps_prefix_and_suffix(self):
-        token = "MTUwMDY4NzQ1ODM5NDcwNjEwMQ.GR04ZG.eKmF3qEwKEAg9ITV8UbyElTvDoe8SeSQB1jjdg"
+        token = "DUMMY_TOKEN_FOR_TESTING.MTkx.GR04ZG"
         masked = _mask_token(token)
         assert masked.startswith("MTUw")
         assert masked.endswith("jjdg")
