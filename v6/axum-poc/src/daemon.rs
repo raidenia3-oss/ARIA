@@ -81,10 +81,9 @@ fn now_secs() -> u64 {
 }
 
 async fn pc_state(
-    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Extension(_state): Extension<Arc<Mutex<SharedState>>>,
     Json(_req): Json<DaemonRequest>,
 ) -> Json<PCStateResponse> {
-    let state = state.lock().await;
     let now = now_secs();
     
     Json(PCStateResponse {
@@ -107,21 +106,30 @@ async fn daemon_task(
             let agent_id = req.agent_id.clone();
             let mut queue = state.task_queue.lock().await;
             
-            let task = queue.iter_mut().find(|t| {
-                t.status == "pending" && 
-                (t.assigned_to.is_none() || t.assigned_to.as_ref() == agent_id.as_ref())
+            let task_idx = queue.iter().position(|t| {
+                t.get("status").and_then(|v| v.as_str()) == Some("pending") && 
+                (t.get("assigned_to").is_none() || t.get("assigned_to").and_then(|v| v.as_str()) == agent_id.as_deref())
             });
 
-            if let Some(task) = task {
-                task.status = "assigned".to_string();
-                task.assigned_to = agent_id;
+            if let Some(idx) = task_idx {
+                if let Some(task) = queue.get_mut(idx) {
+                    if let Some(status) = task.get_mut("status") {
+                        *status = serde_json::Value::String("assigned".to_string());
+                    }
+                    if let Some(assigned) = task.get_mut("assigned_to") {
+                        *assigned = serde_json::Value::String(agent_id.clone().unwrap_or_default());
+                    }
+                }
+                
+                let task_data = queue.get(idx).unwrap().clone();
+                
                 Json(TaskResponse {
                     available: true,
                     task: Some(Task {
-                        id: task.get("id").and_then(|v| v.as_str()).unwrap_or("unknown").to_string(),
-                        task_type: task.get("task_type").and_then(|v| v.as_str()).unwrap_or("generic").to_string(),
-                        payload: task.get("payload").cloned().unwrap_or(serde_json::json!({})),
-                        assigned_to: task.get("assigned_to").and_then(|v| v.as_str().map(String::from)),
+                        id: task_data.get("id").and_then(|v| v.as_str()).unwrap_or("unknown").to_string(),
+                        task_type: task_data.get("task_type").and_then(|v| v.as_str()).unwrap_or("generic").to_string(),
+                        payload: task_data.get("payload").cloned().unwrap_or(serde_json::json!({})),
+                        assigned_to: task_data.get("assigned_to").and_then(|v| v.as_str().map(String::from)),
                         status: "assigned".to_string(),
                         created_at: now,
                     }),

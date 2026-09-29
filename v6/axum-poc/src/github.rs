@@ -48,6 +48,7 @@ async fn issues() -> Json<serde_json::Value> {
 
 async fn webhooks(
     Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Json(_req): Json<serde_json::Value>,
 ) -> Json<serde_json::Value> {
     let state = state.lock().await;
     state.increment_requests().await;

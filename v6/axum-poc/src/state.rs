@@ -5,7 +5,7 @@ use axum::{
     extract::ws::{WebSocket, WebSocketUpgrade, Message},
     response::Response,
 };
-use futures::{stream::StreamExt, SinkExt};
+use futures::StreamExt;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use serde_json::json;
@@ -38,7 +38,7 @@ async fn handle_socket(mut socket: WebSocket) {
                 // Echo back with ARIA prefix
                 let echo = json!({
                     "type": "echo",
-                    "original": text.as_ref(),
+                    "original": text.as_str(),
                     "server": "ARIA-Axum-8002",
                 });
                 

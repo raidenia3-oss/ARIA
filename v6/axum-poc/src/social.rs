@@ -114,12 +114,9 @@ async fn research(
 }
 
 async fn save(
-    Extension(state): Extension<Arc<Mutex<SharedState>>>,
-    Json(req): Json<serde_json::Value>,
+    Extension(_state): Extension<Arc<Mutex<SharedState>>>,
+    Json(_req): Json<serde_json::Value>,
 ) -> Json<serde_json::Value> {
-    let state = state.lock().await;
-    state.increment_requests().await;
-    
     Json(json!({
         "status": "ok",
         "saved": true,
