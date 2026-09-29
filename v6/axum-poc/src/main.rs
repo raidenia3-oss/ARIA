@@ -3,16 +3,15 @@
 //!
 //! Runs on port 8002 to avoid conflict with FastAPI on port 8001.
 //! USB-ARIA daemon endpoints are available at /api/pc/state and /api/daemon/*.
-//! The native 3D orb launches automatically on startup (no manual command needed).
+//! The native 3D orb is opt-in: it does NOT auto-start (so the server is
+//! headless by default) and is controlled through /api/orb/{start,stop,state,phase}.
 
 use aria_axum_poc::create_full_router;
 use aria_axum_poc::state::SharedState;
-use aria_axum_poc::daemon::orb_running;
 use aria_axum_poc::orb::OrbPhase;
 use axum::Extension;
 use std::net::SocketAddr;
 use std::sync::Arc;
-use std::sync::atomic::Ordering;
 use tokio::sync::Mutex;
 
 #[tokio::main]
@@ -61,22 +60,30 @@ async fn main() {
     println!("");
     println!("   Port: 8002 (FastAPI running on 8001)");
 
-    // Auto-launch the 3D orb window on startup (no manual command needed)
-    orb_running().store(true, Ordering::SeqCst);
-    
+    // Headless by default: the orb is optional visual feedback and must never
+    // block or destabilize the HTTP server. Set ARIA_ORB_AUTOSTART=1 to open it
+    // at boot, otherwise use POST /api/orb/start.
+    if std::env::var("ARIA_ORB_AUTOSTART")
+        .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
+        .unwrap_or(false)
+    {
+        match aria_axum_poc::orb::spawn_orb_window() {
+            Ok(()) => {
+                println!("   Orb visualization started (native GPU window, ARIA_ORB_AUTOSTART=1)");
+            }
+            Err(e) => {
+                println!("   Orb autostart failed ({}). Server continues headless.", e);
+            }
+        }
+    } else {
+        println!("   Orb window: NOT started (headless). Start it with POST /api/orb/start");
+    }
+
     // Sync initial phase to Idle
     {
         let phase_guard = aria_axum_poc::daemon::orb_phase();
         *phase_guard.lock().unwrap() = OrbPhase::Idle;
     }
-    
-    // The orb window runs on its own thread with internal rendering loop
-    let stop_flag = Arc::new(std::sync::atomic::AtomicBool::new(true));
-    std::thread::spawn(move || {
-        aria_axum_poc::orb::run_orb_window(stop_flag);
-    });
-    
-    println!("   Orb visualization auto-started (native GPU window)");
 
     // Start the autonomy daemon in the background (idle detection -> self-improvement)
     let autonomy_state = shared_state.clone();

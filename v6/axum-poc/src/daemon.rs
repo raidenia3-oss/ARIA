@@ -330,7 +330,7 @@ async fn orb_state() -> Json<OrbStateResponse> {
     Json(OrbStateResponse {
         status: "ok".to_string(),
         phase: phase_str.to_string(),
-        animated: true,
+        animated: crate::orb::orb_window_alive(),
     })
 }
 
@@ -361,25 +361,31 @@ async fn set_orb_phase(Json(req): Json<SetOrbPhaseRequest>) -> Json<serde_json::
 }
 
 async fn start_orb() -> Json<serde_json::Value> {
-    orb_running().store(true, Ordering::SeqCst);
-
-    let running = orb_running();
-
-    std::thread::spawn(move || {
-        crate::orb::run_orb_window(Arc::new(AtomicBool::new(running.load(Ordering::SeqCst))));
-    });
-
-    Json(serde_json::json!({
-        "status": "orb_started",
-        "window": "native_gpu_window"
-    }))
+    match crate::orb::spawn_orb_window() {
+        Ok(()) => {
+            Json(serde_json::json!({
+                "status": "orb_started",
+                "window": "native_gpu_window"
+            }))
+        }
+        Err(e) => {
+            orb_running().store(false, Ordering::SeqCst);
+            Json(serde_json::json!({
+                "status": "error",
+                "error": e,
+                "hint": "winit allows one EventLoop per process; restart the server before starting the orb again"
+            }))
+        }
+    }
 }
 
 async fn stop_orb() -> Json<serde_json::Value> {
+    // The orb thread watches this flag and exits its event loop on the next frame.
     orb_running().store(false, Ordering::SeqCst);
 
     Json(serde_json::json!({
-        "status": "orb_stopped"
+        "status": "orb_stopped",
+        "running": crate::orb::orb_window_alive()
     }))
 }
 

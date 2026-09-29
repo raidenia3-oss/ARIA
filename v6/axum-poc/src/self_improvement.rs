@@ -19,6 +19,7 @@ pub fn router() -> Router<()> {
         .route("/api/self-improvement/status", get(status))
         .route("/api/self-improvement/proposals", get(proposals))
         .route("/api/self-improvement/commit", post(commit))
+        .route("/api/self-improvement/improve", post(improve))
         .route("/api/self-improvement/analyze-prs", get(analyze_prs))
         .route("/api/self-improvement/triaging", get(triaging))
 }
@@ -61,10 +62,24 @@ async fn commit(
 ) -> Json<serde_json::Value> {
     let state = state.lock().await;
     state.increment_requests().await;
-    
+
     Json(json!({
         "status": "ok",
         "committed": true,
+        "server": "ARIA-Axum-8002",
+    }))
+}
+
+async fn improve(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+) -> Json<serde_json::Value> {
+    let state = state.lock().await;
+    state.increment_requests().await;
+
+    Json(json!({
+        "status": "ok",
+        "improved": true,
+        "cycles_completed": 0,
         "server": "ARIA-Axum-8002",
     }))
 }

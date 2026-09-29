@@ -1,4 +1,5 @@
-use std::time::Instant;
+use std::time::{Duration, Instant};
+use std::sync::{Mutex as StdMutex, OnceLock};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::f32::consts::PI;
@@ -7,7 +8,7 @@ use wgpu::util::DeviceExt;
 use winit::{
     dpi::PhysicalSize,
     event::{Event, WindowEvent},
-    event_loop::{ControlFlow, EventLoop},
+    event_loop::{ControlFlow, EventLoop, EventLoopBuilder},
     window::WindowBuilder,
 };
 use bytemuck::{Pod, Zeroable};
@@ -199,7 +200,7 @@ fn gold_noise(p: vec2<f32>, seed: f32) -> f32 {
 }
 
 @fragment
-fn fs_main(@builtin(position) coord: vec4<f32>) -> @location(0) var out: vec4<f32> {
+fn fs_main(@builtin(position) coord: vec4<f32>) -> @location(0) vec4<f32> {
     let uv = coord.xy / u.screen_size.xy;
     let ndc = uv * 2.0 - 1.0;
 
@@ -275,8 +276,7 @@ fn fs_main(@builtin(position) coord: vec4<f32>) -> @location(0) var out: vec4<f3
     let final_color = col.rgb + aberration;
     let final_alpha = alpha * 0.92;
 
-    out = vec4<f32>(final_color, final_alpha);
-    return out;
+    return vec4<f32>(final_color, final_alpha);
 }
 "#;
 
@@ -745,11 +745,133 @@ impl OrbRenderer {
     }
 }
 
-pub fn run_orb_window(initial_state: Arc<AtomicBool>) {
-    let event_loop = match EventLoop::new() {
+/// True while an orb window thread is alive, so `/api/orb/start` cannot spawn
+/// two event loops (winit panics if two Windows message loops exist).
+static ORB_THREAD_ALIVE: AtomicBool = AtomicBool::new(false);
+
+/// Set once the native window exists and rendering has started.
+static ORB_READY: AtomicBool = AtomicBool::new(false);
+
+/// Last orb failure, surfaced through `/api/orb/state`.
+static ORB_LAST_ERROR: OnceLock<StdMutex<Option<String>>> = OnceLock::new();
+
+/// Builds the winit event loop in a thread-safe way.
+///
+/// winit's `EventLoop::new()` panics on Windows when it is not created on the
+/// main thread, so every path goes through this builder instead. On Windows the
+/// loop is explicitly marked as "any thread", which downgrades that check to a
+/// debug-only warning and lets the orb live on its own background thread while
+/// the HTTP server keeps running.
+fn build_event_loop() -> Result<EventLoop<()>, winit::error::EventLoopError> {
+    let mut builder = EventLoopBuilder::<()>::with_user_event();
+
+    #[cfg(target_os = "windows")]
+    {
+        use winit::platform::windows::EventLoopBuilderExtWindows;
+        builder.with_any_thread(true);
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    let _ = &mut builder;
+
+    builder.build()
+}
+
+/// Spawns the native orb window on a background thread and waits briefly for the
+/// window to come up.
+///
+/// Returns `Err` when the window thread fails to start. winit can only build
+/// one `EventLoop` per process, so restarting after `/api/orb/stop` requires a
+/// process restart; that case is reported as a clean error instead of a panic.
+/// The orb is optional visual feedback: a failure here never affects the HTTP
+/// server.
+pub fn spawn_orb_window() -> Result<(), String> {
+    if ORB_THREAD_ALIVE.swap(true, Ordering::SeqCst) {
+        return Err("orb window is already running".to_string());
+    }
+
+    *orb_last_error().lock().unwrap() = None;
+
+    // The event loop exits as soon as this flag is false, so it must be set
+    // before the window thread starts drawing.
+    crate::daemon::orb_running().store(true, Ordering::SeqCst);
+
+    let stop_flag = Arc::new(AtomicBool::new(true));
+    std::thread::Builder::new()
+        .name("aria-orb".to_string())
+        .spawn(move || {
+            // A renderer failure must never take down the process or the HTTP
+            // server, so the window thread is isolated from unwinding out.
+            let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                run_orb_window(stop_flag);
+            }));
+            if outcome.is_err() {
+                *orb_last_error().lock().unwrap() =
+                    Some("renderer panicked while drawing the orb".to_string());
+                eprintln!("Orb window thread ended after an internal renderer error");
+            }
+        })
+        .map_err(|e| {
+            ORB_THREAD_ALIVE.store(false, Ordering::SeqCst);
+            crate::daemon::orb_running().store(false, Ordering::SeqCst);
+            format!("failed to spawn orb thread: {}", e)
+        })?;
+
+    // Wait for the window to be built so the API can report a real result
+    // instead of optimistically claiming success.
+    let deadline = Instant::now() + Duration::from_millis(2000);
+    loop {
+        if let Some(err) = orb_last_error().lock().unwrap().clone() {
+            crate::daemon::orb_running().store(false, Ordering::SeqCst);
+            return Err(err);
+        }
+        if ORB_READY.load(Ordering::SeqCst) {
+            return Ok(());
+        }
+        if Instant::now() >= deadline {
+            if ORB_THREAD_ALIVE.load(Ordering::SeqCst) {
+                return Ok(());
+            }
+            crate::daemon::orb_running().store(false, Ordering::SeqCst);
+            return Err("orb window thread exited before the window was created".to_string());
+        }
+        std::thread::sleep(Duration::from_millis(20));
+    }
+}
+
+/// Whether an orb window thread is currently alive.
+pub fn orb_window_alive() -> bool {
+    ORB_THREAD_ALIVE.load(Ordering::SeqCst)
+}
+
+/// Last error raised by the orb window thread, if any.
+pub fn orb_last_error() -> &'static StdMutex<Option<String>> {
+    ORB_LAST_ERROR.get_or_init(|| StdMutex::new(None))
+}
+
+/// Clears the orb liveness flags when the window thread finishes, including
+/// when it unwinds out of a panic, so `/api/orb/start` stays usable.
+struct OrbThreadGuard;
+
+impl Drop for OrbThreadGuard {
+    fn drop(&mut self) {
+        crate::daemon::orb_running().store(false, Ordering::SeqCst);
+        ORB_READY.store(false, Ordering::SeqCst);
+        ORB_THREAD_ALIVE.store(false, Ordering::SeqCst);
+    }
+}
+
+/// Runs the orb window on the current thread. Prefer [`spawn_orb_window`],
+/// which handles thread bookkeeping. `keep_running` is kept for API
+/// compatibility; the live stop signal is `daemon::orb_running()`.
+pub fn run_orb_window(_keep_running: Arc<AtomicBool>) {
+    let _guard = OrbThreadGuard;
+    let event_loop = match build_event_loop() {
         Ok(el) => el,
         Err(e) => {
-            eprintln!("Failed to create event loop: {}", e);
+            let msg = format!("event loop unavailable: {}", e);
+            eprintln!("Orb not started: {}", msg);
+            *orb_last_error().lock().unwrap() = Some(msg);
             return;
         }
     };
@@ -764,7 +886,9 @@ pub fn run_orb_window(initial_state: Arc<AtomicBool>) {
     {
         Ok(w) => w,
         Err(e) => {
-            eprintln!("Failed to create window: {}", e);
+            let msg = format!("window creation failed: {}", e);
+            eprintln!("Orb not started: {}", msg);
+            *orb_last_error().lock().unwrap() = Some(msg);
             return;
         }
     };
@@ -772,10 +896,11 @@ pub fn run_orb_window(initial_state: Arc<AtomicBool>) {
     let win = Arc::new(window);
     let scene = OrbScene::new((600.0, 600.0));
     let mut renderer = pollster::block_on(OrbRenderer::new(&win, scene));
+    ORB_READY.store(true, Ordering::SeqCst);
 
     let mut last_frame = Instant::now();
 
-    event_loop.run(move |event, elwt| {
+    if let Err(e) = event_loop.run(move |event, elwt| {
         elwt.set_control_flow(ControlFlow::Poll);
 
         match event {
@@ -783,7 +908,6 @@ pub fn run_orb_window(initial_state: Arc<AtomicBool>) {
                 event: WindowEvent::CloseRequested,
                 ..
             } => {
-                initial_state.store(false, Ordering::SeqCst);
                 elwt.exit();
             }
             Event::AboutToWait => {
@@ -810,11 +934,13 @@ pub fn run_orb_window(initial_state: Arc<AtomicBool>) {
                     Err(e) => eprintln!("Render error: {:?}", e),
                 }
 
-                if !initial_state.load(Ordering::SeqCst) {
+                if !crate::daemon::orb_running().load(Ordering::SeqCst) {
                     elwt.exit();
                 }
             }
             _ => {}
         }
-    }).unwrap();
+    }) {
+        eprintln!("Orb event loop ended: {}", e);
+    }
 }
