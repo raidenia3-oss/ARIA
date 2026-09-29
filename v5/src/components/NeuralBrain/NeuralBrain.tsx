@@ -24,6 +24,8 @@ const AGENT_COLORS: Record<string, string> = {
   ResearchAgent: '#f59e0b',
 }
 
+const AXUM_ORIGIN = 'http://127.0.0.1:8002'
+
 function useAgentStatus(poll_ms = 3000): NeuralBrainState {
   const [state, setState] = useState<NeuralBrainState>({
     agents: [],
@@ -37,10 +39,10 @@ function useAgentStatus(poll_ms = 3000): NeuralBrainState {
     let cancelled = false
     async function fetchStatus() {
       try {
-        const res = await fetch('/api/agents/status')
+        const res = await fetch(`${AXUM_ORIGIN}/api/agents/status`)
         const data = await res.json()
         if (cancelled) return
-        const agents: AgentNode[] = (data.agent_list || []).map((a: Record<string, unknown>) => ({
+        const agents: AgentNode[] = (data.agent_list || data.agents || []).map((a: Record<string, unknown>) => ({
           name: String(a.name || 'unknown'),
           role: String(a.role || ''),
           status: (a.status as AgentNode['status']) || 'idle',

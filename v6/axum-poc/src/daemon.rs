@@ -1,6 +1,7 @@
 //! Daemon routes: USB-ARIA coordination endpoints.
 //! Phase L.4: USB-ARIA distributed autonomous infrastructure.
 //! Uses SharedState for cross-module state sharing.
+//! Also exposes orb visual state control for native renderer integration.
 
 use axum::{
     extract::Json,
@@ -10,10 +11,13 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Mutex as StdMutex, OnceLock};
 use tokio::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::state::{SharedState, AgentInfo};
+use crate::orb::OrbPhase;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Task {
@@ -59,10 +63,33 @@ struct TaskResponse {
     status: String,
 }
 
+#[derive(Deserialize)]
+struct SetOrbPhaseRequest {
+    phase: String,
+}
+
+#[derive(Serialize)]
+struct OrbStateResponse {
+    status: String,
+    phase: String,
+    animated: bool,
+}
+
 #[derive(Serialize)]
 struct HeartbeatResponse {
     status: String,
     timestamp: u64,
+}
+
+static ORB_RUNNING: OnceLock<AtomicBool> = OnceLock::new();
+static ORB_PHASE: OnceLock<StdMutex<OrbPhase>> = OnceLock::new();
+
+fn orb_running() -> &'static AtomicBool {
+    ORB_RUNNING.get_or_init(|| AtomicBool::new(false))
+}
+
+fn orb_phase() -> &'static StdMutex<OrbPhase> {
+    ORB_PHASE.get_or_init(|| StdMutex::new(OrbPhase::Idle))
 }
 
 pub fn router() -> Router<()> {
@@ -71,6 +98,10 @@ pub fn router() -> Router<()> {
         .route("/api/daemon/task", post(daemon_task).get(daemon_task_get))
         .route("/api/daemon/result", post(daemon_result))
         .route("/api/daemon/heartbeat", post(daemon_heartbeat))
+        .route("/api/orb/state", get(orb_state))
+        .route("/api/orb/phase", post(set_orb_phase))
+        .route("/api/orb/start", post(start_orb))
+        .route("/api/orb/stop", post(stop_orb))
 }
 
 fn now_secs() -> u64 {
@@ -250,4 +281,69 @@ async fn daemon_heartbeat(
         status: "alive".to_string(),
         timestamp: now,
     })
+}
+
+async fn orb_state() -> Json<OrbStateResponse> {
+    let phase = orb_phase().lock().unwrap();
+    let phase_str = match &*phase {
+        OrbPhase::Idle => "idle",
+        OrbPhase::Thinking => "thinking",
+        OrbPhase::Responding => "responding",
+        OrbPhase::Listening => "listening",
+        OrbPhase::Wisdom => "wisdom",
+    };
+    Json(OrbStateResponse {
+        status: "ok".to_string(),
+        phase: phase_str.to_string(),
+        animated: true,
+    })
+}
+
+async fn set_orb_phase(Json(req): Json<SetOrbPhaseRequest>) -> Json<serde_json::Value> {
+    let new_phase = match req.phase.to_lowercase().as_str() {
+        "idle" => OrbPhase::Idle,
+        "thinking" => OrbPhase::Thinking,
+        "responding" => OrbPhase::Responding,
+        "listening" => OrbPhase::Listening,
+        "wisdom" => OrbPhase::Wisdom,
+        _ => {
+            return Json(serde_json::json!({
+                "status": "error",
+                "error": format!("Unknown phase: {}", req.phase)
+            }));
+        }
+    };
+
+    {
+        let mut phase = orb_phase().lock().unwrap();
+        *phase = new_phase;
+    }
+
+    Json(serde_json::json!({
+        "status": "ok",
+        "phase": req.phase
+    }))
+}
+
+async fn start_orb() -> Json<serde_json::Value> {
+    orb_running().store(true, Ordering::SeqCst);
+
+    let running = orb_running();
+
+    std::thread::spawn(move || {
+        crate::orb::run_orb_window(Arc::new(AtomicBool::new(running.load(Ordering::SeqCst))));
+    });
+
+    Json(serde_json::json!({
+        "status": "orb_started",
+        "window": "native_gpu_window"
+    }))
+}
+
+async fn stop_orb() -> Json<serde_json::Value> {
+    orb_running().store(false, Ordering::SeqCst);
+
+    Json(serde_json::json!({
+        "status": "orb_stopped"
+    }))
 }

@@ -41,6 +41,13 @@ const api = {
   backendTestMemory: () => ipcRenderer.invoke('backend:test:memory'),
   backendTestAI: () => ipcRenderer.invoke('backend:test:ai'),
 
+  // Axum backend (8002) — Cerebro Neural
+  axumHealth: () => ipcRenderer.invoke('axum:health'),
+  axumAgentsStatus: () => ipcRenderer.invoke('axum:agents:status'),
+  axumAgentsGeospatial: () => ipcRenderer.invoke('axum:agents:geospatial'),
+  axumAgentsHarnessSkills: () => ipcRenderer.invoke('axum:agents:harness:skills'),
+  axumVoiceProcess: (text: string) => ipcRenderer.invoke('axum:agents:voice:process', text),
+
   // Notifications
   notificationShow: (title: string, body: string) => ipcRenderer.invoke('notification:show', title, body),
 }

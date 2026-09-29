@@ -18,6 +18,8 @@ export interface SkillProgressionState {
   unlocked: number
 }
 
+const AXUM_ORIGIN = 'http://127.0.0.1:8002'
+
 function useSkillSystem(): SkillProgressionState {
   const [state, setState] = useState<SkillProgressionState>({
     skills: [],
@@ -30,7 +32,7 @@ function useSkillSystem(): SkillProgressionState {
     let cancelled = false
     async function load() {
       try {
-        const res = await fetch('/api/agents/harness/skills')
+        const res = await fetch(`${AXUM_ORIGIN}/api/agents/harness/skills`)
         const data = await res.json()
         if (cancelled) return
         const rawSkills = data.skills || []

@@ -48,6 +48,13 @@ export interface ElectronAPI {
   backendTestMemory: () => Promise<{ ok: boolean; systemStatus?: unknown; memoryRecent?: unknown; error?: string }>
   backendTestAI: () => Promise<{ ok: boolean; enabled?: boolean; providers?: unknown; error?: string }>
 
+  // Axum backend (8002) — Cerebro Neural
+  axumHealth: () => Promise<unknown>
+  axumAgentsStatus: () => Promise<unknown>
+  axumAgentsGeospatial: () => Promise<unknown>
+  axumAgentsHarnessSkills: () => Promise<unknown>
+  axumVoiceProcess: (text: string) => Promise<unknown>
+
   notificationShow: (title: string, body: string) => Promise<void>
 }
 

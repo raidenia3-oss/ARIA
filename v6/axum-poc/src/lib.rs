@@ -37,6 +37,7 @@ pub mod admin;
 pub mod self_improvement;
 pub mod daemon;
 pub mod state;
+pub mod orb;
 
 /// Build the complete Axum router with all route groups.
 /// Phase L.4: Full migration architecture.

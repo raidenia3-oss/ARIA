@@ -24,6 +24,8 @@ const TYPE_COLORS: Record<GeoPoint['type'], string> = {
   infrastructure: '#f59e0b',
 }
 
+const AXUM_ORIGIN = 'http://127.0.0.1:8002'
+
 function useGeospatial(poll_ms = 5000): { points: GeoPoint[] } {
   const [points, setPoints] = useState<GeoPoint[]>([])
 
@@ -31,7 +33,7 @@ function useGeospatial(poll_ms = 5000): { points: GeoPoint[] } {
     let cancelled = false
     async function load() {
       try {
-        const res = await fetch('/api/agents/geospatial/status')
+        const res = await fetch(`${AXUM_ORIGIN}/api/agents/geospatial/status`)
         const data = await res.json()
         if (cancelled) return
         setPoints((data.points || []).map((p: Record<string, unknown>) => ({

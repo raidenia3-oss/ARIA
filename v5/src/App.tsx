@@ -11,6 +11,7 @@ import { NeuralBrain } from './components/NeuralBrain/NeuralBrain'
 import { SkillProgression } from './components/SkillProgression/SkillProgression'
 import { GodsEyeView } from './components/GodsEyeView/GodsEyeView'
 import { JarvisVoice } from './components/JarvisVoice/JarvisVoice'
+import { TabBar } from './components/TabBar/TabBar'
 import { orbStates, useOrbState } from './hooks/useOrbState'
 import { useChat } from './hooks/useChat'
 import { useSettings } from './hooks/useSettings'
@@ -41,10 +42,13 @@ function blip() {
   }
 }
 
+export type ActiveView = 'chat' | 'brain' | 'eye' | 'skills' | 'voice'
+
 export default function App() {
   const [showControl, setShowControl] = useState(false)
   const [showSkills, setShowSkills] = useState(true)
   const [showDebug, setShowDebug] = useState(false)
+  const [activeView, setActiveView] = useState<ActiveView>('chat')
   const { orbState, setOrbState } = useOrbState()
   const { settings, updateSettings } = useSettings()
   const chat = useChat(setOrbState, { stream: settings.streaming })
@@ -108,6 +112,8 @@ export default function App() {
         onSkillsToggle={() => setShowSkills((value) => !value)}
         onControlClick={() => setShowControl((value) => !value)}
       />
+
+      <TabBar activeView={activeView} onTabChange={setActiveView} />
 
       {showDebug && (
         <div className="absolute bottom-4 right-4 z-50 flex flex-col gap-2">
@@ -181,24 +187,21 @@ export default function App() {
               <OrbVisual phase={effectivePhase} animated={settings.animations} />
             </div>
 
-            {/* Phase N: Neural Brain Dashboard */}
-            <div className="glass-panel hidden w-[420px] flex-col items-center rounded-2xl p-3 lg:flex">
+            <div className={`glass-panel flex w-[420px] flex-col items-center rounded-2xl p-3 ${activeView === 'brain' ? 'flex' : 'hidden'}`}>
               <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-accent-purple">
                 ◈ Neural Brain
               </span>
               <NeuralBrain />
             </div>
 
-            {/* Phase P: Skill Progression Circle */}
-            <div className="glass-panel hidden flex-col items-center rounded-2xl p-3 xl:flex">
+            <div className={`glass-panel flex flex-col items-center rounded-2xl p-3 ${activeView === 'skills' ? 'flex' : 'hidden'}`}>
               <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-accent-green">
                 ◇ Skill Progression
               </span>
               <SkillProgression />
             </div>
 
-            {/* Phase O: Gods Eye View */}
-            <div className="glass-panel hidden h-[420px] w-[420px] flex-col items-center rounded-2xl p-3 2xl:flex">
+            <div className={`glass-panel flex h-[420px] w-[420px] flex-col items-center rounded-2xl p-3 ${activeView === 'eye' ? 'flex' : 'hidden'}`}>
               <span className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-accent-orange">
                 ◎ God's Eye
               </span>
@@ -220,7 +223,6 @@ export default function App() {
         </main>
       </div>
 
-      {/* Phase Q: Jarvis Voice (floating) */}
       <div className="fixed bottom-4 left-4 z-40">
         <JarvisVoice />
       </div>

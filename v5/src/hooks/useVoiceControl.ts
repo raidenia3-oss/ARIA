@@ -42,6 +42,8 @@ export interface VoiceCommand {
   confidence: number
 }
 
+const AXUM_ORIGIN = 'http://127.0.0.1:8002'
+
 export function useVoiceControl() {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState('')
@@ -92,7 +94,7 @@ export function useVoiceControl() {
 
   const processCommand = async (text: string) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/agents/voice/process', {
+      const response = await fetch(`${AXUM_ORIGIN}/api/agents/voice/process`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),

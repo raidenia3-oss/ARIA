@@ -6,9 +6,11 @@ import { existsSync, readFileSync, writeFileSync } from 'fs'
 let win: BrowserWindow | null = null
 let tray: Tray | null = null
 let backendProcess: ChildProcess | null = null
+let axumProcess: ChildProcess | null = null
 let isQuitting = false
 
 const BACKEND_PORT = 8000
+const AXUM_PORT = 8002
 // const DEV_URL = 'http://localhost:5173'
 
 /** Raíz del repo en dev: v5/dist-electron → AURA */
@@ -64,6 +66,46 @@ function stopBackend(): void {
     console.error('[Backend] kill error:', error)
   }
   backendProcess = null
+}
+
+/** Arranca el backend Axum (Rust) en puerto 8002 para el Cerebro Neural */
+function startAxumBackend(): void {
+  const candidates = [
+    app.isPackaged
+      ? join(process.resourcesPath, 'axum', 'aria-axum-poc.exe')
+      : join(workspaceRoot, 'v6', 'axum-poc', 'target', 'debug', 'aria-axum-poc.exe'),
+    join(workspaceRoot, 'v6', 'axum-poc', 'target', 'release', 'aria-axum-poc.exe'),
+  ]
+  const exe = candidates.find((p) => existsSync(p))
+  if (!exe) {
+    console.warn('[Axum] binario no encontrado → modo offline (Cerebro no disponible)')
+    return
+  }
+  console.log('[Axum] Iniciando Cerebro Neural:', exe)
+
+  axumProcess = spawn(exe, [], {
+    env: {
+      ...process.env,
+      ARIA_DB_PATH: join(workspaceRoot, 'aura.db'),
+      RUST_LOG: 'info',
+    },
+    stdio: 'pipe',
+  })
+
+  axumProcess.stdout?.on('data', (chunk: Buffer) => process.stdout.write(`[Axum] ${chunk.toString()}`))
+  axumProcess.stderr?.on('data', (chunk: Buffer) => process.stderr.write(`[Axum] ${chunk.toString()}`))
+  axumProcess.on('error', (error: Error) => console.error('[Axum] spawn error:', error))
+  axumProcess.on('exit', (code) => console.log(`[Axum] exited with code ${code}`))
+}
+
+function stopAxumBackend(): void {
+  if (!axumProcess) return
+  try {
+    axumProcess.kill()
+  } catch (error) {
+    console.error('[Axum] kill error:', error)
+  }
+  axumProcess = null
 }
 
 function createWindow(): void {
@@ -447,6 +489,58 @@ ipcMain.handle('backend:test:ai', async () => {
 })
 
 /* ------------------------------------------------------------------
+    IPC: Axum backend (8002) — Cerebro Neural
+    ------------------------------------------------------------------ */
+ipcMain.handle('axum:health', async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:${AXUM_PORT}/health`)
+    return await response.json()
+  } catch {
+    return { status: 'offline' }
+  }
+})
+
+ipcMain.handle('axum:agents:status', async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:${AXUM_PORT}/api/agents/status`)
+    return await response.json()
+  } catch {
+    return { agents: [] }
+  }
+})
+
+ipcMain.handle('axum:agents:geospatial', async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:${AXUM_PORT}/api/agents/geospatial/status`)
+    return await response.json()
+  } catch {
+    return { points: [] }
+  }
+})
+
+ipcMain.handle('axum:agents:harness:skills', async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:${AXUM_PORT}/api/agents/harness/skills`)
+    return await response.json()
+  } catch {
+    return { skills: [] }
+  }
+})
+
+ipcMain.handle('axum:agents:voice:process', async (_event, text: string) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:${AXUM_PORT}/api/agents/voice/process`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    })
+    return await response.json()
+  } catch (error) {
+    return { error: String(error) }
+  }
+})
+
+/* ------------------------------------------------------------------
     IPC: settings
     ------------------------------------------------------------------ */
 ipcMain.handle('settings:get', async () => readSettings())
@@ -487,6 +581,7 @@ ipcMain.handle('notification:show', (_event, title: string, body: string) => {
    ------------------------------------------------------------------ */
 app.whenReady().then(() => {
   startBackend()
+  startAxumBackend()
   createWindow()
   createTray()
 
@@ -515,6 +610,7 @@ app.on('window-all-closed', () => {
   // La app vive en la bandeja hasta que el usuario elige "Salir"
   if (isQuitting) {
     stopBackend()
+    stopAxumBackend()
     app.quit()
   }
 })
@@ -522,6 +618,7 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   isQuitting = true
   stopBackend()
+  stopAxumBackend()
 })
 
 
