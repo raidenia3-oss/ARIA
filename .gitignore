@@ -23,6 +23,13 @@ __pycache__/
 env/
 venv/
 
+# Rust
+/target/
+*.exe
+*.pdb
+*.rlib
+Cargo.lock
+
 # Environment
 .env
 .env.local

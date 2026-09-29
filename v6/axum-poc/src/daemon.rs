@@ -4,7 +4,7 @@
 
 use axum::{
     extract::Json,
-    routing::post,
+    routing::{get, post},
     Router,
     Extension,
 };
@@ -68,7 +68,7 @@ struct HeartbeatResponse {
 pub fn router() -> Router<()> {
     Router::new()
         .route("/api/pc/state", post(pc_state))
-        .route("/api/daemon/task", post(daemon_task))
+        .route("/api/daemon/task", post(daemon_task).get(daemon_task))
         .route("/api/daemon/result", post(daemon_result))
         .route("/api/daemon/heartbeat", post(daemon_heartbeat))
 }
