@@ -1,14 +1,17 @@
-# AURA OS v4.0 — Production Build Complete
+# ARIA / AURA OS
 
-## Status: READY
+## Zero-touch setup (recommended)
 
-✅ dist/AURA OS.exe created (347 MB)
-✅ All 25 verification checks PASSED
-✅ Visual polish complete (orb, chat, tray)
-✅ Reasoning engine enhanced
-✅ Build verified
+```bash
+python aria_setup.py --auto-configure
+python aria_autonomous.py
+```
 
-## Quick Start
+One command detects the host, installs dependencies, creates configuration,
+initialises the database, builds the Rust crates and validates the result.
+No prompts, no manual steps. Full reference: [docs/AUTO_SETUP.md](docs/AUTO_SETUP.md).
+
+## Desktop build
 
 1. **Double-click** `dist/AURA OS.exe`
 2. Say: "Prendete" (or type in the chat box)
@@ -21,8 +24,21 @@
 - Ollama running with `dolphin-2_6-phi-2` model for local AI
 - Atria API key in `.env` for enhanced intelligence (optional)
 
+## Setup commands
+
+```bash
+python aria_setup.py --auto-configure    # full zero-touch setup
+python aria_setup.py --validate          # health checks only
+python aria_setup.py --diagnose          # explain current state
+python aria_setup.py --reset             # clean rebuild
+```
+
 ## Files
 
+- `aria_setup.py` — Zero-touch configuration entry point
+- `aria_autoconfig/` — Auto-configuration engine (12 modules)
+- `aria_autonomous.py` — Autonomous self-improvement loop
+- `docs/AUTO_SETUP.md` — Setup reference
 - `dist/AURA OS.exe` — Main executable
 - `AURA_APP/scripts/verify_all.py` — Pre-build verification
 - `AURA_APP/scripts/build.py` — Build script
