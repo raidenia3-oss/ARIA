@@ -123,7 +123,11 @@ def convert_batch(data: dict[str, Any]) -> list[VideoMetadata]:
 
 
 def analysis_path(storage: VideoLibraryStorage, stamp: str) -> Path:
-    """Where the original analysis JSON is copied for preservation."""
+    """Where the original analysis JSON is copied for preservation.
+
+    The storage root already points at the library root (``<usb>/``), and the
+    analysis files live under ``videos/analysis/`` next to the cache.
+    """
     return storage.root / "videos" / ANALYSIS_SUBDIR / f"{stamp}.json"
 
 

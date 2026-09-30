@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import shutil
 import threading
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -22,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Iterator
 
-from .errors import IndexCorruptError
+from .errors import IndexCorruptError, StorageError
 from .models import DEFAULT_TAGS, VideoMetadata, utcnow
 from .storage import VideoLibraryStorage
 
@@ -83,16 +84,32 @@ def _file_lock(path: Path, timeout: float = 30.0) -> Iterator[None]:
 
     Advisory and OS-level (``msvcrt.locking`` / ``fcntl.flock``), so two
     ``aria-videos download`` processes serialise against each other rather than
-    both writing. Falls back to an in-process lock when the filesystem refuses
-    the syscall (some network and FAT mounts do).
+    both writing. The lock is *fail-closed*: when the filesystem refuses the
+    syscall entirely — FAT32 and some network mounts do, because they have no
+    byte-range locking — the caller gets a :class:`StorageError` instead of
+    silently proceeding into a race that can corrupt the index.
+
+    Contention and unsupported filesystems are indistinguishable from the
+    syscall alone, so the lock retries for the timeout and only then gives up;
+    a lock that never succeeds is treated as unusable, not as "nobody else is
+    writing".
     """
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         handle = os.open(path, os.O_RDWR | os.O_CREAT, 0o666)
     except OSError as exc:
-        log.warning("index lock unavailable at %s: %s", path, exc)
-        yield
-        return
+        raise StorageError(
+            f"cannot create the index lock file at {path}: {exc}"
+        ) from exc
+
+    # msvcrt.locking locks a byte range; an empty file has no byte 0 to lock.
+    try:
+        os.fstat(handle)
+        if os.lseek(handle, 0, os.SEEK_END) == 0:
+            os.write(handle, b"\0")
+            os.lseek(handle, 0, os.SEEK_SET)
+    except OSError:  # pragma: no cover - exotic filesystems
+        pass
 
     acquired = False
     try:
@@ -102,7 +119,7 @@ def _file_lock(path: Path, timeout: float = 30.0) -> Iterator[None]:
             deadline = _monotonic() + timeout
             while True:
                 try:
-                    handle and msvcrt.locking(handle, msvcrt.LK_NBLCK, 1)
+                    msvcrt.locking(handle, msvcrt.LK_NBLCK, 1)
                     acquired = True
                     break
                 except OSError:
@@ -123,7 +140,10 @@ def _file_lock(path: Path, timeout: float = 30.0) -> Iterator[None]:
                         break
                     _sleep(0.05)
         if not acquired:
-            log.warning("index lock at %s timed out after %ss", path, timeout)
+            raise StorageError(
+                f"could not lock {path} after {timeout}s — the filesystem does not "
+                f"support byte-range locking or another writer holds it"
+            )
         yield
     finally:
         try:
@@ -299,7 +319,14 @@ class VideoIndexer:
                 log.warning("could not prune %s: %s", stale, exc)
 
     def save(self, index: dict[str, Any]) -> None:
-        """Write the index atomically, keeping one backup of the last good copy."""
+        """Write the index atomically, keeping one backup of the last good copy.
+
+        The order matters: the temp file is written first, the old index is
+        *copied* to the backup name while it still exists, and only then is the
+        temp renamed over the live file. A crash at any point leaves ``index.json``
+        holding either the old complete file or the new complete file — never a
+        missing file with a stale backup as the only recoverable copy.
+        """
         with self._locked():
             index["updated_at"] = utcnow().isoformat()
             index["schema_version"] = SCHEMA_VERSION
@@ -309,15 +336,15 @@ class VideoIndexer:
             )
             index["search_index"] = self.build_search_index(index.get("videos", []))
             self.index_file.parent.mkdir(parents=True, exist_ok=True)
-            if self.index_file.exists():
-                try:
-                    os.replace(self.index_file, self.index_file.with_name(BACKUP_FILENAME))
-                except OSError as exc:  # pragma: no cover - permission dependent
-                    log.warning("could not write the index backup: %s", exc)
             temp = self.index_file.with_suffix(".json.tmp")
             temp.write_text(
                 json.dumps(index, indent=2, ensure_ascii=False, default=str), encoding="utf-8"
             )
+            if self.index_file.exists():
+                try:
+                    shutil.copy2(self.index_file, self.index_file.with_name(BACKUP_FILENAME))
+                except OSError as exc:  # pragma: no cover - permission dependent
+                    log.warning("could not write the index backup: %s", exc)
             os.replace(temp, self.index_file)
 
     def restore_backup(self) -> bool:

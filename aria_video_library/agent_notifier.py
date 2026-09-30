@@ -187,12 +187,19 @@ class AgentNotifier:
         return outcome
 
     def _send_discord(self, message: str) -> bool:
-        """POST to the webhook. ``False`` means "not delivered", never "fine"."""
+        """POST to the webhook. ``False`` means "not delivered", never "fine".
+
+        ``allowed_mentions`` is set to an empty parse list: the message body
+        mentions agent ids and titles, and without this Discord would turn any
+        ``@agent``-looking substring into a ping. The library does not want to
+        mention anyone; it only wants to inform.
+        """
         if not self.webhook:
             return False
         payload = {
             "content": truncate_message(message),
             "username": "ARIA Video Library",
+            "allowed_mentions": {"parse": []},
         }
         try:
             status = self._post(self.webhook, payload, 10)
