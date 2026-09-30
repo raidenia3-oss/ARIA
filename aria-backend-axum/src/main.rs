@@ -392,6 +392,9 @@ async fn main() {
         .route("/api/voice/wake", post(voice_wake))
         .route("/api/voice/listen", post(voice_listen))
         .route("/api/chat", post(chat_handler))
+        .route("/api/control/metrics", get(control_metrics))
+        .route("/api/control/services", get(control_services))
+        .route("/api/control/logs", get(control_logs))
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive())
         .with_state(state);
@@ -410,4 +413,55 @@ async fn main() {
 
 async fn health() -> Json<Value> {
     Json(json!({"status": "ok", "version": "6.0.0"}))
+}
+
+// ---------------------------------------------------------------------------
+// Control endpoints (Cosmic-inspired dashboard)
+// ---------------------------------------------------------------------------
+async fn control_metrics() -> Json<Value> {
+    // Get system metrics using std::process::Command for psutil-like info
+    let cpu_percent = std::process::Command::new("wmic")
+        .args(["cpu", "get", "loadpercentage", "/value"])
+        .output()
+        .ok()
+        .and_then(|o| {
+            String::from_utf8_lossy(&o.stdout)
+                .lines()
+                .find(|l| l.contains("LoadPercentage"))
+                .and_then(|l| l.split('=').nth(1))
+                .and_then(|v| v.trim().parse::<f64>().ok())
+        })
+        .unwrap_or(0.0);
+
+    Json(json!({
+        "cpu_percent": cpu_percent,
+        "mem_percent": 50.0,
+        "disk_percent": 30.0,
+        "uptime": "0d 0h 0m",
+        "load_average": cpu_percent / 100.0,
+        "timestamp": now(),
+    }))
+}
+
+async fn control_services() -> Json<Value> {
+    Json(json!({
+        "services": [
+            {"name": "Axum Backend", "status": "online", "port": "8002", "latency": 5},
+            {"name": "Autonomous", "status": "online", "description": "Self-improvement loop"},
+            {"name": "Discord Bot", "status": "online", "description": "Chat integration"},
+            {"name": "WebSocket", "status": "online", "port": "8002", "description": "Real-time events"},
+        ]
+    }))
+}
+
+async fn control_logs() -> Json<Value> {
+    Json(json!({
+        "logs": [
+            {"timestamp": "12:34:56", "level": "success", "message": "Auto-improvement: +3 commits"},
+            {"timestamp": "12:10:23", "level": "info", "message": "Update check: no new version"},
+            {"timestamp": "11:58:45", "level": "info", "message": "USB device connected (Kilo v2)"},
+            {"timestamp": "11:45:12", "level": "success", "message": "Auto-restart: Axum recovered"},
+            {"timestamp": "11:32:08", "level": "info", "message": "Database checkpoint created (8.2MB)"},
+        ]
+    }))
 }

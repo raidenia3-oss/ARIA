@@ -1,3 +1,5 @@
+/* ARIA Cosmic-Inspired UI - Tailwind config additions */
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -7,17 +9,34 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Cosmic-inspired palette
         'bg-dark-0': '#0a0e27',
         'bg-dark-1': '#0f172a',
         'bg-dark-2': '#141e3f',
+        'surface-0': '#1e293b',
+        'surface-1': '#273449',
+        'border': '#334155',
+        'border-bright': '#475569',
+        
+        // ARIA accent colors
         'accent-cyan': 'var(--color-accent-cyan)',
         'accent-cyan-bright': 'var(--color-accent-cyan-bright)',
         'accent-purple': 'var(--color-accent-purple)',
         'accent-green': '#00ff88',
         'accent-orange': '#ff6b4a',
+        
+        // Cosmic-inspired semantic colors
+        'cosmic-primary': '#38bdf8',    // cyan - actions
+        'cosmic-accent': '#a78bfa',     // purple - highlights
+        'cosmic-success': '#34d399',    // green - positive
+        'cosmic-warning': '#fbbf24',    // amber - caution
+        'cosmic-error': '#ef4444',      // red - critical
+        
+        // Text
         'text-primary': '#ffffff',
         'text-secondary': '#cbd5e1',
         'text-tertiary': '#94a3b8',
+        'text-muted': '#64748b',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -30,6 +49,8 @@ export default {
         'pulse-ring': 'pulse-ring 2s ease-out infinite',
         'fade-in': 'fade-in 200ms ease-out',
         'slide-up': 'slide-up 200ms ease-out',
+        'float': 'float 3s ease-in-out infinite',
+        'scanline': 'scanline 8s linear infinite',
       },
       keyframes: {
         breathing: {
@@ -56,6 +77,14 @@ export default {
           '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        scanline: {
+          '0%': { 'background-position': '0 0' },
+          '100%': { 'background-position': '0 100%' },
+        },
       },
       backdropBlur: {
         xs: '2px',
@@ -65,7 +94,17 @@ export default {
         xl: '24px',
         '2xl': '32px',
         '3xl': '48px',
-      }
+      },
+      backgroundImage: {
+        'cosmic-gradient': 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+        'glass-gradient': 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%)',
+      },
+      boxShadow: {
+        'glass': '0 8px 32px rgba(0, 0, 0, 0.3)',
+        'glow-cyan': '0 0 20px rgba(56, 189, 248, 0.4)',
+        'glow-purple': '0 0 20px rgba(167, 139, 250, 0.4)',
+        'glow-green': '0 0 20px rgba(52, 211, 153, 0.4)',
+      },
     }
   },
   plugins: [],

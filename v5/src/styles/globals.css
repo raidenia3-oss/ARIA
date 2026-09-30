@@ -21,6 +21,18 @@
   --blur-radius: 24px;
   --corner-radius: 12px;
   --ease-material: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Cosmic-inspired semantic colors */
+  --color-cosmic-primary: #38bdf8;
+  --color-cosmic-accent: #a78bfa;
+  --color-cosmic-success: #34d399;
+  --color-cosmic-warning: #fbbf24;
+  --color-cosmic-error: #ef4444;
+  --color-surface-0: #1e293b;
+  --color-surface-1: #273449;
+  --color-border: #334155;
+  --color-border-bright: #475569;
+  --color-text-muted: #64748b;
 }
 
 * {
