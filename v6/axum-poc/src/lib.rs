@@ -45,6 +45,7 @@ pub mod daemon;
 pub mod state;
 pub mod orb;
 pub mod version;
+pub mod control;
 
 /// CORS policy for the native orb and the desktop shell.
 ///
@@ -92,6 +93,7 @@ pub fn create_full_router(state: Arc<Mutex<SharedState>>) -> Router {
         .merge(admin::router())
         .merge(self_improvement::router())
         .merge(daemon::router())
+        .merge(control::router())
         .route("/ws", get(state::websocket_handler));
 
     app.layer(middleware::from_fn(move |request, next| {

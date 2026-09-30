@@ -13,21 +13,29 @@ use axum::Extension;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::sync::Mutex;
+// `with` on Registry and `init` are extension traits, not inherent methods.
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::util::SubscriberInitExt;
 
 #[tokio::main]
 async fn main() {
     // ARIA runs headlessly in the background, so keep the global level at INFO
     // and only raise verbosity for ARIA's own targets. tower_http stays at INFO
-    // to avoid a trace line per request.
-    tracing_subscriber::fmt()
-        .with_target(true)
-        .with_level(true)
-        .with_max_level(tracing::Level::INFO)
-        .with_env_filter(
-            tracing_subscriber::EnvFilter::builder()
-                .with_default_directive(tracing::Level::INFO.into())
-                .parse_lossy("aria=debug,aria::auth=debug,aria::ratelimit=debug"),
+    // to avoid a trace line per request. ControlLogLayer sits on the same
+    // registry, so /api/control/logs sees exactly the events the operator sees.
+    let filter = tracing_subscriber::EnvFilter::builder()
+        .with_default_directive(tracing::Level::INFO.into())
+        .parse_lossy(
+            "aria=debug,aria::auth=debug,aria::ratelimit=debug,aria::control=debug",
+        );
+    tracing_subscriber::registry()
+        .with(filter)
+        .with(
+            tracing_subscriber::fmt::layer()
+                .with_target(true)
+                .with_level(true),
         )
+        .with(aria_axum_poc::control::ControlLogLayer)
         .init();
 
     println!("🚀 ARIA Axum Server (Phase L.4) starting...");
@@ -44,11 +52,11 @@ async fn main() {
     let app = create_full_router(shared_state.clone())
         .layer(Extension(shared_state.clone()));
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:8002")
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8002")
         .await
-        .expect("Failed to bind to 127.0.0.1:8002");
+        .expect("Failed to bind to 0.0.0.0:8002");
 
-    println!("🚀 ARIA Axum Server (Phase L.4) running on http://127.0.0.1:8002");
+    println!("🚀 ARIA Axum Server (Phase L.4) running on http://0.0.0.0:8002");
     println!("   Full router with daemon endpoints for USB-ARIA");
     println!("   - GET  /health");
     println!("   - GET  /api/system/status");
@@ -57,6 +65,9 @@ async fn main() {
     println!("   - POST /api/daemon/task (USB-ARIA)");
     println!("   - POST /api/daemon/result (USB-ARIA)");
     println!("   - POST /api/daemon/heartbeat (USB-ARIA)");
+    println!("   - GET  /api/control/status | /services | /logs | /config | /plugins");
+    println!("   - WS   /api/control/logs/stream");
+    println!("   - POST /api/control/config | /restart | /upgrade");
     println!("");
     println!("   Port: 8002 (FastAPI running on 8001)");
 

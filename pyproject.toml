@@ -27,6 +27,9 @@ classifiers = [
 ]
 requires-python = ">=3.11"
 
+[project.scripts]
+aria = "aria_control.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/raidenia3-oss/ARIA"
 Repository = "https://github.com/raidenia3-oss/ARIA"

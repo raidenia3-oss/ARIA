@@ -261,6 +261,8 @@ pub struct SharedState {
     pub rate_limits: Arc<Mutex<RateLimitMap>>,
     /// Rejected requests, for the security counters surfaced in status routes.
     pub auth_failures: Arc<Mutex<u64>>,
+    /// Control-plane state: settings, log ring, dispatched jobs.
+    pub control: Arc<crate::control::ControlState>,
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -278,6 +280,12 @@ impl SharedState {
             Some(_) => println!("   SQLite pool ready: {}", db_path),
             None => eprintln!("   ⚠️  SQLite pool unavailable: {}", db_path),
         }
+        let control = std::sync::Arc::new(crate::control::ControlState::new(Some(
+            crate::control::ControlState::default_config_path(),
+        )));
+        // Publish before serving so the tracing layer can reach the log ring for
+        // every event, including the first ones after boot.
+        crate::control::install_control_state(control.clone());
         SharedState {
             db_path: db_path.to_string(),
             db,
@@ -290,6 +298,7 @@ impl SharedState {
             auth: AuthConfig::from_env(),
             rate_limits: Arc::new(Mutex::new(HashMap::new())),
             auth_failures: Arc::new(Mutex::new(0)),
+            control,
         }
     }
     

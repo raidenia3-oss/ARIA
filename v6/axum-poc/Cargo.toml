@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 axum = { version = "0.7", features = ["json", "tokio", "http1", "ws"] }
-tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync", "macros", "net", "time"] }
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync", "macros", "net", "time", "process", "io-util", "fs"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tower = "0.5"
@@ -14,7 +14,7 @@ reqwest = { version = "0.11", default-features = false, features = ["json"] }
 sqlx = { version = "0.7", features = ["runtime-tokio", "sqlite", "chrono"] }
 chrono = { version = "0.4", features = ["serde"] }
 tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "registry"] }
 uuid = { version = "1", features = ["v4", "serde"] }
 futures = "0.3"
 wgpu = { version = "22", features = ["wgsl", "dx12"] }
