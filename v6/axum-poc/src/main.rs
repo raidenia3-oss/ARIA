@@ -68,6 +68,8 @@ async fn main() {
     println!("   - GET  /api/control/status | /services | /logs | /config | /plugins");
     println!("   - WS   /api/control/logs/stream");
     println!("   - POST /api/control/config | /restart | /upgrade");
+    println!("   - GET  /api/videos/list | /search?q= | /:id");
+    println!("   - POST /api/videos/download (USB reference library)");
     println!("");
     println!("   Port: 8002 (FastAPI running on 8001)");
 

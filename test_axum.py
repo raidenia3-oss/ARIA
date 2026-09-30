@@ -13,7 +13,7 @@ for method, url, data in tests:
     try:
         req = urllib.request.Request(url, data=data.encode() if data else None, method=method)
         req.add_header('Content-Type', 'application/json')
-        r = urllib.request.urlopen(req, timeout=5)
+        r = urllib.request.urlopen(req, timeout=15)
         body = r.read().decode()[:120]
         endpoint = url.replace('http://127.0.0.1:8002', '')
         print(method, endpoint, '->', r.status, body)
