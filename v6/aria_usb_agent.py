@@ -11,8 +11,10 @@ import time
 import uuid
 import logging
 import subprocess
+import threading
 import urllib.request
 import urllib.error
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional
@@ -22,6 +24,20 @@ try:
     load_dotenv()
 except ImportError:
     pass
+
+# This file is run as `python v6/aria_usb_agent.py`, so sys.path[0] is v6/ and the
+# repo root — where aria_video_library lives — is not importable. Add it rather
+# than relying on the caller's PYTHONPATH.
+_REPO_ROOT = str(Path(__file__).resolve().parent.parent)
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+
+try:
+    from aria_video_library import AddResult, LibraryError, VideoLibrary
+except ImportError:  # The agent still polls without the library installed.
+    AddResult = None  # type: ignore[assignment]
+    LibraryError = RuntimeError  # type: ignore[misc, assignment]
+    VideoLibrary = None  # type: ignore[assignment]
 
 logging.basicConfig(
     level=logging.INFO,
@@ -37,11 +53,25 @@ IDLE_THRESHOLD = int(os.getenv("ARIA_IDLE_THRESHOLD", "60"))
 POLL_INTERVAL = int(os.getenv("ARIA_POLL_INTERVAL", "30"))
 HEARTBEAT_INTERVAL = int(os.getenv("ARIA_HEARTBEAT_INTERVAL", "30"))
 
+#: Backend the agent talks to. `main_loop` updates it when a different URL is
+#: passed on the command line; task helpers outside the loop read it from here.
+CURRENT_BASE_URL = DEFAULT_BASE_URL
+
+
+#: Discord rejects messages longer than this, and a video notification with its
+#: summary easily exceeds it; the same limit is applied in aria_video_library.
+DISCORD_CONTENT_LIMIT = 2000
+DISCORD_TRUNCATION_MARKER = "\n… *(truncated)*"
+
 
 def discord_notify(content: str, username: str = "USB-ARIA Agent") -> bool:
     if not DISCORD_WEBHOOK:
         return False
-    payload = json.dumps({"content": content, "username": username}).encode()
+    message = content
+    if len(message) > DISCORD_CONTENT_LIMIT:
+        message = message[: DISCORD_CONTENT_LIMIT - len(DISCORD_TRUNCATION_MARKER)].rstrip()
+        message += DISCORD_TRUNCATION_MARKER
+    payload = json.dumps({"content": message, "username": username}).encode()
     req = urllib.request.Request(
         DISCORD_WEBHOOK,
         data=payload,
@@ -50,7 +80,8 @@ def discord_notify(content: str, username: str = "USB-ARIA Agent") -> bool:
     )
     try:
         with urllib.request.urlopen(req, timeout=10) as resp:
-            return resp.status == 204
+            # Discord answers 204 today; any 2xx is a delivery.
+            return 200 <= resp.status < 300
     except Exception as e:
         log.warning(f"Discord webhook failed: {e}")
         return False
@@ -113,6 +144,81 @@ def send_heartbeat(base_url: str, status: str = "idle") -> Optional[Dict[Any, An
     return http_post(f"{base_url}/api/daemon/heartbeat", {"agent_id": AGENT_ID, "status": status})
 
 
+@contextmanager
+def task_heartbeat(base_url: str, status: str) -> Any:
+    """Keep the daemon informed while a long task runs.
+
+    The poll loop only heartbeats between iterations, so a task that takes longer
+    than the lease looks like a dead agent and gets re-dispatched. A daemon
+    thread posts on its own schedule for the duration of the block.
+    """
+    stop = threading.Event()
+
+    def beat() -> None:
+        while not stop.wait(HEARTBEAT_INTERVAL):
+            send_heartbeat(base_url, f"executing:{status}")
+
+    thread = threading.Thread(target=beat, name="aria-task-heartbeat", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        stop.set()
+        thread.join(timeout=1)
+        send_heartbeat(base_url, "idle")
+
+
+_VIDEO_LIBRARY: Any = None
+
+
+def get_video_library() -> Any:
+    """Lazily build the shared :class:`VideoLibrary`.
+
+    Constructing it creates the stick layout, which is wasted work on every poll
+    iteration; the instance is cached because the index write path is not
+    reentrant-friendly across processes.
+    """
+    global _VIDEO_LIBRARY
+    if _VIDEO_LIBRARY is None:
+        if VideoLibrary is None:
+            raise LibraryError("aria_video_library is not importable from this interpreter")
+        _VIDEO_LIBRARY = VideoLibrary()
+        report = _VIDEO_LIBRARY.storage.report()
+        log.info(
+            f"Video library at {report['root']} ({report['source']}, "
+            f"removable={report['removable']})"
+        )
+    return _VIDEO_LIBRARY
+
+
+def handle_instagram_download(
+    url: str,
+    tags: Optional[list] = None,
+    agent_type: Optional[str] = None,
+    context: str = "",
+) -> Dict[Any, Any]:
+    """Download a video, index it, and tell the interested agent about it.
+
+    Returns a plain dict so the result can be embedded in a task submission
+    without dragging dataclasses across the HTTP boundary. Failures are reported
+    as ``status: "failed"`` rather than raised, because a single bad URL must not
+    kill the agent's main loop.
+    """
+    try:
+        result: AddResult = get_video_library().add_reference(
+            url, tags=tags, agent_type=agent_type, context=context
+        )
+    except Exception as e:
+        log.error(f"Video reference failed for {url}: {e}")
+        return {"status": "failed", "url": url, "error": str(e)}
+
+    payload = result.to_dict()
+    payload["status"] = "success"
+    payload["url"] = url
+    log.info(f"Video reference ready: {result.video.id} (added={result.added})")
+    return payload
+
+
 def execute_task(task: Dict[Any, Any]) -> tuple[str, str]:
     task_type = task.get("type", "unknown")
     payload = task.get("payload", {})
@@ -137,11 +243,29 @@ def execute_task(task: Dict[Any, Any]) -> tuple[str, str]:
         log.info(f"Task log: {msg}")
         return ("success", f"Logged: {msg}")
 
+    elif task_type == "video_reference":
+        url = payload.get("url", "")
+        if not url:
+            return ("failed", "video_reference task has no url")
+        # A download can run for an hour. Without a heartbeat the daemon sees a
+        # silent agent, the claim can be re-dispatched, and a second downloader
+        # would race this one for the same file and index.
+        with task_heartbeat(CURRENT_BASE_URL, f"video:{url[:80]}"):
+            report = handle_instagram_download(
+                url,
+                tags=payload.get("tags") or [],
+                agent_type=payload.get("agent_type"),
+                context=payload.get("context", ""),
+            )
+        return (report.get("status", "failed"), json.dumps(report, default=str))
+
     else:
         return ("failed", f"Unknown task type: {task_type}")
 
 
 def main_loop(base_url: str) -> None:
+    global CURRENT_BASE_URL
+    CURRENT_BASE_URL = base_url
     log.info(f"USB-ARIA Agent started: {AGENT_ID}")
     log.info(f"Backend: {base_url}")
     log.info(f"Poll interval: {POLL_INTERVAL}s, Idle threshold: {IDLE_THRESHOLD}s")

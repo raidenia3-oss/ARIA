@@ -26,9 +26,16 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 requires-python = ">=3.11"
+# The `aria` and `aria-videos` console scripts import these at start-up, so they
+# are runtime requirements, not extras.
+dependencies = [
+    "click>=8.0",
+    "rich>=13.0",
+]
 
 [project.scripts]
 aria = "aria_control.cli:main"
+aria-videos = "aria_video_library.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/raidenia3-oss/ARIA"
