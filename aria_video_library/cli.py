@@ -238,6 +238,28 @@ def pending(ctx: click.Context, agent_id: str, limit: int, as_json: bool) -> Non
 
 
 @main.command()
+@click.argument("analysis_file", type=click.Path(exists=True, dir_okay=False))
+@click.option("--json", "as_json", is_flag=True, help="Machine-readable output.")
+@click.pass_context
+def ingest(ctx: click.Context, analysis_file: str, as_json: bool) -> None:
+    """Index a batch of video references from a Claude/Gemini analysis JSON."""
+    from .ingest_analysis import ingest as run_ingest
+
+    try:
+        report = run_ingest(analysis_file, storage=ctx.obj["library"].storage)
+    except LibraryError as exc:
+        raise click.ClickException(str(exc)) from exc
+    if as_json:
+        _emit(report, True)
+        return
+    console.print(
+        f"[green]ingested[/green] {report['total']} videos "
+        f"({report['new']} new, {report['refreshed']} refreshed)"
+    )
+    console.print(f"[dim]analysis preserved at {report['preserved_as']}[/dim]")
+
+
+@main.command()
 @click.option("--json", "as_json", is_flag=True, help="Machine-readable output.")
 @click.pass_context
 def rebuild(ctx: click.Context, as_json: bool) -> None:

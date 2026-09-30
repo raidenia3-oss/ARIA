@@ -28,6 +28,7 @@ from aria_version import ARIA_VERSION
 
 from .agent_notifier import AgentNotifier, NotificationOutcome, build_message
 from .downloader import VideoDownloader, build_video_id, infer_source, sanitize_component
+from .ingest_analysis import convert_batch, convert_video, ingest
 from .errors import (
     DownloadError,
     ExtractionError,
@@ -69,6 +70,9 @@ __all__ = [
     "VideoLibraryStorage",
     "VideoMetadata",
     "__version__",
+    "convert_batch",
+    "convert_video",
+    "ingest",
     "build_message",
     "build_video_id",
     "infer_source",
