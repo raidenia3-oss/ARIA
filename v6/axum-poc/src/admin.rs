@@ -12,6 +12,7 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 
 use crate::state::SharedState;
+use crate::version::ARIA_VERSION;
 
 pub fn router() -> Router<()> {
     Router::new()
@@ -67,7 +68,7 @@ async fn system() -> Json<serde_json::Value> {
         "status": "ok",
         "system": {
             "framework": "Axum (Rust)",
-            "version": "0.1.0-POC",
+            "version": ARIA_VERSION,
             "port": 8002,
             "mode": "ARIA-Axum-v6.0",
         },

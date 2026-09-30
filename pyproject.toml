@@ -2,6 +2,50 @@
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
+# Canonical ARIA OS release identity. This is the ONLY place the version is
+# authored. Every other location (aria_version.py, ARIA_APP/__init__.py, VERSION,
+# setup.py, v5/package.json, Cargo manifests, pubspec.yaml, config.yaml) is a
+# generated copy kept honest by tools/sync_version.py + tools/verify_version.py.
+# See docs/VERSIONING.md.
+[project]
+name = "aura-os"
+version = "6.0.0"
+description = "ARIA OS — Autonomous Reasoning Intelligence Agent"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "AURA Team", email = "raidenia3@gmail.com" },
+]
+keywords = ["ai", "autonomous", "agent", "os", "aria"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.11"
+
+[project.urls]
+Homepage = "https://github.com/raidenia3-oss/ARIA"
+Repository = "https://github.com/raidenia3-oss/ARIA"
+Documentation = "https://docs.aria-os.dev"
+Issues = "https://github.com/raidenia3-oss/ARIA/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0",
+]
+web = ["fastapi>=0.100.0", "uvicorn>=0.23.0"]
+tui = ["rich>=13.0"]
+mobile = ["flet>=0.24.0"]
+desktop = ["PyQt5>=5.15.0"]
+
 [tool.pytest.ini_options]
 testpaths = ["ame_backend/tests", "training/tests", "tests"]
 pythonpath = ["."]

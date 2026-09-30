@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""AURA OS — Package setup for production release."""
+"""AURA OS — Package setup for production release.
 
-from setuptools import setup, find_packages
+The version is never written here: it is read from the single source of truth in
+``pyproject.toml`` via ``aria_version.ARIA_VERSION`` (which
+``tools/sync_version.py`` keeps in sync with ``[project].version``).
+"""
+
+from setuptools import find_packages, setup
+
+import aria_version
 
 setup(
     name="aura-os",
-    version="2.1.0",
+    version=aria_version.ARIA_VERSION,
     description="Production-ready AI Operating System with 300+ providers, mobile support, and netrunner mode",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",

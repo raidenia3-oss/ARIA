@@ -44,6 +44,7 @@ pub mod self_improvement;
 pub mod daemon;
 pub mod state;
 pub mod orb;
+pub mod version;
 
 /// CORS policy for the native orb and the desktop shell.
 ///

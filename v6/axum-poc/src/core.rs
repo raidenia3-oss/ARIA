@@ -12,6 +12,7 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 
 use crate::state::SharedState;
+use crate::version::ARIA_VERSION;
 
 #[derive(Serialize)]
 struct HealthResponse {
@@ -35,7 +36,7 @@ async fn health(
     Json(HealthResponse {
         status: "ok".into(),
         framework: "Axum (Rust)".into(),
-        version: "0.1.0-POC".into(),
+        version: ARIA_VERSION.into(),
         uptime_ms: state.uptime_ms(),
     })
 }
@@ -54,7 +55,7 @@ async fn system_status(
     Json(serde_json::json!({
         "status": "ok",
         "framework": "Axum (Rust)",
-        "version": "0.1.0-POC",
+        "version": ARIA_VERSION,
         "uptime_ms": state.uptime_ms(),
         "memory_safety": "compile-time guaranteed",
         "gc_pauses": "0ms (deterministic)",
