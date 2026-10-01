@@ -16,6 +16,28 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple
 
+from backend.agents.agent_roles import (
+    APEXAgentRole,
+    RoleSpec,
+    get_role_spec,
+    role_to_dict,
+)
+
+
+def _safe_sink(sink: Callable[..., None], event: str, run_id: str,
+               index: int, total: int, name: str = "", tier: str = "",
+               status: str = "", message: str = "") -> None:
+    """Call ``sink`` with progress-frame args, swallowing any exception.
+
+    The sink pushes frames to the Axum hub over HTTP. A refused connection,
+    a timeout or a malformed frame must never abort task execution: progress
+    is observability, not correctness.
+    """
+    try:
+        sink(event, run_id, index, total, name, tier, status, message)
+    except Exception:  # noqa: BLE001 - progress sink must not break execution
+        return
+
 
 class AgentRole(str, Enum):
     PLANNER = "planner"
@@ -359,19 +381,57 @@ class AgentSwarmManager:
         self._max_history = 500
         self.bus: Optional[InterAgentBus] = None
         self.queue: Optional[AsyncTaskQueue] = None
+        # Optional progress sink (EONVERSE visual feedback). Set with
+        # `set_progress_sink()`; a None sink means no UI updates are emitted.
+        self._progress_sink: Optional[Callable[..., None]] = None
+
+    def set_progress_sink(self, sink: Optional[Callable[..., None]]) -> None:
+        """Attach a callable that receives progress frames.
+
+        The sink signature is ``sink(event, run_id, index, total, name, tier, status, message)``.
+        It is fire-and-forget: any exception it raises is swallowed so a broken
+        UI channel can never abort task execution.
+        """
+        self._progress_sink = sink
 
     def create_agent(self, role: str = "planner", config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        if role not in [r.value for r in AgentRole]:
+        # Accept both the 5 swarm roles (planner/coder/...) and the 12 APEX roles
+        # (architect/devops/...). Anything else falls back to "planner" so a
+        # bogus role never crashes the registry.
+        valid_roles = [r.value for r in AgentRole] + [r.value for r in APEXAgentRole]
+        if role not in valid_roles:
             role = "planner"
         agent_id = f"agent-{self._agent_counter}"
         self._agent_counter += 1
+        now = datetime.utcnow().isoformat() + "Z"
+        # Attach APEX visual identity when the role maps to one of the 12
+        # APEX roles; swarm-only roles (planner/coder/...) fall back to a
+        # neutral grey so the dashboard never renders an undefined color.
+        try:
+            apex_role = APEXAgentRole(role)
+            role_spec = role_to_dict(apex_role)
+        except ValueError:
+            role_spec = {
+                "role": role,
+                "name": role.title(),
+                "color": "#64748b",
+                "icon": "⚙️",
+                "description": f"Swarm role: {role}",
+                "capabilities": [],
+            }
         agent = {
             "id": agent_id,
             "role": role,
             "status": "idle",
             "config": config or {},
-            "created_at": datetime.utcnow().isoformat() + "Z",
+            "created_at": now,
+            "last_heartbeat": now,
             "tasks_completed": 0,
+            "tasks_attempted": 0,
+            "errors": 0,
+            "last_task": None,
+            "last_execution": None,
+            "role_spec": role_spec,
         }
         self.agents[agent_id] = agent
         return agent
@@ -389,6 +449,18 @@ class AgentSwarmManager:
     def get_agent(self, role: str) -> Optional[Dict[str, Any]]:
         for agent in self.agents.values():
             if agent["role"] == role and agent["status"] == "idle":
+                return agent
+        return None
+
+    def _claim_agent(self, role: str) -> Optional[Dict[str, Any]]:
+        """Reserve a real idle agent of ``role`` by flipping it to "busy".
+
+        Returns None when no agent of that role exists, so a caller can tell
+        "assigned to agent-3" apart from "nobody available".
+        """
+        for agent in self.agents.values():
+            if agent["role"] == role and agent["status"] == "idle":
+                agent["status"] = "busy"
                 return agent
         return None
 
@@ -463,57 +535,128 @@ class AgentSwarmManager:
         }
 
     async def execute_task(self, task: SubAgentTask, prior_results: Dict[str, Any]) -> Dict[str, Any]:
+        self._ensure_infra()
         task.started_at = datetime.utcnow().isoformat() + "Z"
-        task.assigned_agent = f"agent-for-{task.role}"
 
-        result = await self._execute_by_role(task, prior_results)
-        task.result = result
-        task.status = "completed"
-        task.completed_at = datetime.utcnow().isoformat() + "Z"
-        return result
+        agent = self._claim_agent(task.role)
+        task.assigned_agent = agent["id"] if agent else None
+        if agent is not None:
+            agent["tasks_attempted"] = int(agent.get("tasks_attempted", 0)) + 1
+
+        # Optional progress sink: when set, every task emits run_start/step_start/
+        # step_end frames to the Axum hub so the UI can render the EONVERSE
+        # animated counter. The sink is fire-and-forget: a refused hub must
+        # never abort task execution.
+        sink = getattr(self, "_progress_sink", None)
+        if sink is not None:
+            _safe_sink(sink, "run_start", task.task_id, 0, 1, task.description[:80], "core")
+            _safe_sink(sink, "step_start", task.task_id, 0, 1, task.role, "core")
+
+        try:
+            result = await self._execute_by_role(task, prior_results)
+        except Exception as exc:
+            if agent is not None:
+                agent["errors"] = int(agent.get("errors", 0)) + 1
+                agent["last_task"] = task.task_id
+                agent["last_execution"] = datetime.utcnow().isoformat() + "Z"
+            if sink is not None:
+                _safe_sink(sink, "step_end", task.task_id, 0, 1, task.role, "core", "fail", str(exc)[:80])
+                _safe_sink(sink, "run_end", task.task_id, 0, 1, "fail")
+            raise
+        else:
+            if agent is not None:
+                agent["tasks_completed"] = int(agent.get("tasks_completed", 0)) + 1
+                agent["last_task"] = task.task_id
+                agent["last_execution"] = datetime.utcnow().isoformat() + "Z"
+            task.result = result
+            task.status = "completed"
+            task.completed_at = datetime.utcnow().isoformat() + "Z"
+            if sink is not None:
+                _safe_sink(sink, "step_end", task.task_id, 0, 1, task.role, "core", "ok", task.description[:80])
+                _safe_sink(sink, "run_end", task.task_id, 1, 1, "ok")
+            return result
+        finally:
+            if agent is not None:
+                agent["status"] = "idle"
 
     async def _execute_by_role(self, task: SubAgentTask, prior_results: Dict[str, Any]) -> Dict[str, Any]:
         role = task.role
         dep_results = {dep: prior_results.get(dep, {}) for dep in task.dependencies}
+        started = time.monotonic()
 
         if role == "planner":
             return {
                 "type": "planning",
                 "task": task.description,
                 "sub_tasks": len(task.dependencies) + 1,
-                "approach": "sequential",
+                "approach": "sequential" if len(task.dependencies) <= 1 else "wave",
+                "dependency_count": len(task.dependencies),
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
         if role == "coder":
+            file_name = f"generated_{task.task_id}.py"
             return {
                 "type": "coding",
                 "task": task.description,
-                "file": f"generated_{task.task_id}.py",
-                "lines": 42,
+                "file": file_name,
+                "lines": len(task.description.splitlines()) + len(dep_results) * 10,
                 "dependencies_analyzed": len(dep_results),
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
         if role == "reviewer":
+            prior_scores = [
+                r.get("score") for r in dep_results.values()
+                if isinstance(r, dict) and isinstance(r.get("score"), (int, float))
+            ]
+            issues = sum(
+                1 for r in dep_results.values()
+                if isinstance(r, dict) and r.get("issues_found")
+            )
+            avg_score = round(sum(prior_scores) / len(prior_scores), 2) if prior_scores else None
             return {
                 "type": "review",
                 "task": task.description,
-                "issues_found": 0,
-                "score": 9.5,
+                "issues_found": issues,
+                "score": avg_score if avg_score is not None else 0.0,
                 "prior_results": {k: "reviewed" for k in dep_results},
+                "prior_score_count": len(prior_scores),
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
         if role == "researcher":
+            dep_keys = list(dep_results.keys())
             return {
                 "type": "research",
                 "task": task.description,
-                "sources_found": 3,
-                "findings": "relevant information gathered",
+                "sources_found": len(dep_keys) + 1,
+                "findings": f"relevant information gathered for: {task.description[:80]}",
+                "dependency_sources": dep_keys,
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
         if role == "evaluator":
+            prior_scores = [
+                r.get("score") for r in dep_results.values()
+                if isinstance(r, dict) and isinstance(r.get("score"), (int, float))
+            ]
+            avg_score = round(sum(prior_scores) / len(prior_scores), 2) if prior_scores else 0.0
+            completeness = round(len(dep_results) / max(len(dep_results) + 1, 1), 2)
             return {
                 "type": "evaluation",
                 "task": task.description,
-                "score": 8.7,
-                "metrics": {"accuracy": 0.92, "completeness": 0.88},
+                "score": avg_score,
+                "metrics": {
+                    "accuracy": round(avg_score / 10.0, 2) if avg_score else 0.0,
+                    "completeness": completeness,
+                },
+                "evaluated_deps": len(dep_results),
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
-        return {"type": "unknown", "task": task.description, "result": "no_handler"}
+        return {
+            "type": "unknown",
+            "task": task.description,
+            "result": "no_handler",
+            "role": role,
+            "duration_seconds": round(time.monotonic() - started, 4),
+        }
 
     async def execute_plan(self, plan_id: str, concurrent: bool = True) -> Dict[str, Any]:
         plan = self.task_plans.get(plan_id)
@@ -602,6 +745,91 @@ class AgentSwarmManager:
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }
 
+    def get_swarm_metrics(self) -> Dict[str, Any]:
+        """Aggregate agent counters at read time.
+
+        success_rate is None when nothing has been attempted: an unknown rate
+        and a rate of zero are different facts.
+        """
+        total_completed = 0
+        total_attempted = 0
+        total_errors = 0
+        for agent in self.agents.values():
+            total_completed += int(agent.get("tasks_completed", 0))
+            total_attempted += int(agent.get("tasks_attempted", 0))
+            total_errors += int(agent.get("errors", 0))
+        success_rate = (total_completed / total_attempted) if total_attempted > 0 else None
+        return {
+            "total_agents": len(self.agents),
+            "total_tasks_completed": total_completed,
+            "total_tasks_attempted": total_attempted,
+            "total_errors": total_errors,
+            "success_rate": success_rate,
+        }
+
+    def get_agent_status(self, agent_id: str) -> Optional[Dict[str, Any]]:
+        """Return a status snapshot for one agent, or None if unknown.
+
+        The snapshot is what the APEX dashboard consumes: it carries the
+        role_spec (color/icon), the lifecycle state, the current task and the
+        counters needed to render the orbit + detail cards.
+        """
+        agent = self.agents.get(agent_id)
+        if agent is None:
+            return None
+        uptime_seconds = 0.0
+        created = agent.get("created_at")
+        if created:
+            try:
+                created_dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
+                uptime_seconds = max(0.0, (datetime.utcnow() - created_dt.replace(tzinfo=None)).total_seconds())
+            except (ValueError, TypeError):
+                uptime_seconds = 0.0
+        role_spec = agent.get("role_spec") or {}
+        return {
+            "id": agent["id"],
+            "role": agent["role"],
+            "name": role_spec.get("name", agent["role"].title()),
+            "status": agent["status"],
+            "color": role_spec.get("color", "#64748b"),
+            "icon": role_spec.get("icon", "⚙️"),
+            "current_task": agent.get("last_task"),
+            "tasks_completed": int(agent.get("tasks_completed", 0)),
+            "tasks_attempted": int(agent.get("tasks_attempted", 0)),
+            "error_count": int(agent.get("errors", 0)),
+            "uptime_seconds": round(uptime_seconds, 1),
+            "last_heartbeat": agent.get("last_heartbeat"),
+            "last_execution": agent.get("last_execution"),
+        }
+
+    def list_agent_status(self) -> List[Dict[str, Any]]:
+        """Status snapshot for every registered agent, APEX-role-first."""
+        return [self.get_agent_status(aid) for aid in self.agents]
+
+    def touch_agent(self, agent_id: str) -> bool:
+        """Refresh the heartbeat timestamp for an agent.
+
+        Returns False for an unknown id. The dashboard polls this to tell a
+        live agent from a stale one without needing a separate status channel.
+        """
+        agent = self.agents.get(agent_id)
+        if agent is None:
+            return False
+        agent["last_heartbeat"] = datetime.utcnow().isoformat() + "Z"
+        return True
+
+    def reset_agent_metrics(self, agent_id: str) -> bool:
+        """Zero the counters of one agent. Returns False for an unknown id."""
+        agent = self.agents.get(agent_id)
+        if agent is None:
+            return False
+        agent["tasks_completed"] = 0
+        agent["tasks_attempted"] = 0
+        agent["errors"] = 0
+        agent["last_task"] = None
+        agent["last_execution"] = None
+        return True
+
 
 # --------------------------------------------------------------------------- #
 # Singleton access
@@ -624,6 +852,7 @@ def reset_swarm_manager() -> None:
 
 __all__ = [
     "AgentRole",
+    "APEXAgentRole",
     "AgentSwarmManager",
     "AsyncTaskQueue",
     "InterAgentBus",

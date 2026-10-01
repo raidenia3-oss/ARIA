@@ -4,6 +4,7 @@ import { ServicesPanel } from './ServicesPanel'
 import { SetupProgressPanel } from './SetupProgressPanel'
 import { LogsPanel } from './LogsPanel'
 import ProgressDisplay from '../ProgressDisplay'
+import { AgentStatusDashboard } from '../AgentStatusDashboard'
 
 export function ControlDashboard() {
   return (
@@ -21,6 +22,7 @@ export function ControlDashboard() {
 
       <SetupProgressPanel />
       <ProgressDisplay />
+      <AgentStatusDashboard />
 
       <div className="grid grid-cols-2 gap-3">
         <StatusPanel />

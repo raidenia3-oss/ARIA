@@ -10,6 +10,13 @@ from fastapi import APIRouter, Body, HTTPException, Path, Query
 from fastapi.responses import JSONResponse
 
 from backend.agent_swarm import AgentRole, SubAgentTask, AgentSwarmManager
+from backend.agents.agent_roles import (
+    APEXAgentRole,
+    RoleSpec,
+    get_all_roles,
+    get_role_spec,
+    role_to_dict,
+)
 from backend.gui_automation_engine import ActionPayload, Coordinates, ComputerUseAgent
 
 router = APIRouter(prefix="/api", tags=["swarm", "gui"])
@@ -183,6 +190,60 @@ async def create_agent(
     config = payload.get("config") or {}
     agent = swarm.create_agent(role=role, config=config)
     return {"status": "created", "agent": agent}
+
+
+@router.get("/swarm/metrics")
+async def swarm_metrics() -> Dict[str, Any]:
+    """Aggregate dispatch counters for every registered swarm agent."""
+    return {"server": "ARIA", **swarm.get_swarm_metrics()}
+
+
+@router.get("/swarm/agents/status")
+async def swarm_agent_status() -> Dict[str, Any]:
+    """APEX dashboard feed: per-agent lifecycle, role_spec and counters.
+
+    The response is shaped for the React ``AgentStatusDashboard``: each entry
+    carries the hex color and icon the orbit needs, plus the counters the
+    detail cards render. Agents with no APEX role fall back to a neutral
+    grey so the UI never shows an undefined color.
+    """
+    agents = swarm.list_agent_status()
+    roles = [role_to_dict(r) for r in APEXAgentRole]
+    return {
+        "server": "ARIA-Axum-8002",
+        "count": len(agents),
+        "agents": agents,
+        "available_roles": [r.value for r in APEXAgentRole],
+        "role_specs": {r.value: role_to_dict(r) for r in APEXAgentRole},
+    }
+
+
+@router.get("/swarm/agents/{agent_id}/status")
+async def swarm_agent_status_by_id(agent_id: str) -> Dict[str, Any]:
+    """Single-agent status snapshot for the dashboard detail card."""
+    snapshot = swarm.get_agent_status(agent_id)
+    if snapshot is None:
+        raise HTTPException(status_code=404, detail="agent_not_found")
+    return snapshot
+
+
+@router.post("/swarm/agents/{agent_id}/heartbeat")
+async def swarm_agent_heartbeat(agent_id: str) -> Dict[str, Any]:
+    """Refresh an agent's heartbeat so the dashboard can tell live from stale."""
+    ok = swarm.touch_agent(agent_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="agent_not_found")
+    return {"status": "ok", "agent_id": agent_id}
+
+
+@router.get("/swarm/roles")
+async def swarm_roles() -> Dict[str, Any]:
+    """APEX role catalogue: 12 roles with color, icon, description, capabilities."""
+    return {
+        "server": "ARIA-Axum-8002",
+        "count": len(APEXAgentRole),
+        "roles": [role_to_dict(r) for r in APEXAgentRole],
+    }
 
 
 @router.get("/swarm/history")

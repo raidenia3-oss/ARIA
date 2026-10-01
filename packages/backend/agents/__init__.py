@@ -70,6 +70,13 @@ from backend.agents.agent_researcher import (
     ResearcherAgent,
     researcher,
 )
+from backend.agents.agent_roles import (
+    AgentRole,
+    RoleSpec,
+    get_role_spec,
+    get_all_roles,
+    role_to_dict,
+)
 
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)

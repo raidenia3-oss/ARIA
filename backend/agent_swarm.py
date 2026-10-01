@@ -16,6 +16,13 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple
 
+from backend.agents.agent_roles import (
+    APEXAgentRole,
+    RoleSpec,
+    get_role_spec,
+    role_to_dict,
+)
+
 
 def _safe_sink(sink: Callable[..., None], event: str, run_id: str,
                index: int, total: int, name: str = "", tier: str = "",
@@ -388,21 +395,43 @@ class AgentSwarmManager:
         self._progress_sink = sink
 
     def create_agent(self, role: str = "planner", config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        if role not in [r.value for r in AgentRole]:
+        # Accept both the 5 swarm roles (planner/coder/...) and the 12 APEX roles
+        # (architect/devops/...). Anything else falls back to "planner" so a
+        # bogus role never crashes the registry.
+        valid_roles = [r.value for r in AgentRole] + [r.value for r in APEXAgentRole]
+        if role not in valid_roles:
             role = "planner"
         agent_id = f"agent-{self._agent_counter}"
         self._agent_counter += 1
+        now = datetime.utcnow().isoformat() + "Z"
+        # Attach APEX visual identity when the role maps to one of the 12
+        # APEX roles; swarm-only roles (planner/coder/...) fall back to a
+        # neutral grey so the dashboard never renders an undefined color.
+        try:
+            apex_role = APEXAgentRole(role)
+            role_spec = role_to_dict(apex_role)
+        except ValueError:
+            role_spec = {
+                "role": role,
+                "name": role.title(),
+                "color": "#64748b",
+                "icon": "⚙️",
+                "description": f"Swarm role: {role}",
+                "capabilities": [],
+            }
         agent = {
             "id": agent_id,
             "role": role,
             "status": "idle",
             "config": config or {},
-            "created_at": datetime.utcnow().isoformat() + "Z",
+            "created_at": now,
+            "last_heartbeat": now,
             "tasks_completed": 0,
             "tasks_attempted": 0,
             "errors": 0,
             "last_task": None,
             "last_execution": None,
+            "role_spec": role_spec,
         }
         self.agents[agent_id] = agent
         return agent
@@ -738,6 +767,57 @@ class AgentSwarmManager:
             "success_rate": success_rate,
         }
 
+    def get_agent_status(self, agent_id: str) -> Optional[Dict[str, Any]]:
+        """Return a status snapshot for one agent, or None if unknown.
+
+        The snapshot is what the APEX dashboard consumes: it carries the
+        role_spec (color/icon), the lifecycle state, the current task and the
+        counters needed to render the orbit + detail cards.
+        """
+        agent = self.agents.get(agent_id)
+        if agent is None:
+            return None
+        uptime_seconds = 0.0
+        created = agent.get("created_at")
+        if created:
+            try:
+                created_dt = datetime.fromisoformat(created.replace("Z", "+00:00"))
+                uptime_seconds = max(0.0, (datetime.utcnow() - created_dt.replace(tzinfo=None)).total_seconds())
+            except (ValueError, TypeError):
+                uptime_seconds = 0.0
+        role_spec = agent.get("role_spec") or {}
+        return {
+            "id": agent["id"],
+            "role": agent["role"],
+            "name": role_spec.get("name", agent["role"].title()),
+            "status": agent["status"],
+            "color": role_spec.get("color", "#64748b"),
+            "icon": role_spec.get("icon", "⚙️"),
+            "current_task": agent.get("last_task"),
+            "tasks_completed": int(agent.get("tasks_completed", 0)),
+            "tasks_attempted": int(agent.get("tasks_attempted", 0)),
+            "error_count": int(agent.get("errors", 0)),
+            "uptime_seconds": round(uptime_seconds, 1),
+            "last_heartbeat": agent.get("last_heartbeat"),
+            "last_execution": agent.get("last_execution"),
+        }
+
+    def list_agent_status(self) -> List[Dict[str, Any]]:
+        """Status snapshot for every registered agent, APEX-role-first."""
+        return [self.get_agent_status(aid) for aid in self.agents]
+
+    def touch_agent(self, agent_id: str) -> bool:
+        """Refresh the heartbeat timestamp for an agent.
+
+        Returns False for an unknown id. The dashboard polls this to tell a
+        live agent from a stale one without needing a separate status channel.
+        """
+        agent = self.agents.get(agent_id)
+        if agent is None:
+            return False
+        agent["last_heartbeat"] = datetime.utcnow().isoformat() + "Z"
+        return True
+
     def reset_agent_metrics(self, agent_id: str) -> bool:
         """Zero the counters of one agent. Returns False for an unknown id."""
         agent = self.agents.get(agent_id)
@@ -772,6 +852,7 @@ def reset_swarm_manager() -> None:
 
 __all__ = [
     "AgentRole",
+    "APEXAgentRole",
     "AgentSwarmManager",
     "AsyncTaskQueue",
     "InterAgentBus",
