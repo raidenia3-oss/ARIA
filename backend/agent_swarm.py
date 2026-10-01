@@ -17,6 +17,21 @@ from enum import Enum
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple
 
 
+def _safe_sink(sink: Callable[..., None], event: str, run_id: str,
+               index: int, total: int, name: str = "", tier: str = "",
+               status: str = "", message: str = "") -> None:
+    """Call ``sink`` with progress-frame args, swallowing any exception.
+
+    The sink pushes frames to the Axum hub over HTTP. A refused connection,
+    a timeout or a malformed frame must never abort task execution: progress
+    is observability, not correctness.
+    """
+    try:
+        sink(event, run_id, index, total, name, tier, status, message)
+    except Exception:  # noqa: BLE001 - progress sink must not break execution
+        return
+
+
 class AgentRole(str, Enum):
     PLANNER = "planner"
     CODER = "coder"
@@ -359,6 +374,18 @@ class AgentSwarmManager:
         self._max_history = 500
         self.bus: Optional[InterAgentBus] = None
         self.queue: Optional[AsyncTaskQueue] = None
+        # Optional progress sink (EONVERSE visual feedback). Set with
+        # `set_progress_sink()`; a None sink means no UI updates are emitted.
+        self._progress_sink: Optional[Callable[..., None]] = None
+
+    def set_progress_sink(self, sink: Optional[Callable[..., None]]) -> None:
+        """Attach a callable that receives progress frames.
+
+        The sink signature is ``sink(event, run_id, index, total, name, tier, status, message)``.
+        It is fire-and-forget: any exception it raises is swallowed so a broken
+        UI channel can never abort task execution.
+        """
+        self._progress_sink = sink
 
     def create_agent(self, role: str = "planner", config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         if role not in [r.value for r in AgentRole]:
@@ -487,13 +514,25 @@ class AgentSwarmManager:
         if agent is not None:
             agent["tasks_attempted"] = int(agent.get("tasks_attempted", 0)) + 1
 
+        # Optional progress sink: when set, every task emits run_start/step_start/
+        # step_end frames to the Axum hub so the UI can render the EONVERSE
+        # animated counter. The sink is fire-and-forget: a refused hub must
+        # never abort task execution.
+        sink = getattr(self, "_progress_sink", None)
+        if sink is not None:
+            _safe_sink(sink, "run_start", task.task_id, 0, 1, task.description[:80], "core")
+            _safe_sink(sink, "step_start", task.task_id, 0, 1, task.role, "core")
+
         try:
             result = await self._execute_by_role(task, prior_results)
-        except Exception:
+        except Exception as exc:
             if agent is not None:
                 agent["errors"] = int(agent.get("errors", 0)) + 1
                 agent["last_task"] = task.task_id
                 agent["last_execution"] = datetime.utcnow().isoformat() + "Z"
+            if sink is not None:
+                _safe_sink(sink, "step_end", task.task_id, 0, 1, task.role, "core", "fail", str(exc)[:80])
+                _safe_sink(sink, "run_end", task.task_id, 0, 1, "fail")
             raise
         else:
             if agent is not None:
@@ -503,6 +542,9 @@ class AgentSwarmManager:
             task.result = result
             task.status = "completed"
             task.completed_at = datetime.utcnow().isoformat() + "Z"
+            if sink is not None:
+                _safe_sink(sink, "step_end", task.task_id, 0, 1, task.role, "core", "ok", task.description[:80])
+                _safe_sink(sink, "run_end", task.task_id, 1, 1, "ok")
             return result
         finally:
             if agent is not None:

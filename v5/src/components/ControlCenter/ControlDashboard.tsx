@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
 import { StatusPanel } from './StatusPanel'
 import { ServicesPanel } from './ServicesPanel'
+import { SetupProgressPanel } from './SetupProgressPanel'
 import { LogsPanel } from './LogsPanel'
+import ProgressDisplay from '../ProgressDisplay'
 
 export function ControlDashboard() {
   return (
@@ -16,6 +18,9 @@ export function ControlDashboard() {
         </h2>
         <span className="text-[10px] text-text-tertiary">v6.0.0</span>
       </motion.div>
+
+      <SetupProgressPanel />
+      <ProgressDisplay />
 
       <div className="grid grid-cols-2 gap-3">
         <StatusPanel />

@@ -720,6 +720,34 @@ impl ControlState {
         let _ = self.progress_tx.send(payload);
     }
 
+    /// Push a progress frame from a non-subprocess source (an in-process Python
+    /// emitter, a direct API call). Same folding path as `apply_progress_frame`,
+    /// so a frame pushed over HTTP and one read off a child pipe behave
+    /// identically downstream.
+    pub async fn push_progress_frame(&self, frame: serde_json::Value) -> bool {
+        let payload = {
+            let mut snapshot = self.progress.lock().await;
+            let recognised = apply_frame(&mut snapshot, &frame);
+            if !recognised {
+                return false;
+            }
+            serde_json::to_string(&*snapshot).unwrap_or_default()
+        };
+        let _ = self.progress_tx.send(payload);
+        true
+    }
+
+    /// Clear the folded progress back to idle and notify subscribers.
+    pub async fn reset_progress(&self) -> ProgressSnapshot {
+        let snapshot = {
+            let mut guard = self.progress.lock().await;
+            *guard = ProgressSnapshot::default();
+            guard.clone()
+        };
+        let _ = self.progress_tx.send(serde_json::to_string(&snapshot).unwrap_or_default());
+        snapshot
+    }
+
     pub async fn note_update_check(&self) {
         *self.last_update_check.lock().await = Some(now_rfc3339());
     }
@@ -1234,6 +1262,8 @@ pub fn router() -> Router<()> {
         .route("/api/control/logs/stream", get(logs_stream))
         .route("/api/control/progress", get(progress))
         .route("/api/control/progress/stream", get(progress_stream))
+        .route("/api/control/progress/push", post(push_progress))
+        .route("/api/control/progress/reset", post(reset_progress))
         .route("/api/control/config", get(get_config).post(set_config))
         .route("/api/control/restart", post(restart))
         .route("/api/control/upgrade", post(upgrade))
@@ -1503,6 +1533,63 @@ async fn stream_progress(
         }
     }
 }
+
+/// `POST /api/control/progress/push` — inject a progress frame from a
+/// non-subprocess source.
+///
+/// Any process that wants the UI to show progress (a Python emitter, a
+/// background job, a test fixture) posts frames here instead of shelling
+/// out. The body is the raw frame: it must carry ``aria_progress: true`` and
+/// one of ``run_start`` / ``step_start`` / ``step_end`` / ``run_end``.
+///
+/// Returns 202 with the folded snapshot on success, 400 when the frame is not
+/// a recognised progress frame (so callers can tell "server ignored me" from
+/// "server applied me" without parsing the body).
+async fn push_progress(
+    Extension(state): Extension<Arc<Mutex<SharedState>>>,
+    Json(frame): Json<serde_json::Value>,
+) -> Response {
+    {
+        let guard = state.lock().await;
+        guard.increment_requests().await;
+    }
+    let control = state.lock().await.control.clone();
+    let applied = control.push_progress_frame(frame).await;
+    if !applied {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(json!({
+                "status": "error",
+                "error": "unrecognised_progress_frame",
+                "hint": "frame must carry aria_progress:true and one of run_start/step_start/step_end/run_end",
+            })),
+        )
+            .into_response();
+    }
+    let snapshot = control.progress_snapshot().await;
+    (
+        StatusCode::ACCEPTED,
+        Json(json!({
+            "status": "accepted",
+            "progress": snapshot,
+        })),
+    )
+        .into_response()
+}
+
+/// `POST /api/control/progress/reset` — clear the folded progress back to idle.
+    ///
+    /// Useful between runs so a stale "ok" snapshot does not greet the next run.
+    async fn reset_progress(Extension(state): Extension<Arc<Mutex<SharedState>>>) -> Response {
+        {
+            let guard = state.lock().await;
+            guard.increment_requests().await;
+        }
+        let control = state.lock().await.control.clone();
+        let snapshot = control.reset_progress().await;
+        Json(json!({ "status": "reset", "progress": snapshot }))
+            .into_response()
+    }
 
 /// `GET /api/control/config` — schema, defaults, and current values.
 async fn get_config(Extension(state): Extension<Arc<Mutex<SharedState>>>) -> Response {
