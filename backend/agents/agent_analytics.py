@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 """AURA OS — Analytics Agent.
 
-Tracks metrics, generates reports, predicts trends.
+Tracks real metrics, generates reports, predicts trends.
+All values are derived from actual system state and agent logs;
+no fabricated or random data is produced.
 """
 from __future__ import annotations
 
-import asyncio
-import json
 import logging
-import os
-import random
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from datetime import datetime
+from typing import Any, Dict, List
 
 logger = logging.getLogger("AURA.Analytics")
 
@@ -19,36 +17,37 @@ METRICS_HISTORY: List[Dict[str, Any]] = []
 
 
 def _get_system_metrics() -> Dict[str, Any]:
+    """Read real system metrics via psutil. Falls back to zeros when
+    psutil is unavailable — never fabricates values."""
     try:
         import psutil
+        net = psutil.net_io_counters()
         return {
-            "cpu_percent": psutil.cpu_percent(interval=0.1),
-            "ram_percent": psutil.virtual_memory().percent,
-            "disk_percent": psutil.disk_usage("/").percent,
-            "network_mb": random.uniform(0.5, 50.0),
+            "cpu_percent": round(psutil.cpu_percent(interval=0.1), 1),
+            "ram_percent": round(psutil.virtual_memory().percent, 1),
+            "disk_percent": round(psutil.disk_usage("/").percent, 1),
+            "network_mb_sent": round(net.bytes_sent / (1024 * 1024), 2),
+            "network_mb_recv": round(net.bytes_recv / (1024 * 1024), 2),
         }
     except ImportError:
         return {
-            "cpu_percent": random.uniform(5, 85),
-            "ram_percent": random.uniform(10, 80),
-            "disk_percent": random.uniform(20, 90),
-            "network_mb": random.uniform(0.5, 50.0),
+            "cpu_percent": 0.0,
+            "ram_percent": 0.0,
+            "disk_percent": 0.0,
+            "network_mb_sent": 0.0,
+            "network_mb_recv": 0.0,
         }
 
 
 class AnalyticsAgent:
-    """Tracks and analyzes AURA metrics."""
+    """Tracks and analyzes AURA metrics from real data sources."""
 
     def __init__(self) -> None:
-        self.revenue_total: float = 0.0
         self.report_count: int = 0
         self.monitoring: bool = False
 
     async def track_metrics(self) -> Dict[str, Any]:
         system = _get_system_metrics()
-
-        revenue = random.uniform(10.0, 500.0)
-        self.revenue_total += revenue
 
         agent_perf: Dict[str, float] = {}
         try:
@@ -59,32 +58,40 @@ class AnalyticsAgent:
                 if "accuracy" in result:
                     agent_perf[name] = result["accuracy"]
         except Exception:
-            agent_perf = {
-                "fanfic": round(random.uniform(0.55, 0.92), 4),
-                "general": round(random.uniform(0.60, 0.95), 4),
-                "code": round(random.uniform(0.50, 0.88), 4),
-            }
+            agent_perf = {}
 
-        learning_progress = random.uniform(0.1, 0.9)
+        # Learning progress derived from real improvement history, if any.
+        try:
+            from backend.agents.agent_autoconfigurator import IMPROVEMENT_HISTORY
+            learning_progress = round(min(len(IMPROVEMENT_HISTORY) / 100, 1.0), 4)
+            models_trained = len({h["agent"] for h in IMPROVEMENT_HISTORY})
+            lora_adapters = sum(
+                1 for h in IMPROVEMENT_HISTORY if "LoRA" in h.get("action", "")
+            )
+        except Exception:
+            learning_progress = 0.0
+            models_trained = 0
+            lora_adapters = 0
 
         metrics = {
             "timestamp": datetime.now().isoformat(),
             "system": system,
-            "revenue": {
-                "cycle_usd": round(revenue, 2),
-                "total_usd": round(self.revenue_total, 2),
-            },
             "agents": agent_perf,
             "learning": {
-                "progress": round(learning_progress, 4),
-                "models_trained": random.randint(1, 5),
-                "lora_adapters": random.randint(0, 3),
+                "progress": learning_progress,
+                "models_trained": models_trained,
+                "lora_adapters": lora_adapters,
             },
         }
 
         METRICS_HISTORY.append(metrics)
+        if len(METRICS_HISTORY) > 1000:
+            METRICS_HISTORY[:] = METRICS_HISTORY[-1000:]
 
-        logger.info("Tracked metrics: CPU=%s%% RAM=%s%% REV=$%.2f", system["cpu_percent"], system["ram_percent"], revenue)
+        logger.info(
+            "Tracked metrics: CPU=%s%% RAM=%s%% agents=%d",
+            system["cpu_percent"], system["ram_percent"], len(agent_perf),
+        )
         return metrics
 
     async def generate_report(self) -> Dict[str, Any]:
@@ -102,8 +109,6 @@ class AnalyticsAgent:
             recommendations.append("Scale down compute or optimize CPU-heavy agents")
         if ram_status == "high":
             recommendations.append("Clear cache or reduce batch sizes")
-        if self.revenue_total < 100:
-            recommendations.append("Increase revenue generation cycles")
         if top_agents and top_agents[0][1] > 0.85:
             recommendations.append(f"Agent '{top_agents[0][0]}' is performing well — consider LoRA training")
 
@@ -113,11 +118,10 @@ class AnalyticsAgent:
             "dashboard": {
                 "metrics": latest,
                 "history_count": len(METRICS_HISTORY),
-                "revenue_total": round(self.revenue_total, 2),
             },
             "charts": {
-                "cpu_trend": [random.uniform(10, 90) for _ in range(7)],
-                "revenue_trend": [random.uniform(10, 500) for _ in range(7)],
+                "cpu_trend": [m["system"]["cpu_percent"] for m in METRICS_HISTORY[-7:]],
+                "ram_trend": [m["system"]["ram_percent"] for m in METRICS_HISTORY[-7:]],
                 "agent_accuracy": {name: round(acc, 4) for name, acc in top_agents},
             },
             "top_agents": [{"name": n, "accuracy": round(a, 4)} for n, a in top_agents],
@@ -129,40 +133,29 @@ class AnalyticsAgent:
         return report
 
     async def predict_trends(self) -> Dict[str, Any]:
-        try:
-            from datetime import datetime as dt
-            now = datetime.now()
-        except Exception:
-            now = datetime.now()
+        now = datetime.now()
 
-        revenue_trend = []
-        current = self.revenue_total if self.revenue_total > 0 else random.uniform(100, 500)
-        for i in range(7):
-            current += random.uniform(10, 60)
-            revenue_trend.append({
-                "date": (now + timedelta(days=i + 1)).isoformat(),
-                "projected_revenue": round(current, 2),
-                "confidence": round(random.uniform(0.6, 0.95), 4),
-            })
-
-        fanfic_acc = random.uniform(0.55, 0.92)
-        general_acc = random.uniform(0.60, 0.95)
-        code_acc = random.uniform(0.50, 0.88)
+        # CPU trend from actual history (last 7 samples, reversed oldest-first).
+        cpu_history = [m["system"]["cpu_percent"] for m in METRICS_HISTORY[-7:]]
+        if len(cpu_history) >= 2:
+            direction = "up" if cpu_history[-1] > cpu_history[0] else "down"
+        else:
+            direction = "stable"
 
         return {
             "prediction_id": f"PRS-{int(now.timestamp())}",
             "generated_at": now.isoformat(),
             "horizon": "7_days",
-            "revenue_projection": revenue_trend,
+            "cpu_trend": cpu_history,
             "accuracy_prediction": {
-                "fanfic_2weeks": round(fanfic_acc + random.uniform(0.01, 0.05), 4),
-                "general_2weeks": round(general_acc + random.uniform(0.02, 0.06), 4),
-                "code_2weeks": round(code_acc + random.uniform(0.01, 0.04), 4),
+                name: round(acc, 4)
+                for name, acc in (await self.track_metrics())["agents"].items()
             },
             "trend_summary": {
-                "revenue_direction": "up" if random.random() > 0.3 else "stable",
-                "learning_acceleration": random.uniform(0.05, 0.20),
-                "model_improvement_rate": round(random.uniform(0.02, 0.08), 4),
+                "cpu_direction": direction,
+                "history_samples": len(cpu_history),
+                "learning_acceleration": 0.0,
+                "model_improvement_rate": 0.0,
             },
         }
 
