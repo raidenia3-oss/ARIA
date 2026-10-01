@@ -372,6 +372,10 @@ class AgentSwarmManager:
             "config": config or {},
             "created_at": datetime.utcnow().isoformat() + "Z",
             "tasks_completed": 0,
+            "tasks_attempted": 0,
+            "errors": 0,
+            "last_task": None,
+            "last_execution": None,
         }
         self.agents[agent_id] = agent
         return agent
@@ -389,6 +393,18 @@ class AgentSwarmManager:
     def get_agent(self, role: str) -> Optional[Dict[str, Any]]:
         for agent in self.agents.values():
             if agent["role"] == role and agent["status"] == "idle":
+                return agent
+        return None
+
+    def _claim_agent(self, role: str) -> Optional[Dict[str, Any]]:
+        """Reserve a real idle agent of ``role`` by flipping it to "busy".
+
+        Returns None when no agent of that role exists, so a caller can tell
+        "assigned to agent-3" apart from "nobody available".
+        """
+        for agent in self.agents.values():
+            if agent["role"] == role and agent["status"] == "idle":
+                agent["status"] = "busy"
                 return agent
         return None
 
@@ -463,57 +479,113 @@ class AgentSwarmManager:
         }
 
     async def execute_task(self, task: SubAgentTask, prior_results: Dict[str, Any]) -> Dict[str, Any]:
+        self._ensure_infra()
         task.started_at = datetime.utcnow().isoformat() + "Z"
-        task.assigned_agent = f"agent-for-{task.role}"
 
-        result = await self._execute_by_role(task, prior_results)
-        task.result = result
-        task.status = "completed"
-        task.completed_at = datetime.utcnow().isoformat() + "Z"
-        return result
+        agent = self._claim_agent(task.role)
+        task.assigned_agent = agent["id"] if agent else None
+        if agent is not None:
+            agent["tasks_attempted"] = int(agent.get("tasks_attempted", 0)) + 1
+
+        try:
+            result = await self._execute_by_role(task, prior_results)
+        except Exception:
+            if agent is not None:
+                agent["errors"] = int(agent.get("errors", 0)) + 1
+                agent["last_task"] = task.task_id
+                agent["last_execution"] = datetime.utcnow().isoformat() + "Z"
+            raise
+        else:
+            if agent is not None:
+                agent["tasks_completed"] = int(agent.get("tasks_completed", 0)) + 1
+                agent["last_task"] = task.task_id
+                agent["last_execution"] = datetime.utcnow().isoformat() + "Z"
+            task.result = result
+            task.status = "completed"
+            task.completed_at = datetime.utcnow().isoformat() + "Z"
+            return result
+        finally:
+            if agent is not None:
+                agent["status"] = "idle"
 
     async def _execute_by_role(self, task: SubAgentTask, prior_results: Dict[str, Any]) -> Dict[str, Any]:
         role = task.role
         dep_results = {dep: prior_results.get(dep, {}) for dep in task.dependencies}
+        started = time.monotonic()
 
         if role == "planner":
             return {
                 "type": "planning",
                 "task": task.description,
                 "sub_tasks": len(task.dependencies) + 1,
-                "approach": "sequential",
+                "approach": "sequential" if len(task.dependencies) <= 1 else "wave",
+                "dependency_count": len(task.dependencies),
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
         if role == "coder":
+            file_name = f"generated_{task.task_id}.py"
             return {
                 "type": "coding",
                 "task": task.description,
-                "file": f"generated_{task.task_id}.py",
-                "lines": 42,
+                "file": file_name,
+                "lines": len(task.description.splitlines()) + len(dep_results) * 10,
                 "dependencies_analyzed": len(dep_results),
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
         if role == "reviewer":
+            prior_scores = [
+                r.get("score") for r in dep_results.values()
+                if isinstance(r, dict) and isinstance(r.get("score"), (int, float))
+            ]
+            issues = sum(
+                1 for r in dep_results.values()
+                if isinstance(r, dict) and r.get("issues_found")
+            )
+            avg_score = round(sum(prior_scores) / len(prior_scores), 2) if prior_scores else None
             return {
                 "type": "review",
                 "task": task.description,
-                "issues_found": 0,
-                "score": 9.5,
+                "issues_found": issues,
+                "score": avg_score if avg_score is not None else 0.0,
                 "prior_results": {k: "reviewed" for k in dep_results},
+                "prior_score_count": len(prior_scores),
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
         if role == "researcher":
+            dep_keys = list(dep_results.keys())
             return {
                 "type": "research",
                 "task": task.description,
-                "sources_found": 3,
-                "findings": "relevant information gathered",
+                "sources_found": len(dep_keys) + 1,
+                "findings": f"relevant information gathered for: {task.description[:80]}",
+                "dependency_sources": dep_keys,
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
         if role == "evaluator":
+            prior_scores = [
+                r.get("score") for r in dep_results.values()
+                if isinstance(r, dict) and isinstance(r.get("score"), (int, float))
+            ]
+            avg_score = round(sum(prior_scores) / len(prior_scores), 2) if prior_scores else 0.0
+            completeness = round(len(dep_results) / max(len(dep_results) + 1, 1), 2)
             return {
                 "type": "evaluation",
                 "task": task.description,
-                "score": 8.7,
-                "metrics": {"accuracy": 0.92, "completeness": 0.88},
+                "score": avg_score,
+                "metrics": {
+                    "accuracy": round(avg_score / 10.0, 2) if avg_score else 0.0,
+                    "completeness": completeness,
+                },
+                "evaluated_deps": len(dep_results),
+                "duration_seconds": round(time.monotonic() - started, 4),
             }
-        return {"type": "unknown", "task": task.description, "result": "no_handler"}
+        return {
+            "type": "unknown",
+            "task": task.description,
+            "result": "no_handler",
+            "role": role,
+            "duration_seconds": round(time.monotonic() - started, 4),
+        }
 
     async def execute_plan(self, plan_id: str, concurrent: bool = True) -> Dict[str, Any]:
         plan = self.task_plans.get(plan_id)
@@ -601,6 +673,40 @@ class AgentSwarmManager:
             "bus_messages": len(self.get_bus_messages()),
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }
+
+    def get_swarm_metrics(self) -> Dict[str, Any]:
+        """Aggregate agent counters at read time.
+
+        success_rate is None when nothing has been attempted: an unknown rate
+        and a rate of zero are different facts.
+        """
+        total_completed = 0
+        total_attempted = 0
+        total_errors = 0
+        for agent in self.agents.values():
+            total_completed += int(agent.get("tasks_completed", 0))
+            total_attempted += int(agent.get("tasks_attempted", 0))
+            total_errors += int(agent.get("errors", 0))
+        success_rate = (total_completed / total_attempted) if total_attempted > 0 else None
+        return {
+            "total_agents": len(self.agents),
+            "total_tasks_completed": total_completed,
+            "total_tasks_attempted": total_attempted,
+            "total_errors": total_errors,
+            "success_rate": success_rate,
+        }
+
+    def reset_agent_metrics(self, agent_id: str) -> bool:
+        """Zero the counters of one agent. Returns False for an unknown id."""
+        agent = self.agents.get(agent_id)
+        if agent is None:
+            return False
+        agent["tasks_completed"] = 0
+        agent["tasks_attempted"] = 0
+        agent["errors"] = 0
+        agent["last_task"] = None
+        agent["last_execution"] = None
+        return True
 
 
 # --------------------------------------------------------------------------- #
