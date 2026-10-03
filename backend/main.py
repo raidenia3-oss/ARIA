@@ -678,10 +678,10 @@ async def health() -> Dict[str, str]:
     `ARIA_APP/backend/skills/system/status.py`): lo no medido -> valor ausente +
     `"data_source": "unavailable"` + `detail` con el motivo.
 
-    La sonda real de dependencias ya existe en `detailed_health`, más abajo en
-    este archivo, pero queda ensombrecida: este decorador se registró antes y
-    Starlette resuelve en orden de registro. Exponerla exige tocar el orden de
-    las rutas, fuera del alcance de este arreglo; se reporta como recomendación.
+    La sonda real de dependencias vive en `/health/detailed`. Antes se registraba
+    tambien como `/health` mas abajo en este archivo y quedaba ensombrecida: este
+    decorador se registro antes y Starlette resuelve en orden de registro, asi que
+    nunca era alcanzable.
 
     Example:
     ```bash
@@ -965,11 +965,22 @@ class AgentCommandRequest(BaseModel):
     device: str = "local"
 
 
-@app.get("/health", response_model=HealthResponse)
+@app.get("/health/detailed", response_model=HealthResponse)
 async def detailed_health(db: SessionLocal = Depends(get_db)) -> HealthResponse:
+    """Sonda real de dependencias: DB, Redis y modelo local.
+
+    Antes se registraba tambien en `/health` y quedaba ensombrecida por el
+    handler de proceso, que se registro antes y Starlette resuelve por orden de
+    registro: esta sonda no era alcanzable. Ahora vive en `/health/detailed` y
+    `/health` sigue siendo la respuesta honesta sin dependencias.
+    """
     checks = {}
     try:
-        db.execute("SELECT 1")
+        # `Session.execute` espera un TextClause en SQLAlchemy 2.x; pasar el
+        # string a pelo lanzaba y el chequeo de DB salia "error" siempre.
+        from sqlalchemy import text as _sql_text
+
+        db.execute(_sql_text("SELECT 1"))
         checks["database"] = "ok"
     except Exception as exc:
         checks["database"] = f"error: {exc}"
@@ -2784,18 +2795,27 @@ async def get_pairing_profile(request: Request):
 async def mobile_health_check(request: Request):
     """Health-check de conectividad local entre AME y AURA PC."""
     import socket as _socket
+    import time as _time
+
     hostname = _socket.gethostname()
+    started = _time.perf_counter()
     try:
         local_ip = _socket.gethostbyname(hostname)
     except Exception:
-        local_ip = "127.0.0.1"
+        local_ip = None
+    # Medido, no literal: antes devolvia `latency_ms: 0` fijo, que es lo mismo
+    # que decir "cero latencia" sin haber cronometrado nada.
+    resolution_ms = round((_time.perf_counter() - started) * 1000, 3)
+
     return {
-        "status": "healthy",
+        "status": "ok",
         "hostname": hostname,
         "local_ip": local_ip,
         "port": 8000,
         "timestamp": time.time(),
-        "latency_ms": 0,
+        "data_source": "measured",
+        "hostname_resolution_ms": resolution_ms,
+        "detail": None if local_ip else "gethostbyname no resolvio el hostname local",
     }
 
 

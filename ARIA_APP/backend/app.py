@@ -45,32 +45,64 @@ try:
 
     ai_manager = AIProviderManager()
     AI_ENABLED = True
-except Exception:
+    AI_UNAVAILABLE_REASON = ""
+except Exception as exc:  # noqa: BLE001 - se registra el motivo, no se traga
     AI_ENABLED = False
+    AI_UNAVAILABLE_REASON = f"{type(exc).__name__}: {exc}"
+    logging.getLogger(__name__).error(
+        "AIProviderManager no disponible, ARIA_APP arranca sin proveedor de IA: %s",
+        AI_UNAVAILABLE_REASON,
+    )
 
     class _FallbackAIManager:
+        """Superficie minima para que la UI no reviente cuando no hay IA.
+
+        No finge estar sana: ningun proveedor se ha sondeado, asi que
+        `available` es `None` (no `True`) y `chat()` devuelve un aviso del
+        sistema, no una respuesta del modelo. `latency` no se inventa.
+        """
+
         def __init__(self):
-            self.providers = {"local": {"available": True, "priority": 99}}
+            self.unavailable_reason = AI_UNAVAILABLE_REASON
+            self.providers = {
+                "local": {
+                    "available": None,
+                    "available_reason": "provider not probed: import failed",
+                    "priority": 99,
+                }
+            }
             self._usage = {"requests": 0, "tokens": 0, "providers_used": {}}
             self._circuit_breaker = {}
             self._latency_history = {}
 
         def chat(self, message, history=None, system_prompt="", provider=None):
             return {
-                "message": "ARIA funcionando en modo local (fallback).",
-                "provider": "local",
-                "latency": 0.0,
+                "message": (
+                    "IA no disponible: ningun proveedor resolvio al arrancar "
+                    f"({self.unavailable_reason or 'motivo desconocido'}). "
+                    "Esto lo dice el sistema, no un modelo."
+                ),
+                "provider": None,
+                "data_source": "unavailable",
+                "detail": self.unavailable_reason,
+                "latency": None,
             }
 
         def get_available_providers(self):
-            return ["local"]
+            return []
 
         def get_best_provider(self):
-            return "local"
+            return None
 
         def get_provider_health(self):
             return {
-                name: {"available": True, "circuit_open": False, "avg_latency": None, "failures": 0}
+                name: {
+                    "available": None,
+                    "available_reason": "provider not probed: import failed",
+                    "circuit_open": None,
+                    "avg_latency": None,
+                    "failures": None,
+                }
                 for name in self.providers
             }
 

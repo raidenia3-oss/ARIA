@@ -164,3 +164,119 @@ def test_ame_backend_contains_no_python_module() -> None:
     assert modules == [], (
         f"ame_backend/ contiene {modules}; los launchers ya no apuntan ahi"
     )
+
+
+# -- (b) registro unico de /health ----------------------------------------------
+
+
+def _get_paths_by_handler() -> dict[str, list[str]]:
+    tree = ast.parse(MAIN_PY.read_text(encoding="utf-8"), filename=str(MAIN_PY))
+    out: dict[str, list[str]] = {}
+    for node in tree.body:
+        if not isinstance(node, ast.AsyncFunctionDef):
+            continue
+        paths = _decorated_get_paths(node)
+        if paths:
+            out[node.name] = sorted(paths)
+    return out
+
+
+def test_no_health_path_is_registered_by_two_handlers() -> None:
+    """`/health` estaba registrado por `health()` y por `detailed_health`.
+
+    Starlette resuelve en orden de registro, asi que la sonda real de DB/Redis era
+    codigo muerto: `detailed_health` ahora se expone en `/health/detailed` y
+    `/health` sigue siendo la respuesta honesta sin dependencias.
+
+    El alcance son las rutas de health. Hay OTRO par duplicado que este test no
+    pretende arbitrar: `/api/orchestrator` lo registran `orchestrator_status`
+    (`Depends(require_api_key)`, linea ~1854) y `get_orchestrator_protected`
+    (`Depends(get_current_user)`, linea ~2500). Gana el primero, asi que el
+    segundo es codigo muerto, pero ambos exigen credenciales: no hay bypass, y
+    elegir un ganador cambia comportamiento, asi que queda reportado.
+    """
+    seen: dict[str, str] = {}
+    collisions = []
+
+    for handler, paths in _get_paths_by_handler().items():
+        for path in paths:
+            if path != "/health" and not path.startswith("/health/"):
+                continue
+            if path in seen:
+                collisions.append(f"{path}: {seen[path]} y {handler}")
+            seen[path] = handler
+
+    assert not collisions, f"rutas de health registradas por dos handlers: {collisions}"
+
+
+def test_the_dependency_probe_is_reachable() -> None:
+    handlers = _get_paths_by_handler()
+    assert "detailed_health" in handlers
+    assert handlers["detailed_health"] == ["/health/detailed"]
+    assert "/health" in handlers["health"]
+
+
+def test_the_db_probe_executes_a_textclause() -> None:
+    """`Session.execute("SELECT 1")` lanza en SQLAlchemy 2.x (exige TextClause),
+    asi que el chequeo de base de datos salia `error` siempre."""
+    source = MAIN_PY.read_text(encoding="utf-8")
+    tree = ast.parse(source, filename=str(MAIN_PY))
+    detailed = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.AsyncFunctionDef) and node.name == "detailed_health"
+    ]
+    assert detailed, "backend/main.py ya no define detailed_health"
+    detailed_source = ast.get_source_segment(source, detailed[0])
+    assert detailed_source is not None
+    assert 'db.execute("SELECT 1")' not in detailed_source
+    assert "text(" in detailed_source
+
+
+# -- (c) el fallback de IA no inventa disponibilidad -----------------------------
+
+
+def test_the_ai_fallback_does_not_claim_a_provider_is_available() -> None:
+    """`ARIA_APP/backend/app.py` arranca un `_FallbackAIManager` si el import de
+    `ai_providers` falla. Declaraba `available: True` sin haber sondeado nada y
+    `chat()` devolvia un texto fijo con `latency: 0.0`: una IA que finge."""
+    app_src = (ARIA_APP_BACKEND / "app.py").read_text(encoding="utf-8", errors="replace")
+
+    start = app_src.find("class _FallbackAIManager")
+    assert start != -1, "el fallback de IA ya no existe: reevaluar el contrato"
+    body = app_src[start:start + 3000]
+
+    assert '"available": True' not in body
+    assert "ARIA funcionando en modo local" not in body
+    assert '"latency": 0.0' not in body
+    assert '"data_source": "unavailable"' in body
+    assert '"available": None' in body
+
+
+def test_the_ai_fallback_records_why_the_import_failed() -> None:
+    """`except Exception:` sin binding se tragaba la causa, y por eso nadie sabia
+    por que caia al fallback."""
+    app_src = (ARIA_APP_BACKEND / "app.py").read_text(encoding="utf-8", errors="replace")
+
+    assert "except Exception as exc:" in app_src
+    assert "AI_UNAVAILABLE_REASON" in app_src
+
+
+def test_the_mobile_health_check_reports_a_measured_latency() -> None:
+    """`/api/mobile/health-check` devolvia `latency_ms: 0` literal: cero latencia
+    sin haber cronometrado nada."""
+    tree = ast.parse(MAIN_PY.read_text(encoding="utf-8"), filename=str(MAIN_PY))
+    handler = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.AsyncFunctionDef)
+        and node.name == "mobile_health_check"
+    ]
+    assert handler, "backend/main.py ya no expone mobile_health_check"
+
+    source = MAIN_PY.read_text(encoding="utf-8")
+    segment = ast.get_source_segment(source, handler[0])
+    assert segment is not None
+    assert '"latency_ms": 0' not in segment
+    assert "perf_counter" in segment
+    assert '"data_source": "measured"' in segment

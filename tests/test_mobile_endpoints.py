@@ -200,9 +200,15 @@ class TestMobilePairingProfile:
         resp = client.get("/api/mobile/health-check")
         assert resp.status_code == 200
         data = resp.json()
-        assert data["status"] == "healthy"
+        # El contrato es "ok" + data_source "measured": se midio gethostbyname.
+        # Antes devolvia "healthy" con `latency_ms: 0` fijo, y el test validaba
+        # esa mentira.
+        assert data["status"] == "ok"
+        assert data["data_source"] == "measured"
         assert "hostname" in data
         assert "port" in data
+        assert isinstance(data["hostname_resolution_ms"], (int, float))
+        assert "latency_ms" not in data
 
 
 if __name__ == "__main__":
