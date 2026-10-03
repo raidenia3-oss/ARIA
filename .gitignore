@@ -46,6 +46,10 @@ test_discord*
 secrets.json
 *.log
 
+# Credenciales de webhook de GitHub (PAT en claro escrito por _save_webhook_config)
+.github_webhook_config.json
+ARIA_APP/.github_webhook_config.json
+
 # IDE
 .idea/
 .vscode/

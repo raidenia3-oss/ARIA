@@ -333,13 +333,15 @@ class SecurityManager:
 
     def require_auth(self, token: str, required_level: str = SecurityLevel.INTERNAL):
         if not self._verifier.verify(token, required_level):
+            # Ni el prefijo del token: el log de auditoria acaba en disco y los
+            # 8 primeros caracteres acortan el espacio de busqueda de un token.
             self._audit.log_event(
                 "auth_failed",
-                dict(tok_prefix=token[:8] if token else "none"),
+                dict(token_present=bool(token)),
                 level=SecurityLevel.SECRET,
             )
             raise UnauthorizedError("Unauthorized or insufficient level")
-        logger.debug(f'Auth OK: {token[:8] if token else "none"}...')
+        logger.debug(f"Auth OK: token present={bool(token)}")
 
     def check_permission(self, token: str, perm: str) -> bool:
         if not self._init:

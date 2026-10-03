@@ -313,10 +313,27 @@ app.include_router(self_healing_router, prefix="/api/resilience")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    # Origins explicitos, no "*": con allow_credentials=True el comodin hace que
+    # el navegador acepte el credential de cualquier origen. Sin "null"/"file://":
+    # el renderer Electron llama por IPC, no por HTTP directo al backend.
+    allow_origins=[
+        origin.strip()
+        for origin in os.getenv(
+            "AURA_CORS_ORIGINS",
+            "http://localhost:3000,http://localhost:8000,http://127.0.0.1:8000",
+        ).split(",")
+        if origin.strip()
+    ],
+    # allow_credentials=True SOLO con origins literales: si AURA_CORS_ORIGINS trae
+    # "*" hay que pasarlo a False.
+    allow_credentials="*" not in os.getenv("AURA_CORS_ORIGINS", ""),
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "X-API-Key",
+        "X-Hub-Signature-256",
+    ],
 )
 
 app.include_router(core_router)

@@ -7,8 +7,11 @@ Endpoints para webhooks de GitHub:
   POST /api/github/webhook/config  - Configure webhook
   POST /api/github/webhook/test  - Send test event
 
-Este router NO exige autenticacion (ARIA_APP/backend/app.py no registra auth),
-asi que ninguna respuesta puede incluir material de credencial.
+Las rutas que ejecutan git contra el repositorio (`/autocommit`, `/pr/create`) y
+la que escribe el secreto en disco (`POST /config`) exigen
+`Authorization: Bearer <$ARIA_ADMIN_TOKEN>`: ver `require_admin_token`. Las rutas
+de solo lectura (`GET /config`) siguen abiertas, asi que ninguna respuesta puede
+incluir material de credencial.
 """
 
 from __future__ import annotations
@@ -21,7 +24,7 @@ import os
 import time
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, HTTPException, Request, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Request, BackgroundTasks
 from pydantic import BaseModel, Field
 
 logger = logging.getLogger("ARIA.GitHubWebhooks")
@@ -107,10 +110,10 @@ _SECRET_KEYS = frozenset({"secret", "token", "api_key", "apikey", "webhook_secre
 def _public_webhook_config(config: Dict[str, Any]) -> Dict[str, Any]:
     """Copia de la config apta para responder por HTTP: sin material de credencial.
 
-    `GET /api/github/webhook/config` no exige autenticacion (ARIA_APP/backend/app.py
-    no registra middleware de auth ni dependencias de auth en ninguna ruta, y el
-    CORS va con `allow_origins=["*"]` + `allow_credentials=True`), asi que
-    devolver `secret` allowia leer el secreto del webhook sin credenciales.
+    `GET /api/github/webhook/config` no exige autenticacion (las rutas de
+    administracion si, esta no) y el CORS ya no combina comodin con credenciales,
+    asi que devolver `secret` allowia leer el secreto del webhook sin presentar
+    ninguna credencial.
 
     Devuelve en su lugar dos booleanos:
       - `secret_configured`: hay un secreto configurado (no vacio).
@@ -124,6 +127,63 @@ def _public_webhook_config(config: Dict[str, Any]) -> Dict[str, Any]:
     public["secret_configured"] = bool(secret)
     public["verification_enabled"] = bool(secret)
     return public
+
+
+# ============================================================================
+# Autenticacion de las rutas de administracion
+# ============================================================================
+
+ADMIN_TOKEN_ENV = "ARIA_ADMIN_TOKEN"
+
+
+def _configured_admin_token() -> str:
+    return (os.getenv(ADMIN_TOKEN_ENV) or "").strip()
+
+
+def require_admin_token(request: Request) -> bool:
+    """Exige `Authorization: Bearer <$ARIA_ADMIN_TOKEN>` en las rutas de admin.
+
+    Sin esto, `POST /autocommit` hacia `git add -A` + commit + `git push` a
+    master y `POST /pr/create` empuja una rama: cualquier proceso que alcance el
+    puerto escribiria en el repositorio. `POST /config` ademas sobrescribe el
+    secreto del webhook en disco.
+
+    No se reutiliza la firma `X-Hub-Signature-256` porque estas rutas no las
+    invoca GitHub, las invoca un operador: la firma HMAC no aportaria nada.
+
+    Fail-closed: sin token configurado la ruta responde 503 y el cuerpo no se
+    ejecuta. La comparacion es en tiempo constante y el token no se registra.
+    """
+    expected = _configured_admin_token()
+    if not expected:
+        logger.error(
+            "%s no configurado: rutas de administracion de webhooks cerradas",
+            ADMIN_TOKEN_ENV,
+        )
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"admin endpoints disabled: set {ADMIN_TOKEN_ENV} and restart"
+            ),
+        )
+
+    scheme, _, presented = request.headers.get("authorization", "").partition(" ")
+    if scheme.lower() != "bearer" or not presented.strip():
+        raise HTTPException(
+            status_code=401,
+            detail="missing bearer token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    if not hmac.compare_digest(presented.strip(), expected):
+        logger.warning("admin token mismatch on %s", request.url.path)
+        raise HTTPException(
+            status_code=401,
+            detail="invalid bearer token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return True
 
 
 # ============================================================================
@@ -141,9 +201,13 @@ async def get_webhook_config():
     return _public_webhook_config(config)
 
 
-@router.post("/config", response_model=Dict[str, Any])
+@router.post(
+    "/config",
+    response_model=Dict[str, Any],
+    dependencies=[Depends(require_admin_token)],
+)
 async def set_webhook_config(config: WebhookConfig):
-    """Update webhook configuration."""
+    """Update webhook configuration. Requiere `Authorization: Bearer <admin>`."""
     data = config.model_dump()
     data["url"] = config.url  # Keep URL in config
     _save_webhook_config(data)
@@ -377,9 +441,17 @@ class CreatePRResponse(BaseModel):
     status: str
 
 
-@router.post("/autocommit", response_model=Dict[str, Any])
+@router.post(
+    "/autocommit",
+    response_model=Dict[str, Any],
+    dependencies=[Depends(require_admin_token)],
+)
 async def auto_commit_changes(req: AutoCommitRequest):
-    """Auto-commit changes to the ARIA repository."""
+    """Auto-commit changes to the ARIA repository. Requiere admin.
+
+    Hace `git add -A` + commit + `git push` a master, asi que sin token esta
+    ruta permite a cualquiera que alcance el puerto escribir en el repo.
+    """
     from skills.custom.self_improvement import get_self_improvement
 
     engine = get_self_improvement()
@@ -393,9 +465,13 @@ async def auto_commit_changes(req: AutoCommitRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/pr/create", response_model=CreatePRResponse)
+@router.post(
+    "/pr/create",
+    response_model=CreatePRResponse,
+    dependencies=[Depends(require_admin_token)],
+)
 async def create_pr(req: CreatePRRequest):
-    """Create a PR from current changes."""
+    """Create a PR from current changes. Requiere `Authorization: Bearer <admin>`."""
     from github_admin import GitHubAdminClient, PRAnalyzer
 
     client = GitHubAdminClient(token=os.getenv("GITHUB_TOKEN", ""), org="raidenia3-oss")

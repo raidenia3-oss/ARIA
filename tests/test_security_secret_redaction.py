@@ -20,6 +20,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -242,26 +244,169 @@ def test_public_webhook_config_does_not_mutate_the_input():
     assert config["secret"] == FAKE_WEBHOOK_SECRET
 
 
-# -- (c) el router de webhooks no exige autenticacion ---------------------------
+# -- (c) las rutas de administracion exigen token; GET /config sigue abierta ----
 
 
-def test_the_real_app_still_has_no_auth_markers():
-    """Documenta por que el secreto no puede salir de este router.
+# -- (c) las rutas de administracion del webhook exigen token --------------------
 
-    `ARIA_APP/backend/app.py` no registra middleware de auth ni dependencias
-    `Depends(require_auth)` / `HTTPBearer` / `APIKeyHeader` / `OAuth2`, y monta
-    el CORS con `allow_origins=["*"]` + `allow_credentials=True`. Este test lee
-    el fuente: si alguien anade auth, el aviso deja de ser cierto.
-    """
-    app_src = (PROJECT_ROOT / "ARIA_APP" / "backend" / "app.py").read_text(
+
+ADMIN_ROUTES = ("/api/github/webhook/config", "/api/github/webhook/autocommit",
+                "/api/github/webhook/pr/create")
+
+FAKE_ADMIN_TOKEN = "test-" + "a" * 24
+
+
+def _app_source() -> str:
+    return (PROJECT_ROOT / "ARIA_APP" / "backend" / "app.py").read_text(
         encoding="utf-8", errors="replace"
     )
 
-    for marker in ("HTTPBearer", "APIKeyHeader", "OAuth2PasswordBearer", "require_auth"):
-        assert marker not in app_src, (
-            f"app.py ya define `{marker}`: reevaluar si GET /api/github/webhook/config "
-            "sigue necesitando redactar el secreto"
+
+def _admin_route(path: str):
+    """La ruta POST ya montada, leida del router (no del fuente)."""
+    for route in gh.router.routes:
+        if getattr(route, "path", None) == path and "POST" in getattr(route, "methods", set()):
+            return route
+    raise AssertionError(f"el router no expone POST {path}")
+
+
+def _guards(dependant) -> bool:
+    """`require_admin_token` aparece en el arbol de dependencias de la ruta."""
+    calls = []
+
+    def walk(node):
+        for sub in node.dependencies:
+            calls.append(sub.call)
+            walk(sub)
+
+    walk(dependant)
+    return gh.require_admin_token in calls
+
+
+def test_the_app_no_longer_mounts_wildcard_cors_with_credentials():
+    """`allow_origins=["*"]` + `allow_credentials=True` acepta el credential de
+    cualquier origen. El CORS se deriva de `AURA_CORS_ORIGINS` y las credenciales
+    solo se permiten si esa lista no trae `"*"`."""
+    app_src = _app_source()
+
+    assert 'allow_origins=["*"]' not in app_src
+    assert "AURA_CORS_ORIGINS" in app_src
+    assert 'allow_credentials="*" not in os.getenv("AURA_CORS_ORIGINS", "")' in app_src
+
+
+def test_the_three_admin_routes_depend_on_require_admin_token():
+    """`/autocommit` hace push a master y `/pr/create` empuja una rama: sin
+    `Depends(require_admin_token)` cualquiera que alcance el puerto escribe en el
+    repositorio."""
+    for path in ADMIN_ROUTES:
+        route = _admin_route(path)
+
+        assert _guards(route.dependant), (
+            f"POST {path} no depende de require_admin_token"
         )
+
+
+def test_get_config_stays_open_and_therefore_redacted():
+    """`GET /config` sigue sin token; por eso `_public_webhook_config` existe."""
+    for route in gh.router.routes:
+        if getattr(route, "path", None) != "/api/github/webhook/config":
+            continue
+        if "GET" not in getattr(route, "methods", set()):
+            continue
+        assert not _guards(route.dependant)
+        return
+    raise AssertionError("el router no expone GET /api/github/webhook/config")
+
+
+@pytest.mark.parametrize("route", ADMIN_ROUTES)
+def test_admin_routes_reject_a_request_without_a_token(webhook_client, monkeypatch, route):
+    """503 (fail-closed) si no hay token configurado: nunca se ejecuta el cuerpo."""
+    monkeypatch.delenv("ARIA_ADMIN_TOKEN", raising=False)
+
+    response = webhook_client.post(route, json={})
+
+    assert response.status_code == 503
+    assert "ARIA_ADMIN_TOKEN" in response.json()["detail"]
+
+
+@pytest.mark.parametrize("route", ADMIN_ROUTES)
+def test_admin_routes_reject_a_wrong_token(webhook_client, monkeypatch, route):
+    monkeypatch.setenv("ARIA_ADMIN_TOKEN", FAKE_ADMIN_TOKEN)
+
+    for header in ({"Authorization": "Bearer wrong"}, {"Authorization": "Basic x"},
+                   {"Authorization": FAKE_ADMIN_TOKEN}):
+        response = webhook_client.post(route, json={}, headers=header)
+        assert response.status_code == 401, f"{route} acepto {header}"
+        assert response.headers.get("www-authenticate") == "Bearer"
+
+
+@pytest.mark.parametrize("header", ["Bearer " + FAKE_ADMIN_TOKEN,
+                                    "bearer " + FAKE_ADMIN_TOKEN,
+                                    "BEARER " + FAKE_ADMIN_TOKEN])
+def test_require_admin_token_accepts_the_configured_token(monkeypatch, header):
+    """La dependencia se prueba directa: llamar a las rutas con token valido
+    ejecutaria git de verdad."""
+    from starlette.requests import Request
+
+    monkeypatch.setenv("ARIA_ADMIN_TOKEN", FAKE_ADMIN_TOKEN)
+    request = Request({
+        "type": "http",
+        "method": "POST",
+        "path": "/api/github/webhook/autocommit",
+        "headers": [(b"authorization", header.encode())],
+    })
+
+    assert gh.require_admin_token(request) is True
+
+
+def test_require_admin_token_is_fail_closed_without_configuration(monkeypatch):
+    from fastapi import HTTPException
+    from starlette.requests import Request
+
+    monkeypatch.setenv("ARIA_ADMIN_TOKEN", "   ")
+    request = Request({"type": "http", "method": "POST", "path": "/x", "headers": []})
+
+    with pytest.raises(HTTPException) as excinfo:
+        gh.require_admin_token(request)
+    assert excinfo.value.status_code == 503
+
+
+def test_get_config_still_answers_without_a_token(webhook_client):
+    """El contrato de solo lectura no se rompe al cerrar las rutas de admin."""
+    assert webhook_client.get("/api/github/webhook/config").status_code == 200
+
+
+# -- (d) el PAT en claro no se versiona -----------------------------------------
+
+
+def test_the_webhook_config_with_the_pat_is_not_tracked():
+    """`ARIA_APP/.github_webhook_config.json` contenia un PAT en claro y estaba
+    trackeado: .gitignore no basta, hay que sacarlo del indice."""
+    tracked = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "ARIA_APP/.github_webhook_config.json"],
+        cwd=PROJECT_ROOT, capture_output=True, text=True,
+    )
+    assert tracked.returncode != 0, "el PAT sigue trackeado en git"
+
+
+def test_the_webhook_config_path_is_gitignored():
+    ignored = (PROJECT_ROOT / ".gitignore").read_text(encoding="utf-8")
+    assert ".github_webhook_config.json" in ignored
+
+
+# -- (e) los logs de auditoria no guardan prefijos de token ---------------------
+
+
+@pytest.mark.parametrize("module_path", ["backend/core/security.py",
+                                        "ARIA_APP/backend/core/security.py"])
+def test_no_module_logs_a_token_prefix(module_path):
+    """`tok_prefix=token[:8]` metia 8 caracteres de un token de auth en el log de
+    auditoria, que ademas se persiste en disco."""
+    source = (PROJECT_ROOT / module_path).read_text(encoding="utf-8", errors="replace")
+
+    assert "tok_prefix" not in source
+    assert "token[:8]" not in source
+    assert "token_present" in source
 
 
 def test_the_audit_default_secret_is_the_published_constant_not_a_real_one():
@@ -278,5 +423,10 @@ def test_the_audit_default_secret_is_the_published_constant_not_a_real_one():
 @pytest.fixture(autouse=True)
 def _isolate_env(monkeypatch):
     """Ningun test depende del entorno real del que corre pytest."""
-    for name in ("ARIA_SECRET_KEY", "GITHUB_WEBHOOK_SECRET", "ARIA_AUDIT_SECRET"):
+    for name in (
+        "ARIA_SECRET_KEY",
+        "GITHUB_WEBHOOK_SECRET",
+        "ARIA_AUDIT_SECRET",
+        "ARIA_ADMIN_TOKEN",
+    ):
         monkeypatch.delenv(name, raising=False)
