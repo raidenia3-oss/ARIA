@@ -16,6 +16,12 @@ logger = logging.getLogger('AURA.Security')
 
 AUDIT_LOG_FILE = Path(os.environ.get('AURA_AUDIT_LOG', 'data/audit.log'))
 
+# Fallback de desarrollo: NO es un secreto. Es una constante publicada en el
+# codigo fuente, asi que cualquiera que lo lea puede firmar/verificar con ella.
+# Se nombra para poder reportarlo honestamente en get_stats() en vez de
+# presentarlo como una clave configurada.
+DEV_SECRET_FALLBACK = 'dev-secret-change-me-32bytes!!'
+
 
 class SecurityLevel:
     """Niveles de seguridad para acceso zero-trust."""
@@ -41,8 +47,15 @@ class CredentialVerifier:
     
     def __init__(self):
         self._tokens: Dict[str, Dict[str, Any]] = {}
-        self._secret = os.environ.get('AURA_SECRET_KEY', 'dev-secret-change-me-32bytes!!')
+        configured = os.environ.get('AURA_SECRET_KEY') or ''
+        self._secret_configured = bool(configured)
+        self._secret = configured or DEV_SECRET_FALLBACK
+        self._secret_source = 'env' if self._secret_configured else 'development_default'
         self._init = False
+        if not self._secret_configured:
+            logger.warning('CredentialVerifier: AURA_SECRET_KEY no esta definida — se usa la clave '
+                           'de firma de desarrollo (publica, en el codigo fuente); las firmas '
+                           'HMAC que se generen con ella son falsificables')
     
     def initialize(self, admin_token: str = ''):
         if self._init: return
@@ -68,8 +81,15 @@ class CredentialVerifier:
         return False
     
     def get_stats(self) -> Dict[str, Any]:
-        return dict(initialized=self._init, active_tokens=len(self._tokens), 
-                    secret_key_prefix=self._secret[:8] + '...')
+        """Estado del verificador.
+
+        No expone material de clave: ni completo ni por prefijo. Solo booleano
+        de configuracion y procedencia, para que un consumidor distinga una clave
+        real de la constante de desarrollo publicada en el codigo.
+        """
+        return dict(initialized=self._init, active_tokens=len(self._tokens),
+                    secret_configured=self._secret_configured,
+                    secret_source=self._secret_source)
 
 
 class AuditLogger:
@@ -103,6 +123,14 @@ class AuditLogger:
             logger.info(f'AuditLogger: initialized at {self._lf}')
     
     def _hash(self, p: str) -> str: return hashlib.sha256(p.encode()).hexdigest()
+
+    def _read_valid_events(self) -> List[Dict[str, Any]]:
+        """Lee todos los eventos validos del archivo de auditoria.
+
+        Wrapper sobre get_events() para compatibilidad con _resume_last_hash().
+        Ignora lineas corruptas (mismo comportamiento que get_events).
+        """
+        return self.get_events()
 
     def _resume_last_hash(self) -> None:
         """Retoma el hash del ultimo evento valido (soporta reinicios del proceso)."""

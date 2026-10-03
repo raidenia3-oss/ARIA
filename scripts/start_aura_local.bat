@@ -37,24 +37,59 @@ if errorlevel 1 (
 )
 
 :: Iniciar Backend AURA (FastAPI)
+:: Objetivo verificado: el entrypoint real es ARIA_APP\backend\app.py servido como
+:: "app:app" con cwd en ARIA_APP\backend, el mismo modulo y directorio que lanza
+:: v5/electron/main.ts:111. Antes apuntaba a ame_backend.src.main:app, que NO
+:: existe: ame_backend/ solo contiene .env.local.
 echo.
 echo [2/4] Iniciando Backend AURA (FastAPI puerto 8000)...
-cd /d "%AURA_ROOT%"
-start "AURA Backend" cmd /c "%PYTHON% -m uvicorn ame_backend.src.main:app --host 0.0.0.0 --port 8000"
+if not exist "%AURA_ROOT%\ARIA_APP\backend\app.py" (
+    echo [ERROR] No existe "%AURA_ROOT%\ARIA_APP\backend\app.py".
+    echo         El entrypoint de ARIA v5 es ARIA_APP\backend\app.py, servido
+    echo         como "app:app" desde ARIA_APP\backend.
+    echo         No se arranca nada. Abortando.
+    pause
+    exit /b 1
+)
+pushd "%AURA_ROOT%\ARIA_APP\backend"
+start "AURA Backend" cmd /c "%PYTHON% -m uvicorn app:app --host 0.0.0.0 --port 8000"
+popd
+set /a _AURA_WAIT=0
 echo       Esperando backend...
 :wait_backend
 curl -s http://localhost:8000/health >nul 2>&1
-if errorlevel 1 (
-    timeout /t 2 /nobreak >nul
-    goto wait_backend
-)
+if not errorlevel 1 goto backend_ready
+timeout /t 2 /nobreak >nul
+set /a _AURA_WAIT+=1
+if %_AURA_WAIT% GEQ 60 goto backend_timeout
+goto wait_backend
+:backend_ready
 echo       [OK] Backend corriendo en http://localhost:8000
+goto backend_done
+:backend_timeout
+echo [ERROR] El backend no respondio en /health tras 120 s.
+echo         Revisa la ventana "AURA Backend" para ver el trace de uvicorn.
+echo         Abortando en vez de dejar un bucle infinito sin salida.
+pause
+exit /b 1
+:backend_done
 
 :: Iniciar AURA Core Agent (usa Jan, no Ollama)
+:: El "cd /d" no se comprobaba: si fallaba, "start" abria una ventana que moria al
+:: instante y el script imprimia "[OK] AURA Core iniciado" sin haber arrancado nada.
+:: Se verifica el directorio y el modulo antes de afirmar que arranco.
 echo.
 echo [3/4] Iniciando AURA Core Agent...
-cd /d "%AURA_ROOT%\docs\AURA_OS_Workspace\AME_Core\AURA_Core"
+set "CORE_DIR=%AURA_ROOT%\docs\AURA_OS_Workspace\AME_Core\AURA_Core"
+if not exist "%CORE_DIR%\aura_core.py" (
+    echo [ERROR] No existe "%CORE_DIR%\aura_core.py".
+    echo         No se arranca nada. Abortando.
+    pause
+    exit /b 1
+)
+pushd "%CORE_DIR%"
 start "AURA Core" cmd /c "%PYTHON% aura_core.py"
+popd
 echo       [OK] AURA Core iniciado
 
 :: Frontend Next.js (opcional)

@@ -36,12 +36,27 @@ pub enum KeySource {
 }
 
 /// Immutable auth configuration resolved once at startup.
-#[derive(Debug, Clone)]
+///
+/// `Debug` is implemented by hand below and never prints `api_key`: the derived
+/// impl would leak the live bearer token into any `{:?}` / `tracing::?(..)` sink
+/// (including the control log ring served at `/api/control/logs`).
+#[derive(Clone)]
 pub struct AuthConfig {
     /// The active bearer token.
     pub api_key: String,
     /// Provenance of [`AuthConfig::api_key`].
     pub source: KeySource,
+}
+
+impl std::fmt::Debug for AuthConfig {
+    /// Redacts the key: length and provenance only, never the key material.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("AuthConfig")
+            .field("api_key", &"<redacted>")
+            .field("api_key_len", &self.api_key.len())
+            .field("source", &self.source)
+            .finish()
+    }
 }
 
 impl AuthConfig {
@@ -211,35 +226,183 @@ async fn handle_socket(mut socket: WebSocket) {
 }
 
 /// Build a lazy SQLite pool for `path`.
-/// Connections are established on first use; short busy/acquire timeouts keep
-/// route latency well under 2s even if another process holds the write lock.
-/// `None` signals routes to emit fallback JSON.
-pub fn open_pool(path: &str) -> Option<SqlitePool> {
-    if path.starts_with("memory:") {
-        return None;
-    }
-    let url = format!("sqlite://{}?mode=rwc", path.replace('\\', "/"));
-
-    let connect_opts = match SqliteConnectOptions::from_str(&url) {
-        Ok(o) => o
-            .create_if_missing(true)
-            .busy_timeout(Duration::from_millis(800)),
-        Err(e) => {
-            eprintln!("   SQLite URL error: {}", e);
+    /// Connections are established on first use; short busy/acquire timeouts keep
+    /// route latency well under 2s even if another process holds the write lock.
+    /// `None` signals routes to emit fallback JSON.
+    pub fn open_pool(path: &str) -> Option<SqlitePool> {
+        if path.starts_with("memory:") {
             return None;
         }
-    };
+        let url = format!("sqlite://{}?mode=rwc", path.replace('\\', "/"));
 
-    let pool = SqlitePoolOptions::new()
-        .max_connections(4)
-        .min_connections(0)
-        .acquire_timeout(Duration::from_millis(800))
-        .idle_timeout(Duration::from_secs(60))
-        .max_lifetime(Duration::from_secs(300))
-        .connect_lazy_with(connect_opts);
+        let connect_opts = match SqliteConnectOptions::from_str(&url) {
+            Ok(o) => o
+                .create_if_missing(true)
+                .busy_timeout(Duration::from_millis(800)),
+            Err(e) => {
+                eprintln!("   SQLite URL error: {}", e);
+                return None;
+            }
+        };
 
-    Some(pool)
-}
+        let pool = SqlitePoolOptions::new()
+            .max_connections(4)
+            .min_connections(0)
+            .acquire_timeout(Duration::from_millis(800))
+            .idle_timeout(Duration::from_secs(60))
+            .max_lifetime(Duration::from_secs(300))
+            .connect_lazy_with(connect_opts);
+
+        Some(pool)
+    }
+
+    /// Ensure the tables the Axum routes depend on exist.
+    ///
+    /// `semantic_memory` is owned by this crate (Phase M.1: no FastAPI proxy).
+    /// `chat_history` and `messages` are read by `/api/memory/stats` and may
+    /// have been created by the legacy Python side; this is idempotent so a
+    /// fresh aura.db still boots the full memory API.
+    pub async fn init_db(pool: &SqlitePool) {
+        // 1. Ensure the tables the Axum routes depend on exist.
+        let statements = [
+            "CREATE TABLE IF NOT EXISTS semantic_memory (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT,
+                kind VARCHAR(32),
+                vector_json TEXT,
+                timestamp DATETIME
+            )",
+            "CREATE TABLE IF NOT EXISTS chat_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                role VARCHAR(16),
+                content TEXT,
+                provider VARCHAR(64),
+                session_id VARCHAR(64),
+                context TEXT,
+                created_at DATETIME
+            )",
+            "CREATE TABLE IF NOT EXISTS messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                conversation_id INTEGER,
+                role VARCHAR,
+                content TEXT,
+                provider VARCHAR,
+                timestamp FLOAT,
+                extra TEXT
+            )",
+        ];
+        for stmt in statements {
+            if let Err(e) = sqlx::query(stmt).execute(pool).await {
+                eprintln!("   init_db: {} -> {}", stmt, e);
+            }
+        }
+
+        // 2. Unified memory table. The legacy `memories` table (id, key, value,
+        // kind, score, created_at, updated_at) has a different schema, so if it
+        // exists we rename it to `memories_legacy` before creating the new one.
+        // This is idempotent: a fresh aura.db skips the rename and just creates.
+        //
+        // The probes below FAIL CLOSED. Treating a query error as "no legacy
+        // table" (`unwrap_or(false)`) meant that lock contention on this shared
+        // SQLite file silently skipped the rename, and the following
+        // `CREATE TABLE IF NOT EXISTS memories` then no-op'd against the legacy
+        // shape: the server booted "successfully" on the wrong schema.
+        async fn table_exists(pool: &sqlx::SqlitePool, name: &str) -> Result<bool, sqlx::Error> {
+            sqlx::query_scalar::<_, bool>(
+                "SELECT COUNT(*) > 0 FROM sqlite_master WHERE type='table' AND name = ?",
+            )
+            .bind(name)
+            .fetch_one(pool)
+            .await
+        }
+
+        let memories_exists = match table_exists(pool, "memories").await {
+            Ok(v) => v,
+            Err(e) => {
+                eprintln!("   init_db: no se pudo inspeccionar `memories`: {e}");
+                return;
+            }
+        };
+
+        if memories_exists {
+            // Only rename if the legacy schema is still present (has the old `key` column).
+            let has_old_key = sqlx::query_scalar::<_, bool>(
+                "SELECT COUNT(*) > 0 FROM pragma_table_info('memories') WHERE name='key'",
+            )
+            .fetch_one(pool)
+            .await;
+
+            let has_old_key = match has_old_key {
+                Ok(v) => v,
+                Err(e) => {
+                    eprintln!("   init_db: no se pudo inspeccionar pragma_table_info: {e}");
+                    return;
+                }
+            };
+
+            if has_old_key {
+                // Guard the destination too. If `memories_legacy` already exists
+                // the rename FAILS, and the `CREATE TABLE IF NOT EXISTS` below
+                // then silently no-ops against the legacy shape — booting on the
+                // wrong schema with only an eprintln to show for it.
+                let legacy_exists = match table_exists(pool, "memories_legacy").await {
+                    Ok(v) => v,
+                    Err(e) => {
+                        eprintln!("   init_db: no se pudo inspeccionar `memories_legacy`: {e}");
+                        return;
+                    }
+                };
+                if legacy_exists {
+                    // `memories` is legacy-shaped but `memories_legacy` is taken
+                    // (restored backup, another writer). Park the old rows under a
+                    // suffixed name instead of failing, and say so loudly.
+                    let parked = format!(
+                        "memories_legacy_{}",
+                        std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .map(|d| d.as_secs())
+                            .unwrap_or(0)
+                    );
+                    println!("   init_db: memories_legacy ya existe; legacy -> {parked}");
+                    if let Err(e) = sqlx::query(&format!(
+                        "ALTER TABLE memories RENAME TO {parked}"
+                    ))
+                    .execute(pool)
+                    .await
+                    {
+                        eprintln!("   init_db: rename legacy memories -> {parked}: {e}");
+                        return;
+                    }
+                } else if let Err(e) =
+                    sqlx::query("ALTER TABLE memories RENAME TO memories_legacy")
+                        .execute(pool)
+                        .await
+                {
+                    eprintln!("   init_db: rename legacy memories -> {e}");
+                    return;
+                } else {
+                    println!("   init_db: legacy memories table renamed to memories_legacy");
+                }
+            }
+        }
+
+        let memory_stmt = "CREATE TABLE IF NOT EXISTS memories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type VARCHAR(64),
+            content TEXT,
+            embedding TEXT,
+            confidence FLOAT,
+            source_llm VARCHAR(64),
+            source_agent VARCHAR(128),
+            expiry_at FLOAT,
+            tags TEXT,
+            created_at FLOAT,
+            updated_at FLOAT
+        )";
+        if let Err(e) = sqlx::query(memory_stmt).execute(pool).await {
+            eprintln!("   init_db: memories -> {}", e);
+        }
+    }
 
 /// Shared state struct for the entire application.
 #[derive(Clone)]
@@ -347,5 +510,82 @@ impl SharedState {
     /// Total rejected requests since startup.
     pub async fn auth_failure_count(&self) -> u64 {
         *self.auth_failures.lock().await
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // Fixture obviousamente falsa: no es una credencial, solo material para
+    // comprobar que `Debug` no lo imprime.
+    const FAKE_KEY: &str = "aria_test_key_not_a_real_credential";
+
+    #[test]
+    fn auth_config_debug_redacts_the_api_key() {
+        let cfg = AuthConfig {
+            api_key: FAKE_KEY.to_string(),
+            source: KeySource::Env,
+        };
+
+        let rendered = format!("{:?}", cfg);
+
+        assert!(
+            !rendered.contains(FAKE_KEY),
+            "Debug de AuthConfig filtró la clave: {rendered}"
+        );
+        assert!(
+            rendered.contains("<redacted>"),
+            "Debug de AuthConfig debería marcar la clave como redactada: {rendered}"
+        );
+    }
+
+    #[test]
+    fn auth_config_alternate_debug_also_redacts() {
+        let cfg = AuthConfig {
+            api_key: FAKE_KEY.to_string(),
+            source: KeySource::Generated,
+        };
+
+        let rendered = format!("{:#?}", cfg);
+
+        assert!(
+            !rendered.contains(FAKE_KEY),
+            "Debug alterno de AuthConfig filtró la clave: {rendered}"
+        );
+        assert!(rendered.contains("<redacted>"), "falta la marca de redaccion");
+    }
+
+    #[test]
+    fn auth_config_debug_keeps_the_non_secret_fields() {
+        let cfg = AuthConfig {
+            api_key: FAKE_KEY.to_string(),
+            source: KeySource::Env,
+        };
+
+        let rendered = format!("{:?}", cfg);
+
+        assert!(
+            rendered.contains("Env"),
+            "se perdió la procedencia: {rendered}"
+        );
+        assert!(
+            rendered.contains(&format!("api_key_len: {}", FAKE_KEY.len())),
+            "se perdió la longitud de la clave: {rendered}"
+        );
+    }
+
+    #[test]
+    fn auth_config_is_still_cloneable() {
+        let cfg = AuthConfig {
+            api_key: FAKE_KEY.to_string(),
+            source: KeySource::Env,
+        };
+
+        let copy = cfg.clone();
+
+        assert_eq!(copy.api_key, cfg.api_key);
+        assert_eq!(copy.source, cfg.source);
+        assert!(!format!("{:?}", copy).contains(FAKE_KEY));
     }
 }

@@ -22,6 +22,12 @@ logger = logging.getLogger("ARIA.Security")
 
 AUDIT_LOG_FILE = Path(os.environ.get("ARIA_AUDIT_LOG", "data/audit.log"))
 
+# Fallback de desarrollo: NO es un secreto. Es una constante publicada en el
+# codigo fuente, asi que cualquiera que lo lea puede firmar/verificar con ella.
+# Se nombra para poder reportarlo honestamente en get_stats() en vez de
+# presentarlo como una clave configurada.
+DEV_SECRET_FALLBACK = "dev-secret-change-me-32bytes!!"
+
 
 class SecurityLevel:
     """Niveles de seguridad para acceso zero-trust."""
@@ -57,8 +63,17 @@ class CredentialVerifier:
 
     def __init__(self):
         self._tokens: Dict[str, Dict[str, Any]] = {}
-        self._secret = os.environ.get("ARIA_SECRET_KEY", "dev-secret-change-me-32bytes!!")
+        configured = os.environ.get("ARIA_SECRET_KEY") or ""
+        self._secret_configured = bool(configured)
+        self._secret = configured or DEV_SECRET_FALLBACK
+        self._secret_source = "env" if self._secret_configured else "development_default"
         self._init = False
+        if not self._secret_configured:
+            logger.warning(
+                "CredentialVerifier: ARIA_SECRET_KEY no esta definida — se usa la clave "
+                "de firma de desarrollo (publica, en el codigo fuente); las firmas "
+                "HMAC que se generen con ella son falsificables"
+            )
 
     def initialize(self, admin_token: str = ""):
         if self._init:
@@ -95,10 +110,17 @@ class CredentialVerifier:
         return False
 
     def get_stats(self) -> Dict[str, Any]:
+        """Estado del verificador.
+
+        No expone material de clave: ni completo ni por prefijo. Solo booleano
+        de configuracion y procedencia, para que un consumidor distinga una clave
+        real de la constante de desarrollo publicada en el codigo.
+        """
         return dict(
             initialized=self._init,
             active_tokens=len(self._tokens),
-            secret_key_prefix=self._secret[:8] + "...",
+            secret_configured=self._secret_configured,
+            secret_source=self._secret_source,
         )
 
 
@@ -257,7 +279,11 @@ class ZKPStub:
             proof_type="sha256_commitment",
             commitment=hashlib.sha256(f"{secret}:{time.time()}".encode()).hexdigest(),
             generated_at=datetime.now(timezone.utc).isoformat(),
-            valid=True,
+            # Stub: nadie verifico la prueba; valid=None para que ningun
+            # llamador lea el booleano como "prueba valida".
+            valid=None,
+            verified=False,
+            data_source="unavailable",
             note="ZKP stub - replace with real lib in production",
         )
         self._proofs[pid] = proof
@@ -266,11 +292,16 @@ class ZKPStub:
     def verify_proof(self, proof_id: str, public_input: str) -> Dict[str, Any]:
         p = self._proofs.get(proof_id)
         if not p:
-            return dict(valid=False, error="not found")
+            return dict(valid=False, verified=False, error="not found")
+        # Stub: no se verifica public_input ni el commitment. valid=None
+        # (desconocido, no False) y verified=False: verificar no ocurrio.
         return dict(
-            valid=True,
+            valid=None,
+            verified=False,
             proof_id=proof_id,
-            verified_at=datetime.now(timezone.utc).isoformat(),
+            verified_at=None,
+            data_source="unavailable",
+            detail="stub: public_input and commitment not verified",
             note="ZKP stub - verification simulated",
         )
 

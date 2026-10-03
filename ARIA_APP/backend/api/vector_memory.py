@@ -11,11 +11,27 @@ Endpoints para memoria vectorial y RAG:
   POST /api/memory/vector/embed         - Generate embeddings
   GET  /api/memory/vector/stats         - Collection statistics
   POST /api/memory/vector/consolidate   - Consolidate memories
+
+Honesty contract (ARIA Phase A). Semantic similarity is only a claim this module
+may make when a real embedding model produced the vectors. Every response that
+carries vectors, similarity scores or retrieved documents carries
+`data_source`, and `data_source` is derived structurally from the loaded model
+object, never from a label parsed out of a string:
+  * 200 with `data_source: "measured"` when sentence-transformers actually
+    encoded the texts here and now.
+  * 200 with `data_source: "unavailable"`, explicit nulls and a `detail`, when
+    the datum was never measured because the embedding model is absent. The
+    key is present and null so a client can tell "not measured" apart from
+    "field I do not know about".
+  * Placeholder vectors exist only to keep the `/embed` shape; they are
+    deterministic, they carry no semantic information, and they are never
+    indexed nor searched as if they were embeddings.
 """
 
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import logging
 import os
 import time
@@ -29,6 +45,26 @@ from pydantic import BaseModel, Field
 logger = logging.getLogger("ARIA.VectorMemory")
 
 router = APIRouter(prefix="/api/memory/vector", tags=["vector-memory"])
+
+# ============================================================================
+# Honesty constants
+# ============================================================================
+
+#: A real embedding model encoded the data in this response.
+DATA_SOURCE_MEASURED = "measured"
+#: The datum could not be measured (no embedding model loaded).
+DATA_SOURCE_UNAVAILABLE = "unavailable"
+
+EMBEDDING_MODEL_REF = "sentence-transformers/all-MiniLM-L6-v2"
+EMBEDDING_MODEL_MOCK_LABEL = "mock"
+PLACEHOLDER_VECTOR_SIZE = 384
+
+UNAVAILABLE_DETAIL = (
+    "Vector memory unavailable: sentence-transformers is not installed, so no "
+    "real embedding was computed. Nothing was indexed and no semantic "
+    "similarity is reported. Install sentence-transformers to enable "
+    f"{EMBEDDING_MODEL_REF}."
+)
 
 # ============================================================================
 # Models
@@ -54,6 +90,9 @@ class SearchResult(BaseModel):
     content: str
     metadata: Dict[str, Any]
     score: float
+    #: Defaults to the honest value: a result is treated as unmeasured until
+    #: the route that produced it stamps it as DATA_SOURCE_MEASURED.
+    data_source: str = DATA_SOURCE_UNAVAILABLE
 
 
 class SearchResponse(BaseModel):
@@ -61,6 +100,13 @@ class SearchResponse(BaseModel):
     results: List[SearchResult]
     total: int
     latency_ms: int
+    #: DATA_SOURCE_MEASURED only when the query and the indexed vectors were
+    #: really encoded; DATA_SOURCE_UNAVAILABLE when results are empty because
+    #: nothing could be measured.
+    data_source: str = DATA_SOURCE_UNAVAILABLE
+    #: The query embedding actually used, or None when none was computed.
+    embedding: Optional[List[float]] = None
+    detail: Optional[str] = None
 
 
 class RAGRequest(BaseModel):
@@ -78,6 +124,10 @@ class RAGResponse(BaseModel):
     sources: List[SearchResult]
     latency_ms: int
     tokens_used: int
+    #: DATA_SOURCE_MEASURED only when the retrieved context came from real
+    #: embeddings; DATA_SOURCE_UNAVAILABLE when no retrieval was possible.
+    data_source: str = DATA_SOURCE_UNAVAILABLE
+    detail: Optional[str] = None
 
 
 class CollectionInfo(BaseModel):
@@ -103,6 +153,10 @@ class EmbedResponse(BaseModel):
     embeddings: List[List[float]]
     model: str
     latency_ms: int
+    #: DATA_SOURCE_UNAVAILABLE whenever `model` is "mock": the vectors below
+    #: are deterministic placeholders, not embeddings.
+    data_source: str = DATA_SOURCE_UNAVAILABLE
+    detail: Optional[str] = None
 
 
 class ConsolidateRequest(BaseModel):
@@ -119,6 +173,19 @@ _vector_store = None
 _embedding_model = None
 
 
+class _UnavailableEmbeddingModel:
+    """Sentinel for "no real embedding model is loaded".
+
+    A dedicated type instead of the string "mock" so availability is decided by
+    identity against a typed sentinel, not by comparing a string value.
+    """
+
+    __slots__ = ()
+
+
+_UNAVAILABLE_EMBEDDING_MODEL = _UnavailableEmbeddingModel()
+
+
 def _get_vector_store():
     """Get or initialize vector store."""
     global _vector_store
@@ -133,12 +200,26 @@ def _get_embedding_model():
     if _embedding_model is None:
         try:
             from sentence_transformers import SentenceTransformer
-            _embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+            _embedding_model = SentenceTransformer(EMBEDDING_MODEL_REF)
             logger.info("Loaded sentence-transformers embedding model")
         except ImportError:
-            logger.warning("sentence-transformers not available, using mock embeddings")
-            _embedding_model = "mock"
+            logger.warning(
+                "sentence-transformers not available: vector memory cannot "
+                "embed, index or search; vector routes report "
+                "data_source=unavailable"
+            )
+            _embedding_model = _UNAVAILABLE_EMBEDDING_MODEL
     return _embedding_model
+
+
+def _embeddings_available() -> bool:
+    """Structural check: is a real embedding model loaded?"""
+    return _get_embedding_model() is not _UNAVAILABLE_EMBEDDING_MODEL
+
+
+def _embedding_model_name() -> str:
+    """Name of the loaded model, or the "mock" label when none is loaded."""
+    return EMBEDDING_MODEL_REF if _embeddings_available() else EMBEDDING_MODEL_MOCK_LABEL
 
 
 class VectorStore:
@@ -482,15 +563,50 @@ class VectorStore:
 # Embedding Generation
 # ============================================================================
 
+def _placeholder_vector(text: str, size: int = PLACEHOLDER_VECTOR_SIZE) -> List[float]:
+    """Deterministic, non-semantic placeholder of the requested size.
+
+    Deterministic (SHA-256 of the text) rather than random on purpose: the same
+    text yields the same vector across processes and restarts, so a placeholder
+    is reproducible and debuggable instead of irreproducible noise. A random
+    vector would change on every call, which makes any stored trace of it
+    uninterpretable and hides the fact that nothing was measured.
+
+    This is NOT a degraded embedding: it carries no semantic information. Every
+    response that hands one out must declare data_source="unavailable", and no
+    placeholder may be indexed or searched as if it were an embedding.
+    """
+    seed = hashlib.sha256(text.encode("utf-8")).digest()
+    values: List[float] = []
+    counter = 0
+    while len(values) < size:
+        block = hashlib.sha256(seed + counter.to_bytes(4, "big")).digest()
+        # 32 bytes per block, mapped onto [-1.0, 1.0].
+        values.extend(byte / 127.5 - 1.0 for byte in block)
+        counter += 1
+    return [round(value, 6) for value in values[:size]]
+
+
+def _stamp_measured(results: List[SearchResult]) -> List[SearchResult]:
+    """Mark results as produced from real embeddings."""
+    for result in results:
+        result.data_source = DATA_SOURCE_MEASURED
+    return results
+
+
 def _generate_embeddings(texts: List[str], model_name: str) -> List[List[float]]:
-    """Generate embeddings for texts."""
+    """Generate embeddings for texts.
+
+    Without a real embedding model this returns deterministic placeholders
+    (see _placeholder_vector). They exist only so /embed, which is already
+    labelled model="mock" + data_source="unavailable", keeps its shape. Routes
+    that would store or search them (/add, /search, /rag) refuse to run instead.
+    """
     model = _get_embedding_model()
-    
-    if model == "mock":
-        # Return random embeddings for testing
-        import random
-        return [[random.uniform(-1, 1) for _ in range(384)] for _ in texts]
-    
+
+    if model is _UNAVAILABLE_EMBEDDING_MODEL:
+        return [_placeholder_vector(text) for text in texts]
+
     # Use sentence-transformers
     embeddings = model.encode(texts, convert_to_numpy=True, show_progress_bar=False)
     return embeddings.tolist()
@@ -503,38 +619,69 @@ def _generate_embeddings(texts: List[str], model_name: str) -> List[List[float]]
 @router.post("/add", response_model=Dict[str, Any])
 async def add_documents(documents: List[Document]):
     """Add documents to vector store with automatic embedding generation."""
-    store = _get_vector_store()
-    
-    # Generate embeddings
-    texts = [doc.content for doc in documents]
-    embeddings = _generate_embeddings(texts, "default")
-    
     # Use first document's collection or default
     collection = documents[0].collection if documents else "default"
-    
+
+    if not _embeddings_available():
+        # Indexing placeholder vectors would build a decorative index: the
+        # client would get a success and later "semantic" results derived from
+        # nothing. 200 + data_source keeps "unavailable" distinguishable from
+        # "error" for the client; no document is stored.
+        return {
+            "status": DATA_SOURCE_UNAVAILABLE,
+            "added": 0,
+            "ids": [],
+            "collection": collection,
+            "embeddings": None,
+            "data_source": DATA_SOURCE_UNAVAILABLE,
+            "detail": UNAVAILABLE_DETAIL,
+        }
+
+    store = _get_vector_store()
+
+    # Generate embeddings
+    texts = [doc.content for doc in documents]
+    embeddings = _generate_embeddings(texts, EMBEDDING_MODEL_REF)
+
     # Ensure collection exists
     if collection not in [c.name for c in store.list_collections()]:
         store.create_collection(collection, len(embeddings[0]), "cosine")
-    
+
     ids = store.add_documents(collection, documents, embeddings)
-    
+
     return {
         "status": "ok",
         "added": len(ids),
         "ids": ids,
-        "collection": collection
+        "collection": collection,
+        "data_source": DATA_SOURCE_MEASURED,
+        "detail": None,
     }
 
 
 @router.post("/search", response_model=SearchResponse)
 async def search(req: SearchRequest):
     """Semantic search in vector store."""
-    store = _get_vector_store()
     start = time.time()
-    
+
+    if not _embeddings_available():
+        # Similarity over placeholder vectors is not a semantic result, so no
+        # result is returned at all rather than a ranked list of noise.
+        return SearchResponse(
+            query=req.query,
+            results=[],
+            total=0,
+            latency_ms=int((time.time() - start) * 1000),
+            data_source=DATA_SOURCE_UNAVAILABLE,
+            embedding=None,
+            detail=UNAVAILABLE_DETAIL,
+        )
+
+    store = _get_vector_store()
+
     # Generate query embedding
-    query_embedding = _generate_embeddings([req.query], "default")[0]
-    
+    query_embedding = _generate_embeddings([req.query], EMBEDDING_MODEL_REF)[0]
+
     # Search
     results = store.search(
         collection=req.collection,
@@ -543,30 +690,51 @@ async def search(req: SearchRequest):
         threshold=req.threshold,
         filter=req.filter
     )
-    
+
     return SearchResponse(
         query=req.query,
-        results=results,
+        results=_stamp_measured(results),
         total=len(results),
-        latency_ms=int((time.time() - start) * 1000)
+        latency_ms=int((time.time() - start) * 1000),
+        data_source=DATA_SOURCE_MEASURED,
+        embedding=query_embedding,
+        detail=None,
     )
 
 
 @router.post("/rag", response_model=RAGResponse)
 async def rag_query(req: RAGRequest):
     """RAG: Retrieve relevant docs + generate answer using local LLM."""
-    store = _get_vector_store()
     start = time.time()
-    
+
+    if not _embeddings_available():
+        # Retrieval over placeholder vectors would hand the LLM a fabricated
+        # context and make it answer from noise while citing [Fuente X]. The
+        # LLM is not called at all here.
+        return RAGResponse(
+            answer=(
+                "No puedo responder con la base de conocimiento: la memoria "
+                "vectorial no esta disponible, asi que no hay contexto "
+                "recuperado que puedas citar."
+            ),
+            sources=[],
+            latency_ms=int((time.time() - start) * 1000),
+            tokens_used=0,
+            data_source=DATA_SOURCE_UNAVAILABLE,
+            detail=UNAVAILABLE_DETAIL,
+        )
+
+    store = _get_vector_store()
+
     # Step 1: Retrieve relevant documents
-    query_embedding = _generate_embeddings([req.query], "default")[0]
-    
-    sources = store.search(
+    query_embedding = _generate_embeddings([req.query], EMBEDDING_MODEL_REF)[0]
+
+    sources = _stamp_measured(store.search(
         collection=req.collection,
         query_vector=query_embedding,
         top_k=req.top_k,
         threshold=0.3  # Lower threshold for better recall
-    )
+    ))
     
     # Step 2: Build context from sources
     if sources:
@@ -632,7 +800,9 @@ Respuesta basada únicamente en el contexto:"""
         answer=answer,
         sources=sources if req.include_sources else [],
         latency_ms=latency_ms,
-        tokens_used=len(answer.split())
+        tokens_used=len(answer.split()),
+        data_source=DATA_SOURCE_MEASURED,
+        detail=None,
     )
 
 
@@ -673,16 +843,23 @@ async def delete_collection(name: str):
 async def generate_embeddings(req: EmbedRequest):
     """Generate embeddings for texts."""
     start = time.time()
-    
-    model = _get_embedding_model()
-    model_name = req.model if model != "mock" else "mock"
-    
+
+    available = _embeddings_available()
+    model_name = req.model if available else EMBEDDING_MODEL_MOCK_LABEL
+
     embeddings = _generate_embeddings(req.texts, model_name)
-    
+
     return EmbedResponse(
         embeddings=embeddings,
         model=model_name,
-        latency_ms=int((time.time() - start) * 1000)
+        latency_ms=int((time.time() - start) * 1000),
+        data_source=DATA_SOURCE_MEASURED if available else DATA_SOURCE_UNAVAILABLE,
+        detail=None if available else (
+            "Placeholder vectors, not embeddings: deterministic hashes of each "
+            "text with no semantic information, returned because the "
+            f"{EMBEDDING_MODEL_REF} model is not installed. Do not index or "
+            "search them."
+        ),
     )
 
 
@@ -692,6 +869,14 @@ async def get_stats(collection: str = "default"):
     store = _get_vector_store()
     stats = store.get_collection_stats(collection)
     stats["backend"] = store.backend
+    available = _embeddings_available()
+    stats["data_source"] = DATA_SOURCE_MEASURED if available else DATA_SOURCE_UNAVAILABLE
+    if not available:
+        stats["detail"] = (
+            "Points counted here may hold placeholder vectors indexed before "
+            "this endpoint stopped storing them; their provenance cannot be "
+            "verified and they are not searchable as semantics."
+        )
     return stats
 
 
@@ -699,7 +884,17 @@ async def get_stats(collection: str = "default"):
 async def consolidate_memories(req: ConsolidateRequest):
     """Consolidate memories from multiple collections into one."""
     store = _get_vector_store()
-    
+    # No embedding is generated here: stored vectors are copied verbatim, so no
+    # semantic claim is made about them. Their provenance is not re-verified.
+    data_source = (
+        DATA_SOURCE_MEASURED if _embeddings_available() else DATA_SOURCE_UNAVAILABLE
+    )
+    provenance_detail = (
+        "Vectors are copied verbatim from the source collections; their origin "
+        "is not re-verified here, so a collection populated with placeholder "
+        "vectors stays unsearchable as semantics."
+    )
+
     all_docs = []
     all_embeddings = []
     
@@ -746,10 +941,17 @@ async def consolidate_memories(req: ConsolidateRequest):
             "status": "ok",
             "consolidated": len(ids),
             "source_collections": req.source_collections,
-            "target_collection": req.target_collection
+            "target_collection": req.target_collection,
+            "data_source": data_source,
+            "detail": provenance_detail,
         }
-    
-    return {"status": "empty", "message": "No documents to consolidate"}
+
+    return {
+        "status": "empty",
+        "message": "No documents to consolidate",
+        "data_source": data_source,
+        "detail": provenance_detail,
+    }
 
 
 # ============================================================================
@@ -760,11 +962,13 @@ async def consolidate_memories(req: ConsolidateRequest):
 async def vector_memory_health():
     """Health check for vector memory system."""
     store = _get_vector_store()
-    model = _get_embedding_model()
-    
+    available = _embeddings_available()
+
     return {
         "vector_store": store.backend,
-        "embedding_model": "sentence-transformers/all-MiniLM-L6-v2" if model != "mock" else "mock",
+        "embedding_model": _embedding_model_name(),
         "collections": len(store.list_collections()),
-        "timestamp": time.time()
+        "timestamp": time.time(),
+        "data_source": DATA_SOURCE_MEASURED if available else DATA_SOURCE_UNAVAILABLE,
+        "detail": None if available else UNAVAILABLE_DETAIL,
     }

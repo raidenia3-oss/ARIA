@@ -34,9 +34,17 @@ class CreativityEngine:
             "id": f"idea_{domain}_{index}",
             "domain": domain,
             "blend": blended,
-            "novelty": random.uniform(0.3, 0.95),
-            "feasibility": random.uniform(0.2, 0.9),
+            # Puntuaciones heuristicas aleatorias para variedad de
+            # brainstorming; NO son mediciones de la idea. Renombradas
+            # y etiquetadas para que ningun cliente las lea como metrica.
+            "novelty_heuristic": random.uniform(0.3, 0.95),
+            "feasibility_heuristic": random.uniform(0.2, 0.9),
             "constraints_applied": self._constraints[:3],
+            "data_source": "simulated",
+            "detail": (
+                "novelty/feasibility are unseeded random heuristics "
+                "for brainstorming variety, not measurements"
+            ),
         }
         key = f"{blend}:{domain}"
         if key not in self._used_combinations:
@@ -45,10 +53,21 @@ class CreativityEngine:
 
     def conceptual_blend(self, concepts: List[str]) -> Dict[str, Any]:
         if len(concepts) < 2:
-            return {"blend": concepts[0] if concepts else "none", "novelty": 0.0}
+            return {
+                "blend": concepts[0] if concepts else "none",
+                "novelty_heuristic": 0.0,
+                "data_source": "heuristic",
+                "detail": "score derived from concept count, not a measurement",
+            }
         blend = " × ".join(concepts)
         novelty = min(len(concepts) / 10, 0.9)
-        return {"blend": blend, "novelty": novelty, "concepts": concepts}
+        return {
+            "blend": blend,
+            "novelty_heuristic": novelty,
+            "concepts": concepts,
+            "data_source": "heuristic",
+            "detail": "score derived from concept count, not a measurement",
+        }
 
     def analogical_generation(self, source: str, target: str) -> Dict[str, Any]:
         mapping = {"source": source, "target": target, "mappings": []}
@@ -58,8 +77,13 @@ class CreativityEngine:
             for t in target_words:
                 if len(s) > 3 and len(t) > 3 and hash(s + t) % 3 == 0:
                     mapping["mappings"].append(
-                        {"from": s, "to": t, "strength": random.uniform(0.1, 0.8)}
+                        {"from": s, "to": t, "strength_heuristic": random.uniform(0.1, 0.8)}
                     )
+        # Las fuerzas de mapeo son heuristicas aleatorias, no mediciones.
+        mapping["data_source"] = "simulated"
+        mapping["detail"] = (
+            "mapping strengths are unseeded random heuristics, not measurements"
+        )
         return mapping
 
     def divergent_thinking(self, problem: str, num_solutions: int = 8) -> List[str]:

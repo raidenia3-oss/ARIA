@@ -6,8 +6,14 @@ Serves multiple interfaces:
 - Godot client support
 - Local and cloud AI models
 """
-from __future__ import annotations
-
+# NOTA: `from __future__ import annotations` NO debe añadirse aquí.
+# Con PEP 563 las anotaciones son strings, y las rutas con `@limiter.limit`
+# de slowapi registran el WRAPPER ante FastAPI: `get_typed_signature` evalúa
+# el string contra `wrapper.__globals__` (los de slowapi, no los de este
+# módulo), `eval_type_lenient` traga el NameError y sólo el parámetro body
+# revienta en pydantic al construir la ruta -> el import de backend.main
+# muere DESPUÉS de registrar las métricas de Prometheus (475-478), y cada
+# reintento re-registra los mismos 4 nombres -> DuplicateTimeseries.
 import os
 import time
 import threading
@@ -26,6 +32,11 @@ from dotenv import load_dotenv
 load_dotenv()
 _project_root = Path(__file__).resolve().parent.parent
 load_dotenv(_project_root / "services" / "discord-bot" / ".env", override=False)
+# Las claves de proveedores vivían en ame_backend/.env.local y nadie las cargaba:
+# ai_router leía os.environ y veía 0 de 6, así que el router degradaba a los 2
+# proveedores locales sin avisar. override=False para no pisar lo que venga del
+# entorno real (producción, CI) con valores de desarrollo.
+load_dotenv(_project_root / "ame_backend" / ".env.local", override=False)
 
 import uvicorn
 from fastapi import FastAPI, Request, HTTPException, Depends, Response, WebSocket
@@ -182,7 +193,7 @@ from backend.agent_scheduler import get_agent_scheduler
 from backend.ai_router import AIRouter
 from backend.routers.deep_learning import router as deep_learning_router
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+from backend.core import passwords
 
 from backend.distributed.orchestrator_distributed import DistributedOrchestrator
 from backend.distributed.agent_sync import agent_sync_manager
@@ -256,16 +267,21 @@ app = FastAPI(
     contact={"name": "AURA Dev Team", "url": "https://github.com/your-org/aura"},
     license_info={"name": "MIT"},
 )
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=os.getenv(
-        "AURA_CORS_ORIGINS",
-        "http://localhost:3000,http://localhost:8000,http://frontend:3000,http://localhost:8080,file://,null,http://127.0.0.1:8000,http://192.168.*.*,http://10.*.*.*,http://172.16.*.*"
-    ).split(","),
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+# Orden de middlewares (reordenado a propósito, no lo deshagas por "limpieza"):
+# en Starlette add_middleware() hace user_middleware.insert(0, ...), así que la
+# ÚLTIMA llamada es la MÁS EXTERNA. SlowAPIMiddleware va justo después de este
+# bloque, pero CORSMiddleware se registra al FINAL del bloque para que envuelva a
+# SlowAPI: su 429 también debe llevar access-control-allow-origin, o el renderer
+# ve un error opaco en vez de un 429 con CORS. Este bloque sube aquí porque
+# `limiter` debe existir ANTES de la primera ruta con @limiter.limit (L688):
+# los decoradores resuelven el nombre en tiempo de definición, no en request.
+from slowapi.middleware import SlowAPIMiddleware  # noqa: E402
+
+app.add_middleware(SlowAPIMiddleware)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 
 @app.middleware("http")
 async def security_headers_middleware(request: Request, call_next):
@@ -279,6 +295,7 @@ async def security_headers_middleware(request: Request, call_next):
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     return response
 
+
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
     # Excluir WebSocket upgrade requests del rate limiter
@@ -289,9 +306,45 @@ async def rate_limit_middleware(request: Request, call_next):
         return await call_next(request)
     return JSONResponse(status_code=429, content={"detail": "Rate limit exceeded"})
 
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+@app.middleware("http")
+async def metrics_middleware(request: Request, call_next):
+    # Va aquí, y no más abajo, por el mismo motivo que CORS: @app.middleware es
+    # un add_middleware disfrazado, así que definirlo después de CORS lo haría el
+    # MÁS EXTERNO y volvería a esconder SlowAPI (y su 429) detrás de él. Se
+    # puede mover aquí aunque REQUEST_COUNT/REQUEST_LATENCY se definan más
+    # abajo: el decorador solo necesita `app`, y los dos nombres se resuelven
+    # desde los globals del módulo en cada request, ya con el import completo.
+    with REQUEST_LATENCY.labels(endpoint=request.url.path).time():
+        response = await call_next(request)
+    REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path, status=response.status_code).inc()
+    return response
+
+
+# ÚLTIMA llamada add_middleware del archivo a propósito: registro de CORS fuera
+# de SlowAPIMiddleware para que sus 429 lleven headers CORS (ver bloque de arriba).
+app.add_middleware(
+    CORSMiddleware,
+    # allowlist explícita: Starlette hace coincidencia EXACTA de origins.
+    # Los comodines LAN ("http://192.168.*.*", etc.) se eliminaron porque NUNCA
+    # matcheaban (solo valdrían vía allow_origin_regex); eran config muerta.
+    # Sin "null"/"file://": ese renderer debe llamar por IPC, no por HTTP
+    # directo al backend (null + allow_credentials es vector de robo de credenciales).
+    allow_origins=[
+        origin.strip()
+        for origin in os.getenv(
+            "AURA_CORS_ORIGINS",
+            "http://localhost:3000,http://localhost:8000,http://127.0.0.1:8000,http://frontend:3000",
+        ).split(",")
+        if origin.strip()
+    ],
+    # allow_credentials=True SOLO con origins explícitos literales (sin comodines
+    # ni regex): si AURA_CORS_ORIGINS trae "*" hay que pasarlo a False.
+    allow_credentials="*" not in os.getenv("AURA_CORS_ORIGINS", ""),
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-API-Key"],
+)
+
 app.include_router(rollercoin_router)
 app.include_router(device_sync_router)
 app.include_router(sync_router)
@@ -457,14 +510,6 @@ async def _serve_aura_dashboard_alt():
     return JSONResponse(status_code=404, content={"error": "Dashboard not found"})
 
 
-@app.middleware("http")
-async def metrics_middleware(request: Request, call_next):
-    with REQUEST_LATENCY.labels(endpoint=request.url.path).time():
-        response = await call_next(request)
-    REQUEST_COUNT.labels(method=request.method, endpoint=request.url.path, status=response.status_code).inc()
-    return response
-
-
 if os.getenv("AURA_OTEL_ENDPOINT"):
     provider = TracerProvider()
     processor = SimpleSpanProcessor(OTLPSpanExporter(endpoint=os.getenv("AURA_OTEL_ENDPOINT"), insecure=True))
@@ -481,7 +526,17 @@ SECRET_KEY = os.getenv("AURA_JWT_SECRET", "change-me")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# NOTA: passlib se eliminó del path de import a propósito. passlib 1.7.4 sondea
+# `bcrypt.__about__` y su probe `detect_wrap_bug` hashea un secreto largo, algo
+# que bcrypt >= 4.1 (y 5.x) rechaza con "password cannot be longer than 72 bytes".
+# Con la dependencia instalada, CUALQUIER hash/verify a través de passlib lanzaba
+# ValueError: login y registro estaban rotos en runtime. El truncado explícito a
+# 72 bytes vive ahora en UN solo sitio, backend/core/passwords.py, que también
+# usa backend/auth/service.py: dos políticas sobre la misma columna `users`
+#-meaningían que una contraseña larga devolvía 500 en una ruta y funcionaba en otra.
+BCRYPT_MAX_SECRET_BYTES = passwords.BCRYPT_MAX_SECRET_BYTES
+get_password_hash = passwords.get_password_hash
+verify_password = passwords.verify_password
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 _latest_recommendations: List[Dict[str, Any]] = []
@@ -568,14 +623,6 @@ def _get_api_key() -> Optional[str]:
     return os.getenv("AURA_API_KEY")
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
-
-
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -619,20 +666,45 @@ def require_api_key(request: Request, db: SessionLocal = Depends(get_db)) -> Aut
 @app.get("/health")
 async def health() -> Dict[str, str]:
     """
-    Health check del sistema.
+    Health check del proceso, no de sus dependencias.
 
-    Verifica que el backend está corriendo y responde correctamente.
+    Lo único verificado al responder es el enrutado: si este handler se ejecuta,
+    el proceso ASGI está aceptando peticiones en esta ruta. NO se sondea base de
+    datos, Redis ni modelo local, así que no se afirma nada sobre ellos: el
+    `"healthy"` estático anterior declaraba saludable una dependencia que nunca
+    se midió.
 
-    Returns:
-        - status: "healthy"
-        - service: "aura-news-api"
+    Convención (`v6/axum-poc/src/system.rs::ping`,
+    `ARIA_APP/backend/skills/system/status.py`): lo no medido -> valor ausente +
+    `"data_source": "unavailable"` + `detail` con el motivo.
+
+    La sonda real de dependencias ya existe en `detailed_health`, más abajo en
+    este archivo, pero queda ensombrecida: este decorador se registró antes y
+    Starlette resuelve en orden de registro. Exponerla exige tocar el orden de
+    las rutas, fuera del alcance de este arreglo; se reporta como recomendación.
 
     Example:
     ```bash
     curl http://localhost:8000/health
     ```
     """
-    return {"status": "healthy", "service": "aura-news-api"}
+    # Derivado de una lectura real del entorno, no de un literal fijo.
+    deployment_mode = (
+        "cloud"
+        if os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("FLY_APP_NAME")
+        else "local"
+    )
+    return {
+        "status": "ok",
+        "service": f"aura-backend-{deployment_mode}",
+        "data_source": "unavailable",
+        "detail": (
+            "sin medición: este endpoint solo confirma que el proceso sirve "
+            "peticiones en /health. No se sondea base de datos, Redis ni modelo "
+            "local, así que no se reporta estado de ninguno. La sonda de "
+            "dependencias (detailed_health) queda ensombrecida por esta ruta."
+        ),
+    }
 
 
 @app.get("/metrics")

@@ -1,7 +1,9 @@
 # ARIA v6.0 — Phase Airi (Mobile Sync) Specification
 
 Status: Draft / Phase Airi — **verified against source on 2026-09-29**
-Backend: `v6/axum-poc` (Rust + Axum), bound to `127.0.0.1:8002`
+Backend: `v6/axum-poc` (Rust + Axum), bound to `127.0.0.1:8002` by default.
+  Override with `ARIA_BIND` (e.g. `ARIA_BIND=0.0.0.0:8002`) to reach it from a
+  physical device on the LAN; see `v6/airi_mobile/README.md` for the security note.
 Client: `v6/airi_mobile` (Flutter 3.x)
 Source of truth: `v6/axum-poc/src/{state.rs,daemon.rs,core.rs,system.rs,computer.rs,auth.rs,agents.rs,skills.rs,chat.rs,lib.rs}`
 
@@ -31,8 +33,8 @@ implement before production mobile sync.
 | Task queue | `VecDeque<Value>` in `SharedState` (`state.rs:256`). Read by `daemon.rs:132,155` and `core.rs:50`; **nothing ever pushes onto it.** | `daemon.rs:128-143` |
 | Daemon protocol | Functional: `get_pending`, `report_status`, `report_result`, `heartbeat`. | `daemon.rs:140-284` |
 | PC state | `POST /api/pc/state` returns a **hardcoded stub** (`active: true`, `idle_seconds: 0`, `session_user: "ARIA-USB"`). Request body is discarded. | `daemon.rs:114-126` |
-| Memory / system info | Hardcoded constants (16 GB total, 50% used, 75 volume, fixed app list). | `system.rs`, `computer.rs` |
-| CPU | **No CPU endpoint exists.** `/api/computer/status` returns `cpu: "x86_64"` (the architecture string), not a load percentage. | `computer.rs:112-120` |
+| Memory / system info | `/api/computer/*` — **RESOLVED.** No fabricated constants left: unmeasured data is served as `data_source: "unavailable"` with explicit `null`s (§4.2). `/api/system/*` mirrors have their own bodies and are tracked separately. | `computer.rs`, `system.rs` |
+| CPU | **No CPU endpoint exists.** `/api/computer/status` no longer publishes a `cpu` key at all — it used to carry the architecture string, which the client read as a load percentage. | `computer.rs`, `system.rs` |
 | Orb state | `/api/orb/{state,phase,start,stop}` exist and control the native wgpu orb window. Not mobile-relevant yet, but a second WS client can read it. | `daemon.rs:101-104, 286-349` |
 
 ### 0.2 Blocking backend defects found during this phase
@@ -387,26 +389,39 @@ Do not present it as a "ready work" count.
 
 Not all GET — `/api/computer/open` and `/api/computer/execute` are `POST`.
 
+**Contract for every `/api/computer/*` route.** Each one is exactly one of:
+a `501` with `not_implemented` (the route advertises an action and this build performs none of it),
+a `200` carrying `data_source: "unavailable"` plus explicit `null`s (the datum was never measured),
+or a `200` whose values were read from the running process or OS. **If a key is present, it was
+measured** — there is no fourth shape and no placeholder literal anywhere in this group.
+
 | Method | Path | Notes |
 | --- | --- | --- |
-| GET | `/api/computer/control` | generic system-control ping |
-| GET | `/api/computer/apps` | `{running: string[]}` |
-| GET | `/api/computer/screenshot` | returns a status stub; **no image payload yet** (§4.3) |
-| GET | `/api/computer/volume` | `{volume, muted}` |
-| GET | `/api/computer/lock` | locks the PC — confirm dialog required |
-| POST | `/api/computer/open` | `{target: string}` |
-| POST | `/api/computer/execute` | `{command: string}` — **dangerous; UI gates this** |
-| GET | `/api/computer/processes` | `{processes: string[]}` |
-| GET | `/api/computer/status` | `{cpu: "<arch>", os, memory}` — `cpu` is **not** a load value |
-| GET | `/api/computer/memory` \| `/scan` \| `/time` \| `/ping` | mirrors of the `/api/system/*` pair |
-| GET | `/api/computer/whois` | **degraded**: `{status, hostname, server}` only — no `os`, no `arch`, unlike `/api/system/whois` |
-| GET | `/api/computer/explorer` | status stub |
+| GET | `/api/computer/control` | **`501`** `computer_control` — nothing is controlled |
+| GET | `/api/computer/apps` | `200` `{running: null}` + `data_source: "unavailable"` — no app is enumerated |
+| GET | `/api/computer/screenshot` | **`501`** `computer_screenshot` — no image payload, no capture (§4.3) |
+| GET | `/api/computer/volume` | `200` `{volume: null, muted: null}` + `data_source: "unavailable"` |
+| GET | `/api/computer/lock` | **`501`** `computer_lock` — the PC is **not** locked, so the client must not show a locked state |
+| POST | `/api/computer/open` | **`501`** `computer_open` — no `Json` extractor, so a POST with or without a body is always `501` (never `422`). The request counter still increments. `{target}` is ignored |
+| POST | `/api/computer/execute` | **`501`** `computer_execute` — **nothing is executed**; the UI gates this |
+| GET | `/api/computer/processes` | `200` `{processes: null}` + `data_source: "unavailable"` |
+| GET | `/api/computer/status` | `200` `{status, os, arch, server}` (+ `hostname` when `COMPUTERNAME` is non-empty). **No `cpu` key, no `memory` key** |
+| GET | `/api/computer/memory` | `200` `{total: null, used: null, available: null, usage_percent: null}` + `data_source: "unavailable"` |
+| GET | `/api/computer/scan` | `200` + `data_source: "unavailable"`, **no `network` key** — no scan is performed |
+| GET | `/api/computer/time` | `200` `{timestamp}` from `SystemTime` — measured |
+| GET | `/api/computer/ping` | `200` `{pong: true}` + `data_source: "unavailable"`, **no timing field** — the route has no real destination to reach |
+| GET | `/api/computer/whois` | `200` `{status, os, arch, framework, server}` (+ `hostname` when `COMPUTERNAME` is non-empty) — **no longer degraded**; it now reports the same OS facts as `/api/system/whois`, minus that route's extra `data_source` marker |
+| GET | `/api/computer/explorer` | **`501`** `computer_explorer` — nothing is opened |
+
+All `501` bodies share the shape `{error: "not_implemented", status: 501, feature, detail, server}`;
+every `unavailable` body carries `status: "ok"`, `data_source: "unavailable"`, a `detail`, and
+`server: "ARIA-Axum-8002"`. `hostname` is **omitted**, never invented, when `COMPUTERNAME` is unset
+or blank — render the device tile without a name in that case rather than substituting one.
 
 `/api/system/*` mirrors `/api/computer/*` (`system.rs` vs `computer.rs`) with near-identical
 bodies. The mobile client uses `/api/computer/*` as canonical and falls back to
 `/api/system/*` on 404, since one of the two module sets may be retired during migration.
-The one exception is `whois`, where `/api/system/whois` is strictly richer — prefer it for
-the header device tile.
+The `whois` pair now report the same OS facts, so either is acceptable for the header device tile.
 
 ### 4.3 Phase Airi backend additions (required, not yet implemented)
 
@@ -427,7 +442,7 @@ Listed so the next revision does not rediscover them. None are on the mobile cri
 | --- | --- | --- | --- |
 | GET | `/api/system/health` | `core.rs:28` | alias of `/health` |
 | GET | `/api/system/explorer`, `/api/system/code_exec` | `system.rs:29-30` | status stubs, desktop-only |
-| GET | `/api/computer/explorer` | `computer.rs:31` | status stub |
+| GET | `/api/computer/explorer` | `computer.rs:31` | **`501`** `computer_explorer` |
 | GET | `/api/skills/scan`, `/api/skills/search` | `skills.rs:26-27` | search/scan skills |
 | POST | `/api/agents/research/batch` | `agents.rs:39` | batched research |
 | GET | `/api/agents/geospatial/status` | `agents.rs:41` | God's-Eye view state |
@@ -568,7 +583,7 @@ expect.
 | Class | Budget | Behaviour on breach |
 | --- | --- | --- |
 | `poll` (status, memory, agents) | 1 per 5 s, burst 3 | coalesce — drop the tick |
-| `command` (control, lock, volume, open, screenshot) | 1 per 2 s, burst 5 | queue locally (§5) |
+| `command` (control, lock, volume, open, screenshot) | 1 per 2 s, burst 5 | do **not** queue — every one of these is `501` or `unavailable` (§4.2), so a replay can never succeed |
 | `execute` (`/api/computer/execute`) | 1 per 30 s | hard block with a countdown |
 | `chat` | 1 per 10 s | queue |
 | `daemon` (heartbeat/task/result) | 1 per 30 s | drop, never queue |

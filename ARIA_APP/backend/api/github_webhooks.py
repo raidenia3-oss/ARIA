@@ -3,9 +3,12 @@
 
 Endpoints para webhooks de GitHub:
   POST /api/github/webhook    - Receive GitHub webhook events
-  GET  /api/github/webhook/config - Get webhook configuration
+  GET  /api/github/webhook/config - Get webhook configuration (SIN secreto)
   POST /api/github/webhook/config  - Configure webhook
   POST /api/github/webhook/test  - Send test event
+
+Este router NO exige autenticacion (ARIA_APP/backend/app.py no registra auth),
+asi que ninguna respuesta puede incluir material de credencial.
 """
 
 from __future__ import annotations
@@ -44,7 +47,11 @@ class WebhookEvent(BaseModel):
 # ============================================================================
 
 def _load_webhook_config() -> Dict[str, Any]:
-    """Load webhook config from .env or config file."""
+    """Load webhook config from .env or config file.
+
+    Uso INTERNO: el dict devuelto puede contener `secret`, asi que nunca debe
+    devolverse tal cual por HTTP. Para responder use `_public_webhook_config`.
+    """
     config_file = os.path.join(os.path.dirname(__file__), "..", "..", ".github_webhook_config.json")
     config_file = os.path.normpath(config_file)
 
@@ -91,16 +98,47 @@ def _verify_signature(payload: bytes, signature: str, secret: str) -> bool:
     return hmac.compare_digest(signature, expected_signature)
 
 
+# Claves que NUNCA salen por HTTP en este router: material de credencial.
+# La lista es amplia a proposito para que anadir un campo con token al config
+# no reintroduzca la fuga por olvido.
+_SECRET_KEYS = frozenset({"secret", "token", "api_key", "apikey", "webhook_secret", "password"})
+
+
+def _public_webhook_config(config: Dict[str, Any]) -> Dict[str, Any]:
+    """Copia de la config apta para responder por HTTP: sin material de credencial.
+
+    `GET /api/github/webhook/config` no exige autenticacion (ARIA_APP/backend/app.py
+    no registra middleware de auth ni dependencias de auth en ninguna ruta, y el
+    CORS va con `allow_origins=["*"]` + `allow_credentials=True`), asi que
+    devolver `secret` allowia leer el secreto del webhook sin credenciales.
+
+    Devuelve en su lugar dos booleanos:
+      - `secret_configured`: hay un secreto configurado (no vacio).
+      - `verification_enabled`: la firma se verifica DE VERDAD. Hoy coincide con
+        el anterior porque `_verify_signature` es el unico verificador y acepta
+        cualquier payload cuando el secreto esta vacio; se reportan por separado
+        porque dejarian de coincidir en cuanto ese vacio se cambie por fail-closed.
+    """
+    secret = config.get("secret") or ""
+    public = {k: v for k, v in config.items() if k not in _SECRET_KEYS}
+    public["secret_configured"] = bool(secret)
+    public["verification_enabled"] = bool(secret)
+    return public
+
+
 # ============================================================================
 # Webhook Handlers
 # ============================================================================
 
 @router.get("/config", response_model=Dict[str, Any])
 async def get_webhook_config():
-    """Get webhook configuration."""
+    """Get webhook configuration.
+
+    Nunca devuelve el secreto: este router no exige autenticacion.
+    """
     config = _load_webhook_config()
     config["url"] = os.getenv("GITHUB_WEBHOOK_URL", "http://localhost:8000/api/github/webhook")
-    return config
+    return _public_webhook_config(config)
 
 
 @router.post("/config", response_model=Dict[str, Any])
@@ -109,7 +147,8 @@ async def set_webhook_config(config: WebhookConfig):
     data = config.model_dump()
     data["url"] = config.url  # Keep URL in config
     _save_webhook_config(data)
-    return {"status": "updated", "config": data}
+    # El eco tampoco devuelve el secreto (mismo motivo que en GET /config).
+    return {"status": "updated", "config": _public_webhook_config(data)}
 
 
 @router.get("/test", response_model=Dict[str, Any])

@@ -2,6 +2,10 @@
 
 Integra la API de Atria Dawn para generacion de datos de training,
 mejora de respuestas, sintesis de skills y meta-aprendizaje.
+
+Import: este paquete no es importable directo (`integration.py:7` hace
+`from backend.atria_integration...`); el smoke test debe correr con
+`PYTHONPATH=ARIA_APP`, como ya hace `ARIA_APP/scripts/verify_all.py:9`.
 """
 
 import httpx
@@ -22,11 +26,27 @@ class AtriaClient:
     - Atria = Inteligencia estrategica (~4M tokens/mes, 100M tokens duran 2+ anios)
     """
 
+    RPM_LIMIT_HEADER = "x-rpm-limit"
+    # El servidor publica su tasa en el header `x-rpm-limit`. Antes hardcodeábamos
+    # 100, con lo que ARIA se auto-limitaba a la mitad de la tasa real sin avisar.
+    # 50 es el valor por defecto que declara el servidor hasta que el header lo
+    # confirme; en cuanto llegue, pasa a ser el valor medido.
+    DEFAULT_RATE_LIMIT = 50
+
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.environ.get("ATRIA_API_KEY", "")
         self.base_url = os.environ.get("ATRIA_API_URL", "https://api.atria-asi.ai/v1")
         self.model = os.environ.get("ATRIA_MODEL", "Atria-Dawn-Preview")
         self.available = bool(self.api_key)
+
+        # Rate limiting. `rate_limit` arranca en el default DECLARADO por el
+        # servidor, no en uno medido por nosotros: `rate_limit_source` dice cual de
+        # los dos es. Se inicializa aqui (antes del early return) para que el
+        # atributo exista siempre, incluso sin API key.
+        self.rate_limit = self.DEFAULT_RATE_LIMIT
+        self.rate_limit_source = "unavailable"
+        self.requests_this_minute = 0
+        self.minute_start = time.time()
 
         if not self.available:
             print("[AtriaClient] Warning: API key no configurada. Set ATRIA_API_KEY.")
@@ -40,11 +60,6 @@ class AtriaClient:
         self.tokens_monthly_budget = 4_000_000
         self.tokens_monthly_used = 0
         self.month_reset = datetime.now()
-
-        # Rate limiting (100 requests/min)
-        self.rate_limit = 100
-        self.requests_this_minute = 0
-        self.minute_start = time.time()
 
         # Usage by category (ROI tracking)
         self.usage_by_category = {
@@ -124,6 +139,10 @@ class AtriaClient:
                 },
             )
 
+            # Antes de raise_for_status: un 429 tambien trae el header del
+            # servidor, y es justo el caso en el que el limite importa mas.
+            self._observe_rpm_limit(response.headers)
+
             response.raise_for_status()
             data = response.json()
 
@@ -162,13 +181,73 @@ class AtriaClient:
                 "model": self.model,
             }
 
+        except httpx.HTTPStatusError as e:
+            # HTTPStatusError es subclase de HTTPError: esta rama DEBE ir
+            # primero o nunca se ejecutaria. Un 429 no es un error opaco,
+            # es el servidor diciendonos cual es su tasa.
+            if e.response is not None and e.response.status_code == 429:
+                return {
+                    "error": "RATE_LIMITED",
+                    "rate_limit": self.rate_limit,
+                    "rate_limit_source": self.rate_limit_source,
+                    "status_code": 429,
+                    "success": False,
+                }
+            return {"error": str(e), "success": False}
         except httpx.HTTPError as e:
             return {"error": str(e), "success": False}
         except Exception as e:
             return {"error": str(e), "success": False}
 
+    def _observe_rpm_limit(self, headers: Optional[Any]) -> None:
+        """Adopta la tasa real declarada por el servidor en `x-rpm-limit`.
+
+        Es la unica lectura honesta del limite: la unica respuesta que tenemos es
+        la que `request()` ya recibe, asi que no hay endpoint que consultar.
+        Si el header falta, viene vacio, no es un entero o es <= 0, NO se inventa
+        nada: `rate_limit` y `rate_limit_source` se quedan como estaban.
+        """
+        if headers is None:
+            return
+
+        raw = None
+        getter = getattr(headers, "get", None)
+        if callable(getter):
+            raw = getter(self.RPM_LIMIT_HEADER)
+
+        if raw is None:
+            # dicts planos no son case-insensitive como httpx.Headers.
+            items = getattr(headers, "items", None)
+            if callable(items):
+                for key, value in items():
+                    if str(key).lower() == self.RPM_LIMIT_HEADER:
+                        raw = value
+                        break
+
+        if raw is None:
+            return
+
+        if isinstance(raw, str) and not raw.strip():
+            return
+
+        try:
+            limit = int(raw)
+        except (TypeError, ValueError):
+            return
+
+        if limit <= 0:
+            return
+
+        self.rate_limit = limit
+        self.rate_limit_source = "measured"
+
     async def _check_rate_limit(self):
-        """Chequea rate limit (100 req/min)"""
+        """Chequea el rate limit contra `self.rate_limit`.
+
+        Ese limite no es un 100 fijo: viene observado del header `x-rpm-limit`
+        del servidor (source "measured") o, hasta que llegue, del default
+        declarado por el servidor (source "unavailable").
+        """
         now = time.time()
 
         if now - self.minute_start > 60:
@@ -224,6 +303,8 @@ class AtriaClient:
             "usage_by_category": self.usage_by_category,
             "request_count": len(self.request_history),
             "value_generated": self.value_generated,
+            "rate_limit": self.rate_limit,
+            "rate_limit_source": self.rate_limit_source,
             "available": self.available,
         }
 

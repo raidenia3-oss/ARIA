@@ -1,19 +1,46 @@
 import { useEffect, useState } from 'react'
+import {
+  ariaBackend,
+  normalizeAgentStatus,
+  type AgentStatusName,
+  type SwarmAgentRow,
+} from '../../lib/ariaBackend'
 
+/**
+ * Fila ya normalizada para el anillo.
+ *
+ * Solo contiene lo que el servidor MIDE. No hay `task_count`, `error_count` ni
+ * `pipeline_ready` porque `GET /api/agents/status` no los emite nunca (la nota
+ * `STATUS_NOTE` de agents.rs:32 lo dice); cada uno de esos campos se habría
+ * fabricado un 0 permanente.
+ */
 export interface AgentNode {
+  id: string
   name: string
   role: string
-  status: 'idle' | 'working' | 'error'
-  task_count: number
-  error_count: number
-  pipeline_ready?: boolean
+  status: AgentStatusName
+  source: SwarmAgentRow['source'] | null
+  /** `null` = no medido (clave omitida por `skip_serializing_if`). */
+  current_task: string | null
+  /** `null` = no medido; nunca `0`. */
+  heartbeat_age_seconds: number | null
+  /** `null` = no medido. */
+  stale: boolean | null
 }
 
 export interface NeuralBrainState {
   agents: AgentNode[]
-  total_tasks: number
-  active_agents: number
+  /**
+   * Pendientes MEDIDOS en `SharedState.task_queue`. Es el único agregado real
+   * del endpoint y NO es un "total de tareas": `null` cuando no se pudo leer.
+   */
+  queue_depth: number | null
+  /** Agentes cuyo estado normalizado es `busy` — recuento de datos reales. */
+  busy_agents: number
+  /** Agentes cuyo estado normalizado es `error` — recuento de datos reales. */
   error_agents: number
+  /** `false` tras un fallo: no hay lectura válida que mostrar. */
+  online: boolean
   last_updated: string
 }
 
@@ -24,41 +51,69 @@ const AGENT_COLORS: Record<string, string> = {
   ResearchAgent: '#f59e0b',
 }
 
-const AXUM_ORIGIN = 'http://127.0.0.1:8002'
+/** Etiqueta por estado normalizado. Presentación, no telemetría. */
+const STATUS_LABEL: Record<AgentStatusName, string> = {
+  idle: '○ IDLE',
+  busy: '● BUSY',
+  error: '✕ ERROR',
+  stalled: '◐ STALLED',
+  offline: '○ OFFLINE',
+}
+
+/** Estado de reposo honesto: sin lectura no hay ceros que mostrar. */
+const UNAVAILABLE: NeuralBrainState = {
+  agents: [],
+  queue_depth: null,
+  busy_agents: 0,
+  error_agents: 0,
+  online: false,
+  last_updated: '',
+}
+
+function toNode(row: SwarmAgentRow): AgentNode {
+  return {
+    // `id`, `name`, `role` y `source` no llevan `skip_serializing_if`: el
+    // servidor los emite siempre, así que se copian tal cual.
+    id: row.id,
+    name: row.name,
+    role: row.role,
+    status: normalizeAgentStatus(row.status, row.stale),
+    source: row.source,
+    current_task: row.current_task ?? null,
+    heartbeat_age_seconds:
+      typeof row.heartbeat_age_seconds === 'number' ? row.heartbeat_age_seconds : null,
+    stale: typeof row.stale === 'boolean' ? row.stale : null,
+  }
+}
 
 function useAgentStatus(poll_ms = 3000): NeuralBrainState {
-  const [state, setState] = useState<NeuralBrainState>({
-    agents: [],
-    total_tasks: 0,
-    active_agents: 0,
-    error_agents: 0,
-    last_updated: '',
-  })
+  const [state, setState] = useState<NeuralBrainState>(UNAVAILABLE)
 
   useEffect(() => {
     let cancelled = false
     async function fetchStatus() {
       try {
-        const res = await fetch(`${AXUM_ORIGIN}/api/agents/status`)
-        const data = await res.json()
+        // Misma ruta que antes (`GET /api/agents/status` en 8002) pero a través
+        // del cliente centralizado: esa ruta NO es pública (auth.rs:35 excluye
+        // todo menos `/`, `/health`, `/ws`), así que un fetch desnudo recibía
+        // 401 y el panel se quedaba permanentemente vacío.
+        const data = await ariaBackend.agentsStatus()
         if (cancelled) return
-        const agents: AgentNode[] = (data.agent_list || data.agents || []).map((a: Record<string, unknown>) => ({
-          name: String(a.name || 'unknown'),
-          role: String(a.role || ''),
-          status: (a.status as AgentNode['status']) || 'idle',
-          task_count: Number(a.task_count || 0),
-          error_count: Number(a.error_count || 0),
-          pipeline_ready: Boolean(a.pipeline_ready),
-        }))
+        if (!data || !Array.isArray(data.agents)) {
+          throw new Error('respuesta sin `agents` (unavailable)')
+        }
+        const agents = data.agents.map(toNode)
         setState({
           agents,
-          total_tasks: agents.reduce((s, a) => s + a.task_count, 0),
-          active_agents: agents.filter((a) => a.status === 'working').length,
+          queue_depth: typeof data.queue_depth === 'number' ? data.queue_depth : null,
+          busy_agents: agents.filter((a) => a.status === 'busy').length,
           error_agents: agents.filter((a) => a.status === 'error').length,
+          online: true,
           last_updated: new Date().toISOString(),
         })
       } catch {
-        /* backend no disponible */
+        /* backend no disponible: se vacía para no pintar datos viejos como vivos */
+        if (!cancelled) setState(UNAVAILABLE)
       }
     }
     fetchStatus()
@@ -96,31 +151,34 @@ export function NeuralBrain() {
 
         {/* Conexiones entre agentes y centro */}
         {state.agents.map((agent, i) => {
-          const angle = (i / state.agents.length) * Math.PI * 2 - Math.PI / 2
+          // Sin este `Math.max`, `agents.length === 0` daba `0/0 = NaN`.
+          const slots = Math.max(state.agents.length, 1)
+          const angle = (i / slots) * Math.PI * 2 - Math.PI / 2
           const ax = centerX + Math.cos(angle) * radius * 0.72
           const ay = centerY + Math.sin(angle) * radius * 0.72
           const color = AGENT_COLORS[agent.name] || '#64748b'
+          const isBusy = agent.status === 'busy'
+          const isAlert = agent.status === 'error'
           return (
-            <g key={agent.name}>
+            <g key={agent.id || agent.name}>
               <line x1={centerX} y1={centerY} x2={ax} y2={ay}
                 stroke={color} strokeOpacity="0.25" strokeWidth="1"
                 strokeDasharray="4 4" />
               <circle cx={ax} cy={ay} r={14} fill="#0f172a" stroke={color} strokeWidth="1.5"
                 filter="url(#glow)" />
               <circle cx={ax} cy={ay} r={4} fill={color}>
-                {agent.status === 'working' && (
+                {isBusy && (
                   <animate attributeName="r" values="4;8;4" dur="1.5s" repeatCount="indefinite" />
                 )}
               </circle>
               <text x={ax} y={ay + 30} textAnchor="middle"
                 fill={color} fontSize="11" fontFamily="monospace">
-                {agent.name.replace('Agent', '')}
+                {(agent.name || '—').replace('Agent', '')}
               </text>
               <text x={ax} y={ay + 44} textAnchor="middle"
-                fill={agent.status === 'working' ? color : '#64748b'}
+                fill={isBusy || isAlert ? color : '#64748b'}
                 fontSize="9" fontFamily="monospace">
-                {agent.status === 'working' ? '● WORKING' :
-                 agent.status === 'error' ? '✕ ERROR' : '○ IDLE'}
+                {STATUS_LABEL[agent.status]}
               </text>
             </g>
           )
@@ -140,16 +198,18 @@ export function NeuralBrain() {
           </text>
           <text x={centerX} y={centerY + 36} textAnchor="middle"
             fill="#64748b" fontSize="9" fontFamily="monospace">
-            {state.active_agents} active · {state.total_tasks} tasks
+            {state.online ? `${state.busy_agents} busy · queue ${state.queue_depth ?? '—'}` : 'unavailable'}
           </text>
         </g>
       </svg>
 
       {/* Stats overlay */}
       <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-4 text-[10px] font-mono">
-        <span className="text-cyan-400">● {state.active_agents} active</span>
-        <span className="text-green-400">✓ {state.total_tasks} tasks</span>
-        <span className="text-red-400">✕ {state.error_agents} errors</span>
+        <span className="text-cyan-400">● {state.online ? `${state.busy_agents} busy` : '—'}</span>
+        <span className="text-green-400">✓ {state.online ? `${state.queue_depth ?? '—'} queued` : '—'}</span>
+        {/* El servidor NO registra errores por agente (agents.rs:32): se dice
+            que no se mide, en vez de pintar un 0 siempre verde. */}
+        <span className="text-text-tertiary">errors: not tracked</span>
       </div>
     </div>
   )

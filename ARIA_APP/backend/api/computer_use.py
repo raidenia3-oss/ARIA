@@ -255,11 +255,11 @@ class WindowsAutomation:
             import pywinauto.keyboard as keyboard
             keyboard.send_keys(text, with_spaces=True, pause=interval_ms/1000)
         else:
-            # Fallback: SendKeys via Windows API
-            import ctypes
-            for char in text:
-                # Simplified - would need proper key mapping
-                pass
+            raise HTTPException(
+                status_code=501,
+                detail="type_text not executed: no automation backend available "
+                       "(install uiautomation or pywinauto: pip install uiautomation pywinauto)"
+            )
         
         return {"status": "ok", "length": len(text)}
     
@@ -271,8 +271,11 @@ class WindowsAutomation:
             import pywinauto.keyboard as keyboard
             keyboard.send_keys(key, presses=presses)
         else:
-            # Fallback
-            pass
+            raise HTTPException(
+                status_code=501,
+                detail="press_key not executed: no automation backend available "
+                       "(install uiautomation or pywinauto: pip install uiautomation pywinauto)"
+            )
         
         return {"status": "ok", "key": key}
     
@@ -283,6 +286,12 @@ class WindowsAutomation:
         elif self.pywinauto_available:
             import pywinauto.mouse as mouse
             mouse.wheel(amount, coords=(x, y))
+        else:
+            raise HTTPException(
+                status_code=501,
+                detail="scroll not executed: no automation backend available "
+                       "(install uiautomation or pywinauto: pip install uiautomation pywinauto)"
+            )
         
         return {"status": "ok", "x": x, "y": y, "amount": amount}
     
@@ -297,6 +306,12 @@ class WindowsAutomation:
             mouse.move(coords=(end_x, end_y))
             time.sleep(0.1)
             mouse.release(coords=(end_x, end_y))
+        else:
+            raise HTTPException(
+                status_code=501,
+                detail="drag not executed: no automation backend available "
+                       "(install uiautomation or pywinauto: pip install uiautomation pywinauto)"
+            )
         
         return {"status": "ok"}
     

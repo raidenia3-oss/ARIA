@@ -49,6 +49,7 @@ use tokio::sync::{broadcast, Mutex};
 use tracing::field::{Field, Visit};
 use tracing::{Event, Subscriber};
 
+use crate::child_env;
 use crate::skills::plugin_catalog;
 use crate::state::SharedState;
 use crate::version::ARIA_VERSION;
@@ -861,18 +862,22 @@ impl ControlState {
 /// Append one captured line to the job accumulator, bounding it on overflow.
 ///
 /// Overflow is dropped from the FRONT: the tail is what explains a failure, and
-/// an updater's last words are the error. The in-loop cap can cut mid-
-/// codepoint, which is why callers go through `String::from_utf8_lossy`
-/// instead of slicing the buffer as `str`.
+/// an updater's last words are the error. The in-loop cap can cut mid-codepoint,
+/// and the cut advances to a valid char boundary in the ORIGINAL byte space;
+/// a partial multibyte character at the cut may cost up to 3 bytes.
 fn append_captured(buffer: &mut Vec<u8>, line: &[u8]) {
     if line.len() > JOB_LINE_LIMIT {
-        // Keep the tail of an enormous line; the cut is moved forward to the
-        // next char boundary so the lossless prefix stays valid. `str` owns
-        // `is_char_boundary`, so we probe with a lossy view and then slice the
-        // original bytes at the matching offset.
-        let lossy = String::from_utf8_lossy(line);
-        let mut start = line.len() - JOB_LINE_LIMIT;
-        while start < lossy.len() && !lossy.is_char_boundary(start) {
+        // Keep the tail of an enormous line. The cut is moved forward to the
+        // next UTF-8 char boundary in the ORIGINAL byte space, so the slicing
+        // below is in range by construction.
+        //
+        // A boundary byte is any byte that is not a continuation byte
+        // (`0b10xxxxxx`). Testing the byte directly matters: `from_utf8` on
+        // `&line[start..]` would re-validate the whole remaining slice on every
+        // step, making a run of invalid bytes O(JOB_LINE_LIMIT * line.len()) of
+        // blocking CPU on a tokio worker.
+        let mut start = line.len().saturating_sub(JOB_LINE_LIMIT);
+        while start < line.len() && (line[start] & 0xC0) == 0x80 {
             start += 1;
         }
         buffer.extend_from_slice(&line[start..]);
@@ -940,6 +945,7 @@ async fn stream_child(
     args: &[String],
 ) -> (&'static str, Option<i32>, String) {
     let mut command = tokio::process::Command::new(program);
+    child_env::sanitize(&mut command);
     command
         .args(args)
         .stdin(std::process::Stdio::null())
@@ -1042,6 +1048,14 @@ struct EventVisitor {
 }
 
 impl EventVisitor {
+    /// Formats one event field with `Debug` and appends it to the log line.
+    ///
+    /// There is no redaction here: whatever a caller records lands verbatim in the
+    /// ring served by `GET /api/control/logs`. The redaction boundary is the
+    /// `Debug` impl of the recorded type — `state::AuthConfig` hand-implements it
+    /// to print `<redacted>` instead of the bearer token, which is what makes
+    /// `tracing::info!(?cfg)` safe. A `Debug`-derived type holding a secret would
+    /// leak through this visitor.
     fn push(&mut self, field: &Field, value: &dyn std::fmt::Debug) {
         if field.name() == "message" {
             self.message = format!("{value:?}");
@@ -1368,6 +1382,28 @@ async fn services(Extension(state): Extension<Arc<Mutex<SharedState>>>) -> Respo
     .into_response()
 }
 
+/// The canonical tail body, shared by every endpoint that reads the LogRing.
+///
+/// Three routes served this ring with three different contracts: `admin.rs`
+/// hardcoded 200 and bypassed [`clamp_lines`], `system.rs` clamped and echoed
+/// `limit`, and `control.rs` clamped under the key `lines`. A client that
+/// normalizes on `logs` and switches endpoints silently got a different window.
+///
+/// `lines` is kept as a documented alias of `logs` so existing consumers of
+/// `/api/control/logs` do not break; it points at the same array.
+pub fn log_response(entries: &[LogEntry], requested: usize) -> serde_json::Value {
+    json!({
+        "logs": entries,
+        "lines": entries,
+        "count": entries.len(),
+        "requested": requested,
+        "capacity": LOG_RING_CAPACITY,
+        "data_source": "measured",
+        "note": "captured from tracing events; set ARIA_LOG_PATH to include legacy stdout",
+        "server": "ARIA-Axum-8002",
+    })
+}
+
 /// `GET /api/control/logs?lines=50` — ring-buffer tail.
 async fn logs(
     Extension(state): Extension<Arc<Mutex<SharedState>>>,
@@ -1379,15 +1415,7 @@ async fn logs(
     }
     let lines = clamp_lines(query.lines);
     let entries = state.lock().await.control.tail_logs(lines).await;
-    Json(json!({
-        "lines": entries,
-        "count": entries.len(),
-        "requested": lines,
-        "capacity": LOG_RING_CAPACITY,
-        "note": "captured from tracing events; set ARIA_LOG_PATH to include legacy stdout",
-        "server": "ARIA-Axum-8002",
-    }))
-    .into_response()
+    Json(log_response(&entries, lines)).into_response()
 }
 
 /// `GET /api/control/logs/stream` — WebSocket tail.
@@ -1799,6 +1827,27 @@ pub fn json_error(status: StatusCode, code: &str, detail: &str) -> Response {
             "error": code,
             "detail": detail,
             "status": status.as_u16(),
+        })),
+    )
+        .into_response()
+}
+
+/// The single 501 body for "this capability does not exist in this build".
+///
+/// Every route that declines to fabricate a capability must return THIS, so
+/// `detail` and `server` are always present. They were not: `files_read` shipped
+/// without `detail`, `admin.rs` omitted both, and only `auth.rs`/`system.rs`
+/// carried `server` — a client rendering `payload.detail` got `undefined` on
+/// some routes for the identical error class.
+pub fn not_implemented(feature: &str, detail: &str) -> Response {
+    (
+        StatusCode::NOT_IMPLEMENTED,
+        Json(json!({
+            "error": "not_implemented",
+            "status": 501,
+            "feature": feature,
+            "detail": detail,
+            "server": "ARIA-Axum-8002",
         })),
     )
         .into_response()
@@ -2324,8 +2373,43 @@ mod tests {
         let mut line = "x".repeat(JOB_LINE_LIMIT + 1024);
         line.push_str("NEEDLE");
         append_captured(&mut buffer, line.as_bytes());
-        let text = String::from_utf8_lossy(&buffer).to_string();
+        let text = String::from_utf8_lossy(&buffer).trim_end().to_string();
         assert!(text.ends_with("NEEDLE"), "head of the line was kept: {text}");
         assert!(text.len() <= JOB_LINE_LIMIT + 1);
+    }
+
+    #[test]
+    fn an_oversized_line_cut_lands_on_a_char_boundary() {
+        // The cut is advanced past continuation bytes, so a multibyte
+        // character sitting just below JOB_LINE_LIMIT must survive WHOLE, not
+        // be sliced in half (and not turn into U+FFFD).
+        let mut line = vec![b'x'; JOB_LINE_LIMIT];
+        // "✓" is 3 bytes; place it so the naive cut would split it.
+        line.extend_from_slice("✓".as_bytes());
+        line.extend_from_slice(b"TAILMARK");
+        let mut buffer: Vec<u8> = Vec::new();
+        append_captured(&mut buffer, &line);
+
+        let text = String::from_utf8_lossy(&buffer);
+        assert!(text.contains("✓"), "multibyte char was split at the cut");
+        assert!(!text.contains('\u{fffd}'), "replacement char in retained tail");
+        assert!(text.contains("TAILMARK"), "tail lost");
+        assert!(buffer.len() <= JOB_LINE_LIMIT + 4);
+    }
+
+    #[test]
+    fn an_oversized_line_with_invalid_utf8_does_not_panic() {
+        let mut raw: Vec<u8> = Vec::new();
+        while raw.len() < JOB_LINE_LIMIT + 512 {
+            raw.extend_from_slice(&[0xFF, 0xFE, b'a', b'b', b'c', 0x80]);
+        }
+        raw.extend_from_slice(b"TAILMARK");
+        let mut buffer: Vec<u8> = Vec::new();
+        append_captured(&mut buffer, &raw);
+        assert!(buffer.len() <= JOB_LINE_LIMIT + 1);
+        assert!(
+            String::from_utf8_lossy(&buffer).contains("TAILMARK"),
+            "tail lost"
+        );
     }
 }
