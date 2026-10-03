@@ -21,7 +21,7 @@ from fastapi import APIRouter, HTTPException, Body
 from pydantic import BaseModel
 
 from backend.marketplace.marketplace_manager import marketplace_manager
-from backend.automation.automation_engine import automation_engine
+from backend.automation.workflow_engine import workflow_engine
 from backend.agents.agent_code_reviewer import code_reviewer
 from backend.agents.agent_video_analyzer import video_analyzer
 from backend.agents.agent_image_processor import image_processor
@@ -140,7 +140,7 @@ async def call_agent(req: AgentCallRequest) -> Dict[str, Any]:
 async def automate(req: AutomateRequest) -> Dict[str, Any]:
     """Schedule an automation task."""
     try:
-        result = await automation_engine.schedule_task(req.trigger, req.action)
+        result = await workflow_engine.schedule_task(req.trigger, req.action)
         return result
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
@@ -187,7 +187,7 @@ async def public_status() -> Dict[str, Any]:
             "agents": list(AGENT_MAP.keys()),
             "agents_count": len(AGENT_MAP),
             "revenue": daemon.total_revenue if daemon else 0.0,
-            "automations": len(automation_engine.automations),
+            "automations": len(workflow_engine.automations),
             "marketplace_listings": len(marketplace_manager.listings),
             "version": "2.0.0",
             "timestamp": datetime.now().isoformat(),
@@ -219,7 +219,7 @@ async def marketplace_royalties() -> Dict[str, Any]:
 async def create_workflow(steps: List[Dict[str, Any]] = Body(...)) -> Dict[str, Any]:
     """Create a complex workflow."""
     try:
-        return await automation_engine.create_workflow(steps)
+        return await workflow_engine.create_workflow(steps)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
@@ -228,6 +228,6 @@ async def create_workflow(steps: List[Dict[str, Any]] = Body(...)) -> Dict[str, 
 async def automate_status() -> Dict[str, Any]:
     """Monitor all automations."""
     try:
-        return await automation_engine.monitor_automations()
+        return await workflow_engine.monitor_automations()
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))

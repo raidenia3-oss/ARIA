@@ -33,7 +33,7 @@ from backend.agents.agent_psychology_counselor import psychology_counselor
 from backend.agents.agent_business_analyst import business_analyst
 from backend.agents.agent_researcher import researcher
 from backend.marketplace.marketplace_manager import marketplace_manager
-from backend.automation.automation_engine import automation_engine
+from backend.automation.workflow_engine import workflow_engine
 from backend.daemon.learning_daemon import learning_daemon, CYCLE_INTERVAL
 
 logger = logging.getLogger("AURA.Daemon")
@@ -381,7 +381,7 @@ class AURADaemon:
                     await asyncio.sleep(60)
                     continue
 
-                status = await automation_engine.monitor_automations()
+                status = await workflow_engine.monitor_automations()
                 self.event_bus.emit_simple("automation_status", {
                     "total": status.get("total_automations", 0),
                     "active": status.get("active", 0),
@@ -392,7 +392,7 @@ class AURADaemon:
                 active_autos = [a for a in self._get_automation_configs() if a.get("trigger", "").startswith("every")]
                 if active_autos:
                     for auto_cfg in active_autos[:2]:
-                        result = await automation_engine.execute_automation(auto_cfg["automation_id"])
+                        result = await workflow_engine.execute_automation(auto_cfg["automation_id"])
                         self.event_bus.emit_simple("automation_executed", {
                             "automation_id": result.get("automation_id"),
                             "status": result.get("status"),

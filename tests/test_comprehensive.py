@@ -13,12 +13,18 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 # Ensure AURA_APP has priority for backend.app and v2 modules
-AURA_APP = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "AURA_APP")
+# NOTA: el directorio real del repo es "ARIA_APP"; "AURA_APP" no existe. Se
+# resuelve por existencia para no romper la colección (FileNotFoundError al
+# cargar backend/memory/working.py).
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+AURA_APP = os.path.join(_ROOT, "ARIA_APP")
+if not os.path.isdir(AURA_APP):
+    AURA_APP = os.path.join(_ROOT, "AURA_APP")
 
-# Clear cached backend modules to avoid project-root conflict
-for mod in list(sys.modules.keys()):
-    if mod.startswith("backend"):
-        del sys.modules[mod]
+# NOTA: aquí se vaciaba sys.modules["backend*"] para evitar el conflicto de
+# project-root. Eso re-importaba los módulos y re-registraba los collectors de
+# prometheus_client, provocando DuplicateTimeseries en la colección. Se eliminó:
+# el conflicto se resuelve con el orden de sys.path, no vaciando el cache.
 
 if AURA_APP not in sys.path:
     sys.path.insert(0, AURA_APP)
@@ -469,23 +475,23 @@ class TestAutomationUnit:
 
     @pytest.mark.asyncio
     async def test_schedule_task(self):
-        from backend.automation.automation_engine import automation_engine
+        from backend.automation.workflow_engine import workflow_engine
 
-        auto = await automation_engine.schedule_task("every 9am", "send_newsletter")
+        auto = await workflow_engine.schedule_task("every 9am", "send_newsletter")
         assert "automation_id" in auto
 
     @pytest.mark.asyncio
     async def test_monitor_automations(self):
-        from backend.automation.automation_engine import automation_engine
+        from backend.automation.workflow_engine import workflow_engine
 
-        monitor = await automation_engine.monitor_automations()
+        monitor = await workflow_engine.monitor_automations()
         assert "total_automations" in monitor
 
     @pytest.mark.asyncio
     async def test_create_workflow(self):
-        from backend.automation.automation_engine import automation_engine
+        from backend.automation.workflow_engine import workflow_engine
 
-        wf = await automation_engine.create_workflow([{"name": "step1", "action": "do"}])
+        wf = await workflow_engine.create_workflow([{"name": "step1", "action": "do"}])
         assert "workflow_id" in wf
 
 
@@ -1229,10 +1235,10 @@ class TestE2E:
 
     @pytest.mark.asyncio
     async def test_automation_workflow(self):
-        from backend.automation.automation_engine import automation_engine
+        from backend.automation.workflow_engine import workflow_engine
 
-        rule_id = await automation_engine.schedule_task("every 9am", "send_newsletter")
-        monitor = await automation_engine.monitor_automations()
+        rule_id = await workflow_engine.schedule_task("every 9am", "send_newsletter")
+        monitor = await workflow_engine.monitor_automations()
         assert monitor is not None
 
     @pytest.mark.asyncio

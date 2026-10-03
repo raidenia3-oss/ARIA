@@ -41,8 +41,17 @@ ACTION_MAP = {
 }
 
 
-class AutomationEngine:
-    """Schedules and executes automated workflows based on triggers."""
+class WorkflowEngine:
+    """Schedules and executes automated workflows based on triggers.
+
+    Distinct from `backend.automation.engine.AutomationEngine`, which owns rule
+    storage and monitoring. This one owns trigger-driven workflows and task
+    scheduling. They were previously both called `AutomationEngine` in modules
+    named `engine.py` and `automation_engine.py`; importing the latter rebound
+    the package attribute `backend.automation.automation_engine` over the real
+    singleton, so `main.py` silently received this module instead and every
+    `check_and_execute` call raised AttributeError.
+    """
 
     def __init__(self) -> None:
         self.automations: Dict[str, Dict[str, Any]] = {}
@@ -185,4 +194,4 @@ class AutomationEngine:
         }
 
 
-automation_engine = AutomationEngine()
+workflow_engine = WorkflowEngine()
