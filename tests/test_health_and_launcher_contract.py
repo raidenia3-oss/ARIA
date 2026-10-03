@@ -188,12 +188,13 @@ def test_no_health_path_is_registered_by_two_handlers() -> None:
     codigo muerto: `detailed_health` ahora se expone en `/health/detailed` y
     `/health` sigue siendo la respuesta honesta sin dependencias.
 
-    El alcance son las rutas de health. Hay OTRO par duplicado que este test no
-    pretende arbitrar: `/api/orchestrator` lo registran `orchestrator_status`
-    (`Depends(require_api_key)`, linea ~1854) y `get_orchestrator_protected`
-    (`Depends(get_current_user)`, linea ~2500). Gana el primero, asi que el
-    segundo es codigo muerto, pero ambos exigen credenciales: no hay bypass, y
-    elegir un ganador cambia comportamiento, asi que queda reportado.
+El alcance son las rutas de health. `/api/orchestrator` tambien estaba
+    registrado por dos handlers: `orchestrator_status` (`Depends(require_api_key)`,
+    linea ~1854) y `get_orchestrator_protected` (`Depends(get_current_user)`,
+    linea ~2500). El segundo se elimino: llamaba `await orchestrator.get_status_async()`,
+    metodo que no existe en `DistributedOrchestrator` ni en su base
+    `AvailabilityOrchestrator` (solo hay `get_status` sync y `get_cluster_status`
+    async), asi que era un 500 permanente enmascarado por el shadowing de Starlette.
     """
     seen: dict[str, str] = {}
     collisions = []

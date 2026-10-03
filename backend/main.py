@@ -2497,11 +2497,6 @@ async def gesture_stream(request: Request, auth: AuthContext = Depends(require_a
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 
-@app.get("/api/orchestrator")
-async def get_orchestrator_protected(current_user: str = Depends(get_current_user)):
-    return await orchestrator.get_status_async()
-
-
 @app.on_event("startup")
 async def _on_startup_production() -> None:
     try:
