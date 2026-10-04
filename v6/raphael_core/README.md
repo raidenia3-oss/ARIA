@@ -25,7 +25,22 @@ El nucleo no enciende un color propio: lo enciende la respuesta.
 | TIERRA | Enjambre de agentes | `GET /api/swarm/agents/status` | `backend/swarm_routes.py` |
 | VIENTO | Contadores de despacho | `GET /api/swarm/metrics` | `backend/swarm_routes.py` |
 | LUZ | Catalogo de 12 roles APEX | `GET /api/swarm/roles` | `backend/swarm_routes.py` |
-| SOMBRA | Orquestador, swarm y auto-curacion | `GET /api/swarm/status` | `backend/swarm_routes.py` |
+| SOMBRA | Estado del enjambre | `GET /api/swarm/status` | `backend/swarm_routes.py` |
+
+### `/api/swarm/status` tiene dos handlers
+
+`backend/swarm_routes.py` registra dos veces la misma ruta: la de la linea 95
+(`swarm.get_status()`) y la unificada de la linea 327 (`swarm`,
+`orchestrator`, `self_healing`, `process_monitor`). Starlette resuelve por orden
+de registro, asi que la unificada es inalcanzable y la que responde devuelve
+contadores del enjambre (`agents_by_role`, `agents_total`, `queue`,
+`task_status_counts`, `tasks_total`, `plans_total`, `bus_messages`,
+`execution_history_count`, `timestamp`).
+
+Comprobado con `TestClient` sobre `backend.main:app`, no de memoria. Por eso el
+HUD recorre ese payload tal cual, sin asumir la forma que el handler unificado
+promete. Es el mismo tipo de sombreado que se corrigio en `/health` durante la
+Ola 5: un endpoint inalcanzable debe declararse, no fingirse.
 
 ## Honestidad de los datos
 

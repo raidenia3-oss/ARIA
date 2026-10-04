@@ -143,21 +143,19 @@ export async function readCore(base) {
     .map(([key, value]) => ({ key, value }));
 
   const unifiedBody = unified.state === "measured" ? unified.body : {};
-  const layers = ["swarm", "orchestrator", "self_healing", "process_monitor"]
-    .filter((key) => unifiedBody && typeof unifiedBody[key] === "object" && unifiedBody[key] !== null)
-    .map((key) => {
-      const layer = unifiedBody[key];
-      const state = str(layer.status ?? layer.state ?? layer.health, null);
-      return {
-        key,
-        state,
-        ok: state === null ? null : /ok|ready|running|healthy|online/i.test(state),
-        fields: Object.entries(layer)
-          .filter(([, value]) => value === null || ["string", "number", "boolean"].includes(typeof value))
-          .slice(0, 6)
-          .map(([k, value]) => ({ key: k, value: str(value, "—") })),
-      };
-    });
+  // `/api/swarm/status` tiene dos handlers registrados: el de la linea 95
+  // (swarm.get_status()) gana por orden de registro y el unificado de la linea
+  // 327 es inalcanzable. El que manda devuelve un mapa de contadores del
+  // enjambre, no {swarm, orchestrator, ...}, asi que se recorre tal cual sin
+  // asumir nombres de campo.
+  const signals = unifiedBody && typeof unifiedBody === "object"
+    ? Object.entries(unifiedBody).map(([key, value]) => {
+        if (value === null || value === undefined) return { key, value: "sin valor" };
+        if (Array.isArray(value)) return { key, value: `${value.length} elementos` };
+        if (typeof value === "object") return { key, value: `${Object.keys(value).length} claves` };
+        return { key, value: str(value, String(value)) };
+      })
+    : [];
 
   return {
     base: target,
@@ -256,11 +254,11 @@ export async function readCore(base) {
       {
         id: "shadow",
         endpoint: "/api/swarm/status",
-        state: classify(unified, (body) => Boolean(body.orchestrator)),
-        headline: layers.length === 0 ? "sin capas" : `${layers.length} capas`,
-        data_source: layers.length === 0 ? "unavailable" : "measured",
+        state: classify(unified, (body) => Boolean(body) && typeof body === "object"),
+        headline: signals.length === 0 ? "sin señales" : `${signals.length} señales`,
+        data_source: signals.length === 0 ? "unavailable" : "measured",
         detail: unified.state === "measured" ? null : unified.detail,
-        layers,
+        signals,
         latency_ms: num(unified.latency_ms),
       },
     ],

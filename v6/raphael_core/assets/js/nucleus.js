@@ -19,7 +19,7 @@ const ELEMENT_CORES = [
   { id: "earth", label: "TIERRA", system: "Enjambre APEX", endpoint: "/api/swarm/agents/status", hue: 96 },
   { id: "wind", label: "VIENTO", system: "Despacho", endpoint: "/api/swarm/metrics", hue: 158 },
   { id: "light", label: "LUZ", system: "Catalogo de roles", endpoint: "/api/swarm/roles", hue: 44 },
-  { id: "shadow", label: "SOMBRA", system: "Orquestador", endpoint: "/api/swarm/status", hue: 282 },
+  { id: "shadow", label: "SOMBRA", system: "Estado del enjambre", endpoint: "/api/swarm/status", hue: 282 },
 ];
 
 const LATTICE_LINES = 54;

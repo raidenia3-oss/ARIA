@@ -43,6 +43,12 @@ const BLUEPRINTS = [
     path: "backend/agents/agent_roles.py",
   },
   {
+    tag: "estado",
+    title: "Estado del enjambre",
+    body: "Contadores del enjambre: agentes por rol, cola, bus, planes e historico. Ojo: tiene dos handlers con la misma ruta y gana el primero que se registro.",
+    path: "backend/swarm_routes.py",
+  },
+  {
     tag: "orquestador",
     title: "Orquestador de tareas",
     body: "Enruta cada tarea, recupera contexto, ejecuta con el modelo seleccionado y conserva en memoria el modelo usado.",
@@ -368,9 +374,9 @@ function extraRows(core) {
       rows.push([`${role.icon} ${role.name}`, role.role]);
     });
   }
-  if (core.id === "shadow" && core.layers.length) {
-    core.layers.forEach((layer) => {
-      rows.push([layer.key, layer.state ?? "sin estado declarado"]);
+  if (core.id === "shadow" && core.signals.length) {
+    core.signals.forEach((signal) => {
+      rows.push([signal.key, signal.value]);
     });
   }
   return rows;

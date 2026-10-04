@@ -76,6 +76,33 @@ def test_probe_endpoint_is_registered(endpoint, handler_source):
     assert f'"{suffix}"' in source, f"{endpoint} no aparece en {handler_source.name}"
 
 
+def _code_without_comments(path: Path) -> str:
+    source = _read(path)
+    source = re.sub(r"/\*.*?\*/", "", source, flags=re.S)
+    return re.sub(r"//[^\n]*", "", source)
+
+
+def test_swarm_status_returns_counters_not_the_unified_shape():
+    """`/api/swarm/status` esta sombreado: gana el handler de la linea 95.
+
+    El HUD recorre el payload real, asi que este gate congela el hecho. Si
+    alguien quita el handler duplicado, este test falla y obliga a revisar el
+    parseo en vez de dejar el sitio explicando una forma que ya no existe.
+    """
+    source = _read(SWARM_ROUTES_PY)
+    registrations = re.findall(r'@router\.get\("/swarm/status"\)', source)
+    assert len(registrations) == 2, (
+        "se esperaba el sombreado conocido (2 registros de /swarm/status); "
+        f"hay {len(registrations)}. Revisa el parseo del HUD antes de tocarlo."
+    )
+    code = _code_without_comments(API_JS)
+    for forbidden in ("orchestrator", "self_healing", "process_monitor"):
+        assert forbidden not in code, (
+            f"api.js no debe asumir la forma del handler unificado ({forbidden}): "
+            "esa ruta la sirve el handler de la linea 95 y no lo devuelve"
+        )
+
+
 def test_api_js_only_probes_declared_endpoints():
     probes = set(re.findall(r'probe\("([^"]+)"', _read(API_JS)))
     assert probes == PROBES, f"sondas inesperadas o ausentes: {probes ^ PROBES}"
