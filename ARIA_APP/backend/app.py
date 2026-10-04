@@ -564,6 +564,18 @@ except Exception as _p2p_exc:  # el HUD degrada a '--' si no está montado
     print(f"[AURA] p2p_reconcile no montado: {_p2p_exc}")
 
 
+_ARIA_ROUTER = None
+
+
+def _get_aria_router():
+    """Shared AIRouter instance so provider scores and circuit state persist in-process."""
+    global _ARIA_ROUTER
+    if _ARIA_ROUTER is None:
+        from backend.ai_router import AIRouter
+        _ARIA_ROUTER = AIRouter()
+    return _ARIA_ROUTER
+
+
 @app.post("/api/chat")
 async def chat(req: ChatRequest):
     text = (req.message or "").strip()
@@ -608,6 +620,34 @@ async def chat(req: ChatRequest):
 
     if episodic_context:
         system_prompt = system_prompt + episodic_context
+
+    # --- AIRouter: canonical multi-provider gateway (Mistral → DeepSeek → Ollama) ---
+    if AI_ENABLED:
+        try:
+            decision = await _get_aria_router().generate_response(
+                text,
+                context={"session_id": session_id},
+                system_prompt=system_prompt,
+                max_tokens=512,
+            )
+            routed_text = decision.get("message") or ""
+            if routed_text.strip():
+                working_memory.set(session_id, "last_response", routed_text)
+                working_memory.set(session_id, "last_provider", decision.get("provider"))
+                await _store_chat_memory(text, routed_text)
+                return JSONResponse(
+                    {
+                        "response": routed_text,
+                        "timestamp": time.time(),
+                        "mode": req.mode,
+                        "session_id": session_id,
+                        "provider": decision.get("provider"),
+                        "latency": decision.get("latency"),
+                        "tokens": decision.get("tokens"),
+                    }
+                )
+        except Exception:
+            pass  # router unavailable — falls through to Candle/Ollama/ReAct
 
     # --- Provider priority: Candle → Ollama → ReAct loop ---
     # Candle.rs (v5.2+) is fastest (~5-8s), Ollama is default (~15s)
