@@ -5,7 +5,7 @@
     "provider": "mistral",
     "model": "pixtral",
     "mistral": {
-      "apiKey": "J0fkJ75cZIZuDzcwZmeXnJPQekB96ORn"
+      "apiKey": "{file:.kilo/mistral_api_key}"
     }
   },
   "mcp": {

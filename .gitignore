@@ -128,3 +128,15 @@ aura_memory_db/
 # Weird encoding files (Windows path issues)
 C:\\*
 "C\\*"
+# Token de GitHub para el MCP de Kilo: NUNCA en git (se lee con {file:...})
+.kilo/github_token
+.kilo/secrets.json
+
+# Claves privadas de identidad de nodo: las genera identity_engine.py en runtime
+# NUNCA en git (permiten suplantar un nodo del enjambre).
+backend/security_state/identities/
+packages/backend/security_state/identities/
+*.ed25519.private.pem
+
+# Clave de Mistral para el indexing de Kilo (se lee con {file:...})
+.kilo/mistral_api_key
