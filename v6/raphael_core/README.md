@@ -1,8 +1,8 @@
 # ARIA Raphael Core
 
 HUD web del nucleo Raphael de ARIA. Sitio estatico: sin build, sin bundler, sin
-dependencias npm. Se abre con doble clic o se sirve desde cualquier hosting
-estatico.
+dependencias npm. Se sirve desde cualquier hosting estatico o con un
+`python -m http.server` de una linea.
 
 ## Inspiration y como se tradujo
 
@@ -77,18 +77,29 @@ query: `index.html?api=http://localhost:8002`. La eleccion se guarda en
 
 ## Uso
 
-```powershell
-# Abrir sin servidor
-start v6\raphael_core\index.html
+Hace falta un servidor estatico cualquiera: los ES modules no cargan desde
+`file://` porque el navegador los bloquea por CORS (origen `null`).
 
-# O servirlo
+```powershell
 cd v6\raphael_core
 python -m http.server 5173
+# abrir http://127.0.0.1:5173/
 ```
 
+Con el servidor levantado, el nucleo queda apagado hasta que le digas donde
+esta el backend:
+
+```
+http://127.0.0.1:5173/?api=http://localhost:8000
+```
+
+Tambien se puede cambiar en caliente desde el propio HUD (campo de la seccion
+CORE, boton `Sondear`). La URL se guarda en `localStorage`.
+
 Accesibilidad: `prefers-reduced-motion` detiene la animacion y dibuja un solo
-fotograma; en punteros gruesos se oculta el cursor custom y se mantiene el del
-navegador.
+fotograma, y fija el nivel de vida del nucleo al valor medido en ese instante
+para que no quede apagado por no tener animacion; en punteros gruesos se oculta
+el cursor custom y se mantiene el del navegador.
 
 ## Ficheros
 
