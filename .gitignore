@@ -117,7 +117,7 @@ training_data/
 training_checkpoints/
 agent_runs/
 aura_memory_db/
-story_memory/
+/story_memory/
 .federated_state/
 
 # Backup files
