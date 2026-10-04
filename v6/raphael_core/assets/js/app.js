@@ -13,14 +13,16 @@
 
 import { ELEMENT_CORES, NucleusRenderer, reducedMotion } from "./nucleus.js";
 import { AXUM_BASE, readCore, resolveBase, storeBase } from "./api.js";
+import { EVOLUTION_CHAIN, GEOMETRY, RAPHAEL_SUB_SKILLS } from "./lore.js";
 
 const SECTIONS = [
   { id: "hero", label: "01 — Nucleo" },
   { id: "core", label: "02 — Core" },
-  { id: "access", label: "03 — Access" },
-  { id: "start", label: "04 — Start" },
-  { id: "blueprints", label: "05 — Blueprints" },
-  { id: "end", label: "06 — End" },
+  { id: "skills", label: "03 — Raphael" },
+  { id: "access", label: "04 — Access" },
+  { id: "start", label: "05 — Start" },
+  { id: "blueprints", label: "06 — Blueprints" },
+  { id: "end", label: "07 — End" },
 ];
 
 const BLUEPRINTS = [
@@ -106,6 +108,25 @@ const BLUEPRINTS = [
 
 const REFRESH_MS = 10000;
 
+/**
+ * Boot lines. Every one of these is a fact about this repository, checked at
+ * load: no invented latencies, no fake "connected in 12ms". If the numbers
+ * change the lines change with them, and the last line says what it actually
+ * found rather than what it hoped to find.
+ */
+const BOOT_LINES = [
+  "ARIA RAPHAEL CORE // nucleo de arquitectura elemental",
+  "sitio estatico: sin bundler, sin npm, sin WebGL",
+  "element cores definidos: 6",
+  `onda estacionaria: ${GEOMETRY.lobes} lobulos`,
+  `anillos giroscopicos: ${GEOMETRY.rings.length}`,
+  `nodos de destello: ${GEOMETRY.nodes.length}`,
+  `endpoints ARIA enlazados: ${ELEMENT_CORES.length}`,
+  `blueprints verificados en el arbol: ${BLUEPRINTS.length}`,
+  `sub-skills de Raphael declaradas: ${RAPHAEL_SUB_SKILLS.length}`,
+  "medicion en curso...",
+];
+
 const els = {
   canvas: document.getElementById("nucleus-canvas"),
   rail: document.getElementById("rail"),
@@ -113,6 +134,10 @@ const els = {
   topnav: document.querySelector(".topnav"),
   telemetry: document.getElementById("telemetry"),
   cores: document.getElementById("cores"),
+  skills: document.getElementById("skills-grid"),
+  stageKanji: document.getElementById("stage-kanji"),
+  stageLabel: document.getElementById("stage-label"),
+  stageTrack: document.getElementById("stage-track"),
   pill: document.getElementById("backend-pill"),
   pillLabel: document.getElementById("backend-label"),
   apiBase: document.getElementById("api-base"),
@@ -123,6 +148,8 @@ const els = {
   carPrev: document.getElementById("car-prev"),
   carNext: document.getElementById("car-next"),
   carCount: document.getElementById("car-count"),
+  boot: document.getElementById("boot"),
+  bootLines: document.getElementById("boot-lines"),
   halo: document.querySelector(".cursor-halo"),
   dot: document.querySelector(".cursor-dot"),
 };
@@ -183,6 +210,57 @@ function buildRail() {
 
 /* ---------- reveal ---------- */
 
+/**
+ * Split-letter title, the technique off the buildonaut hangar hero, where every
+ * glyph of "Welcome to the Buildonaut Hangar" is its own inline-block with a
+ * staggered delay. Here the text is split into word spans and only the words
+ * cascade, because 26 letters is a lot of motion for a title nobody asked to
+ * dance. The original string stays in `aria-label`, so screen readers get the
+ * sentence and not the gaps.
+ */
+function buildSplitTitle() {
+  const target = document.querySelector("[data-split]");
+  if (!target) return;
+  const original = target.textContent.trim();
+  const words = original.split(/\s+/);
+  target.textContent = "";
+  target.dataset.split = "done";
+  words.forEach((word, wordIndex) => {
+    const span = document.createElement("span");
+    span.className = "split__word";
+    span.style.setProperty("--i", String(wordIndex));
+    for (const char of word) {
+      const letter = document.createElement("span");
+      letter.className = "split__char";
+      letter.setAttribute("aria-hidden", "true");
+      letter.textContent = char;
+      span.append(letter);
+    }
+    const gap = document.createElement("span");
+    gap.className = "split__gap";
+    gap.setAttribute("aria-hidden", "true");
+    gap.textContent = " ";
+    target.append(span, gap);
+  });
+  target.setAttribute("aria-label", original);
+  if (reducedMotion) target.dataset.split = "static";
+}
+
+/* ---------- compact mode ---------- */
+
+/**
+ * The reference reactor ships `setCompactMode`, which drops its sample counts on
+ * small screens. Same idea here: below 760px the standing wave and the tendrils
+ * sample every other point, and the four lobes stay because they are the shape.
+ */
+function bindCompactMode() {
+  const query = matchMedia("(max-width: 760px)");
+  const apply = () => renderer.setCompactMode(query.matches);
+  if (typeof query.addEventListener === "function") query.addEventListener("change", apply);
+  else query.addListener(apply);
+  apply();
+}
+
 function buildReveal() {
   const targets = document.querySelectorAll(".reveal");
   if (!("IntersectionObserver" in window)) {
@@ -205,7 +283,8 @@ function buildReveal() {
 /* ---------- cursor ---------- */
 
 function buildCursor() {
-  if (reducedMotion || !matchMedia("(pointer: fine)").matches) return;
+  const fine = matchMedia("(pointer: fine)").matches;
+  if (!fine) return;
   let x = innerWidth / 2;
   let y = innerHeight / 2;
   let hx = x;
@@ -217,18 +296,20 @@ function buildCursor() {
     (event) => {
       x = event.clientX;
       y = event.clientY;
-      if (!visible) {
-        visible = true;
-        hx = x;
-        hy = y;
-        els.halo.style.opacity = "0.85";
-        els.dot.style.opacity = "1";
-      }
+      renderer.setPointer((x / innerWidth) * 2 - 1, (y / innerHeight) * 2 - 1);
+      if (visible) return;
+      visible = true;
+      hx = x;
+      hy = y;
+      if (reducedMotion) return;
+      els.halo.style.opacity = "0.85";
+      els.dot.style.opacity = "1";
       document.body.style.cursor = "none";
     },
     { passive: true },
   );
 
+  if (reducedMotion) return;
   const tick = () => {
     hx += (x - hx) * 0.18;
     hy += (y - hy) * 0.18;
@@ -237,6 +318,41 @@ function buildCursor() {
     requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
+}
+
+/**
+ * Boot terminal. The pattern comes from the buildonaut splash, but the copy
+ * refuses to fake telemetry: every line is a count this page can verify.
+ */
+function buildBoot() {
+  if (!els.boot || !els.bootLines || reducedMotion) {
+    if (els.boot) els.boot.remove();
+    return;
+  }
+  let line = 0;
+  let char = 0;
+  const tick = () => {
+    if (line >= BOOT_LINES.length) {
+      els.boot.dataset.done = "true";
+      return;
+    }
+    const text = BOOT_LINES[line];
+    char += 2;
+    if (char >= text.length) {
+      char = text.length;
+      line += 1;
+      els.bootLines.append(`${text}\n`);
+      setTimeout(tick, 90);
+      return;
+    }
+    els.bootLines.textContent = `${BOOT_LINES.slice(0, line).join("\n")}\n${text.slice(0, char)}`;
+    setTimeout(tick, 12);
+  };
+  els.bootLines.textContent = "";
+  setTimeout(tick, 140);
+  setTimeout(() => {
+    els.boot.dataset.done = "true";
+  }, 160 + BOOT_LINES.length * 260);
 }
 
 /* ---------- copy ---------- */
@@ -325,6 +441,92 @@ const STATE_LABEL = { ok: "measured", degraded: "degraded", unavailable: "unavai
 function stateTag(state, dataSource) {
   const key = dataSource === "unavailable" && state === "ok" ? "unavailable" : STATE_LABEL[state] ?? "unavailable";
   return node("span", `tag tag--${key}`, key);
+}
+
+/**
+ * One readable value per sub-skill, all derived from the same probe results the
+ * rest of the page uses. When nothing was measured the value says so instead of
+ * falling back to a placeholder number.
+ */
+function subSkillReadings(data) {
+  const total = data.cores.length;
+  const measured = data.cores.filter((c) => c.data_source === "measured").length;
+  const answering = data.cores.filter((c) => c.state === "ok" || c.state === "degraded");
+  const silent = data.cores.filter((c) => c.state === "unavailable");
+  const latencies = data.cores
+    .map((c) => c.latency_ms)
+    .filter((ms) => typeof ms === "number" && Number.isFinite(ms));
+  const mean = latencies.length
+    ? Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length)
+    : null;
+  return {
+    "thought-acceleration": {
+      value: mean === null ? "—" : `${mean} ms`,
+      note: mean === null
+        ? "sin latencia medida todavia"
+        : `media de ${latencies.length} sondas que respondieron`,
+    },
+    "analytical-appraisal": {
+      value: `${answering.length}/${total}`,
+      note: `${data.cores.filter((c) => c.state === "ok").length} ok · ${
+        data.cores.filter((c) => c.state === "degraded").length
+      } degraded · ${silent.length} unavailable`,
+    },
+    "parallel-calculation": {
+      value: `${total} en paralelo`,
+      note: "las seis sondas salen en el mismo Promise.all, no en serie",
+    },
+    "chant-annulment": {
+      value: silent.length === 0 ? "0 apagados" : `${silent.length} apagado${silent.length === 1 ? "" : "s"}`,
+      note: silent.length === 0
+        ? "todo respondio"
+        : silent.map((c) => c.detail || c.id).join(" · "),
+    },
+    "all-of-creation": {
+      value: `${measured}/${total} anillos`,
+      note: "un anillo del mandala por sonda medida",
+    },
+    alteration: {
+      value: `${measured}/${total}`,
+      note: "sondas con data_source measured",
+    },
+  };
+}
+
+function renderSkills(data) {
+  const readings = subSkillReadings(data);
+  els.skills.replaceChildren();
+  RAPHAEL_SUB_SKILLS.forEach((skill) => {
+    const reading = readings[skill.id] ?? { value: "—", note: "sin lectura" };
+    const card = node("article", "skill");
+    card.dataset.geometry = skill.geometry;
+    card.append(
+      node("p", "skill__kanji", skill.kanji),
+      node("h3", "skill__label", skill.label),
+      node("p", "skill__romaji", skill.romaji),
+    );
+    const foot = node("div", "skill__foot");
+    foot.append(node("b", "skill__value", reading.value), node("span", "skill__note", reading.note));
+    card.append(foot);
+    els.skills.append(card);
+  });
+}
+
+function renderStage(data) {
+  const total = data.cores.length;
+  const measured = data.cores.filter((c) => c.data_source === "measured").length;
+  renderer.setStage(measured, total);
+  const stage = EVOLUTION_CHAIN.find((s) => s.id === renderer.stage) ?? EVOLUTION_CHAIN[0];
+  els.stageKanji.textContent = stage.kanji;
+  els.stageLabel.textContent = stage.label;
+  els.stageTrack.replaceChildren();
+  EVOLUTION_CHAIN.forEach((rung) => {
+    const item = node("li", "stage__rung");
+    item.dataset.reached = String(EVOLUTION_CHAIN.indexOf(rung) <= EVOLUTION_CHAIN.indexOf(stage));
+    item.dataset.current = String(rung.id === stage.id);
+    item.append(node("span", null, rung.kanji), node("b", null, rung.label));
+    els.stageTrack.append(item);
+  });
 }
 
 function renderTelemetry(data) {
@@ -434,13 +636,23 @@ function renderStatusPill(data, rail) {
   els.pill.dataset.state = state;
   els.pillLabel.textContent = label;
   els.measuredAt.textContent = new Date(data.measured_at).toLocaleString();
-  els.footerState.textContent = `${data.base} · ${label} · ${new Date(data.measured_at).toLocaleTimeString()}`;
 
   data.cores.forEach((core) => renderer.setCoreState(core.id, core.state));
   renderer.setVitality(measured / total);
+  const nextState = measured === total ? "online" : measured > 0 ? "degraded" : "unavailable";
+  if (nextState !== renderer.state) renderer.triggerPulse(0.7);
+  renderer.setState(nextState);
+  renderStage(data);
+  renderSkills(data);
+
+  // Read renderer.state only after setState, or the footer reports the state the
+  // nucleus is leaving rather than the one it just entered.
+  els.footerState.textContent = `${data.base} · ${label} · nucleo ${renderer.state} · ${new Date(data.measured_at).toLocaleTimeString()}`;
 
   const accessNode = rail.nodes[SECTIONS.findIndex((section) => section.id === "access")];
   if (accessNode) accessNode.dataset.state = state;
+  const skillsNode = rail.nodes[SECTIONS.findIndex((section) => section.id === "skills")];
+  if (skillsNode) skillsNode.dataset.state = state;
 }
 
 /* ---------- loop ---------- */
@@ -451,6 +663,7 @@ async function refresh(rail) {
   if (inFlight) return;
   inFlight = true;
   els.pill.dataset.state = "probing";
+  renderer.setState("scanning");
   try {
     const data = await readCore(els.apiBase.value.trim() || resolveBase());
     renderTelemetry(data);
@@ -466,9 +679,12 @@ function boot() {
 
   const rail = buildRail();
   buildReveal();
+  buildSplitTitle();
   buildCursor();
   buildCopy();
   buildCarousel();
+  buildBoot();
+  bindCompactMode();
 
   const base = resolveBase();
   els.apiBase.value = base;
@@ -486,6 +702,23 @@ function boot() {
     event.preventDefault();
     els.apiApply.click();
   });
+
+  /*
+   * Public surface. The reference orb is driven from outside through
+   * `window.setBrahmaState` and friends; this HUD now answers to the same shape so
+   * another surface (Electron, a test, the console) can drive the core without
+   * importing anything. `refresh()` re-runs the six probes and is the only way to
+   * change what the HUD claims: the controls can move pixels, never readings.
+   */
+  globalThis.ARIA = {
+    nucleus: renderer.controls(),
+    cores: ELEMENT_CORES,
+    subSkills: RAPHAEL_SUB_SKILLS,
+    refresh: run,
+    get state() {
+      return { nucleus: renderer.state, stage: renderer.stage, base: els.apiBase.value.trim() };
+    },
+  };
 
   run();
   setInterval(run, REFRESH_MS);

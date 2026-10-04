@@ -401,6 +401,79 @@ body::after {
   }
 }
 
+/*
+ * `energy-flicker`, read off the brahma-evo circuit HUD: the telemetry rail does
+ * not fade smoothly, it stutters like a current that is being rectified. Applied
+ * only to the three states that are actually receiving data, because a dead probe
+ * has nothing to flicker about.
+ */
+@keyframes energy-flicker {
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+  38% {
+    opacity: 0.72;
+  }
+  47% {
+    opacity: 0.98;
+  }
+  62% {
+    opacity: 0.66;
+  }
+  71% {
+    opacity: 0.93;
+  }
+}
+
+.telemetry__row[data-state="ok"] .telemetry__led,
+.telemetry__row[data-state="degraded"] .telemetry__led {
+  animation: energy-flicker 4.2s steps(1, end) infinite;
+}
+
+.core-card[data-state="ok"]::after,
+.core-card[data-state="degraded"]::after {
+  animation: energy-flicker 6s steps(1, end) infinite;
+}
+
+/*
+ * Split-letter title, off the buildonaut hangar hero. Words cascade, glyphs stay
+ * inside their word, and the whole thing resolves to plain text when motion is
+ * reduced or the script never runs.
+ */
+.split__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.split__char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em) rotateX(-70deg);
+  transition:
+    opacity 0.42s ease,
+    transform 0.42s cubic-bezier(0.22, 0.85, 0.3, 1);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+[data-split="done"].is-in .split__char,
+.subtitle.is-in .split__char {
+  opacity: 1;
+  transform: none;
+}
+
+[data-split="static"] .split__char,
+[data-split="static"].is-in .split__char {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.split__gap {
+  display: inline-block;
+  width: 0.34em;
+}
+
 /* ---------- sections ---------- */
 
 .section {
@@ -1075,6 +1148,220 @@ h3 {
   color: var(--dim);
 }
 
+/* ---------- boot terminal ---------- */
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: var(--void);
+  transition: opacity 0.45s var(--ease), visibility 0.45s var(--ease);
+}
+
+.boot[data-done="true"] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.boot__lines {
+  margin: 0;
+  max-width: 640px;
+  font-family: var(--mono);
+  font-size: clamp(0.72rem, 1.4vw, 0.92rem);
+  line-height: 2;
+  letter-spacing: 0.04em;
+  color: var(--cyan);
+  white-space: pre-wrap;
+}
+
+.boot__lines::after {
+  content: "▌";
+  color: var(--cyan-soft);
+}
+
+/* ---------- evolution stage ---------- */
+
+.stage {
+  margin: 2.4rem auto 0;
+  padding: 1.1rem 1.3rem 1.2rem;
+  max-width: 520px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-b);
+  text-align: left;
+}
+
+.stage__label {
+  font-family: var(--display);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stage__name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-top: 0.55rem;
+  font-family: var(--display);
+}
+
+.stage__name span:first-child {
+  font-size: 1.35rem;
+  color: var(--cyan);
+  filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.4));
+}
+
+.stage__name span:last-child {
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: 0.24em;
+  color: var(--ink);
+}
+
+.stage__track {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+
+.stage__rung {
+  flex: 1;
+  padding: 0.5rem 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  text-align: center;
+  opacity: 0.4;
+  transition: opacity 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.stage__rung[data-reached="true"] {
+  opacity: 1;
+  border-color: var(--line-strong);
+}
+
+.stage__rung[data-current="true"] {
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px rgba(0, 240, 255, 0.18);
+}
+
+.stage__rung span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  color: var(--cyan);
+}
+
+.stage__rung b {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--display);
+  font-size: 0.52rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+.stage__note {
+  margin-top: 0.85rem;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--dim);
+}
+
+.stage__note code {
+  font-family: var(--mono);
+  color: var(--muted);
+}
+
+/* ---------- raphael sub-skills ---------- */
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.6rem;
+}
+
+.skill {
+  position: relative;
+  padding: 1.1rem 1.15rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-b);
+  overflow: hidden;
+  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.skill::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  opacity: 0.5;
+}
+
+.skill:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-2px);
+}
+
+.skill__kanji {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--cyan);
+  text-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+}
+
+.skill__label {
+  margin-top: 0.55rem;
+  font-family: var(--display);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.skill__romaji {
+  margin-top: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-style: italic;
+  color: var(--dim);
+}
+
+.skill__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.95rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+}
+
+.skill__value {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--cyan);
+}
+
+.skill__note {
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 1100px) {
@@ -1107,6 +1394,18 @@ h3 {
   .telemetry__note {
     grid-column: 2;
   }
+  .stage__track {
+    flex-direction: column;
+  }
+  .stage__rung {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    text-align: left;
+  }
+  .skill__kanji {
+    font-size: 1rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1114,6 +1413,18 @@ h3 {
     scroll-behavior: auto;
   }
   .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .boot {
+    display: none;
+  }
+  .cursor-halo,
+  .cursor-dot {
+    display: none;
+  }
+  .split__char {
     opacity: 1;
     transform: none;
     transition: none;

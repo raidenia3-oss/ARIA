@@ -15,7 +15,11 @@
  *   /api/swarm/roles     -> {server, count, roles:[{role,name,color,icon,...}]}
  *   /api/swarm/agents/*  -> {server, count, agents:[{id,status,color,icon,...}]}
  *   /api/swarm/metrics   -> {server, ...counters}
- *   /api/swarm/status    -> {swarm, orchestrator, self_healing, process_monitor}
+ *   /api/swarm/status    -> a flat map of swarm counters. NOT
+ *                           {swarm, orchestrator, self_healing, process_monitor}:
+ *                           two handlers are registered on that path and the
+ *                           first one wins, so the unified shape is unreachable.
+ *                           The payload is walked generically; see below.
  *
  * Nothing here fabricates a value. A probe that cannot be measured resolves to
  * state "unavailable" with the reason, and the UI renders that reason.
