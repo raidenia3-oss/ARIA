@@ -96,7 +96,11 @@ def _validate_event(ev: Dict[str, Any]) -> Tuple[bool, str]:
 def _coherence_check_via_jan(text: str, work_id: str = "", character_id: str = "") -> Dict[str, Any]:
     """Valida coherencia literaria usando el proveedor Jan local (si está activo).
 
-    Devuelve {'provider': 'jan'|'none', 'pass': bool, 'note': str}.
+    Contrato explicito: distingue "validado" de "no validado".
+      {'provider': 'jan'|'none', 'validated': bool, 'pass': bool|None, 'note': str}
+      - validated=True  -> medicion real; 'pass' es True/False.
+      - validated=False -> no se pudo validar (jan caido/deshabilitado);
+        'pass' es None. El llamador NO debe tratar esto como aprobado.
     """
     try:
         import asyncio
@@ -121,10 +125,20 @@ def _coherence_check_via_jan(text: str, work_id: str = "", character_id: str = "
         ))
         if result and result.get("provider") == "jan":
             verdict = (result.get("message") or "").strip().lower()
-            return {"provider": "jan", "pass": verdict == "coherent", "note": "validated via jan"}
+            return {
+                "provider": "jan",
+                "validated": True,
+                "pass": verdict == "coherent",
+                "note": "validated via jan",
+            }
     except Exception:
         pass
-    return {"provider": "none", "pass": True, "note": "jan not available; skipped validation"}
+    return {
+        "provider": "none",
+        "validated": False,
+        "pass": None,
+        "note": "jan not available; skipped validation",
+    }
 
 
 class AMESyncEngine:
@@ -254,6 +268,7 @@ class AMESyncEngine:
             rejected: List[Dict[str, str]] = []
             log_entries: List[Dict[str, Any]] = []
             coherence_checked = 0
+            coherence_unvalidated = 0
 
             for ev in ordered:
                 valid, reason = _validate_event(ev)
@@ -272,7 +287,12 @@ class AMESyncEngine:
                     text = str(payload.get("content", payload.get("message", "")))
                     verdict = _coherence_check_via_jan(text, work_id, char_id)
                     coherence_checked += 1
-                    if not verdict["pass"]:
+                    if not verdict.get("validated"):
+                        # No pudimos validar (jan caido/deshabilitado). NO es una
+                        # aprobacion: se cuenta aparte para no confundir "no
+                        # validado" con "coherente".
+                        coherence_unvalidated += 1
+                    elif not verdict["pass"]:
                         rejected.append({"eventId": event_id, "reason": "incoherent", "validator": verdict["provider"]})
                         log_entries.append({
                             "eventId": event_id,
@@ -309,6 +329,7 @@ class AMESyncEngine:
                 "skipped": len(skipped),
                 "rejected": len(rejected),
                 "coherence_checked": coherence_checked,
+                "coherence_unvalidated": coherence_unvalidated,
                 "skipped_details": skipped[:20],
                 "rejected_details": rejected[:20],
             }
