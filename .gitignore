@@ -140,3 +140,6 @@ packages/backend/security_state/identities/
 
 # Clave de Mistral para el indexing de Kilo (se lee con {file:...})
 .kilo/mistral_api_key
+
+# Artefactos de las sesiones de navegador (capturas, snapshots, logs)
+.playwright-mcp/
