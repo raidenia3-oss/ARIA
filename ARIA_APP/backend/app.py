@@ -573,6 +573,13 @@ def _get_aria_router():
     if _ARIA_ROUTER is None:
         from backend.ai_router import AIRouter
         _ARIA_ROUTER = AIRouter()
+        # Se sondea aqui, en la construccion, y no en un hook de arranque: el
+        # hook queda registrado pero no llega a ejecutarse, y sondear por request
+        # abriria 9 conexiones TCP en cada peticion.
+        try:
+            _ARIA_ROUTER.prime_health()
+        except Exception:
+            pass
     return _ARIA_ROUTER
 
 
@@ -2783,3 +2790,72 @@ async def pro_continuous_optimize():
         return JSONResponse(await daemon.continuous_optimization())
     except Exception as exc:
         return JSONResponse({"error": str(exc)}, status_code=500)
+
+
+# =============================================================================
+# Permission Engine Endpoints
+# =============================================================================
+
+from pydantic import BaseModel, Field
+
+
+class PermissionApproveRequest(BaseModel):
+    request_id: str = Field(..., min_length=1)
+    token: str = Field(..., min_length=1)
+    approve: bool = True
+
+
+@app.post("/api/permissions/approve")
+async def approve_permission_request(payload: PermissionApproveRequest) -> JSONResponse:
+    """Approve or deny a pending permission request. Requires valid auth token (hmac.compare_digest)."""
+    try:
+        from backend.permissions import get_permission_engine
+        engine = get_permission_engine()
+        success, message = engine.approve_request(payload.request_id, payload.token, payload.approve)
+        if not success:
+            return JSONResponse({"success": False, "message": message}, status_code=400)
+        return JSONResponse({"success": True, "message": message})
+    except Exception as exc:
+        return JSONResponse({"success": False, "message": str(exc)}, status_code=500)
+
+
+@app.get("/api/permissions/pending")
+async def list_pending_permissions() -> JSONResponse:
+    """List all pending permission requests."""
+    try:
+        from backend.permissions import get_permission_engine
+        import time
+        engine = get_permission_engine()
+        with engine._ask_lock:
+            pending = [
+                {
+                    "request_id": req.request_id,
+                    "tool": req.tool,
+                    "risk": req.risk,
+                    "args_canonical": req.args_canonical,
+                    "created_at": req.created_at,
+                    "expires_at": req.expires_at,
+                }
+                for req in engine._ask_requests.values()
+                if not req.decided and req.expires_at > time.time()
+            ]
+        return JSONResponse({"pending": pending, "count": len(pending)})
+    except Exception as exc:
+        return JSONResponse({"pending": [], "count": 0, "error": str(exc)}, status_code=500)
+
+
+@app.get("/api/permissions/audit")
+async def permission_audit() -> JSONResponse:
+    """Get permission audit log (no secrets)."""
+    try:
+        from backend.permissions import get_permission_engine
+        engine = get_permission_engine()
+        return JSONResponse(engine.audit())
+    except Exception as exc:
+        return JSONResponse({"error": str(exc)}, status_code=500)
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)

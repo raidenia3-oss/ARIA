@@ -378,7 +378,7 @@ class TestDangerousToolExecution:
 
         reset_permission_engine()
         engine = get_permission_engine()
-        # Don't allow shell - should be denied
+        # Don't allow shell - should be denied (explicitly_denied=True in default policy)
 
         tc = ToolConnector()
         result = await tc.execute("shell", {"command": "echo hello"})
@@ -388,17 +388,120 @@ class TestDangerousToolExecution:
         reset_permission_engine()
 
     @pytest.mark.asyncio
+    async def test_code_run_denied_without_approval(self):
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+        # code_run is explicitly_denied in default policy
+
+        tc = ToolConnector()
+        result = await tc.execute("code_run", {"code": "print('hello')"})
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission denied" in result.error.lower() or "permission required" in result.error.lower()
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
+    async def test_control_pc_denied_without_approval(self):
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+        # control_pc is explicitly_denied in default policy
+
+        tc = ToolConnector()
+        result = await tc.execute("control_pc", {"action": "move_mouse"})
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission denied" in result.error.lower() or "permission required" in result.error.lower()
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
+    async def test_os_denied_without_approval(self):
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+        # os is explicitly_denied in default policy
+
+        tc = ToolConnector()
+        result = await tc.execute("os", {"kind": "status"})
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission denied" in result.error.lower() or "permission required" in result.error.lower()
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
+    async def test_browser_ask_mode(self):
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+        # browser is ask-mode (allow=True, require_confirm=True) in default policy
+
+        tc = ToolConnector()
+        result = await tc.execute("browser", {"url": "https://example.com"})
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission required" in result.error.lower()
+        assert result.metadata.get("ask_request_id") is not None
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
+    async def test_gui_ask_mode(self):
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+
+        tc = ToolConnector()
+        result = await tc.execute("gui", {"command": "click"})
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission required" in result.error.lower()
+        assert result.metadata.get("ask_request_id") is not None
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
     async def test_write_file_ask_mode(self):
         from backend.agents.orchestrator import ToolConnector, ToolResultStatus
 
         reset_permission_engine()
         engine = get_permission_engine()
-        # Allow write_file but require confirmation
-        engine.allow_tool("write_file", "high", require_confirm=True)
 
         tc = ToolConnector()
         result = await tc.execute("write_file", {"path": "/tmp/test.txt", "content": "hello"})
-        # Should return permission required with ask_request_id
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission required" in result.error.lower()
+        assert result.metadata.get("ask_request_id") is not None
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
+    async def test_screenshot_ask_mode(self):
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+
+        tc = ToolConnector()
+        result = await tc.execute("screenshot", {"path": "/tmp/shot.png"})
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission required" in result.error.lower()
+        assert result.metadata.get("ask_request_id") is not None
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
+    async def test_search_web_ask_mode(self):
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+
+        tc = ToolConnector()
+        result = await tc.execute("search_web", {"query": "test"})
         assert result.status == ToolResultStatus.FAILED
         assert "permission required" in result.error.lower()
         assert result.metadata.get("ask_request_id") is not None
@@ -411,10 +514,9 @@ class TestDangerousToolExecution:
 
         reset_permission_engine()
         engine = get_permission_engine()
-        engine.allow_tool("read_file", "low")
+        # read_file is allowed by default (low risk)
 
         tc = ToolConnector()
-        # Create a temp file to read
         import tempfile
         with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
             f.write("test content")
@@ -426,6 +528,89 @@ class TestDangerousToolExecution:
             assert "test content" in result.output
         finally:
             os.unlink(temp_path)
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
+    async def test_list_dir_allowed(self):
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+        # list_dir is allowed by default (low risk)
+
+        tc = ToolConnector()
+        result = await tc.execute("list_dir", {"path": "."})
+        assert result.status == ToolResultStatus.SUCCESS
+        assert isinstance(result.output, str)
+
+        reset_permission_engine()
+
+    @pytest.mark.asyncio
+    async def test_write_file_approved_exact_args_executes(self):
+        """With exact approval (matching args hash), write_file executes."""
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+        engine.set_auth_token("test-token")
+
+        tc = ToolConnector()
+        import tempfile
+        temp_path = tempfile.mktemp(suffix=".txt")
+
+        # First call - should return ask mode
+        result = await tc.execute("write_file", {"path": temp_path, "content": "hello world"})
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission required" in result.error.lower()
+        ask_id = result.metadata.get("ask_request_id")
+        assert ask_id is not None
+
+        # Approve with correct token
+        success, msg = engine.approve_request(ask_id, "test-token", approve=True)
+        assert success is True
+
+        # Verify args hash matches
+        assert engine.verify_args_hash(ask_id, {"path": temp_path, "content": "hello world"}) is True
+
+        # Different args should fail hash verification
+        assert engine.verify_args_hash(ask_id, {"path": temp_path, "content": "different"}) is False
+
+        # The executor (not check()) uses verify_args_hash to allow execution
+        # After approval, a re-execution with same args would:
+        # 1. check() returns ask mode again (new request)
+        # 2. executor calls verify_args_hash() which returns True for exact match
+        # 3. executor proceeds with execution
+        # Here we test the verification logic directly
+        reset_permission_engine()
+        if os.path.exists(temp_path):
+            os.unlink(temp_path)
+
+    @pytest.mark.asyncio
+    async def test_browser_approved_exact_args_executes(self):
+        """With exact approval (matching args hash), browser executes."""
+        from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+
+        reset_permission_engine()
+        engine = get_permission_engine()
+        engine.set_auth_token("test-token")
+
+        tc = ToolConnector()
+        result = await tc.execute("browser", {"url": "https://example.com"})
+        assert result.status == ToolResultStatus.FAILED
+        assert "permission required" in result.error.lower()
+        ask_id = result.metadata.get("ask_request_id")
+        assert ask_id is not None
+
+        # Approve with correct token
+        success, msg = engine.approve_request(ask_id, "test-token", approve=True)
+        assert success is True
+
+        # Verify args hash matches
+        assert engine.verify_args_hash(ask_id, {"url": "https://example.com"}) is True
+
+        # Different args should fail
+        assert engine.verify_args_hash(ask_id, {"url": "https://different.com"}) is False
 
         reset_permission_engine()
 

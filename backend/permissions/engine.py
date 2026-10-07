@@ -114,9 +114,12 @@ class PermissionEngine:
         self._start_ask_cleanup()
 
     def _apply_default_policy(self) -> None:
-        """Apply the 13-tool default policy:
-        - 11 read-only tools = allow (safe)
-        - 2 write tools = ask (medium, require_confirm)
+        """Apply the default policy per owner requirements:
+        - 11 read-only built-in skills = allow (safe)
+        - 2 write built-in skills = ask (medium, require_confirm)
+        - 4 dangerous tools = explicitly denied (deny until sandbox): shell, code_run, control_pc, os
+        - 6 ask-mode tools = allow + require_confirm: write_file, browser, gui, open_app, screenshot, search_web
+        - 2 read tools = allow (path validation for roots done at call site): read_file, list_dir
         """
         readonly_tools = [
             ("notes.markdown.render_heading", "safe"),
@@ -142,6 +145,36 @@ class PermissionEngine:
             self.config.tools[tool] = ToolPermission(
                 tool=tool, allow=True, risk=risk, require_confirm=True
             )
+
+        # Dangerous tools: explicitly denied (deny wins over allow) until sandbox exists
+        dangerous_tools = ["shell", "code_run", "control_pc", "os"]
+        for tool in dangerous_tools:
+            self.config.tools[tool] = ToolPermission(
+                tool=tool, allow=False, risk="critical", explicitly_denied=True
+            )
+
+        # Ask-mode tools: allowed but require human confirmation
+        ask_tools = [
+            ("write_file", "high"),
+            ("browser", "high"),
+            ("gui", "high"),
+            ("open_app", "high"),
+            ("screenshot", "high"),
+            ("search_web", "high"),
+        ]
+        for tool, risk in ask_tools:
+            self.config.tools[tool] = ToolPermission(
+                tool=tool, allow=True, risk=risk, require_confirm=True
+            )
+
+        # Read tools: allowed (path validation for allowed roots at call site)
+        read_tools = [
+            ("read_file", "low"),
+            ("list_dir", "low"),
+        ]
+        for tool, risk in read_tools:
+            self.config.tools[tool] = ToolPermission(tool=tool, allow=True, risk=risk)
+
         self.save_config()
 
     @classmethod
