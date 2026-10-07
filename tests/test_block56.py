@@ -24,6 +24,28 @@ from backend.agents.tools_registry import (
     tool_registry,
 )
 from backend.main import app
+from backend.permissions import get_permission_engine, reset_permission_engine
+
+
+def _allow_sandbox_tools():
+    """Configure permission engine to allow sandbox test tools."""
+    engine = get_permission_engine()
+    for name in ("t.ok", "t.typed", "t.bool", "t.boom", "t.slow", "t.weird", "t.async"):
+        engine.allow_tool(name, "safe")
+
+
+def _allow_builtin_tools():
+    """Configure permission engine to allow built-in tools."""
+    engine = get_permission_engine()
+    builtin_tools = [
+        "notes.local.write", "notes.markdown.render_heading", "notes.sys.timestamp",
+        "numeric.compute.average", "numeric.compute.clamp", "numeric.compute.percent",
+        "research.engine.status", "research.missions.get", "research.missions.list",
+        "research.missions.start", "text.utils.count_words", "text.utils.slugify",
+        "text.utils.split_lines"
+    ]
+    for name in builtin_tools:
+        engine.allow_tool(name, "safe")
 
 # ---------------------------------------------------------------- registro ----
 
@@ -117,6 +139,13 @@ def _sandbox_registry():
 
 
 class TestSandboxIsolation:
+    @pytest.fixture(autouse=True)
+    def _setup_permissions(self):
+        reset_permission_engine()
+        _allow_sandbox_tools()
+        yield
+        reset_permission_engine()
+
     @pytest.mark.asyncio
     async def test_executes_registered_tool(self):
         reg = _sandbox_registry()
@@ -196,6 +225,13 @@ class TestSandboxIsolation:
 
 
 class TestOrchestratorIntegration:
+    @pytest.fixture(autouse=True)
+    def _setup_permissions(self):
+        reset_permission_engine()
+        _allow_builtin_tools()
+        yield
+        reset_permission_engine()
+
     @pytest.mark.asyncio
     async def test_toolconnector_falls_back_to_dynamic_registry(self):
         from backend.agents.orchestrator import ToolConnector, ToolResultStatus
@@ -212,7 +248,8 @@ class TestOrchestratorIntegration:
 
         res = await ToolConnector().execute("definitivamente.no.existe", {})
         assert res.status == ToolResultStatus.FAILED
-        assert "unknown tool" in res.error
+        # Permission check runs first (fail-closed), so unknown tools are denied by permission engine
+        assert "permission denied" in res.error.lower() or "unknown tool" in res.error.lower()
 
 
 # ---------------------------------------------------------------------- REST --
@@ -222,10 +259,13 @@ class TestOrchestratorIntegration:
 def client(monkeypatch):
     monkeypatch.delenv("AURA_API_KEY", raising=False)
     reset_tools_registry()
+    reset_permission_engine()
+    _allow_builtin_tools()
     from backend.main import app
 
     yield TestClient(app)
     reset_tools_registry()
+    reset_permission_engine()
 
 
 class TestToolsREST:

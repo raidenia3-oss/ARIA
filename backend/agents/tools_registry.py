@@ -14,13 +14,29 @@ import importlib.util
 import inspect
 import json
 import logging
+import os
 import time
+from collections import deque
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Deque, Dict, List, Optional
 
 logger = logging.getLogger("AURA.Agent.ToolsRegistry")
+
+# Permission engine integration
+try:
+    from backend.permissions import get_permission_engine
+except Exception:  # pragma: no cover
+    get_permission_engine = None
+
+# Limite de tasa por herramienta, ventana deslizante. entry.calls es un total
+# desde el arranque y no puede expresar "N por ventana": un agente que dispara
+# 500 llamadas en un minuto y otro que las reparte en una hora son
+# indistinguibles con un contador acumulado. Las marcas de tiempo viven en el
+# sandbox. Poner AURA_TOOL_RATE_LIMIT<=0 desactiva el limite.
+TOOL_RATE_LIMIT = int(os.environ.get("AURA_TOOL_RATE_LIMIT", "120"))
+TOOL_RATE_WINDOW = float(os.environ.get("AURA_TOOL_RATE_WINDOW", "60"))
 
 # Conversores de tipos para argumentos tipados (function-calling).
 TYPE_CONVERTERS: Dict[str, Callable[[Any], Any]] = {
@@ -85,6 +101,35 @@ class SkillExecutionSandbox:
 
     def __init__(self, registry: "DynamicToolRegistry") -> None:
         self.registry = registry
+        self._windows: Dict[str, Deque[float]] = {}
+        self._rejected: Dict[str, int] = {}
+
+    def _rate_limit_reason(self, name: str) -> Optional[str]:
+        """Sliding-window guard. Devuelve el motivo si la herramienta excedio el presupuesto.
+
+        Una llamada rechazada no se registra en la ventana: nunca llego a la
+        herramienta, asi que cobrarla solo serviria para que un bucle la tenga
+        ocupada igual. El conteo de rechazos va aparte para que el limite sea
+        observable en vez de fallar en silencio.
+        """
+        if TOOL_RATE_LIMIT <= 0:
+            return None
+        now = time.monotonic()
+        window = self._windows.setdefault(name, deque())
+        while window and now - window[0] >= TOOL_RATE_WINDOW:
+            window.popleft()
+        if len(window) >= TOOL_RATE_LIMIT:
+            self._rejected[name] = self._rejected.get(name, 0) + 1
+            return (
+                f"rate limit: '{name}' supero {TOOL_RATE_LIMIT} llamadas "
+                f"en {TOOL_RATE_WINDOW:g}s"
+            )
+        window.append(now)
+        return None
+
+    def rate_limit_state(self) -> Dict[str, int]:
+        """Llamadas rechazadas por limite de tasa, por herramienta."""
+        return dict(self._rejected)
 
     def _coerce_args(self, entry: ToolEntry, params: Dict[str, Any]) -> Dict[str, Any]:
         props = (entry.parameters or {}).get("properties", {})
@@ -120,6 +165,13 @@ class SkillExecutionSandbox:
         timeout: float = 30.0,
     ) -> Dict[str, Any]:
         start = time.perf_counter()
+        limit_error = self._rate_limit_reason(entry.name)
+        if limit_error is not None:
+            entry.last_error = limit_error
+            return {
+                "success": False, "tool": entry.name, "output": None,
+                "error": limit_error, "duration_ms": (time.perf_counter() - start) * 1000.0,
+            }
         try:
             kwargs = self._coerce_args(entry, dict(params or {}))
         except ValueError as exc:
@@ -293,6 +345,11 @@ class DynamicToolRegistry:
             "scripts_dir": str(self.scripts_dir),
             "tools_total": len(self._entries),
             "tools": self.list_tools(),
+            "rate_limit": {
+                "limit": TOOL_RATE_LIMIT,
+                "window_s": TOOL_RATE_WINDOW,
+                "rejected": self.sandbox.rate_limit_state(),
+            },
             "recent_events": list(self._audit[-20:]),
         }
 
@@ -300,6 +357,45 @@ class DynamicToolRegistry:
         entry = self._entries.get(name)
         if not entry:
             return {"success": False, "tool": name, "output": None, "error": f"unknown tool: {name}", "duration_ms": 0.0}
+
+        # Permission check (fail-closed)
+        if get_permission_engine:
+            try:
+                engine = get_permission_engine()
+                allowed, reason, request_id = engine.check(name, entry.risk, params)
+                if not allowed:
+                    if request_id:
+                        # ASK mode: wait for human approval
+                        self._log("permission_ask", {"tool": name, "request_id": request_id, "reason": reason})
+                        approved, deny_reason = engine.wait_for_approval(request_id, timeout=min(timeout, 120.0))
+                        if not approved:
+                            self._log("permission_denied", {"tool": name, "request_id": request_id, "reason": deny_reason})
+                            return {
+                                "success": False, "tool": name, "output": None,
+                                "error": f"permission denied: {deny_reason}", "duration_ms": 0.0,
+                            }
+                        # Approved - verify args hash still matches (single-use)
+                        if not engine.verify_args_hash(request_id, params):
+                            self._log("permission_denied", {"tool": name, "request_id": request_id, "reason": "args mismatch after approval"})
+                            return {
+                                "success": False, "tool": name, "output": None,
+                                "error": "permission denied: arguments changed after approval", "duration_ms": 0.0,
+                            }
+                    else:
+                        # Hard deny
+                        self._log("permission_denied", {"tool": name, "reason": reason})
+                        return {
+                            "success": False, "tool": name, "output": None,
+                            "error": f"permission denied: {reason}", "duration_ms": 0.0,
+                        }
+            except Exception as exc:
+                logger.warning("Permission check failed for %s: %s", name, exc)
+                # Fail-closed: deny on permission system failure
+                return {
+                    "success": False, "tool": name, "output": None,
+                    "error": f"permission system error: {exc}", "duration_ms": 0.0,
+                }
+
         return await self.sandbox.execute(entry, params, timeout)
 
     def _log(self, event: str, payload: Dict[str, Any]) -> None:

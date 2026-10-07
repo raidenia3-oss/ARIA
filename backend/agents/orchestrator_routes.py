@@ -6,12 +6,14 @@ import asyncio
 import json
 import logging
 import os
+import time
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 
 from backend.agents.orchestrator import TaskStatus, VibeCodingOrchestrator, vibe_orchestrator
+from backend.permissions import get_permission_engine
 
 logger = logging.getLogger("AURA.Agent.Orchestrator.Routes")
 
@@ -186,3 +188,56 @@ async def agent_stream_ws(websocket: WebSocket) -> None:
                 await websocket.send_json({"event": "ack", "received": data})
     except WebSocketDisconnect:
         pass
+
+
+class ApproveRequest(BaseModel):
+    request_id: str = Field(..., min_length=1)
+    token: str = Field(..., min_length=1)
+    approve: bool = True
+
+
+@router.post("/permissions/approve")
+async def approve_permission_request(
+    payload: ApproveRequest,
+    x_api_key: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Approve or deny a pending permission request. Requires valid auth token."""
+    _check_api_key(x_api_key)
+    engine = get_permission_engine()
+    success, message = engine.approve_request(payload.request_id, payload.token, payload.approve)
+    if not success:
+        raise HTTPException(status_code=400, detail=message)
+    return {"success": True, "message": message}
+
+
+@router.get("/permissions/pending")
+async def list_pending_permissions(
+    x_api_key: Optional[str] = None,
+) -> Dict[str, Any]:
+    """List all pending permission requests."""
+    _check_api_key(x_api_key)
+    engine = get_permission_engine()
+    with engine._ask_lock:
+        pending = [
+            {
+                "request_id": req.request_id,
+                "tool": req.tool,
+                "risk": req.risk,
+                "args_canonical": req.args_canonical,
+                "created_at": req.created_at,
+                "expires_at": req.expires_at,
+            }
+            for req in engine._ask_requests.values()
+            if not req.decided and req.expires_at > time.time()
+        ]
+    return {"pending": pending, "count": len(pending)}
+
+
+@router.get("/permissions/audit")
+async def permission_audit(
+    x_api_key: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Get permission audit log (no secrets)."""
+    _check_api_key(x_api_key)
+    engine = get_permission_engine()
+    return engine.audit()

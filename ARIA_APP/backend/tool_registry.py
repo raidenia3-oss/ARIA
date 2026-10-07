@@ -7,9 +7,17 @@ import subprocess
 import json
 import os
 import time
+import sys
 from typing import Any, Dict, List, Optional, Callable, Tuple
 from dataclasses import dataclass, field
 from pathlib import Path
+
+# Permission engine integration
+try:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+    from backend.permissions import get_permission_engine
+except Exception:
+    get_permission_engine = None
 
 
 @dataclass
@@ -37,10 +45,68 @@ TOOL_TAG_RE = re.compile(r"\[TOOL:(\w+)\]\s*\{([^}]*)\}", re.IGNORECASE)
 class ToolRegistry:
     """Maps AI-generated [TOOL:name]{params} tags to Python handlers."""
 
+    # Tool -> risk mapping for permission checks
+    TOOL_RISK = {
+        "shell": "critical",
+        "code_run": "critical",
+        "control_pc": "critical",
+        "os": "critical",
+        "write_file": "high",
+        "browser": "high",
+        "gui": "high",
+        "open_app": "high",
+        "screenshot": "high",
+        "search_web": "high",
+        "read_file": "low",
+        "list_dir": "low",
+        "explorer": "low",
+        "system_info": "safe",
+        "vision": "medium",
+    }
+
     def __init__(self) -> None:
         self._tools: Dict[str, ToolDef] = {}
         self._history: List[Dict[str, Any]] = []
         self._safety = True  # safety filter enabled
+
+    def _check_permission(self, tool_name: str, params: Dict[str, Any]) -> Optional[ToolResult]:
+        """Check permission for tool execution. Returns ToolResult if denied, None if allowed."""
+        if get_permission_engine is None:
+            return None  # Permission engine not available, skip check
+        try:
+            engine = get_permission_engine()
+            risk = self.TOOL_RISK.get(tool_name.lower(), "safe")
+            allowed, reason, request_id = engine.check(tool_name.lower(), risk, params)
+            if not allowed:
+                if request_id:
+                    # ASK mode - return requires_confirmation
+                    return ToolResult(
+                        tool_name=tool_name,
+                        success=False,
+                        error=f"permission required: {reason}",
+                        output=json.dumps({
+                            "requires_confirmation": True,
+                            "tool": tool_name,
+                            "params": params,
+                            "ask_request_id": request_id,
+                            "risk": risk,
+                        }),
+                    )
+                else:
+                    # Hard deny
+                    return ToolResult(
+                        tool_name=tool_name,
+                        success=False,
+                        error=f"permission denied: {reason}",
+                    )
+        except Exception as exc:
+            # Fail-closed: deny on permission system failure
+            return ToolResult(
+                tool_name=tool_name,
+                success=False,
+                error=f"permission system error: {exc}",
+            )
+        return None
 
     def register(self, name: str, description: str, category: str,
                  handler: Callable, parameters: List[str] = None,
@@ -93,7 +159,12 @@ class ToolRegistry:
 
         params = self._parse_params(params_raw, tool.parameters)
 
-        # Safety check for dangerous tools
+        # Permission engine check (fail-closed) - runs BEFORE legacy safety checks
+        perm_result = self._check_permission(tool_name, params)
+        if perm_result is not None:
+            return perm_result
+
+        # Safety check for dangerous tools (legacy)
         if tool.danger_level == "dangerous" and self._safety:
             return ToolResult(tool_name=tool_name, success=False,
                               error=f"Herramienta peligrosa bloqueada: {tool_name}. "
