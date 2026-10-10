@@ -138,32 +138,41 @@ class ToolConnector:
         return self._screen
 
     async def execute(self, tool: str, params: Dict[str, Any]) -> ToolResult:
+        # Permission check (fail-closed)
+        perm_result = self._check_permission(tool, params)
+        if perm_result is not None:
+            return perm_result
+
         start = time.perf_counter()
         try:
+            result = None
             if tool == "shell":
-                return await self._shell_action(params)
-            if tool == "read_file":
-                return self._read_file(params)
-            if tool == "write_file":
-                return self._write_file(params)
-            if tool == "list_dir":
-                return self._list_dir(params)
-            if tool == "os":
-                return await self._os_action(params)
-            if tool == "gui":
-                return await self._gui_action(params)
-            if tool == "browser":
-                return await self._browser_action(params)
-            if tool == "vision":
-                return await self._vision_action(params)
-            # Bloque 56: fall back to the dynamic skill registry for custom tools.
-            registry = self._get_registry()
-            if registry is not None and registry.has(tool):
-                return await self._registry_action(tool, params)
-            return ToolResult(tool=tool, status=ToolResultStatus.FAILED, error=f"unknown tool: {tool}")
+                result = await self._shell_action(params)
+            elif tool == "read_file":
+                result = self._read_file(params)
+            elif tool == "write_file":
+                result = self._write_file(params)
+            elif tool == "list_dir":
+                result = self._list_dir(params)
+            elif tool == "os":
+                result = await self._os_action(params)
+            elif tool == "gui":
+                result = await self._gui_action(params)
+            elif tool == "browser":
+                result = await self._browser_action(params)
+            elif tool == "vision":
+                result = await self._vision_action(params)
+            else:
+                registry = self._get_registry()
+                if registry is not None and registry.has(tool):
+                    result = await self._registry_action(tool, params)
+                else:
+                    return ToolResult(tool=tool, status=ToolResultStatus.FAILED, error=f"unknown tool: {tool}")
+            if isinstance(result, ToolResult):
+                return result
+            return ToolResult(tool=tool, status=ToolResultStatus.FAILED, error=f"tipo de retorno invalido: {type(result).__name__}")
         finally:
             pass
-
     async def _registry_action(self, tool: str, params: Dict[str, Any]) -> ToolResult:
         start = time.perf_counter()
         registry = self._get_registry()
