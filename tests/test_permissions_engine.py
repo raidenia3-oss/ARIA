@@ -515,15 +515,13 @@ class TestDangerousToolExecution:
 
     @pytest.fixture(autouse=True)
     def _fs_roots(self, tmp_path, monkeypatch):
-        """HUECO 1F: default FS_ROOTS is ONLY the AURA data folder. Tests that
-        need to read/write outside it must opt in by setting ARIA_FS_ROOTS
-        explicitly (here: the pytest tmp_path so the temp file is reachable).
-
-        FS_ROOTS is a module-level constant in backend.permissions.engine, so
-        we patch it in place here (the engine reads it at check time, not at
-        import time)."""
-        import backend.permissions.engine as _eng
-        monkeypatch.setattr(_eng, "FS_ROOTS", [tmp_path])
+        import os
+        monkeypatch.setenv("ARIA_FS_ROOTS", str(tmp_path))
+        try:
+            from backend.permissions import reset_permission_engine
+            reset_permission_engine()
+        except Exception:
+            pass
         yield
 
     @pytest.mark.asyncio

@@ -12,6 +12,7 @@ Adopted from tama96 (MIT) and coucou (MIT, Mochi character excluded):
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
 import logging
 import os
@@ -53,6 +54,7 @@ class PermissionConfig:
     tools: Dict[str, ToolPermission] = field(default_factory=dict)
     risk_threshold: str = "medium"  # Tools above this require confirm
     global_rate_limit: Optional[int] = None  # calls per minute across all tools
+    auth_token_hash: Optional[str] = None  # sha256 hash of auth token for approve/deny
 
     def get_tool_perm(self, tool: str) -> ToolPermission:
         return self.tools.get(tool, ToolPermission(tool=tool))
@@ -102,11 +104,78 @@ class PermissionEngine:
 
     def __init__(self, config: Optional[PermissionConfig] = None):
         self.config = config or self._load_config()
+        # Apply default policy if no tools configured
+        if not self.config.tools:
+            self._apply_default_policy()
         self._call_counts: Dict[str, List[float]] = {}
         self._ask_requests: Dict[str, AskRequest] = {}
         self._ask_lock = threading.RLock()
         self._load_ask_store()
         self._start_ask_cleanup()
+
+    def _apply_default_policy(self) -> None:
+        """Apply the default policy per owner requirements:
+        - 11 read-only built-in skills = allow (safe)
+        - 2 write built-in skills = ask (medium, require_confirm)
+        - 4 dangerous tools = explicitly denied (deny until sandbox): shell, code_run, control_pc, os
+        - 6 ask-mode tools = allow + require_confirm: write_file, browser, gui, open_app, screenshot, search_web
+        - 2 read tools = allow (path validation for roots done at call site): read_file, list_dir
+        """
+        readonly_tools = [
+            ("notes.markdown.render_heading", "safe"),
+            ("notes.sys.timestamp", "safe"),
+            ("numeric.compute.average", "safe"),
+            ("numeric.compute.clamp", "safe"),
+            ("numeric.compute.percent", "safe"),
+            ("research.engine.status", "safe"),
+            ("research.missions.get", "safe"),
+            ("research.missions.list", "safe"),
+            ("text.utils.count_words", "safe"),
+            ("text.utils.slugify", "safe"),
+            ("text.utils.split_lines", "safe"),
+        ]
+        for tool, risk in readonly_tools:
+            self.config.tools[tool] = ToolPermission(tool=tool, allow=True, risk=risk)
+
+        write_tools = [
+            ("notes.local.write", "medium"),
+            ("research.missions.start", "medium"),
+        ]
+        for tool, risk in write_tools:
+            self.config.tools[tool] = ToolPermission(
+                tool=tool, allow=True, risk=risk, require_confirm=True
+            )
+
+        # Dangerous tools: explicitly denied (deny wins over allow) until sandbox exists
+        dangerous_tools = ["shell", "code_run", "control_pc", "os"]
+        for tool in dangerous_tools:
+            self.config.tools[tool] = ToolPermission(
+                tool=tool, allow=False, risk="critical", explicitly_denied=True
+            )
+
+        # Ask-mode tools: allowed but require human confirmation
+        ask_tools = [
+            ("write_file", "high"),
+            ("browser", "high"),
+            ("gui", "high"),
+            ("open_app", "high"),
+            ("screenshot", "high"),
+            ("search_web", "high"),
+        ]
+        for tool, risk in ask_tools:
+            self.config.tools[tool] = ToolPermission(
+                tool=tool, allow=True, risk=risk, require_confirm=True
+            )
+
+        # Read tools: allowed (path validation for allowed roots at call site)
+        read_tools = [
+            ("read_file", "low"),
+            ("list_dir", "low"),
+        ]
+        for tool, risk in read_tools:
+            self.config.tools[tool] = ToolPermission(tool=tool, allow=True, risk=risk)
+
+        self.save_config()
 
     @classmethod
     def _load_config(cls) -> PermissionConfig:
@@ -121,6 +190,7 @@ class PermissionEngine:
                     default_allow=data.get("default_allow", False),
                     risk_threshold=data.get("risk_threshold", "medium"),
                     global_rate_limit=data.get("global_rate_limit"),
+                    auth_token_hash=data.get("auth_token_hash"),
                     tools={
                         name: ToolPermission(
                             tool=name,
@@ -146,6 +216,7 @@ class PermissionEngine:
             "default_allow": self.config.default_allow,
             "risk_threshold": self.config.risk_threshold,
             "global_rate_limit": self.config.global_rate_limit,
+            "auth_token_hash": self.config.auth_token_hash,
             "tools": {
                 name: {
                     "allow": perm.allow,
@@ -269,8 +340,13 @@ class PermissionEngine:
         Approve or deny a pending request. Requires valid auth token.
         Returns: (success, message)
         """
-        # Verify token (hash stored for audit, never plaintext)
-        token_hash = hashlib.sha256(token.encode()).hexdigest()[:16]
+        # Verify token against stored hash using constant-time comparison
+        if self.config.auth_token_hash is None:
+            return False, "no auth token configured (set auth_token_hash in config)"
+        provided_hash = hashlib.sha256(token.encode()).hexdigest()
+        if not hmac.compare_digest(self.config.auth_token_hash, provided_hash):
+            logger.warning("Invalid auth token provided for request %s", request_id)
+            return False, "invalid auth token"
 
         with self._ask_lock:
             req = self._ask_requests.get(request_id)
@@ -284,11 +360,12 @@ class PermissionEngine:
             req.decided = True
             req.decision = approve
             req.decided_at = time.time()
-            req.decided_by = token_hash
+            # Store truncated hash for audit (never plaintext)
+            req.decided_by = provided_hash[:16]
             self._save_ask_store()
 
         action = "approved" if approve else "denied"
-        logger.info("ASK request %s %s by token=%s", request_id, action, token_hash)
+        logger.info("ASK request %s %s by token=%s", request_id, action, provided_hash[:16])
         return True, f"request {action}"
 
     def get_ask_request(self, request_id: str) -> Optional[Dict[str, Any]]:
@@ -396,6 +473,12 @@ class PermissionEngine:
         self.save_config()
         logger.warning("PERMISSION KILL SWITCH %s", "ENABLED" if enabled else "DISABLED")
 
+    def set_auth_token(self, token: str) -> None:
+        """Set the auth token for approve/deny operations. Stores sha256 hash."""
+        self.config.auth_token_hash = hashlib.sha256(token.encode()).hexdigest()
+        self.save_config()
+        logger.warning("AUTH TOKEN UPDATED (hash stored)")
+
     def get_effective_permissions(self) -> Dict[str, Any]:
         """Get effective permissions for UI/debugging."""
         return {
@@ -403,6 +486,7 @@ class PermissionEngine:
             "default_allow": self.config.default_allow,
             "risk_threshold": self.config.risk_threshold,
             "global_rate_limit": self.config.global_rate_limit,
+            "auth_token_configured": self.config.auth_token_hash is not None,
             "tools": {
                 name: {
                     "allow": perm.allow,
