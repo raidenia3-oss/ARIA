@@ -192,37 +192,45 @@ class ToolConnector:
         return self._screen
 
     async def execute(self, tool: str, params: Dict[str, Any]) -> ToolResult:
-        # Permission check (fail-closed)
+        # Permission check (fail-closed). check() returns ask mode with a
+        # request_id the first time; after the human approves via the HTTP
+        # endpoint, re-calling execute() with the SAME args lets check() honour
+        # that approval (single-use) and proceed to the real handler. Different
+        # args or a reused request_id are never honoured.
         perm_result = self._check_permission(tool, params)
         if perm_result is not None:
             return perm_result
 
         start = time.perf_counter()
         try:
+            result = None
             if tool == "shell":
-                return await self._shell_action(params)
-            if tool == "read_file":
-                return self._read_file(params)
-            if tool == "write_file":
-                return self._write_file(params)
-            if tool == "list_dir":
-                return self._list_dir(params)
-            if tool == "os":
-                return await self._os_action(params)
-            if tool == "gui":
-                return await self._gui_action(params)
-            if tool == "browser":
-                return await self._browser_action(params)
-            if tool == "vision":
-                return await self._vision_action(params)
-            # Bloque 56: fall back to the dynamic skill registry for custom tools.
-            registry = self._get_registry()
-            if registry is not None and registry.has(tool):
-                return await self._registry_action(tool, params)
-            return ToolResult(tool=tool, status=ToolResultStatus.FAILED, error=f"unknown tool: {tool}")
+                result = await self._shell_action(params)
+            elif tool == "read_file":
+                result = self._read_file(params)
+            elif tool == "write_file":
+                result = self._write_file(params)
+            elif tool == "list_dir":
+                result = self._list_dir(params)
+            elif tool == "os":
+                result = await self._os_action(params)
+            elif tool == "gui":
+                result = await self._gui_action(params)
+            elif tool == "browser":
+                result = await self._browser_action(params)
+            elif tool == "vision":
+                result = await self._vision_action(params)
+            else:
+                registry = self._get_registry()
+                if registry is not None and registry.has(tool):
+                    result = await self._registry_action(tool, params)
+                else:
+                    return ToolResult(tool=tool, status=ToolResultStatus.FAILED, error=f"unknown tool: {tool}")
+            if isinstance(result, ToolResult):
+                return result
+            return ToolResult(tool=tool, status=ToolResultStatus.FAILED, error=f"tipo de retorno invalido: {type(result).__name__}")
         finally:
             pass
-
     async def _registry_action(self, tool: str, params: Dict[str, Any]) -> ToolResult:
         start = time.perf_counter()
         registry = self._get_registry()
@@ -317,6 +325,18 @@ class ToolConnector:
 
     def _read_file(self, params: Dict[str, Any]) -> ToolResult:
         path = str(params.get("path", ""))
+        # Path policy (HUECO 1C): always-deny secrets + ARIA_FS_ROOTS roots.
+        # check() already gates this, but the handler re-validates so a
+        # bypass of the permission layer can never read a secret file.
+        try:
+            from backend.permissions import get_permission_engine
+            decision, reason, _ = get_permission_engine().check_path(path)
+            if decision == "deny":
+                return ToolResult(tool="read_file", status=ToolResultStatus.FAILED,
+                                  error=f"permission denied: {reason}")
+        except Exception as exc:
+            return ToolResult(tool="read_file", status=ToolResultStatus.FAILED,
+                              error=f"permission system error: {exc}")
         if not path or not Path(path).is_file():
             return ToolResult(tool="read_file", status=ToolResultStatus.FAILED, error="file not found")
         try:
@@ -340,6 +360,16 @@ class ToolConnector:
 
     def _list_dir(self, params: Dict[str, Any]) -> ToolResult:
         path = str(params.get("path", "."))
+        # Path policy (HUECO 1C): same gate as read_file.
+        try:
+            from backend.permissions import get_permission_engine
+            decision, reason, _ = get_permission_engine().check_path(path)
+            if decision == "deny":
+                return ToolResult(tool="list_dir", status=ToolResultStatus.FAILED,
+                                  error=f"permission denied: {reason}")
+        except Exception as exc:
+            return ToolResult(tool="list_dir", status=ToolResultStatus.FAILED,
+                              error=f"permission system error: {exc}")
         try:
             p = Path(path)
             if not p.is_dir():

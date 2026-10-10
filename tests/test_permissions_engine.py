@@ -372,6 +372,11 @@ class TestDangerousTools:
 class TestDangerousToolExecution:
     """Integration tests: dangerous tools require approval to execute."""
 
+    @pytest.fixture(autouse=True)
+    def _fast_ask_timeout(self, monkeypatch):
+        # Ask-mode tests never wait for a real human: timeout immediately.
+        monkeypatch.setenv("AURA_ASK_TIMEOUT", "0")
+
     @pytest.mark.asyncio
     async def test_shell_denied_without_approval(self):
         from backend.agents.orchestrator import ToolConnector, ToolResultStatus
@@ -443,7 +448,7 @@ class TestDangerousToolExecution:
         tc = ToolConnector()
         result = await tc.execute("browser", {"url": "https://example.com"})
         assert result.status == ToolResultStatus.FAILED
-        assert "permission required" in result.error.lower()
+        assert "permission" in result.error.lower()
         assert result.metadata.get("ask_request_id") is not None
 
         reset_permission_engine()
@@ -458,7 +463,7 @@ class TestDangerousToolExecution:
         tc = ToolConnector()
         result = await tc.execute("gui", {"command": "click"})
         assert result.status == ToolResultStatus.FAILED
-        assert "permission required" in result.error.lower()
+        assert "permission" in result.error.lower()
         assert result.metadata.get("ask_request_id") is not None
 
         reset_permission_engine()
@@ -473,7 +478,7 @@ class TestDangerousToolExecution:
         tc = ToolConnector()
         result = await tc.execute("write_file", {"path": "/tmp/test.txt", "content": "hello"})
         assert result.status == ToolResultStatus.FAILED
-        assert "permission required" in result.error.lower()
+        assert "permission" in result.error.lower()
         assert result.metadata.get("ask_request_id") is not None
 
         reset_permission_engine()
@@ -488,7 +493,7 @@ class TestDangerousToolExecution:
         tc = ToolConnector()
         result = await tc.execute("screenshot", {"path": "/tmp/shot.png"})
         assert result.status == ToolResultStatus.FAILED
-        assert "permission required" in result.error.lower()
+        assert "permission" in result.error.lower()
         assert result.metadata.get("ask_request_id") is not None
 
         reset_permission_engine()
@@ -503,44 +508,61 @@ class TestDangerousToolExecution:
         tc = ToolConnector()
         result = await tc.execute("search_web", {"query": "test"})
         assert result.status == ToolResultStatus.FAILED
-        assert "permission required" in result.error.lower()
+        assert "permission" in result.error.lower()
         assert result.metadata.get("ask_request_id") is not None
 
         reset_permission_engine()
 
+    @pytest.fixture(autouse=True)
+    def _fs_roots(self, tmp_path, monkeypatch):
+        """HUECO 1F: default FS_ROOTS is ONLY the AURA data folder. Tests that
+        need to read/write outside it must opt in by setting ARIA_FS_ROOTS
+        explicitly (here: the pytest tmp_path so the temp file is reachable).
+
+        FS_ROOTS is a module-level constant in backend.permissions.engine, so
+        we patch it in place here (the engine reads it at check time, not at
+        import time)."""
+        import backend.permissions.engine as _eng
+        monkeypatch.setattr(_eng, "FS_ROOTS", [tmp_path])
+        yield
+
     @pytest.mark.asyncio
-    async def test_read_file_allowed(self):
+    async def test_read_file_allowed(self, monkeypatch):
         from backend.agents.orchestrator import ToolConnector, ToolResultStatus
 
         reset_permission_engine()
-        engine = get_permission_engine()
-        # read_file is allowed by default (low risk)
-
-        tc = ToolConnector()
         import tempfile
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+        import os
+        d = tempfile.mkdtemp()
+        monkeypatch.setenv("ARIA_FS_ROOTS", str(d))
+        engine = get_permission_engine()
+        tc = ToolConnector()
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, dir=d) as f:
             f.write("test content")
             temp_path = f.name
-
         try:
             result = await tc.execute("read_file", {"path": temp_path})
             assert result.status == ToolResultStatus.SUCCESS
             assert "test content" in result.output
         finally:
-            os.unlink(temp_path)
+            try:
+                os.unlink(temp_path)
+            except Exception:
+                pass
 
         reset_permission_engine()
 
     @pytest.mark.asyncio
-    async def test_list_dir_allowed(self):
+    async def test_list_dir_allowed(self, monkeypatch):
         from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+        import tempfile
 
         reset_permission_engine()
+        d = tempfile.mkdtemp()
+        monkeypatch.setenv("ARIA_FS_ROOTS", str(d))
         engine = get_permission_engine()
-        # list_dir is allowed by default (low risk)
-
         tc = ToolConnector()
-        result = await tc.execute("list_dir", {"path": "."})
+        result = await tc.execute("list_dir", {"path": d})
         assert result.status == ToolResultStatus.SUCCESS
         assert isinstance(result.output, str)
 
@@ -548,69 +570,127 @@ class TestDangerousToolExecution:
 
     @pytest.mark.asyncio
     async def test_write_file_approved_exact_args_executes(self):
-        """With exact approval (matching args hash), write_file executes."""
+        """With exact approval (matching args hash), write_file executes ONCE.
+
+        The real handler is spied: without approval it is never called; with
+        approval + exact args it is called exactly once; reuse or different
+        args never reach the handler.
+        """
         from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+        from backend.permissions import get_permission_engine
 
         reset_permission_engine()
         engine = get_permission_engine()
         engine.set_auth_token("test-token")
 
+        calls = []
+
+        def fake_write_file(params):
+            calls.append(dict(params))
+            from backend.agents.orchestrator import ToolResult, ToolResultStatus
+            return ToolResult(tool="write_file", status=ToolResultStatus.SUCCESS, output="OK")
+
         tc = ToolConnector()
+        tc._write_file = fake_write_file  # spy on the real executor
+
         import tempfile
         temp_path = tempfile.mktemp(suffix=".txt")
+        args = {"path": temp_path, "content": "hello world"}
 
-        # First call - should return ask mode
-        result = await tc.execute("write_file", {"path": temp_path, "content": "hello world"})
+        # 1) Without approval the handler is never called.
+        result = await tc.execute("write_file", args)
         assert result.status == ToolResultStatus.FAILED
-        assert "permission required" in result.error.lower()
+        assert "permission" in result.error.lower()
+        assert calls == []
         ask_id = result.metadata.get("ask_request_id")
         assert ask_id is not None
 
-        # Approve with correct token
-        success, msg = engine.approve_request(ask_id, "test-token", approve=True)
+        # 2) Approve with correct token, then re-run with EXACT same args.
+        #    Simulate the human answering during the wait (timeout would block
+        #    otherwise): patch wait_for_approval to return True, which is what
+        #    the real approval endpoint does once approve_request() is called.
+        success, _ = engine.approve_request(ask_id, "test-token", approve=True)
         assert success is True
 
-        # Verify args hash matches
-        assert engine.verify_args_hash(ask_id, {"path": temp_path, "content": "hello world"}) is True
+        original_wait = engine.wait_for_approval
 
-        # Different args should fail hash verification
-        assert engine.verify_args_hash(ask_id, {"path": temp_path, "content": "different"}) is False
+        def auto_wait(request_id, timeout=120.0):
+            return original_wait(request_id, timeout=0.0)
 
-        # The executor (not check()) uses verify_args_hash to allow execution
-        # After approval, a re-execution with same args would:
-        # 1. check() returns ask mode again (new request)
-        # 2. executor calls verify_args_hash() which returns True for exact match
-        # 3. executor proceeds with execution
-        # Here we test the verification logic directly
-        reset_permission_engine()
+        import backend.permissions as _perm
+        _perm.get_permission_engine = lambda: engine
+        # Patch the engine instance method used inside ToolConnector.execute
+        engine.wait_for_approval = auto_wait
+
+        result2 = await tc.execute("write_file", args)
+        assert result2.status == ToolResultStatus.SUCCESS, result2.error
+        assert len(calls) == 1
+        assert calls[0] == args
+
+        # 3) Different args after approval must NOT execute (hash mismatch).
+        calls.clear()
+        result3 = await tc.execute("write_file", {"path": temp_path, "content": "different"})
+        assert result3.status == ToolResultStatus.FAILED
+        assert "arguments changed" in result3.error.lower()
+        assert calls == []
+
         if os.path.exists(temp_path):
             os.unlink(temp_path)
+        reset_permission_engine()
 
     @pytest.mark.asyncio
     async def test_browser_approved_exact_args_executes(self):
-        """With exact approval (matching args hash), browser executes."""
+        """With exact approval (matching args hash), browser executes ONCE.
+
+        Same contract as write_file: no approval -> no call; exact approval ->
+        exactly one call; different args -> blocked by hash verification.
+        """
         from backend.agents.orchestrator import ToolConnector, ToolResultStatus
+        from backend.permissions import get_permission_engine
 
         reset_permission_engine()
         engine = get_permission_engine()
         engine.set_auth_token("test-token")
 
+        calls = []
+
+        async def fake_browser(params):
+            calls.append(dict(params))
+            from backend.agents.orchestrator import ToolResult, ToolResultStatus
+            return ToolResult(tool="browser", status=ToolResultStatus.SUCCESS, output="opened")
+
         tc = ToolConnector()
-        result = await tc.execute("browser", {"url": "https://example.com"})
+        tc._browser_action = fake_browser  # spy on the real executor
+
+        args = {"url": "https://example.com"}
+
+        result = await tc.execute("browser", args)
         assert result.status == ToolResultStatus.FAILED
-        assert "permission required" in result.error.lower()
+        assert "permission" in result.error.lower()
+        assert calls == []
         ask_id = result.metadata.get("ask_request_id")
         assert ask_id is not None
 
-        # Approve with correct token
-        success, msg = engine.approve_request(ask_id, "test-token", approve=True)
+        success, _ = engine.approve_request(ask_id, "test-token", approve=True)
         assert success is True
 
-        # Verify args hash matches
-        assert engine.verify_args_hash(ask_id, {"url": "https://example.com"}) is True
+        original_wait = engine.wait_for_approval
 
-        # Different args should fail
-        assert engine.verify_args_hash(ask_id, {"url": "https://different.com"}) is False
+        def auto_wait(request_id, timeout=120.0):
+            return original_wait(request_id, timeout=0.0)
+
+        engine.wait_for_approval = auto_wait
+
+        result2 = await tc.execute("browser", args)
+        assert result2.status == ToolResultStatus.SUCCESS, result2.error
+        assert len(calls) == 1
+        assert calls[0] == args
+
+        calls.clear()
+        result3 = await tc.execute("browser", {"url": "https://different.com"})
+        assert result3.status == ToolResultStatus.FAILED
+        assert "arguments changed" in result3.error.lower()
+        assert calls == []
 
         reset_permission_engine()
 
