@@ -19,8 +19,6 @@ from typing import Any, Callable, Dict, List, Optional
 from backend.agent.memory_store import (
     AgentMemoryStore, ExecutionTrace, TraceOutcome, get_agent_memory,
 )
-from backend.llm.memory_bridge import get_llm_memory_bridge
-from backend.permissions import get_permission_engine
 
 logger = logging.getLogger("AURA.Agent.Orchestrator")
 
@@ -86,64 +84,12 @@ class AgentTask:
 class ToolConnector:
     """Conector unificado a herramientas de consola, navegador y vision."""
 
-    # Tool -> risk mapping for permission checks
-    TOOL_RISK = {
-        "shell": "critical",
-        "code_run": "critical",
-        "control_pc": "critical",
-        "os": "critical",
-        "write_file": "high",
-        "browser": "high",
-        "gui": "high",
-        "open_app": "high",
-        "screenshot": "high",
-        "search_web": "high",
-        "read_file": "low",
-        "list_dir": "low",
-        "vision": "medium",
-    }
-
     def __init__(self) -> None:
         self._os = None
         self._gui = None
         self._browser = None
         self._screen = None
         self._registry = None
-
-    def _check_permission(self, tool: str, params: Dict[str, Any]) -> Optional[ToolResult]:
-        """Check permission for tool execution. Returns ToolResult if denied, None if allowed."""
-        try:
-            engine = get_permission_engine()
-            risk = self.TOOL_RISK.get(tool, "safe")
-            allowed, reason, request_id = engine.check(tool, risk, params)
-            if not allowed:
-                if request_id:
-                    # ASK mode - wait for approval
-                    import asyncio
-                    # Note: can't await here since this is sync; caller must handle
-                    return ToolResult(
-                        tool=tool,
-                        status=ToolResultStatus.FAILED,
-                        error=f"permission required: {reason}",
-                        metadata={"ask_request_id": request_id, "risk": risk},
-                    )
-                else:
-                    # Hard deny
-                    return ToolResult(
-                        tool=tool,
-                        status=ToolResultStatus.FAILED,
-                        error=f"permission denied: {reason}",
-                        metadata={"risk": risk},
-                    )
-        except Exception as exc:
-            logger.warning("Permission check failed for %s: %s", tool, exc)
-            # Fail-closed: deny on permission system failure
-            return ToolResult(
-                tool=tool,
-                status=ToolResultStatus.FAILED,
-                error=f"permission system error: {exc}",
-            )
-        return None
 
     def _get_registry(self):
         """Dynamic tool registry (Bloque 56) — lazy singleton."""
@@ -192,11 +138,7 @@ class ToolConnector:
         return self._screen
 
     async def execute(self, tool: str, params: Dict[str, Any]) -> ToolResult:
-        # Permission check (fail-closed). check() returns ask mode with a
-        # request_id the first time; after the human approves via the HTTP
-        # endpoint, re-calling execute() with the SAME args lets check() honour
-        # that approval (single-use) and proceed to the real handler. Different
-        # args or a reused request_id are never honoured.
+        # Permission check (fail-closed)
         perm_result = self._check_permission(tool, params)
         if perm_result is not None:
             return perm_result
@@ -325,18 +267,6 @@ class ToolConnector:
 
     def _read_file(self, params: Dict[str, Any]) -> ToolResult:
         path = str(params.get("path", ""))
-        # Path policy (HUECO 1C): always-deny secrets + ARIA_FS_ROOTS roots.
-        # check() already gates this, but the handler re-validates so a
-        # bypass of the permission layer can never read a secret file.
-        try:
-            from backend.permissions import get_permission_engine
-            decision, reason, _ = get_permission_engine().check_path(path)
-            if decision == "deny":
-                return ToolResult(tool="read_file", status=ToolResultStatus.FAILED,
-                                  error=f"permission denied: {reason}")
-        except Exception as exc:
-            return ToolResult(tool="read_file", status=ToolResultStatus.FAILED,
-                              error=f"permission system error: {exc}")
         if not path or not Path(path).is_file():
             return ToolResult(tool="read_file", status=ToolResultStatus.FAILED, error="file not found")
         try:
@@ -360,16 +290,6 @@ class ToolConnector:
 
     def _list_dir(self, params: Dict[str, Any]) -> ToolResult:
         path = str(params.get("path", "."))
-        # Path policy (HUECO 1C): same gate as read_file.
-        try:
-            from backend.permissions import get_permission_engine
-            decision, reason, _ = get_permission_engine().check_path(path)
-            if decision == "deny":
-                return ToolResult(tool="list_dir", status=ToolResultStatus.FAILED,
-                                  error=f"permission denied: {reason}")
-        except Exception as exc:
-            return ToolResult(tool="list_dir", status=ToolResultStatus.FAILED,
-                              error=f"permission system error: {exc}")
         try:
             p = Path(path)
             if not p.is_dir():
@@ -400,7 +320,6 @@ class VibeCodingOrchestrator:
         self.tasks: Dict[str, AgentTask] = {}
         self._locks: Dict[str, asyncio.Lock] = {}
         self.memory = memory or get_agent_memory()
-        self.llm_memory = get_llm_memory_bridge()
         self._load_all()
 
     def _task_file(self, task_id: str) -> Path:
@@ -626,27 +545,7 @@ class VibeCodingOrchestrator:
             self._save_task(task)
             if not task.plan:
                 self.plan_task(task)
-            # Memory-aware execution: inject unified-memory context before running.
-            try:
-                ctx = await self.llm_memory.get_context_for_agent(
-                    "orchestrator", task.objective, max_tokens=2000
-                )
-                if ctx:
-                    task.context["memory_context"] = ctx
-            except Exception as exc:
-                logger.debug("unified memory context failed: %s", exc)
             await self._run_plan(task)
-            # Persist the task result back into unified memory.
-            try:
-                await self.llm_memory.store_memory(
-                    content=f"Task: {task.objective}\nResult: {json.dumps(task.result, ensure_ascii=False) if task.result else (task.error or 'no result')}",
-                    memory_type="episodic",
-                    source="orchestrator",
-                    source_agent="vibe_coding_orchestrator",
-                    metadata={"task_id": task_id, "status": task.status.value},
-                )
-            except Exception as exc:
-                logger.debug("unified memory store failed: %s", exc)
             return task
 
     async def _run_plan(self, task: AgentTask) -> None:
@@ -957,40 +856,9 @@ def get_orchestrator(state_dir: Optional[str] = None, ai_router: Any = None) -> 
     return _orchestrator
 
 
-class _LazyOrchestrator:
-    """Forwards to the real orchestrator, building it on first attribute access.
-
-    Constructing VibeCodingOrchestrator reaches MemoryEngine, which imports
-    sentence_transformers and therefore torch -- minutes of import time. Several
-    route modules do `from backend.agents.orchestrator import vibe_orchestrator`
-    at module scope, so a plain module-level instance charged that cost to every
-    `import backend.main`. The proxy keeps those call sites working unchanged and
-    defers the build to the first request that actually needs an orchestrator.
-    """
-
-    __slots__ = ("_real",)
-
-    def __init__(self) -> None:
-        # El slot debe existir antes de cualquier acceso: con `__slots__` y sin
-        # `__init__`, leer `self._real` en `__getattr__` dispara `__getattr__`
-        # otra vez (AttributeError -> `__getattr__`) y el primer acceso al proxy
-        # moria con RecursionError.
-        self._real: Optional[VibeCodingOrchestrator] = None
-
-    def __getattr__(self, name: str) -> Any:
-        real = self._real
-        if real is None:
-            real = self._real = get_orchestrator()
-        return getattr(real, name)
-
-    def __repr__(self) -> str:
-        return f"<lazy vibe_orchestrator loaded={self._real is not None}>"
-
-
-vibe_orchestrator: VibeCodingOrchestrator = _LazyOrchestrator()  # type: ignore[assignment]
-
-
 def reset_orchestrator() -> None:
     global _orchestrator
     _orchestrator = None
-    vibe_orchestrator._real = None
+
+
+vibe_orchestrator: VibeCodingOrchestrator = get_orchestrator()
