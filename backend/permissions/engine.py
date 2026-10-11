@@ -175,6 +175,17 @@ class PermissionEngine:
         for tool, risk in read_tools:
             self.config.tools[tool] = ToolPermission(tool=tool, allow=True, risk=risk)
 
+        # FASE 1: official_cli provider (Gemini CLI) — ask on first call.
+        # High risk: it shells out to an external process and the CLI output
+        # is UNTRUSTED. require_confirm makes the PermissionEngine ask the
+        # owner before the first invocation (single-use by args hash, TTL 120s).
+        self.config.tools["llm.cli.invoke"] = ToolPermission(
+            tool="llm.cli.invoke",
+            allow=True,
+            risk="high",
+            require_confirm=True,
+        )
+
         self.save_config()
 
     @classmethod
