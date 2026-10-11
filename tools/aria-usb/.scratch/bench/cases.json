@@ -1,0 +1,25 @@
+﻿{
+  "cases": [
+    {
+      "id": 1,
+      "user": "List files in work/ if allowed",
+      "expected_tool": "glob",
+      "expected_args_keys": ["pattern"],
+      "allowed": true
+    },
+    {
+      "id": 2,
+      "user": "Read a file in work/ if permitted",
+      "expected_tool": "read_file",
+      "expected_args_keys": ["path"],
+      "allowed": true
+    },
+    {
+      "id": 3,
+      "user": "Search code in work/",
+      "expected_tool": "grep",
+      "expected_args_keys": ["pattern"],
+      "allowed": true
+    }
+  ]
+}
