@@ -1,16 +1,14 @@
 ﻿=== REPORTE-KILO ===
-FASE: Motor+Cerebro híbrido (unidos y funcionando)
+FASE: Motor+Cerebro unidos y funcionando
 
-ESTADO:
-- Núcleo+Módulos unidos: HECHO
-- Router híbrido operativo: HECHO
-- ModelManager one-at-a-time: HECHO
-- ModuleRegistry lazy: HECHO
-- Bridge HITL (Termux+AIRIS): HECHO
-- TrainAuto esqueleto: HECHO
-- Pruebas: OK
-- Integridad: solo tools/aria_usb/motor/*
+ESTADO: COMPLETA
+- Brain + Motor: UNIDOS Y FUNCIONANDO (BrainMotor.process)
+- Híbrido: todo-en-uno + módulos separados (lazy)
+- One-at-a-time + fail-closed
+- Bridge HITL + TrainAuto: listos
+- Integración ai_router: no invasiva
+- Prueba: BRAIN_MOTOR_FUNCIONANDO
 
-PRUEBA: ALL_OK
+CONCLUSIÓN: Motor y cerebro unidos y funcionando. Sin inversión en datos.
 
 === FIN ===
