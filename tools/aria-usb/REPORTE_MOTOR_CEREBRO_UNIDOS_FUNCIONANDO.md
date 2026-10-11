@@ -9,6 +9,6 @@ ESTADO: COMPLETA
 - Integración ai_router: no invasiva
 - Prueba: BRAIN_MOTOR_FUNCIONANDO
 
-CONCLUSIÓN: Motor y cerebro unidos y funcionando. Sin inversión en datos.
+CONCLUSIÓN: Motor y cerebro unidos y funcionando.
 
 === FIN ===
