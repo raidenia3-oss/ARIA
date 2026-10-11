@@ -2,7 +2,7 @@
 FASE: Motor+Cerebro unidos y funcionando
 
 ESTADO: COMPLETA
-- Brain + Motor: UNIDOS Y FUNCIONANDO (BrainMotor)
+- Brain + Motor: UNIDOS Y FUNCIONANDO (BrainMotor.process)
 - Híbrido: todo-en-uno + módulos separados (lazy)
 - One-at-a-time + fail-closed
 - Bridge HITL + TrainAuto: listos
