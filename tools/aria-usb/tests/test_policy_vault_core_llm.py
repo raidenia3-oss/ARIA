@@ -2,6 +2,7 @@ import json
 import os
 import tempfile
 from pathlib import Path
+from typing import Any, Dict, List
 
 import pytest
 
@@ -9,6 +10,8 @@ from app.policy import Policy, AccessLevel, PathRisk, DEFAULT_POLICY
 from app.vault import Vault, encrypt_blob, decrypt_blob
 from app.core import create_registry, ToolResult, ToolStatus
 from app.llm_local import LLMLocalClient
+from app.memory_export import MemoryExporter, LongTermMemoryEntry
+from app.obsidian_bridge import MemoryNote, MemoryType, MemorySource
 
 
 class TestPolicy:
@@ -239,6 +242,172 @@ class TestCanaries:
             visible = policy.list_visible(str(work))
             assert "normal.txt" in visible
             assert "canary.txt" not in visible
+
+
+class TestMemoryExport:
+    def setup_method(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.vault_dir = os.path.join(self.tmpdir, "vault")
+        self.memory_dir = os.path.join(self.vault_dir, "memory")
+        os.makedirs(self.memory_dir, exist_ok=True)
+        self.long_term_path = os.path.join(self.tmpdir, "long_term.json")
+
+    def teardown_method(self):
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _write_long_term(self, entries: List[Dict[str, Any]]) -> None:
+        with open(self.long_term_path, "w", encoding="utf-8") as f:
+            json.dump(entries, f, ensure_ascii=False, indent=2)
+
+    def test_load_long_term_memory(self):
+        entries = [
+            {"id": "1", "timestamp": "2026-01-01T00:00:00Z", "content": "Test fact", "meta": {"type": "fact"}},
+            {"id": "2", "timestamp": "2026-01-02T00:00:00Z", "content": "Test decision", "meta": {"type": "decision"}},
+        ]
+        self._write_long_term(entries)
+
+        exporter = MemoryExporter(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        loaded = exporter.load_long_term_memory()
+
+        assert len(loaded) == 2
+        assert loaded[0].id == "1"
+        assert loaded[0].content == "Test fact"
+        assert loaded[0].meta["type"] == "fact"
+        assert loaded[1].meta["type"] == "decision"
+
+    def test_load_empty_long_term(self):
+        exporter = MemoryExporter(
+            long_term_path=os.path.join(self.tmpdir, "nonexistent.json"),
+            vault_path=self.vault_dir,
+        )
+        loaded = exporter.load_long_term_memory()
+        assert loaded == []
+
+    def test_entry_to_memory_note_fact(self):
+        entry = LongTermMemoryEntry(
+            id="test-1",
+            timestamp="2026-01-01T00:00:00Z",
+            content="This is a test fact",
+            meta={"type": "fact", "confidence": 0.9, "tags": ["test", "important"]},
+        )
+
+        exporter = MemoryExporter(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        note = exporter.entry_to_memory_note(entry)
+
+        assert isinstance(note, MemoryNote)
+        assert note.subtype == MemoryType.FACT
+        assert note.source == MemorySource.SYSTEM_OBSERVATION
+        assert note.confidence == 0.9
+        assert "test" in note.tags
+        assert "important" in note.tags
+        assert note.content == "This is a test fact"
+        assert note.title == "This is a test fact"
+
+    def test_entry_to_memory_note_decision(self):
+        entry = LongTermMemoryEntry(
+            id="test-2",
+            timestamp="2026-01-01T00:00:00Z",
+            content="Decision made",
+            meta={"type": "decision", "phase": 3},
+        )
+
+        exporter = MemoryExporter(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        note = exporter.entry_to_memory_note(entry)
+
+        assert note.subtype == MemoryType.DECISION
+        assert "phase-3" in note.tags
+
+    def test_entry_to_memory_note_unknown_type_defaults_to_fact(self):
+        entry = LongTermMemoryEntry(
+            id="test-3",
+            timestamp="2026-01-01T00:00:00Z",
+            content="Unknown type content",
+            meta={"type": "unknown_type"},
+        )
+
+        exporter = MemoryExporter(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        note = exporter.entry_to_memory_note(entry)
+
+        assert note.subtype == MemoryType.FACT
+
+    def test_entry_to_memory_note_long_content_truncates_title(self):
+        entry = LongTermMemoryEntry(
+            id="test-4",
+            timestamp="2026-01-01T00:00:00Z",
+            content="A" * 100,
+            meta={"type": "fact"},
+        )
+
+        exporter = MemoryExporter(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        note = exporter.entry_to_memory_note(entry)
+
+        assert len(note.title) == 63
+        assert note.title.endswith("...")
+
+    def test_export_to_vault_creates_files(self):
+        entries = [
+            {"id": "1", "timestamp": "2026-01-01T00:00:00Z", "content": "Fact one", "meta": {"type": "fact"}},
+            {"id": "2", "timestamp": "2026-01-02T00:00:00Z", "content": "Fact two", "meta": {"type": "insight"}},
+        ]
+        self._write_long_term(entries)
+
+        exporter = MemoryExporter(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        results = exporter.export_to_vault(use_api=False)
+
+        assert results["total"] == 2
+        assert results["exported"] == 2
+        assert results["failed"] == 0
+        assert len(results["details"]) == 2
+
+        files = list(Path(self.memory_dir).glob("*.md"))
+        assert len(files) == 2
+
+        for f in files:
+            content = f.read_text(encoding="utf-8")
+            assert content.startswith("---")
+            assert "type: memory" in content
+            assert "subtype:" in content
+
+    def test_export_to_vault_preserves_frontmatter(self):
+        entries = [
+            {"id": "1", "timestamp": "2026-01-01T00:00:00Z", "content": "Test content", "meta": {"type": "fact", "confidence": 0.7, "tags": ["tag1"]}},
+        ]
+        self._write_long_term(entries)
+
+        exporter = MemoryExporter(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        exporter.export_to_vault(use_api=False)
+
+        files = list(Path(self.memory_dir).glob("*.md"))
+        content = files[0].read_text(encoding="utf-8")
+
+        assert "subtype: fact" in content
+        assert "confidence: 0.7" in content
+        assert "tags:" in content
+        assert "tag1" in content
+        assert "source: system_observation" in content
+        assert "Test content" in content
 
 
 if __name__ == "__main__":
