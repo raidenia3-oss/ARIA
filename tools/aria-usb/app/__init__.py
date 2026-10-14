@@ -5,6 +5,8 @@ from .llm_local import LLMLocalClient, create_client
 from .obsidian_bridge import (
     ObsidianBridge,
     RenderAPIClient,
+    DriveSync,
+    DriveSyncError,
     MemoryNote,
     MemoryType,
     MemorySource,
@@ -32,6 +34,8 @@ __all__ = [
     "create_client",
     "ObsidianBridge",
     "RenderAPIClient",
+    "DriveSync",
+    "DriveSyncError",
     "MemoryNote",
     "MemoryType",
     "MemorySource",

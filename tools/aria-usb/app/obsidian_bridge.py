@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import mimetypes
 import os
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib import request, error
 
@@ -164,10 +166,12 @@ class ObsidianBridge:
         vault_path: str,
         render_api_url: str = "http://localhost:27123",
         memory_folder: str = "memory",
+        drive_folder_id: str = "1pA6egurq1NuAXQYiU4JaSm5u02MjPxp0",
     ):
         self.vault_path = vault_path
         self.memory_folder = memory_folder
         self.client = RenderAPIClient(render_api_url)
+        self.drive_sync = DriveSync(drive_folder_id=drive_folder_id)
 
     def write_memory_note(self, note: MemoryNote) -> str:
         safe_title = "".join(c for c in note.title if c.isalnum() or c in " -_").strip()
@@ -322,10 +326,214 @@ class ObsidianBridge:
         except Exception:
             return False
 
+    def drive_health_check(self) -> bool:
+        return self.drive_sync.is_ready()
+
+    def sync_to_drive(self, folders: Optional[List[str]] = None) -> Dict[str, Any]:
+        """Sync vault folders to Google Drive.
+        
+        NOTE: Service account cannot upload to personal Drive (no storage quota).
+        For full sync, configure Drive Bridge plugin in Obsidian with OAuth user credentials.
+        This method only works if using a Shared Drive with service account access.
+        """
+        if folders is None:
+            folders = ["memory", "canvas"]
+
+        results = {"total_uploaded": 0, "total_updated": 0, "total_errors": 0, "by_folder": {}}
+
+        for folder in folders:
+            local_path = os.path.join(self.vault_path, folder)
+            if not os.path.exists(local_path):
+                results["by_folder"][folder] = {"status": "skipped", "reason": "not found"}
+                continue
+
+            res = self.drive_sync.sync_vault_folder(local_path)
+            results["by_folder"][folder] = res
+            results["total_uploaded"] += res.get("uploaded", 0)
+            results["total_updated"] += res.get("updated", 0)
+            results["total_errors"] += res.get("errors", 0)
+
+        return results
+
+    def upload_to_drive(self, local_path: str, drive_name: Optional[str] = None) -> Dict[str, Any]:
+        """Upload a single file to Drive."""
+        full_path = local_path if os.path.isabs(local_path) else os.path.join(self.vault_path, local_path)
+        return self.drive_sync.upload_file(full_path, drive_name)
+
+    def list_drive_files(self, parent_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """List files in the Drive folder."""
+        return self.drive_sync.list_files(parent_id)
+
+
+class DriveSyncError(Exception):
+    pass
+
+
+class DriveSync:
+    """Sync vault files to Google Drive using service account API."""
+
+    def __init__(
+        self,
+        drive_folder_id: str = "1pA6egurq1NuAXQYiU4JaSm5u02MjPxp0",
+        creds_path: Optional[str] = None,
+    ):
+        self.drive_folder_id = drive_folder_id
+        self.creds_path = creds_path or os.getenv(
+            "GOOGLE_CREDS_PATH",
+            str(Path(__file__).parent.parent.parent.parent / "credentials" / "service-account-key.json")
+        )
+        self._service = None
+        self._connect()
+
+    def _connect(self) -> None:
+        try:
+            from googleapiclient.discovery import build
+            from google.oauth2 import service_account
+        except ImportError:
+            raise DriveSyncError("google-api-python-client not installed")
+
+        if not os.path.exists(self.creds_path):
+            raise DriveSyncError(f"Service account key not found: {self.creds_path}")
+
+        with open(self.creds_path) as f:
+            data = json.load(f)
+
+        if data.get("type") != "service_account":
+            raise DriveSyncError("Credentials file is not a service account")
+
+        SCOPES = ["https://www.googleapis.com/auth/drive"]
+        creds = service_account.Credentials.from_service_account_info(data, scopes=SCOPES)
+
+        from google.auth.transport.requests import Request
+        creds.refresh(Request())
+
+        self._service = build("drive", "v3", credentials=creds)
+
+    def is_ready(self) -> bool:
+        return self._service is not None
+
+    def _mime_type(self, path: str) -> str:
+        mime, _ = mimetypes.guess_type(path)
+        return mime or "application/octet-stream"
+
+    def upload_file(self, local_path: str, drive_name: Optional[str] = None, parent_id: Optional[str] = None) -> Dict[str, Any]:
+        if not self._service:
+            raise DriveSyncError("Drive service not initialized")
+
+        name = drive_name or os.path.basename(local_path)
+        parent = parent_id or self.drive_folder_id
+
+        from googleapiclient.http import MediaFileUpload
+        media = MediaFileUpload(local_path, mimetype=self._mime_type(local_path), resumable=True)
+
+        file_metadata = {"name": name, "parents": [parent]}
+        file = self._service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields="id,name,webViewLink,mimeType,size"
+        ).execute()
+
+        return {
+            "status": "uploaded",
+            "id": file.get("id"),
+            "name": file.get("name"),
+            "webViewLink": file.get("webViewLink"),
+            "mimeType": file.get("mimeType"),
+            "size": file.get("size"),
+        }
+
+    def update_file(self, drive_file_id: str, local_path: str) -> Dict[str, Any]:
+        if not self._service:
+            raise DriveSyncError("Drive service not initialized")
+
+        from googleapiclient.http import MediaFileUpload
+        media = MediaFileUpload(local_path, mimetype=self._mime_type(local_path), resumable=True)
+
+        file = self._service.files().update(
+            fileId=drive_file_id,
+            media_body=media,
+            fields="id,name,webViewLink,mimeType,size"
+        ).execute()
+
+        return {
+            "status": "updated",
+            "id": file.get("id"),
+            "name": file.get("name"),
+            "webViewLink": file.get("webViewLink"),
+            "mimeType": file.get("mimeType"),
+            "size": file.get("size"),
+        }
+
+    def find_file(self, name: str, parent_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        if not self._service:
+            raise DriveSyncError("Drive service not initialized")
+
+        parent = parent_id or self.drive_folder_id
+        q = f"name='{name}' and '{parent}' in parents and trashed=false"
+        res = self._service.files().list(q=q, fields="files(id,name,mimeType,size,webViewLink)").execute()
+        files = res.get("files", [])
+        return files[0] if files else None
+
+    def list_files(self, parent_id: Optional[str] = None, page_size: int = 100) -> List[Dict[str, Any]]:
+        if not self._service:
+            raise DriveSyncError("Drive service not initialized")
+
+        parent = parent_id or self.drive_folder_id
+        q = f"'{parent}' in parents and trashed=false"
+        res = self._service.files().list(
+            q=q,
+            pageSize=page_size,
+            fields="files(id,name,mimeType,size,webViewLink,modifiedTime)"
+        ).execute()
+        return res.get("files", [])
+
+    def delete_file(self, drive_file_id: str) -> bool:
+        if not self._service:
+            raise DriveSyncError("Drive service not initialized")
+
+        try:
+            self._service.files().delete(fileId=drive_file_id).execute()
+            return True
+        except Exception:
+            return False
+
+    def sync_vault_folder(self, local_folder: str, drive_parent_id: Optional[str] = None) -> Dict[str, Any]:
+        """Sync a local folder to Drive recursively."""
+        if not os.path.exists(local_folder):
+            return {"status": "error", "error": f"Local folder not found: {local_folder}"}
+
+        results = {"uploaded": 0, "updated": 0, "errors": 0, "details": []}
+        parent = drive_parent_id or self.drive_folder_id
+
+        for root, dirs, files in os.walk(local_folder):
+            for file in files:
+                if file.startswith(".") or file.endswith(".tmp"):
+                    continue
+
+                local_path = os.path.join(root, file)
+                rel_path = os.path.relpath(local_path, local_folder)
+                drive_name = rel_path.replace(os.sep, "/")
+
+                existing = self.find_file(drive_name, parent)
+                try:
+                    if existing:
+                        res = self.update_file(existing["id"], local_path)
+                        results["updated"] += 1
+                    else:
+                        res = self.upload_file(local_path, drive_name, parent)
+                        results["uploaded"] += 1
+                    results["details"].append({"file": drive_name, "action": res["status"], "id": res["id"]})
+                except Exception as e:
+                    results["errors"] += 1
+                    results["details"].append({"file": drive_name, "action": "error", "error": str(e)})
+
+        return results
+
 
 def create_bridge(
     vault_path: str,
     render_api_url: str = "http://localhost:27123",
     memory_folder: str = "memory",
+    drive_folder_id: str = "1pA6egurq1NuAXQYiU4JaSm5u02MjPxp0",
 ) -> ObsidianBridge:
-    return ObsidianBridge(vault_path, render_api_url, memory_folder)
+    return ObsidianBridge(vault_path, render_api_url, memory_folder, drive_folder_id)
