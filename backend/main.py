@@ -1475,6 +1475,14 @@ async def _on_startup() -> None:
     except Exception as exc:
         logger.error("[STARTUP] AURA Daemon fallo: %s", exc)
 
+    # Autonomous agent: sleep prevention + Drive vision processing + health monitoring
+    try:
+        from backend.integrations.autonomous_drive_vision import start_autonomous_agent
+        start_autonomous_agent()
+        logger.info("[STARTUP] Autonomous agent iniciado (sleep prevention + Drive vision)")
+    except Exception as exc:
+        logger.error("[STARTUP] Autonomous agent fallo: %s", exc)
+
     # Reverse Engineer (REA) — servicio autónomo opcional
     try:
         from backend.reverse_engineer import start_reverse_engineer, get_service_status, _SERVICE_NAME
