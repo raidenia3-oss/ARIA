@@ -24,7 +24,7 @@ DESCRIPTIONS_DIR = REPO_ROOT / "instagram" / "descriptions"
 DESCRIPTIONS_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-MAX_FILES = 10
+MAX_FILES = 2
 PROCESSED_FILE = REPO_ROOT / "instagram" / "descriptions" / ".processed"
 
 
@@ -200,9 +200,16 @@ def start_autonomous_agent() -> None:
     """Entry point for autonomous background operation.
 
     Called automatically on backend startup. Starts sleep prevention
-    and runs Drive vision processing.
+    and runs Drive vision processing in a background thread so the
+    server is never blocked.
     """
-    asyncio.create_task(_run_with_keepawake())
+    import threading
+
+    def _run() -> None:
+        asyncio.run(_run_with_keepawake())
+
+    thread = threading.Thread(target=_run, daemon=True)
+    thread.start()
 
 
 autonomous_drive_vision_running = False
