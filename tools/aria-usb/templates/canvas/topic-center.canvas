@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {
+      "id": "center-topic",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 300,
+      "height": 100,
+      "text": "# {{TOPIC}}",
+      "color": "#4a90d9"
+    }
+  ],
+  "edges": []
+}

@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import threading
 import time
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
 from app.memory_export import MemoryExporter, LongTermMemoryEntry, create_exporter
 from app.obsidian_bridge import create_bridge, ObsidianBridge
@@ -178,6 +179,276 @@ class MemoryVaultManager:
 
         filename = f"memory-graph-{center_topic.lower().replace(' ', '-')}-{int(time.time())}"
         return self.bridge.generate_memory_canvas(center_topic, notes, filename)
+
+    def extract_memory_links(self, notes: Optional[List[Dict[str, Any]]] = None) -> Dict[str, List[str]]:
+        """Extract bidirectional links between memory notes based on content overlap.
+        
+        Returns dict of note_path -> list of linked note_paths.
+        """
+        if notes is None:
+            # Try Render API first, fall back to filesystem
+            try:
+                notes = self.bridge.search_memory(limit=200)
+            except Exception:
+                notes = self._scan_memory_files()
+        
+        # Build content index
+        note_index: Dict[str, Dict[str, Any]] = {}
+        for note in notes:
+            path = note.get("file.path", "")
+            content = note.get("content", "") or note.get("file.name", "")
+            if path and content:
+                note_index[path] = {
+                    "content": content.lower(),
+                    "tags": set(note.get("tags", []) if isinstance(note.get("tags"), list) else []),
+                    "title": note.get("file.name", ""),
+                }
+        
+        links: Dict[str, List[str]] = {path: [] for path in note_index}
+        
+        # Find links based on:
+        # 1. Shared tags
+        # 2. Content keyword overlap
+        # 3. Explicit [[wiki-links]] in content
+        paths = list(note_index.keys())
+        for i, path_a in enumerate(paths):
+            data_a = note_index[path_a]
+            for path_b in paths[i+1:]:
+                data_b = note_index[path_b]
+                
+                link_reasons = []
+                
+                # Shared tags
+                shared_tags = data_a["tags"] & data_b["tags"]
+                if shared_tags:
+                    link_reasons.append(f"tags:{','.join(shared_tags)}")
+                
+                # Content keyword overlap (significant words)
+                words_a = set(re.findall(r'\b\w{4,}\b', data_a["content"]))
+                words_b = set(re.findall(r'\b\w{4,}\b', data_b["content"]))
+                overlap = words_a & words_b
+                if len(overlap) >= 3:
+                    link_reasons.append(f"keywords:{len(overlap)}")
+                
+                # Explicit wiki-links
+                if f"[[{data_b['title']}]]" in data_a["content"] or f"[[{data_a['title']}]]" in data_b["content"]:
+                    link_reasons.append("wikilink")
+                
+                if link_reasons:
+                    links[path_a].append(path_b)
+                    links[path_b].append(path_a)
+        
+        return links
+
+    def _scan_memory_files(self) -> List[Dict[str, Any]]:
+        """Scan memory folder directly for notes (fallback when Render API unavailable)."""
+        notes = []
+        memory_dir = os.path.join(self.bridge.vault_path, self.bridge.memory_folder)
+        if not os.path.exists(memory_dir):
+            return notes
+        
+        import yaml
+        for root, dirs, files in os.walk(memory_dir):
+            for file in files:
+                if not file.endswith(".md"):
+                    continue
+                full_path = os.path.join(root, file)
+                rel_path = os.path.relpath(full_path, self.bridge.vault_path)
+                try:
+                    with open(full_path, "r", encoding="utf-8") as f:
+                        content = f.read()
+                    
+                    # Parse frontmatter
+                    frontmatter = {}
+                    body = content
+                    if content.startswith("---"):
+                        parts = content.split("---", 2)
+                        if len(parts) >= 3:
+                            try:
+                                frontmatter = yaml.safe_load(parts[1]) or {}
+                            except Exception:
+                                pass
+                            body = parts[2].strip()
+                    
+                    notes.append({
+                        "file.path": rel_path.replace("\\", "/"),
+                        "file.name": file[:-3],
+                        "content": body,
+                        "subtype": frontmatter.get("subtype", "fact"),
+                        "source": frontmatter.get("source", "system_observation"),
+                        "confidence": frontmatter.get("confidence", 0.8),
+                        "tags": frontmatter.get("tags", []),
+                        "links": frontmatter.get("links", []),
+                    })
+                except Exception:
+                    pass
+        return notes
+
+    def write_memory_links(self, links: Dict[str, List[str]]) -> int:
+        """Update memory notes with extracted links in frontmatter."""
+        updated = 0
+        for path, linked_paths in links.items():
+            if not linked_paths:
+                continue
+            try:
+                full_path = os.path.join(self.bridge.vault_path, path)
+                if not os.path.exists(full_path):
+                    continue
+                
+                with open(full_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                
+                # Parse frontmatter
+                if not content.startswith("---"):
+                    continue
+                parts = content.split("---", 2)
+                if len(parts) < 3:
+                    continue
+                
+                frontmatter = parts[1].strip()
+                body = parts[2].strip()
+                
+                # Add links to frontmatter
+                link_lines = "\n".join([f"  - {lp}" for lp in sorted(set(linked_paths))])
+                if "links:" in frontmatter:
+                    # Replace existing links
+                    new_fm = re.sub(r'links:.*?(?=\n\w+:|\n---|\Z)', f'links:\n{link_lines}\n', frontmatter, flags=re.DOTALL)
+                else:
+                    # Add links section
+                    new_fm = frontmatter + f"\nlinks:\n{link_lines}\n"
+                
+                new_content = f"---\n{new_fm}---\n\n{body}"
+                with open(full_path, "w", encoding="utf-8") as f:
+                    f.write(new_content)
+                updated += 1
+            except Exception:
+                pass
+        return updated
+
+    def generate_canvas_from_template(self, template_name: str, context: Dict[str, Any], template_dir: Optional[str] = None) -> str:
+        """Generate a canvas from a template file with context variables."""
+        if template_dir:
+            template_path = Path(template_dir) / f"{template_name}.canvas"
+        else:
+            template_path = Path(__file__).parent.parent / "templates" / "canvas" / f"{template_name}.canvas"
+        if not template_path.exists():
+            return ""
+        
+        with open(template_path, "r", encoding="utf-8") as f:
+            template = json.load(f)
+        
+        # Replace template variables in nodes
+        def replace_vars(obj: Any) -> Any:
+            if isinstance(obj, str):
+                for key, value in context.items():
+                    obj = obj.replace(f"{{{{{key}}}}}", str(value))
+                return obj
+            elif isinstance(obj, dict):
+                return {k: replace_vars(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [replace_vars(v) for v in obj]
+            return obj
+        
+        template = replace_vars(template)
+        
+        # Save to vault
+        filename = f"{template_name}-{int(time.time())}"
+        rel_path = os.path.join("canvas", f"{filename}.canvas")
+        full_path = os.path.join(self.bridge.vault_path, rel_path)
+        
+        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        with open(full_path, "w", encoding="utf-8") as f:
+            json.dump(template, f, ensure_ascii=False, indent=2)
+        
+        return rel_path
+
+    def generate_vault_index(self) -> str:
+        """Generate a vault index/dashboard page."""
+        # Try Render API first, fall back to filesystem
+        try:
+            notes = self.bridge.search_memory(limit=500)
+        except Exception:
+            notes = self._scan_memory_files()
+        
+        # Stats
+        total = len(notes)
+        by_subtype: Dict[str, int] = {}
+        by_source: Dict[str, int] = {}
+        by_confidence: Dict[str, int] = {"high": 0, "medium": 0, "low": 0}
+        phases: Set[str] = set()
+        
+        for note in notes:
+            subtype = note.get("subtype", "unknown")
+            by_subtype[subtype] = by_subtype.get(subtype, 0) + 1
+            
+            source = note.get("source", "unknown")
+            by_source[source] = by_source.get(source, 0) + 1
+            
+            conf = float(note.get("confidence", 0))
+            if conf >= 0.8:
+                by_confidence["high"] += 1
+            elif conf >= 0.5:
+                by_confidence["medium"] += 1
+            else:
+                by_confidence["low"] += 1
+            
+            tags = note.get("tags", [])
+            if isinstance(tags, list):
+                for tag in tags:
+                    if tag.startswith("phase-"):
+                        phases.add(tag)
+        
+        index_content = f"""---
+type: index
+title: ARIA Memory Vault Index
+created: {datetime.utcnow().isoformat()}Z
+---
+
+# ARIA Memory Vault 📚
+
+> Auto-generated index of all memory notes in this vault.
+
+## 📊 Overview
+
+| Metric | Value |
+|--------|-------|
+| Total Notes | {total} |
+| High Confidence (≥0.8) | {by_confidence['high']} |
+| Medium Confidence (0.5-0.8) | {by_confidence['medium']} |
+| Low Confidence (<0.5) | {by_confidence['low']} |
+
+## 📂 By Type
+
+| Subtype | Count |
+|---------|-------|
+"""
+        for subtype, count in sorted(by_subtype.items(), key=lambda x: -x[1]):
+            index_content += f"| {subtype} | {count} |\n"
+        
+        index_content += "\n## 🔍 By Source\n\n| Source | Count |\n|--------|-------|\n"
+        for source, count in sorted(by_source.items(), key=lambda x: -x[1]):
+            index_content += f"| {source} | {count} |\n"
+        
+        index_content += f"\n## 🏷️ Phases Detected\n\n{', '.join(sorted(phases)) if phases else 'None'}\n"
+        
+        index_content += "\n## 🔗 Quick Links\n\n"
+        for name, query in self.generate_dataview_queries().items():
+            index_content += f"- [[{name}]] — {name.replace('_', ' ').title()}\n"
+        
+        index_content += "\n## 📊 Canvases\n\n"
+        for template in ["topic-center", "timeline", "source-hub", "phase-overview", "confidence-levels"]:
+            index_content += f"- `canvas/{template}.canvas` — {template.replace('-', ' ').title()}\n"
+        
+        # Save index
+        rel_path = "INDEX.md"
+        full_path = os.path.join(self.bridge.vault_path, rel_path)
+        with open(full_path, "w", encoding="utf-8") as f:
+            f.write(index_content)
+        
+        return rel_path
+
+
+from datetime import datetime
 
 
 def create_vault_manager(

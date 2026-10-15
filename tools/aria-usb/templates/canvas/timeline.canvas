@@ -1,0 +1,32 @@
+{
+  "nodes": [
+    {
+      "id": "timeline-start",
+      "type": "text",
+      "x": -600,
+      "y": 0,
+      "width": 200,
+      "height": 80,
+      "text": "📅 **Timeline Start**\n{{START_DATE}}",
+      "color": "#2ecc71"
+    },
+    {
+      "id": "timeline-end",
+      "type": "text",
+      "x": 600,
+      "y": 0,
+      "width": 200,
+      "height": 80,
+      "text": "📅 **Timeline End**\n{{END_DATE}}",
+      "color": "#e74c3c"
+    }
+  ],
+  "edges": [
+    {
+      "id": "timeline-edge",
+      "from": "timeline-start",
+      "to": "timeline-end",
+      "label": "{{ENTRY_COUNT}} entries"
+    }
+  ]
+}

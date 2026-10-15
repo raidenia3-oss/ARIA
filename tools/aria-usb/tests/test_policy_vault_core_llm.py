@@ -538,5 +538,195 @@ class TestMemoryWatcher:
             assert q.endswith("```")
 
 
+class TestMemoryWatcherPhase6:
+    def setup_method(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.vault_dir = os.path.join(self.tmpdir, "vault")
+        self.memory_dir = os.path.join(self.vault_dir, "memory")
+        self.canvas_dir = os.path.join(self.vault_dir, "canvas")
+        self.templates_dir = os.path.join(self.tmpdir, "templates", "canvas")
+        os.makedirs(self.memory_dir, exist_ok=True)
+        os.makedirs(self.canvas_dir, exist_ok=True)
+        os.makedirs(self.templates_dir, exist_ok=True)
+        self.long_term_path = os.path.join(self.tmpdir, "long_term.json")
+
+        # Create template files
+        self._create_templates()
+
+    def teardown_method(self):
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _create_templates(self) -> None:
+        templates = {
+            "topic-center.canvas": json.dumps({
+                "nodes": [{"id": "center-topic", "type": "text", "x": 0, "y": 0, "width": 300, "height": 100, "text": "# {{TOPIC}}", "color": "#4a90d9"}],
+                "edges": []
+            }),
+            "timeline.canvas": json.dumps({
+                "nodes": [
+                    {"id": "timeline-start", "type": "text", "x": -600, "y": 0, "width": 200, "height": 80, "text": "📅 **Timeline Start**\n{{START_DATE}}", "color": "#2ecc71"},
+                    {"id": "timeline-end", "type": "text", "x": 600, "y": 0, "width": 200, "height": 80, "text": "📅 **Timeline End**\n{{END_DATE}}", "color": "#e74c3c"}
+                ],
+                "edges": [{"id": "timeline-edge", "from": "timeline-start", "to": "timeline-end", "label": "{{ENTRY_COUNT}} entries"}]
+            }),
+        }
+        for name, content in templates.items():
+            with open(os.path.join(self.templates_dir, name), "w", encoding="utf-8") as f:
+                f.write(content)
+
+    def _write_memory_notes(self, notes: List[Dict[str, Any]]) -> None:
+        """Write memory note files directly to vault (simulating export)."""
+        import yaml
+        for note in notes:
+            frontmatter = {
+                "type": "memory",
+                "subtype": note.get("subtype", "fact"),
+                "source": note.get("source", "system_observation"),
+                "confidence": note.get("confidence", 0.8),
+                "tags": note.get("tags", []),
+                "links": note.get("links", []),
+                "created": note.get("created", "2026-01-01T00:00:00Z"),
+                "updated": note.get("updated", "2026-01-01T00:00:00Z"),
+            }
+            fm_yaml = yaml.dump(frontmatter, allow_unicode=True, sort_keys=False).strip()
+            content = f"---\n{fm_yaml}\n---\n\n# {note['title']}\n\n{note['content']}"
+            filename = f"{note['id']}-{note['title']}.md"
+            path = os.path.join(self.memory_dir, filename)
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(content)
+
+    def _write_long_term(self, entries: List[Dict[str, Any]]) -> None:
+        with open(self.long_term_path, "w", encoding="utf-8") as f:
+            json.dump(entries, f, ensure_ascii=False, indent=2)
+
+    def test_extract_memory_links_shared_tags(self):
+        notes = [
+            {"id": "1", "title": "Fact One", "content": "Content about ARIA", "subtype": "fact", "tags": ["aria", "phase-1"], "source": "system_observation", "confidence": 0.9, "created": "2026-01-01T00:00:00Z"},
+            {"id": "2", "title": "Fact Two", "content": "More ARIA content", "subtype": "fact", "tags": ["aria", "phase-2"], "source": "system_observation", "confidence": 0.8, "created": "2026-01-02T00:00:00Z"},
+            {"id": "3", "title": "Unrelated", "content": "Different topic", "subtype": "fact", "tags": ["other"], "source": "system_observation", "confidence": 0.7, "created": "2026-01-03T00:00:00Z"},
+        ]
+        self._write_memory_notes(notes)
+
+        mgr = create_vault_manager(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        # Override templates path for test
+        mgr.bridge.vault_path = self.vault_dir
+
+        links = mgr.extract_memory_links()
+
+        # Note 1 and 2 should be linked (shared tag "aria")
+        path1 = next(p for p in links if "Fact One" in p)
+        path2 = next(p for p in links if "Fact Two" in p)
+        path3 = next(p for p in links if "Unrelated" in p)
+
+        assert path2 in links[path1]
+        assert path1 in links[path2]
+        assert path3 not in links[path1]
+        assert path3 not in links[path2]
+
+    def test_extract_memory_links_keyword_overlap(self):
+        notes = [
+            {"id": "1", "title": "Python Testing", "content": "Python testing with pytest and unittest framework for python code debugging", "subtype": "fact", "tags": [], "source": "system_observation", "confidence": 0.9, "created": "2026-01-01T00:00:00Z"},
+            {"id": "2", "title": "Python Debugging", "content": "Debugging python code using pdb and logging for python projects testing", "subtype": "fact", "tags": [], "source": "system_observation", "confidence": 0.8, "created": "2026-01-02T00:00:00Z"},
+            {"id": "3", "title": "JavaScript Basics", "content": "JavaScript variables functions and objects for web development", "subtype": "fact", "tags": [], "source": "system_observation", "confidence": 0.7, "created": "2026-01-03T00:00:00Z"},
+        ]
+        self._write_memory_notes(notes)
+
+        mgr = create_vault_manager(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        mgr.bridge.vault_path = self.vault_dir
+
+        links = mgr.extract_memory_links()
+
+        path1 = next(p for p in links if "Python Testing" in p)
+        path2 = next(p for p in links if "Python Debugging" in p)
+        path3 = next(p for p in links if "JavaScript Basics" in p)
+
+        # Python notes should be linked (shared keywords: python, code, debugging, testing)
+        assert path2 in links[path1]
+        assert path1 in links[path2]
+        # JavaScript should not be linked
+        assert path3 not in links[path1]
+        assert path3 not in links[path2]
+
+    def test_write_memory_links_updates_frontmatter(self):
+        notes = [
+            {"id": "1", "title": "Note A", "content": "Content A", "subtype": "fact", "tags": ["tag1"], "source": "system_observation", "confidence": 0.9, "created": "2026-01-01T00:00:00Z"},
+            {"id": "2", "title": "Note B", "content": "Content B", "subtype": "fact", "tags": ["tag1"], "source": "system_observation", "confidence": 0.8, "created": "2026-01-02T00:00:00Z"},
+        ]
+        self._write_memory_notes(notes)
+
+        mgr = create_vault_manager(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        mgr.bridge.vault_path = self.vault_dir
+
+        links = mgr.extract_memory_links()
+        updated = mgr.write_memory_links(links)
+
+        assert updated == 2
+
+        # Verify links written to frontmatter
+        for f in Path(self.memory_dir).glob("*.md"):
+            content = f.read_text(encoding="utf-8")
+            assert "links:" in content
+            # Should contain link to the other note
+            other = "Note B" if "Note A" in content else "Note A"
+            assert other in content
+
+    def test_generate_canvas_from_template(self):
+        self._write_long_term([])
+
+        mgr = create_vault_manager(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        mgr.bridge.vault_path = self.vault_dir
+
+        canvas_path = mgr.generate_canvas_from_template("topic-center", {"TOPIC": "Test Topic"}, template_dir=self.templates_dir)
+
+        assert canvas_path
+        assert canvas_path.endswith(".canvas")
+        full_path = os.path.join(self.vault_dir, canvas_path)
+        assert os.path.exists(full_path)
+
+        with open(full_path, "r", encoding="utf-8") as f:
+            canvas = json.load(f)
+        assert canvas["nodes"][0]["text"] == "# Test Topic"
+
+    def test_generate_vault_index(self):
+        notes = [
+            {"id": "1", "title": "Fact One", "content": "Content", "subtype": "fact", "tags": ["phase-1"], "source": "system_observation", "confidence": 0.9, "created": "2026-01-01T00:00:00Z"},
+            {"id": "2", "title": "Decision One", "content": "Content", "subtype": "decision", "tags": ["phase-2"], "source": "user_chat", "confidence": 0.6, "created": "2026-01-02T00:00:00Z"},
+        ]
+        self._write_memory_notes(notes)
+
+        mgr = create_vault_manager(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+        mgr.bridge.vault_path = self.vault_dir
+
+        index_path = mgr.generate_vault_index()
+
+        assert index_path == "INDEX.md"
+        full_path = os.path.join(self.vault_dir, index_path)
+        assert os.path.exists(full_path)
+
+        content = open(full_path, "r", encoding="utf-8").read()
+        assert "ARIA Memory Vault" in content
+        assert "Total Notes" in content
+        assert "fact" in content
+        assert "decision" in content
+        assert "phase-1" in content
+        assert "phase-2" in content
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

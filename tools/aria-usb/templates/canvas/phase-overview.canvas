@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "phase-1",
+      "type": "text",
+      "x": -400,
+      "y": -300,
+      "width": 220,
+      "height": 100,
+      "text": "## Phase 1\n{{PHASE_1_COUNT}} entries",
+      "color": "#3498db"
+    },
+    {
+      "id": "phase-2",
+      "type": "text",
+      "x": 0,
+      "y": -300,
+      "width": 220,
+      "height": 100,
+      "text": "## Phase 2\n{{PHASE_2_COUNT}} entries",
+      "color": "#2ecc71"
+    },
+    {
+      "id": "phase-3",
+      "type": "text",
+      "x": 400,
+      "y": -300,
+      "width": 220,
+      "height": 100,
+      "text": "## Phase 3\n{{PHASE_3_COUNT}} entries",
+      "color": "#f39c12"
+    },
+    {
+      "id": "phase-4",
+      "type": "text",
+      "x": -400,
+      "y": 150,
+      "width": 220,
+      "height": 100,
+      "text": "## Phase 4\n{{PHASE_4_COUNT}} entries",
+      "color": "#e74c3c"
+    },
+    {
+      "id": "phase-5",
+      "type": "text",
+      "x": 0,
+      "y": 150,
+      "width": 220,
+      "height": 100,
+      "text": "## Phase 5\n{{PHASE_5_COUNT}} entries",
+      "color": "#9b59b6"
+    },
+    {
+      "id": "phase-6",
+      "type": "text",
+      "x": 400,
+      "y": 150,
+      "width": 220,
+      "height": 100,
+      "text": "## Phase 6\n{{PHASE_6_COUNT}} entries",
+      "color": "#1abc9c"
+    }
+  ],
+  "edges": []
+}

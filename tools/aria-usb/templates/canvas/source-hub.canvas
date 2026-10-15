@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    {
+      "id": "source-hub",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 250,
+      "height": 80,
+      "text": "# Sources\n{{SOURCE_COUNT}} sources",
+      "color": "#9b59b6"
+    }
+  ],
+  "edges": []
+}
