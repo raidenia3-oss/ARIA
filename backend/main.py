@@ -132,6 +132,7 @@ from backend.autonomy.supervisor import get_supervisor
 from backend.reverse_engineer.routes import router as rea_router
 from backend.drive_routes import router as drive_router
 from backend.integrations_routes import router as integrations_router
+from backend.autonomous_routes import router as autonomous_router
 from backend.automation.memory_routes import router as automation_memory_router
 from backend.automation.models import AutomationRuleModel
 from backend.fanfic_routes import router as fanfic_router
@@ -480,6 +481,7 @@ app.include_router(backup_router)
 app.include_router(rea_router)
 app.include_router(drive_router)
 app.include_router(integrations_router)
+app.include_router(autonomous_router)
 
 DASHBOARD_BUILD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "web_dashboard", "dist")
 if not os.path.isdir(DASHBOARD_BUILD_DIR) and hasattr(sys, "_MEIPASS"):
