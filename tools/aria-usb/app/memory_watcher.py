@@ -180,7 +180,7 @@ class MemoryVaultManager:
         filename = f"memory-graph-{center_topic.lower().replace(' ', '-')}-{int(time.time())}"
         return self.bridge.generate_memory_canvas(center_topic, notes, filename)
 
-    def extract_memory_links(self, notes: Optional[List[Dict[str, Any]]] = None) -> Dict[str, List[str]]:
+    def extract_memory_links(self, notes: Optional[List[Dict[str, Any]]] = None, keyword_threshold: int = 3) -> Dict[str, List[str]]:
         """Extract bidirectional links between memory notes based on content overlap.
         
         Returns dict of note_path -> list of linked note_paths.
@@ -227,7 +227,7 @@ class MemoryVaultManager:
                 words_a = set(re.findall(r'\b\w{4,}\b', data_a["content"]))
                 words_b = set(re.findall(r'\b\w{4,}\b', data_b["content"]))
                 overlap = words_a & words_b
-                if len(overlap) >= 3:
+                if len(overlap) >= keyword_threshold:
                     link_reasons.append(f"keywords:{len(overlap)}")
                 
                 # Explicit wiki-links
