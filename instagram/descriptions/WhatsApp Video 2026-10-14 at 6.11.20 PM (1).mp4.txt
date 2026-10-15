@@ -1,0 +1,94 @@
+SOURCE: downloads\WhatsApp Video 2026-10-14 at 6.11.20 PM (1).mp4
+MODEL:   granite3.2-vision:2b
+CAVEAT:  Model output is not a measurement. Trust 'measured' blindly; everything else is checked, not guaranteed.
+
+========================================================================
+UNIT t=0.00s  476x848
+========================================================================
+-- MEASURED (trustworthy) --
+size=476x848 aspect=0.5613 mean_luma=41.35 dark=86.08% bright=1.41%
+  colour #0a0f1e rgb[10, 15, 30] 2.36%
+  colour #142747 rgb[20, 39, 71] 1.08%
+  colour #41495a rgb[65, 73, 90] 0.17%
+  colour #e7804d rgb[231, 128, 77] 0.15%
+  colour #676d75 rgb[103, 109, 117] 0.1%
+  colour #8a5c3e rgb[138, 92, 62] 0.08%
+  luminance map:
+    |                                                                |
+    |                                             :....              |
+    |    ....                                    .:...:.   .  ..     |
+    |    :==: -:=:=+-+-+: .--==-+:                .  ..              |
+    |    ....                                                        |
+    |                                                                |
+    |                                                                |
+    |                                                                |
+    |                  .-::  -.:.:-::-: :-.--.-::-.                  |
+    |                  -==*-=+++=-*+=*- +--++=++=+:                  |
+    |                 ....  ............ ...........                 |
+    |               . :=:=- :=.-+--=+-=: +=+-:==--+= ..              |
+    |           ......... ...............................            |
+    |       ................................................         |
+    |    .......................=========-......................     |
+    |   ........................-+--====+-........................   |
+    |...........................-++++++++-.......................... |
+    |...........................-========-...........................|
+    |...........................-==+==+=+-...........................|
+    |...........................:-----=--:...........................|
+    |................................................................|
+    |................................................................|
+    |................................................................|
+    |................................................................|
+    |................................................................|
+    |..............................::::..............................|
+    |..............................=++=..............................|
+    |...............................--...............................|
+    |........................:======++======:........................|
+    |........................-*************+-........................|
+    |.....................:--=++=.:+***:.=++=--:.....................|
+    |.....................=***++=::+***::++++**=.....................|
+    |.....................:::=++++++*****+++-:::.....................|
+    |........................-++++++++++++++-........................|
+    |........................::-++=::::=++-::........................|
+    |..........................-**+....+*+-..........................|
+    |-----------------------::::===....===::::-----------------------|
+    |----------------------------------------------------------------|
+    |=====-==-===-==--======-======-======-==-=======-======-======-=|
+    |================================================================|
+    |................................................................|
+    |................................................................|
+    |................................................................|
+    |  ..  .:..........:..:: .:..:..:.::...: ::....:. :  .:.::.      |
+    |      =+*+=.##=+*+*#+*- *=+#-#*=*#+: *#=*+-#*=*#=%= *+*#+:      |
+    |       :..:....:..:..:. .:..:..:..:...........:.. . .:..:.      |
+    |                                                                |
+    |                                                                |
+    |                                                                |
+    |                                                                |
+    |                      ..                                        |
+    |                     =--= :.:::.....:... .:                     |
+    |                     .... .                                     |
+    |                                                                |
+    |                                                                |
+    |                                                                |
+    |                                                                |
+-- TILE SWEEP 2x2 coverage=100.0% (4/4) --
+  r0c0 bbox=[0, 0, 238, 424] The tile contains the text 'CLAUDE CODE' in the top-left corner, with a star symbol above it. The word 'CLAUDE' is in a larger font size and colored in red, while 'CODE' is in a smaller font size and colored in blue.
+      - noun x0 @top-left|top-centre|top-right|centre-left|centre|centre-right|bottom-left|bottom-centre|bottom-right [high|medium|low]
+      text: 'CLAUDE CODE'
+  r0c1 bbox=[238, 0, 476, 424] The tile contains the text 'CODE E MODS'.
+      - noun x0 @top-left|top-centre|top-right|centre-left|centre|centre-right|bottom-left|bottom-centre|bottom-right [high|medium|low]
+      text: 'CODE E MODS'
+  r1c0 bbox=[0, 424, 238, 848] The tile contains a single orange block with a black dot for an eye, placed on a green strip of land.
+      - noun x0 @top-left|top-centre|top-right|centre-left|centre|centre-right|bottom-left|bottom-centre|bottom-right [high|medium|low]
+      text: 'copy any characters EXACTLY as rendered, else empty string'
+  r1c1 bbox=[238, 424, 476, 848] The tile contains a single orange block with a black dot for an eye, standing on a green base. The block is on a blue background with a darker blue border. There is no text present in the tile.
+      - noun x0 @top-left|top-centre|top-right|centre-left|centre|centre-right|bottom-left|bottom-centre|bottom-right [high|medium|low]
+      text: 'copy any characters EXACTLY as rendered, else empty string'
+-- OCR --
+  'exact characters' @ where it sits, plain words
+-- NARRATIVE --
+[narrativa omitida - usar modelos cloud para speedup]
+-- VERIFICATION --
+  unavailable: skipped
+-- CROSS CHECK --
+  no colour contradictions detected

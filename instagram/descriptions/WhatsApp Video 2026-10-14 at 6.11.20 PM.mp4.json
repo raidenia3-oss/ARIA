@@ -1,0 +1,214 @@
+{
+  "source": "downloads\\WhatsApp Video 2026-10-14 at 6.11.20 PM.mp4",
+  "model": "granite3.2-vision:2b",
+  "units": [
+    {
+      "label": "t=0.00s",
+      "measured": {
+        "width": 478,
+        "height": 850,
+        "aspect": 0.5624,
+        "mean_luminance": 6.7,
+        "dark_pct": 99.55,
+        "bright_pct": 0.0,
+        "dominant_colors": [
+          {
+            "rgb": [
+              0,
+              10,
+              8
+            ],
+            "hex": "#000a08",
+            "share_pct": 24.28
+          },
+          {
+            "rgb": [
+              20,
+              34,
+              31
+            ],
+            "hex": "#14221f",
+            "share_pct": 0.03
+          },
+          {
+            "rgb": [
+              50,
+              64,
+              61
+            ],
+            "hex": "#32403d",
+            "share_pct": 0.02
+          },
+          {
+            "rgb": [
+              71,
+              84,
+              81
+            ],
+            "hex": "#475451",
+            "share_pct": 0.0
+          },
+          {
+            "rgb": [
+              118,
+              102,
+              63
+            ],
+            "hex": "#76663f",
+            "share_pct": 0.0
+          },
+          {
+            "rgb": [
+              98,
+              77,
+              37
+            ],
+            "hex": "#624d25",
+            "share_pct": 0.0
+          }
+        ],
+        "luminance_map": [
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                               .....                            ",
+          "                              .......                           ",
+          "                               .....                            ",
+          "                                  .                             ",
+          "                           .. ..  . :::                         ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "               ....                                             ",
+          "                                                                ",
+          "              ......    ..-                                     ",
+          "                          .                                     ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                ",
+          "                                                                "
+        ],
+        "measured_by": "PIL (deterministic, not a model)"
+      },
+      "tile_sweep": {
+        "grid": "2x2",
+        "tiles_planned": 4,
+        "tiles_answered": 0,
+        "tiles_reported_empty": 0,
+        "coverage_pct": 0.0,
+        "tiles": [
+          {
+            "tile": "r0c0",
+            "bbox": [
+              0,
+              0,
+              239,
+              425
+            ],
+            "parsed": false,
+            "answer": null,
+            "error": "ERROR: local vision HTTP 400: {\"error\":\"request (2513 tokens) exceeds the available context size (2048 tokens), try increasing it\"}"
+          },
+          {
+            "tile": "r0c1",
+            "bbox": [
+              239,
+              0,
+              478,
+              425
+            ],
+            "parsed": false,
+            "answer": null,
+            "error": "ERROR: local vision HTTP 400: {\"error\":\"request (2513 tokens) exceeds the available context size (2048 tokens), try increasing it\"}"
+          },
+          {
+            "tile": "r1c0",
+            "bbox": [
+              0,
+              425,
+              239,
+              850
+            ],
+            "parsed": false,
+            "answer": null,
+            "error": "ERROR: local vision HTTP 400: {\"error\":\"request (2513 tokens) exceeds the available context size (2048 tokens), try increasing it\"}"
+          },
+          {
+            "tile": "r1c1",
+            "bbox": [
+              239,
+              425,
+              478,
+              850
+            ],
+            "parsed": false,
+            "answer": null,
+            "error": "ERROR: local vision HTTP 400: {\"error\":\"request (2513 tokens) exceeds the available context size (2048 tokens), try increasing it\"}"
+          }
+        ]
+      },
+      "ocr": {
+        "available": false,
+        "reason": "local vision HTTP 400: {\"error\":\"request (2367 tokens) exceeds the available context size (2048 tokens), try increasing it\"}",
+        "lines": []
+      },
+      "narrative": "[narrativa omitida - usar modelos cloud]",
+      "verification": {
+        "available": false,
+        "reason": "skipped"
+      },
+      "cross_check": {
+        "available": false,
+        "reason": "skipped"
+      },
+      "unverified_claims": [],
+      "stage_errors": [],
+      "complete": true,
+      "trust": {
+        "measured": "arithmetic",
+        "tiles": "model, per-tile",
+        "ocr": "model, verbatim request",
+        "narrative": "skipped for local speed"
+      }
+    }
+  ],
+  "caveat": "Model output is not a measurement. Trust 'measured' blindly; everything else is checked, not guaranteed."
+}

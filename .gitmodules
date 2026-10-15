@@ -1,0 +1,6 @@
+[submodule "integrations/Insomnia"]
+	path = integrations/Insomnia
+	url = https://github.com/krishhgg/Insomnia
+[submodule "integrations/apple_watch_connector"]
+	path = integrations/apple_watch_connector
+	url = https://github.com/LordixDemon/apple_watch_connector
