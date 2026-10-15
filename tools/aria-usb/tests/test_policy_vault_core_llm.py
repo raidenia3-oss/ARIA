@@ -11,6 +11,7 @@ from app.vault import Vault, encrypt_blob, decrypt_blob
 from app.core import create_registry, ToolResult, ToolStatus
 from app.llm_local import LLMLocalClient
 from app.memory_export import MemoryExporter, LongTermMemoryEntry
+from app.memory_watcher import MemoryWatcher, MemoryVaultManager, create_vault_manager
 from app.obsidian_bridge import MemoryNote, MemoryType, MemorySource
 
 
@@ -408,6 +409,133 @@ class TestMemoryExport:
         assert "tag1" in content
         assert "source: system_observation" in content
         assert "Test content" in content
+
+
+class TestMemoryWatcher:
+    def setup_method(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.vault_dir = os.path.join(self.tmpdir, "vault")
+        self.memory_dir = os.path.join(self.vault_dir, "memory")
+        os.makedirs(self.memory_dir, exist_ok=True)
+        self.long_term_path = os.path.join(self.tmpdir, "long_term.json")
+
+    def teardown_method(self):
+        import shutil
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    def _write_long_term(self, entries: List[Dict[str, Any]]) -> None:
+        with open(self.long_term_path, "w", encoding="utf-8") as f:
+            json.dump(entries, f, ensure_ascii=False, indent=2)
+
+    def test_watcher_loads_known_ids(self):
+        entries = [
+            {"id": "1", "timestamp": "2026-01-01T00:00:00Z", "content": "Fact one", "meta": {"type": "fact"}},
+            {"id": "2", "timestamp": "2026-01-02T00:00:00Z", "content": "Fact two", "meta": {"type": "fact"}},
+        ]
+        self._write_long_term(entries)
+
+        watcher = MemoryWatcher(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+
+        assert "1" in watcher._known_ids
+        assert "2" in watcher._known_ids
+        assert len(watcher._known_ids) == 2
+
+    def test_watcher_detects_new_entries(self):
+        entries = [
+            {"id": "1", "timestamp": "2026-01-01T00:00:00Z", "content": "Fact one", "meta": {"type": "fact"}},
+        ]
+        self._write_long_term(entries)
+
+        watcher = MemoryWatcher(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+
+        # Add new entry
+        entries.append({"id": "2", "timestamp": "2026-01-02T00:00:00Z", "content": "Fact two", "meta": {"type": "fact"}})
+        self._write_long_term(entries)
+
+        new_entries = watcher._get_new_entries()
+
+        assert len(new_entries) == 1
+        assert new_entries[0].id == "2"
+        assert new_entries[0].content == "Fact two"
+
+    def test_watcher_check_once_exports_new(self):
+        entries = [
+            {"id": "1", "timestamp": "2026-01-01T00:00:00Z", "content": "Fact one", "meta": {"type": "fact"}},
+        ]
+        self._write_long_term(entries)
+
+        watcher = MemoryWatcher(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+
+        # Add new entry
+        entries.append({"id": "2", "timestamp": "2026-01-02T00:00:00Z", "content": "Fact two", "meta": {"type": "decision"}})
+        self._write_long_term(entries)
+
+        count = watcher.check_once()
+
+        assert count == 1
+        files = list(Path(self.memory_dir).glob("*.md"))
+        assert len(files) == 1  # Only new entry exported
+
+        # Check the new file has correct frontmatter
+        for f in files:
+            content = f.read_text(encoding="utf-8")
+            if "Fact two" in content:
+                assert "subtype: decision" in content
+
+    def test_vault_manager_initial_export(self):
+        entries = [
+            {"id": "1", "timestamp": "2026-01-01T00:00:00Z", "content": "Fact one", "meta": {"type": "fact"}},
+            {"id": "2", "timestamp": "2026-01-02T00:00:00Z", "content": "Fact two", "meta": {"type": "insight"}},
+        ]
+        self._write_long_term(entries)
+
+        mgr = create_vault_manager(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+
+        results = mgr.initial_export(use_api=False)
+
+        assert results["total"] == 2
+        assert results["exported"] == 2
+        files = list(Path(self.memory_dir).glob("*.md"))
+        assert len(files) == 2
+
+    def test_vault_manager_generate_dataview_queries(self):
+        entries = [
+            {"id": "1", "timestamp": "2026-01-01T00:00:00Z", "content": "Fact one", "meta": {"type": "fact"}},
+        ]
+        self._write_long_term(entries)
+
+        mgr = create_vault_manager(
+            long_term_path=self.long_term_path,
+            vault_path=self.vault_dir,
+        )
+
+        queries = mgr.generate_dataview_queries()
+
+        assert "all_facts" in queries
+        assert "all_decisions" in queries
+        assert "all_insights" in queries
+        assert "by_source" in queries
+        assert "by_phase" in queries
+        assert "high_confidence" in queries
+        assert "recent_week" in queries
+        assert "unlinked" in queries
+
+        # Check format is proper markdown code block
+        for q in queries.values():
+            assert q.startswith("```dataview")
+            assert q.endswith("```")
 
 
 if __name__ == "__main__":

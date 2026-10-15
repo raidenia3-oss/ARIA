@@ -15,6 +15,8 @@ from .obsidian_bridge import (
     Canvas,
     create_bridge,
 )
+from .memory_export import MemoryExporter, LongTermMemoryEntry, create_exporter
+from .memory_watcher import MemoryWatcher, MemoryVaultManager, create_vault_manager
 
 __all__ = [
     "ToolRegistry",
@@ -43,4 +45,10 @@ __all__ = [
     "CanvasEdge",
     "Canvas",
     "create_bridge",
+    "MemoryExporter",
+    "LongTermMemoryEntry",
+    "create_exporter",
+    "MemoryWatcher",
+    "MemoryVaultManager",
+    "create_vault_manager",
 ]
