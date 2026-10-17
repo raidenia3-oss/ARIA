@@ -1,20 +1,17 @@
 ﻿# -*- coding: utf-8 -*-
 """ARIA Social Browser - Navegacion universal sin descargar nada.
-
 Playwright para navegar. Captura SOLO frames renderizados (viewport).
 Nunca descarga MP4 u otros binarios. Todo en memoria (base64).
 """
 from __future__ import annotations
 
 import asyncio
-import base64
-import json
 import logging
-import os
-import time
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Callable
+from typing import Any, Dict, List, Optional
+
+from backend.social import social_browser_core
 
 logger = logging.getLogger('ARIA.SocialBrowser')
 
@@ -56,3 +53,26 @@ def guess_platform(url: str) -> str:
             if h in u:
                 return plat
     return 'generic'
+
+async def browse_and_analyze(
+    url: str,
+    max_frames: int = 12,
+    interval_ms: int = 600,
+    headless: bool = True,
+) -> BrowseResult:
+    platform = guess_platform(url)
+    frames_raw = await social_browser_core.capture_frames_viewport(
+        url=url,
+        max_frames=max_frames,
+        interval_ms=interval_ms,
+        headless=headless,
+    )
+    frames = [Frame(t=f['t'], image_b64=f['image_b64'], mime=f['mime']) for f in frames_raw]
+    return BrowseResult(
+        url=url,
+        platform=platform,
+        title=f'{platform} - live',
+        description='Analisis por frames renderizados (sin descarga).',
+        frames=frames,
+        ts=datetime.utcnow().isoformat() + 'Z',
+    )
