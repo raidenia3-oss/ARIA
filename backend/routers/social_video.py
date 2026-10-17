@@ -12,6 +12,11 @@ try:
 except Exception:
     social_video_analyzer = None
 
+try:
+    from backend.social import social_browser
+except Exception:
+    social_browser = None
+
 logger = logging.getLogger('ARIA.Routers.SocialVideo')
 
 router = APIRouter(prefix='/social-video', tags=['social-video'])
@@ -26,6 +31,12 @@ class AnalyzeFramesReq(BaseModel):
     frames: List[FrameIn]
     audio_transcript: Optional[str] = None
     fps_sample: Optional[float] = 0.5
+
+class BrowseReq(BaseModel):
+    url: HttpUrl
+    max_frames: Optional[int] = 12
+    interval_ms: Optional[int] = 600
+    headless: Optional[bool] = True
 
 @router.post('/analyze-frames')
 async def analyze_frames(req: AnalyzeFramesReq) -> Dict[str, Any]:
@@ -43,6 +54,22 @@ async def analyze_frames(req: AnalyzeFramesReq) -> Dict[str, Any]:
         logger.exception('social-video analyze-frames failed')
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post('/browse')
+async def browse(req: BrowseReq) -> Dict[str, Any]:
+    if social_browser is None:
+        raise HTTPException(status_code=503, detail='browser_not_ready')
+    try:
+        res = await social_browser.browse_and_analyze(
+            url=str(req.url),
+            max_frames=req.max_frames or 12,
+            interval_ms=req.interval_ms or 600,
+            headless=req.headless if req.headless is not None else True,
+        )
+        return {'ok': True, 'result': asdict(res)}
+    except Exception as e:
+        logger.exception('social-video browse failed')
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get('/capabilities')
 async def capabilities() -> Dict[str, Any]:
     return {
@@ -50,5 +77,5 @@ async def capabilities() -> Dict[str, Any]:
         'method': 'viewport-frame-sampling',
         'downloads_mp4': False,
         'platforms': ['instagram', 'tiktok', 'youtube', 'x', 'facebook', 'linkedin', 'threads', 'bluesky', 'pinterest', 'reddit'],
-        'notes': 'Analiza fotogramas renderizados (base64 en memoria). No guarda MP4. Reutiliza VisionEngine.',
+        'notes': 'Navega y captura fotogramas renderizados (base64 en memoria). Nunca descarga MP4.',
     }
