@@ -70,8 +70,8 @@ const PHASE_COLORS: Record<OrbPhase, {
 }
 
 const PARTICLE_COUNT = 12
-const BREATH_PERIOD = 1.5
-const PULSE_PERIOD = 2.0
+const BREATH_PERIOD = 1.8
+const PULSE_PERIOD = 2.4
 const FIBONACCI_COUNT = 89
 const INFON_COUNT = 34
 const EVOLUTION_RINGS = 3
