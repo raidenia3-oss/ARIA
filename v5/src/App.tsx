@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Header } from './components/Header/Header'
 import { OrbVisual } from './components/OrbVisual/OrbVisual'
@@ -9,6 +9,8 @@ import { SkillsSidebar } from './components/Skills/SkillsSidebar'
 import { ControlCenter } from './components/Controls/ControlCenter'
 import { NeuralBrain } from './components/NeuralBrain/NeuralBrain'
 import { SkillProgression } from './components/SkillProgression/SkillProgression'
+import { SkillTree } from './components/SkillTree/SkillTree'
+import { GestureEye } from './components/GestureEye/GestureEye'
 import { GodsEyeView } from './components/GodsEyeView/GodsEyeView'
 import { JarvisVoice } from './components/JarvisVoice/JarvisVoice'
 import { TabBar } from './components/TabBar/TabBar'
@@ -17,6 +19,8 @@ import { useChat } from './hooks/useChat'
 import { useSettings } from './hooks/useSettings'
 import { useBackendTest } from './hooks/useBackendTest'
 import { useAriaBackend } from './hooks/useAriaBackend'
+import { useCameraGestures } from './hooks/useCameraGestures'
+import { onGestureAction } from './lib/gestureActions'
 
 /** Blip corto de confirmación (WebAudio, sin assets) */
 function blip() {
@@ -42,18 +46,34 @@ function blip() {
   }
 }
 
-export type ActiveView = 'chat' | 'brain' | 'eye' | 'skills' | 'voice'
+export type ActiveView = 'chat' | 'brain' | 'eye' | 'skills' | 'tree' | 'gestures' | 'voice'
+
+/**
+ * Vistas que ocupan toda el área principal en vez de convivir con el chat.
+ *
+ * El árbol de habilidades y la consola de gestos son experiencias a pantalla
+ * completa: partirlas en dos con el chat las deja inutilizables.
+ */
+const FULLSCREEN_VIEWS: ActiveView[] = ['tree', 'gestures']
+
+/** Orden de las vistas: el gesto «siguiente» avanza por esta lista. */
+const VIEW_ORDER: ActiveView[] = ['chat', 'brain', 'eye', 'skills', 'tree', 'gestures', 'voice']
 
 export default function App() {
   const [showControl, setShowControl] = useState(false)
   const [showSkills, setShowSkills] = useState(true)
   const [showDebug, setShowDebug] = useState(false)
   const [activeView, setActiveView] = useState<ActiveView>('chat')
+  /** Texto del chat: controlado desde fuera para que un gesto lo pueda ejecutar. */
+  const [draft, setDraft] = useState('')
   const { orbState, setOrbState } = useOrbState()
   const { settings, updateSettings } = useSettings()
   const chat = useChat(setOrbState, { stream: settings.streaming })
   const backendTest = useBackendTest()
   const aria = useAriaBackend()
+  // Una sola cámara para toda la app: la consola de gestos y el canal de
+  // voz comparten el mismo veredicto de identidad.
+  const gestures = useCameraGestures()
 
   // La conexión con Axum (8002) sólo dirige el orbe cuando no hay una
   // fase local activa (chat, escritura, voz). Si el usuario está interactuando,
@@ -77,6 +97,46 @@ export default function App() {
     if (settings.vibration) navigator.vibrate?.(40)
     void chat.sendMessage(text)
   }
+
+  /* ── Acciones por gesto ────────────────────────────────────────── */
+
+  // Lo último que el usuario le pidió a ARIA: es la «orden pendiente» que
+  // ejecuta el gesto del índice.
+  const lastUserMessage = useCallback(() => {
+    for (let i = chat.messages.length - 1; i >= 0; i--) {
+      if (chat.messages[i].sender === 'user') return chat.messages[i].text
+    }
+    return ''
+  }, [chat.messages])
+
+  useEffect(() => {
+    return onGestureAction((event) => {
+      switch (event.action) {
+        case 'detener':
+          chat.stop()
+          break
+        case 'siguiente': {
+          const index = VIEW_ORDER.indexOf(activeView)
+          setActiveView(VIEW_ORDER[(index + 1) % VIEW_ORDER.length])
+          break
+        }
+        case 'aprobar':
+          handleSend('Sí, procede con lo que propones.')
+          break
+        case 'ejecutar': {
+          const pending = draft.trim() || lastUserMessage()
+          if (pending) {
+            setDraft('')
+            handleSend(pending)
+          }
+          break
+        }
+        default:
+          // 'pausar' lo escucha el canal de voz: cierra el micrófono.
+          break
+      }
+    })
+  }, [activeView, chat, draft, lastUserMessage])
 
   const handleFocusChange = (focused: boolean) => {
     if (focused) setOrbState('listening')
@@ -179,13 +239,38 @@ export default function App() {
         </AnimatePresence>
 
         <main className="flex min-h-0 flex-1 flex-col items-center px-4 py-3">
+          {activeView === 'tree' && (
+            <div className="flex min-h-0 w-full max-w-6xl flex-1">
+              <SkillTree />
+            </div>
+          )}
+
+          {activeView === 'gestures' && (
+            <div className="flex min-h-0 w-full max-w-6xl flex-1">
+              <GestureEye gestures={gestures} />
+            </div>
+          )}
+
+          {activeView === 'voice' && (
+            <div className="flex min-h-0 w-full max-w-4xl flex-1 justify-center pt-6">
+              <JarvisVoice
+                identity={gestures.identity}
+                enrolled={gestures.enrolled}
+                chat={chat}
+                expanded
+              />
+            </div>
+          )}
+
+          {!FULLSCREEN_VIEWS.includes(activeView) && (
+            <>
           <div className="relative mb-1 flex w-full max-w-5xl items-start justify-center gap-4">
             <div className="flex flex-col items-center">
               <div
                 className="orb-halo"
                 style={{ background: `radial-gradient(circle, ${status.glow} 0%, transparent 68%)` }}
               />
-              <OrbVisual phase={effectivePhase} animated={settings.animations} />
+              <OrbVisual phase={effectivePhase} animated={settings.animations} aspect={settings.aspect} />
             </div>
 
             <div className={`glass-panel flex w-[420px] flex-col items-center rounded-2xl p-3 ${activeView === 'brain' ? 'flex' : 'hidden'}`}>
@@ -219,14 +304,20 @@ export default function App() {
               onSend={handleSend}
               disabled={chat.isStreaming}
               onFocusChange={handleFocusChange}
+              draft={draft}
+              onDraftChange={setDraft}
             />
           </div>
+            </>
+          )}
         </main>
       </div>
 
-      <div className="fixed bottom-4 left-4 z-40">
-        <JarvisVoice />
-      </div>
+      {activeView !== 'voice' && (
+        <div className="fixed bottom-4 left-4 z-40">
+          <JarvisVoice identity={gestures.identity} enrolled={gestures.enrolled} chat={chat} />
+        </div>
+      )}
 
       <AnimatePresence>
         {showControl && (

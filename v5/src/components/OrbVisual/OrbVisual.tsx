@@ -238,6 +238,7 @@ class OrbScene {
   private currentFractal = new THREE.Color(PHASE_COLORS.idle.fractal)
   private animated = true
   private phase: OrbPhase = 'idle'
+  private aspect: 'gran_sabio' | 'raphael' | 'ciel' | 'fused' = 'fused'
 
   constructor(host: HTMLElement) {
     this.host = host
@@ -523,17 +524,35 @@ class OrbScene {
     if (phase === this.phase) return
     const previous = this.phase
     this.phase = phase
-    this.targetCore.set(PHASE_COLORS[phase].core)
-    this.targetGlow.set(PHASE_COLORS[phase].glow)
-    this.targetEye.set(PHASE_COLORS[phase].eye)
-    this.targetFractal.set(PHASE_COLORS[phase].fractal)
+    this.applyColors()
     if (previous !== phase && (phase === 'thinking' || phase === 'responding' || phase === 'wisdom')) {
       this.spawnBurst()
     }
   }
 
+  setAspect(aspect: 'gran_sabio' | 'raphael' | 'ciel' | 'fused'): void {
+    if (aspect === this.aspect) return
+    this.aspect = aspect
+    this.applyColors()
+  }
+
   setAnimated(animated: boolean): void {
     this.animated = animated
+  }
+
+  private applyColors(): void {
+    const base = PHASE_COLORS[this.phase]
+    const asp = ASPECT_COLORS[this.aspect]
+    // Mezcla el color de fase con el tono del aspecto (Gran Sabio/Raphael/Ciel)
+    const mix = (a: string, b: string, t = 0.45): string => {
+      const ca = new THREE.Color(a)
+      const cb = new THREE.Color(b)
+      return ca.lerp(cb, t).getHexString()
+    }
+    this.targetCore.set(`#${mix(base.core, asp.core)}`)
+    this.targetGlow.set(`#${mix(base.glow, asp.glow)}`)
+    this.targetEye.set(`#${mix(base.eye, asp.eye)}`)
+    this.targetFractal.set(`#${mix(base.fractal, asp.core)}`)
   }
 
   private resize(): void {
@@ -846,6 +865,14 @@ function radialTexture(size = 128, power = 2.2): THREE.Texture {
 export interface OrbVisualProps {
   phase: OrbPhase
   animated?: boolean
+  aspect?: 'gran_sabio' | 'raphael' | 'ciel' | 'fused'
+}
+
+const ASPECT_COLORS: Record<'gran_sabio' | 'raphael' | 'ciel' | 'fused', { core: string; glow: string; eye: string }> = {
+  gran_sabio: { core: '#60a5fa', glow: '#3b82f6', eye: '#bfdbfe' },
+  raphael: { core: '#4ade80', glow: '#22c55e', eye: '#bbf7d0' },
+  ciel: { core: '#a78bfa', glow: '#8b5cf6', eye: '#ddd6fe' },
+  fused: { core: '#818cf8', glow: '#6366f1', eye: '#c7d2fe' },
 }
 
 /**
@@ -859,7 +886,7 @@ export interface OrbVisualProps {
  * - Anillos de pulso con ondas Shinkirō
  * - Rayos burst al activarse
  */
-export function OrbVisual({ phase, animated = true }: OrbVisualProps) {
+export function OrbVisual({ phase, animated = true, aspect = 'fused' }: OrbVisualProps) {
   const hostRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<OrbScene | null>(null)
   const composerRef = useRef<EffectComposer | null>(null)
@@ -908,6 +935,10 @@ export function OrbVisual({ phase, animated = true }: OrbVisualProps) {
   useEffect(() => {
     sceneRef.current?.setAnimated(animated)
   }, [animated])
+
+  useEffect(() => {
+    sceneRef.current?.setAspect(aspect)
+  }, [aspect])
 
   useEffect(() => {
     if (!ready) return

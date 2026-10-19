@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import type { Settings, ThemeName } from '../../hooks/useSettings'
-import { THEME_ACCENTS } from '../../hooks/useSettings'
+import { THEME_ACCENTS, ORB_ASPECT_COLORS } from '../../hooks/useSettings'
 import { ControlDashboard } from './ControlDashboard'
 
 export interface ControlCenterProps {
@@ -180,6 +180,45 @@ export function ControlCenter({ settings, onUpdate, onClose }: ControlCenterProp
                   )
                 })}
               </div>
+            </Section>
+
+            <Section title="Aspecto del núcleo">
+              <div className="flex flex-col gap-2">
+                {[
+                  { id: 'gran_sabio', label: 'Gran Sabio' },
+                  { id: 'raphael', label: 'Raphael' },
+                  { id: 'ciel', label: 'Ciel' },
+                  { id: 'fused', label: 'Fusión (3 en 1)' },
+                ].map((a) => {
+                  const ac = ORB_ASPECT_COLORS[a.id as 'gran_sabio' | 'raphael' | 'ciel' | 'fused']
+                  const active = settings.aspect === (a.id as Settings['aspect'])
+                  return (
+                    <motion.button
+                      key={a.id}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => onUpdate({ aspect: a.id as Settings['aspect'] })}
+                      title={a.label}
+                      className={`
+                        flex items-center gap-2 px-3 py-1.5 rounded-xl border
+                        ${active
+                          ? 'bg-white/10 border-accent-cyan text-accent-cyan shadow-[0_0_20px_rgba(129,140,248,0.5)]'
+                          : 'border-transparent text-text-tertiary hover:text-text-secondary'
+                        }
+                      `}
+                    >
+                      <span
+                        className="w-2.5 h-2.5 rounded-full"
+                        style={{ background: `radial-gradient(circle at 50% 50%, ${ac.core}, ${ac.core})`, boxShadow: `0 0 8px ${ac.core}` }}
+                      />
+                      <span className="text-[10px] font-medium">{a.label}</span>
+                    </motion.button>
+                  )
+                })}
+              </div>
+              <p className="mt-1 text-[9px] text-text-tertiary">
+                Gran Sabio = sabiduría y análisis · Raphael = transformación · Ciel = información · Fusión = los tres unidos
+              </p>
             </Section>
 
             <p className="mt-2 text-[10px] leading-relaxed text-text-tertiary">

@@ -886,3 +886,83 @@ body,
   0% { background-position: 0 0, 0 0; }
   100% { background-position: 120px 120px, 240px 240px; }
 }
+.aspect-gran_sabio { --color-accent-cyan: #60a5fa; --color-accent-cyan-bright: #93c5fd; --accent-rgb: 96, 165, 250; }
+.aspect-raphael { --color-accent-cyan: #4ade80; --color-accent-cyan-bright: #86efac; --accent-rgb: 74, 222, 128; }
+.aspect-ciel { --color-accent-cyan: #a78bfa; --color-accent-cyan-bright: #c4b5fd; --accent-rgb: 167, 139, 250; }
+.aspect-fused { --color-accent-cyan: #818cf8; --color-accent-cyan-bright: #a5b4fc; --accent-rgb: 129, 140, 248; }
+
+.panel-unified {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--blur-radius)) saturate(1.3);
+  -webkit-backdrop-filter: blur(var(--blur-radius)) saturate(1.3);
+  border: 1px solid var(--glass-border);
+  border-radius: calc(var(--corner-radius) * 1.8);
+  box-shadow: var(--glass-inner), 0 0 0 1px rgba(255,255,255,0.06) inset,
+    0 40px 140px -40px rgba(var(--accent-rgb), 0.5);
+}
+
+.sidebar-assistant {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(32px) saturate(1.35);
+  -webkit-backdrop-filter: blur(32px) saturate(1.35);
+  border: 1px solid var(--glass-border);
+  border-right: 2px solid var(--color-border-bright);
+  border-radius: 0 calc(var(--corner-radius) * 1.8) calc(var(--corner-radius) * 1.8) 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14),
+    0 40px 140px -40px rgba(var(--accent-rgb), 0.55);
+}
+
+.osd-notification {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid var(--glass-border-strong);
+  box-shadow: var(--glass-inner), 0 0 0 1px rgba(255,255,255,0.12) inset,
+    0 20px 60px -20px rgba(var(--accent-rgb), 0.7);
+  animation: osdSlide 300ms var(--ease-cinematic) both;
+}
+
+@keyframes osdSlide {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.panel-overview {
+  position: absolute;
+  inset: 40px;
+  border-radius: calc(var(--corner-radius) * 2);
+  background: radial-gradient(140% 120% at 50% 0%,
+      rgba(20, 28, 68, 0.94) 0%,
+      rgba(8, 12, 32, 0.9) 100%);
+  backdrop-filter: blur(30px) saturate(1.3);
+  -webkit-backdrop-filter: blur(30px) saturate(1.3);
+  border: 1px solid var(--glass-border-strong);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.1) inset,
+    0 50px 160px -50px rgba(var(--accent-rgb), 0.6);
+}
+
+.orb-halo-aspect {
+  position: absolute;
+  inset: -18%;
+  border-radius: 9999px;
+  filter: blur(48px);
+  pointer-events: none;
+  opacity: 0.5;
+  animation: haloAspect 6s ease-in-out infinite alternate;
+  background: radial-gradient(circle at 50% 50%,
+      var(--aspect-glow) 0%,
+      transparent 60%);
+}
+@keyframes haloAspect {
+  0% { opacity: 0.4; transform: scale(1); filter: blur(44px); }
+  100% { opacity: 0.62; transform: scale(1.08); filter: blur(52px); }
+}
