@@ -1176,6 +1176,9 @@ class LocalSkills:
             {"id": "geo_locate", "name": "Ubicacion (IP)", "category": "sistema"},
             {"id": "sec_sandbox", "name": "Sandbox seguridad", "category": "sistema"},
             {"id": "sec_scan", "name": "Escaneo sospechosos", "category": "sistema"},
+            {"id": "vision_url", "name": "Ver video URL", "category": "vision"},
+            {"id": "vision_preview", "name": "Preview video URL", "category": "vision"},
+            {"id": "vision_image", "name": "Ver imagen URL", "category": "vision"},
             {"id": "code_write", "name": "Escribir codigo", "category": "programacion"},
             {"id": "code_read", "name": "Leer codigo", "category": "programacion"},
             {"id": "eyes_snapshot", "name": "Pulso del Planeta", "category": "sistema"},
@@ -1224,6 +1227,12 @@ class LocalSkills:
             return self._sec_sandbox(params)
         if skill_id == "sec_scan":
             return self._sec_scan(params)
+        if skill_id == "vision_url":
+            return self._vision_url(params)
+        if skill_id == "vision_preview":
+            return self._vision_preview(params)
+        if skill_id == "vision_image":
+            return self._vision_image(params)
         if skill_id == "code_write":
             return self._code_write(params)
         if skill_id == "code_read":
@@ -1450,6 +1459,27 @@ class LocalSkills:
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
         return {"status": "ok", **local_suspicious_scan()}
+
+    def _vision_url(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from vision_eye import ver_url
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        return ver_url(params.get("url", ""))
+
+    def _vision_preview(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from vision_eye import ver_url_preview
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        return ver_url_preview(params.get("url", ""))
+
+    def _vision_image(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from vision_eye import ver_imagen_url
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        return ver_imagen_url(params.get("url", ""))
 
     def _code_write(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
