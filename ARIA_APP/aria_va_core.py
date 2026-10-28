@@ -1205,7 +1205,7 @@ class LocalSkills:
             {"id": "code_write", "name": "Escribir codigo", "category": "programacion"},
             {"id": "code_read", "name": "Leer codigo", "category": "programacion"},
             {"id": "eyes_snapshot", "name": "Pulso del Planeta", "category": "sistema"},
-            {"id": "usb_brain", "name": "Estado USB cerebro", "category": "sistema"},
+            {"id": "bot_create", "name": "Crear bot", "category": "automatizacion"},
             {"id": "bridge_status", "name": "Estado del puente", "category": "red"},
             {"id": "bridge_push", "name": "Enviar al puente", "category": "red"},
             {"id": "bridge_pull", "name": "Leer del puente", "category": "red"},
@@ -1262,8 +1262,8 @@ class LocalSkills:
             return self._code_read(params)
         if skill_id == "eyes_snapshot":
             return self._eyes_snapshot(params)
-        if skill_id == "usb_brain":
-            return self._usb_brain(params)
+        if skill_id == "bot_create":
+            return self._bot_create(params)
         if skill_id == "usb_init":
             return self._usb_init(params)
         if skill_id == "bridge_status":
@@ -1561,6 +1561,18 @@ class LocalSkills:
                     "note": "Requiere ejecutar ARIA como Administrador para formatear."}
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
+
+    def _bot_create(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from bot_factory import create_bot, launch_bot
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        name = params.get("name", "aria_bot")
+        purpose = params.get("purpose", "general")
+        res = create_bot(name, purpose)
+        if params.get("launch"):
+            res.update(launch_bot(res.get("name", name)))
+        return res
 
     def _usb_brain(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
