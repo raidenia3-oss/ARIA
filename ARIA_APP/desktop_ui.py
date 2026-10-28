@@ -731,6 +731,12 @@ class ChatWindow(QMainWindow):
         self._setup_keyboard_shortcuts()
         self._load_settings()
         self._performance_monitor()
+        try:
+            from chibi import crear_chibi
+            self._chibi = crear_chibi(); self._chibi.start()
+            self._chibi.ctrl.pedir_abrir.connect(self.showNormal)
+        except Exception:
+            self._chibi = None
 
     def _append_osd(self, message: str):
         if hasattr(self, '_osd') and self._osd:
