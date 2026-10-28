@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
 import sys
 import threading
 import time
@@ -18,13 +19,22 @@ for p in [str(ARIA_APP)]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
-from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QThread, QSize, QEasingCurve, QSettings
-from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush, QIcon, QRadialGradient, QFontDatabase, QKeySequence
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QThread, QSize, QEasingCurve, QSettings, QObject
+from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush, QIcon, QRadialGradient, QFontDatabase, QKeySequence, QTextCursor
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
     QHBoxLayout, QTextEdit, QLineEdit, QPushButton, QLabel, QListWidget,
     QListWidgetItem, QFrame, QSizePolicy, QMessageBox, QSystemTrayIcon, QMenu,
-    QScrollArea, QButtonGroup, QProxyStyle, QStyle, QStyleOptionButton, QShortcut)
+    QScrollArea, QButtonGroup, QProxyStyle, QStyle, QStyleOptionButton, QShortcut,
+    QTableWidget, QTableWidgetItem, QComboBox, QHeaderView, QFileDialog)
 from PyQt5.QtWidgets import QPushButton as _QBtn
+try:
+    from themes import get_theme, resolve_theme
+except Exception:
+    try:
+        from .themes import get_theme, resolve_theme
+    except Exception:
+        get_theme = None
+        resolve_theme = None
 
 # ── Serpentium Color Palette ──────────────────────────────────────────────────
 C_BG_DEEP    = "#0f172a"   # primary deep blue
@@ -83,6 +93,77 @@ C_TRANS_FAST     = "all 150ms cubic-bezier(0.4, 0.0, 0.2, 1)"
 C_TRANS_NORMAL   = "all 200ms cubic-bezier(0.4, 0.0, 0.2, 1)"
 C_TRANS_SLOW     = "all 300ms cubic-bezier(0.4, 0.0, 0.2, 1)"
 
+# ── Liquid Glass 3-Tier + Aspect Palette (viral, Raphael-Ciel style) ──────────
+# Tier 1: heavy blur (paneles principales, fondo)
+C_GLASS_T1_BG   = "rgba(15, 23, 42, 0.45)"
+C_GLASS_T1_BORDER = "rgba(255, 255, 255, 0.06)"
+C_GLASS_T1_BLUR  = 60
+# Tier 2: medium blur (cards, controles)
+C_GLASS_T2_BG   = "rgba(15, 23, 42, 0.35)"
+C_GLASS_T2_BORDER = "rgba(255, 255, 255, 0.10)"
+C_GLASS_T2_BLUR  = 30
+# Tier 3: light blur (acentos, botones activos)
+C_GLASS_T3_BG   = "rgba(15, 23, 42, 0.25)"
+C_GLASS_T3_BORDER = "rgba(255, 255, 255, 0.14)"
+C_GLASS_T3_BLUR  = 16
+# XOR border trick (borde que se invierte sobre el fondo)
+C_XOR_BORDER    = "rgba(255, 255, 255, 0.16)"
+C_XOR_BORDER_GLOW = "rgba(0, 212, 255, 0.35)"
+
+# Aspectos del núcleo (controlan colores del orbe y variables globales)
+ASPECT_RGB = {
+    "gran_sabio":   (139, 92, 246),   # violet
+    "raphael":      (16, 185, 129),   # emerald
+    "ciel":         (56, 189, 248),   # cyan
+    "fused":        (236, 72, 153),   # rose
+}
+ASPECT_GLOW = {
+    "gran_sabio":   "rgba(139, 92, 246, 0.5)",
+    "raphael":      "rgba(16, 185, 129, 0.5)",
+    "ciel":         "rgba(56, 189, 248, 0.5)",
+    "fused":        "rgba(236, 72, 153, 0.5)",
+}
+ASPECT_CORE = {
+    "gran_sabio":   "#8b5cf6",
+    "raphael":      "#10b981",
+    "ciel":         "#38bdf8",
+    "fused":        "#ec4899",
+}
+
+# Colores de fase (idle/thinking/responding/listening)
+PHASE_COLORS = {
+    "idle":        QColor(56, 189, 248),
+    "thinking":    QColor(245, 158, 11),
+    "responding":  QColor(0, 212, 255),
+    "listening":   QColor(192, 132, 252),
+}
+
+# Aspecto activo del núcleo (se mezcla con la fase para el color del orbe)
+_ASPECT_ACTIVE = "ciel"
+
+
+def aspect_color(aspect: str = None, phase: str = None, t: float = 0.4) -> QColor:
+    """Mezcla color de aspect con color de fase (interpolación t)."""
+    a = _ASPECT_ACTIVE if aspect is None else aspect
+    r, g, b = ASPECT_RGB.get(a, ASPECT_RGB["ciel"])
+    base = QColor(r, g, b)
+    if phase and phase in PHASE_COLORS:
+        p = PHASE_COLORS[phase]
+        return QColor(
+            int(r * (1 - t) + p.red() * t),
+            int(g * (1 - t) + p.green() * t),
+            int(b * (1 - t) + p.blue() * t),
+        )
+    return base
+
+
+def set_aspect(aspect: str):
+    global _ASPECT_ACTIVE
+    if aspect in ASPECT_RGB:
+        _ASPECT_ACTIVE = aspect
+
+
+
 
 # ── Phase 5: Epic Orb + Serpantinum x Caelestia Palette ────────────────────────
 # (All palette constants defined above — this section documents the epic orb spec)
@@ -110,215 +191,159 @@ except Exception:
     pass
 
 
-# ── IPC Client ──────────────────────────────────────────────────────────────
+# ── Núcleo VA local (100% en proceso, sin HTTP, sin subprocess) ──────────────
 
-class _LogicBridge:
-    """In-process bridge when frozen (no subprocess possible)."""
+sys.path.insert(0, str(ARIA_APP))
+# Autonomia desactivada por regla del proyecto: ningun nombre real se importa,
+# todos son stubs inofensivos para que el resto del codigo no rompa.
+# autonomia desactivada: aria_says.emit (desactivado) - no hay latido
+# autonomia desactivada: desktop_autonomy no se importa ni se ejecuta (regla v2)
+_start_heartbeat = lambda *a, **k: None
+_stop_heartbeat = lambda *a, **k: None
+class _NoAutonomia:
+    def ingest(self, *a, **k): pass
+    def perception(self): return {"perception": {}}
+    def status(self): return {}
+    def toggle(self, *a, **k): pass
+    def beat(self): return {}
+_no_autonomia = _NoAutonomia()
+_autonomy_runtime = lambda: _no_autonomia
+_beat_summary = lambda *a, **k: ""
+_episode_line = lambda *a, **k: ""
+_goal_line = lambda *a, **k: ""
+_last_episode = lambda *a, **k: None
+_lesson_line = lambda *a, **k: ""
+_autonomy_mode = lambda *a, **k: "off"
+_pending_goals = lambda *a, **k: []
+_summarize_perception = lambda *a, **k: "Autonomia: desactivada"
 
-    def __init__(self):
-        import importlib
-        mod = importlib.import_module("aria_logic_engine")
-        self.engine = mod.LogicEngine()
-        self._in = queue.Queue()
-        self._out = queue.Queue()
-        self.healthy = True
-        self._running = threading.Event()
-        self._running.set()
-        self._thread = threading.Thread(target=self._run_loop, daemon=True)
-        self._thread.start()
+from aria_va_core import get_va, VirtualAssistant
 
-    def _run_loop(self):
-        while self._running.is_set():
-            try:
-                req = self._in.get(timeout=1.0)
-                if req is None: break
-                result = self.engine.process_request(req)
-                result["id"] = req.get("id")
-                self._out.put(result)
-            except queue.Empty:
-                continue
-            except Exception as e:
-                self._out.put({"status": "error", "error": str(e)})
+class VAAdapter:
+    """Adaptador síncrono al núcleo VA local. Reemplaza a IPCClient."""
 
-    def send(self, request):
-        self._in.put(request)
-        deadline = time.time() + 30
-        while time.time() < deadline:
-            try:
-                return self._out.get(timeout=0.5)
-            except queue.Empty:
-                continue
-        return {"status": "error", "error": "timeout"}
-
-    def stop(self):
-        self._running.clear()
-        self._in.put(None)
-
-
-class IPCClient:
-    """Communicates with Logic Engine via subprocess pipes (stdin/stdout JSON).
-    Auto-restarts process if it crashes. In frozen mode uses direct bridge."""
-
-    HEARTBEAT_INTERVAL = 5.0
-
-    def __init__(self, logic_script: str):
-        self.logic_script = logic_script
-        self.process = None
-        self.reader_thread = None
-        self._running = threading.Event()
-        self._msg_in = queue.Queue()
-        self._msg_out = queue.Queue()
-        self._restart_count = 0
-        self._max_restarts = 5
-        self._last_heartbeat = 0.0
-        self.healthy = False
-        self._frozen = hasattr(sys, "frozen") or hasattr(sys, "_MEIPASS")
-
-    def start(self):
-        if self._frozen:
-            try:
-                self.bridge = _LogicBridge()
-                self.healthy = True
-                logger.info("Logic bridge (frozen mode) started")
-                return
-            except Exception as e:
-                logger.error(f"Bridge start failed: {e}")
-                self.healthy = False
-                return
-
-        import subprocess
-        if self.process and self.process.poll() is None:
-            try:
-                self.process.stdin.close()
-                self.process.terminate()
-                self.process.wait(timeout=2)
-            except Exception:
-                try: self.process.kill()
-                except Exception: pass
-        try:
-            self.process = subprocess.Popen(
-                [sys.executable, self.logic_script],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                bufsize=1,
-                universal_newlines=True,
-                env={**os.environ, "PYTHONUNBUFFERED": "1"},
-            )
-            logger.info(f"Logic process started (pid={self.process.pid})")
-        except Exception as e:
-            logger.error(f"Failed to start logic: {e}")
-            return
-
-        self._running.set()
-        self.reader_thread = threading.Thread(target=self._read_loop, daemon=True)
-        self.reader_thread.start()
-
-        self._heart_thread = threading.Thread(target=self._heartbeat_loop, daemon=True)
-        self._heart_thread.start()
-
-        time.sleep(0.5)
+    def __init__(self) -> None:
+        self.va = get_va()
         self.healthy = True
 
-    def _read_loop(self):
-        buffer = ""
-        while self._running.is_set():
+    def send(self, request: dict) -> dict:
+        req_type = request.get("type", "")
+        if req_type == "chat":
+            text = request.get("data", {}).get("message", "")
+            response = self.va.process_text(text)
+            return {"status": "ok", "response": response, "provider": "local", "source": "va"}
+        if req_type == "list_skills":
+            skills = self.va.skills.list()
+            return {"status": "ok", "skills": skills, "count": len(skills)}
+        if req_type == "skill":
+            skill_id = request.get("skill", "")
+            params = request.get("data", {}).get("params", {})
+            result = self.va.skills.run(skill_id, params)
+            return {"status": "ok", "result": result}
+        if req_type == "status":
+            return {"status": "ok", **self.va.get_status()}
+        if req_type == "ping":
+            return {"status": "ok", "type": "pong"}
+        if req_type == "voice_speak":
+            text = request.get("data", {}).get("text", "")
+            self.va.speak(text)
+            return {"status": "ok"}
+        if req_type == "voice_start":
+            self.va.start_voice_listening()
+            return {"status": "ok"}
+        if req_type == "voice_stop":
+            self.va.stop_voice_listening()
+            return {"status": "ok"}
+        if req_type == "autonomous_toggle":
+            params = request.get("data", {})
+            enable = bool(params.get("enable", not self.va.autonomous))
+            if enable:
+                self.va.start_autonomous()
+            else:
+                self.va.stop_autonomous()
+            # El flag solo no basta: el runtime es quien actúa, así que el
+            # modo autónomo tiene que mover el runtime y el latido de verdad.
             try:
-                if not self.process or self.process.poll() is not None:
-                    logger.warning("Logic process died")
-                    self.healthy = False
-                    self._auto_restart()
-                    return
-                line = self.process.stdout.readline()
-                if not line:
-                    logger.warning("stdout closed")
-                    self.healthy = False
-                    self._auto_restart()
-                    return
-                buffer += line
-                while "\n" in buffer:
-                    msg, buffer = buffer.split("\n", 1)
-                    msg = msg.strip()
-                    if not msg:
-                        continue
-                    try:
-                        data = json.loads(msg)
-                        if data.get("type") == "heartbeat":
-                            self._last_heartbeat = time.time()
-                            self.healthy = True
-                            continue
-                        self._msg_out.put(data)
-                    except json.JSONDecodeError:
-                        pass
-            except Exception as e:
-                logger.error(f"read_loop error: {e}")
-                self.healthy = False
-                if self._running.is_set():
-                    self._auto_restart()
-                    return
-
-    def _heartbeat_loop(self):
-        while self._running.is_set():
-            time.sleep(self.HEARTBEAT_INTERVAL)
-            if not self.healthy:
-                continue
+                _autonomy_runtime().toggle(enable)
+            except Exception:  # noqa: BLE001 - el modo autónomo no rompe la app
+                pass
             try:
-                if self.process and self.process.poll() is None:
-                    self.process.stdin.write(json.dumps({"type": "ping"}) + "\n")
-                    self.process.stdin.flush()
-                else:
-                    self.healthy = False
-            except Exception:
-                self.healthy = False
+                self.va.skills.run("autonomous_toggle", {"enable": enable})
+            except Exception:  # noqa: BLE001
+                pass
+            return {"status": "ok", "autonomous": self.va.autonomous}
+        if req_type == "training_stage":
+            stage = request.get("data", {}).get("stage", "etapa1")
+            return {"status": "ok", **self.va.run_training_stage(stage)}
+        if req_type == "training_summary":
+            return {"status": "ok", **self.va.training_summary()}
+        if req_type == "training_reset":
+            self.va.training_reset()
+            return {"status": "ok", "reset": True}
+        if req_type == "challenge_suite":
+            return {"status": "ok", **self.va.run_challenge_suite()}
+        if req_type == "memory_list":
+            params = request.get("data", {})
+            capa = str(params.get("capa", "") or "")
+            limite = int(params.get("limite", 50) or 50)
+            return {
+                "status": "ok",
+                "entries": self.va.memory_list(capa, limite=limite),
+                "counts": self.va.memory_conteo(),
+                "enabled": self.va.memory_enabled(),
+            }
+        if req_type == "memory_recall":
+            params = request.get("data", {})
+            consulta = str(params.get("consulta", "") or "")
+            k = int(params.get("k", 30) or 30)
+            return {"status": "ok", "hits": self.va.memory_recall(consulta, k=k)}
+        if req_type == "memory_borrar":
+            params = request.get("data", {})
+            capa = str(params.get("capa", "") or "")
+            id_ = int(params.get("id", 0) or 0)
+            return {"status": "ok", "deleted": self.va.memory_borrar(capa, id_)}
+        if req_type == "memory_fijar":
+            params = request.get("data", {})
+            texto = str(params.get("texto", "") or "")
+            return {"status": "ok", "id": self.va.memory_fijar(texto)}
+        if req_type == "memory_reflect":
+            return {"status": "ok", "promoted": self.va.memory_reflect()}
+        if req_type == "memory_export":
+            return {"status": "ok", "entries": self.va.memory_export()}
+        if req_type == "memory_toggle":
+            params = request.get("data", {})
+            enable = params.get("enable")
+            if enable is None:
+                enable = not self.va.memory_enabled()
+            activo = self.va.memory_set_enabled(bool(enable))
+            return {"status": "ok", "enabled": activo}
+        if req_type == "memory_add":
+            params = request.get("data", {})
+            texto = str(params.get("texto", "") or "")
+            capa = str(params.get("capa", "observaciones") or "observaciones")
+            fuente = str(params.get("fuente", "usuario") or "usuario")
+            confianza = str(params.get("confianza", "usuario") or "usuario")
+            return {"status": "ok", "id": self.va.memory_add(texto, capa, fuente, confianza)}
+        if req_type == "memory_import":
+            params = request.get("data", {})
+            ruta = str(params.get("ruta", "") or "")
+            return {"status": "ok", **self.va.memory_import(ruta)}
+        if req_type == "memory_session_add":
+            params = request.get("data", {})
+            texto = str(params.get("texto", "") or "")
+            capa = str(params.get("capa", "observaciones") or "observaciones")
+            return {"status": "ok", "id": self.va.memory_session_add(texto, capa)}
+        if req_type == "memory_session_list":
+            return {"status": "ok", "entries": self.va.memory_session_list()}
+        if req_type == "memory_session_clear":
+            return {"status": "ok", "cleared": self.va.memory_session_clear()}
+        return {"status": "error", "error": f"tipo desconocido: {req_type}"}
 
-    def _auto_restart(self):
-        if self._restart_count >= self._max_restarts:
-            logger.error(f"Max restarts ({self._max_restarts}) reached")
-            return
-        self._restart_count += 1
-        logger.info(f"Auto-restarting logic process ({self._restart_count}/{self._max_restarts})")
-        self.start()
+    def stop(self) -> None:
+        self.va.stop_voice_listening()
 
-    def send(self, request: dict) -> dict | None:
-        if self._frozen:
-            return getattr(self, "bridge", None) and self.bridge.send(request) or \
-                {"status": "error", "error": "bridge no disponible"}
-        req_id = request.get("id", "")
-        if not self.process or self.process.poll() is not None:
-            self.healthy = False
-            self._auto_restart()
-            return {"status": "error", "error": "engine reiniciando"}
-        try:
-            self.process.stdin.write(json.dumps(request) + "\n")
-            self.process.stdin.flush()
-        except Exception as e:
-            logger.error(f"send error: {e}")
-            self.healthy = False
-            self._auto_restart()
-            return {"status": "error", "error": "conexión perdida, reiniciando"}
-        deadline = time.time() + 30
-        while time.time() < deadline:
-            try:
-                resp = self._msg_out.get(timeout=0.5)
-                if resp.get("id") == req_id:
-                    return resp
-            except queue.Empty:
-                continue
-        return {"status": "error", "error": "timeout"}
 
-    def stop(self):
-        self._running.clear()
-        if self._frozen and hasattr(self, "bridge"):
-            self.bridge.stop()
-        if self.process and self.process.poll() is None:
-            try:
-                self.process.stdin.close()
-                self.process.terminate()
-                self.process.wait(timeout=3)
-            except Exception:
-                try: self.process.kill()
-                except Exception: pass
-        logger.info("IPCClient stopped")
+# ── Logging ──────────────────────────────────────────────────────────
 
 
 # ── Orb Visual Widget ──────────────────────────────────────────────────────
@@ -326,11 +351,13 @@ class IPCClient:
 import math as _math
 
 class OrbWidget(QWidget):
-    """Epic 7-layer orb: pulse ring, outer glow, orbit ring, particles, core glow, solid sphere, burst."""
+    """Epic 9-layer orb: pulse rings, outer halo, orbit ring, evolution rings,
+    fractal eye, core glow, solid sphere, burst rays, infon particles.
+    Colores mezclan aspect activo + fase actual (idle/thinking/responding/listening)."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setFixedSize(200, 200)
+        self.setFixedSize(220, 220)
         self._phase = 0.0
         self._state = "idle"
         self._blink_phase = 0.0
@@ -339,51 +366,94 @@ class OrbWidget(QWidget):
         self._burst_rays = []
         self._pulse_ring_phase = 0.0
         self._orbit_angle = 0.0
-        self._color = QColor(56, 189, 248)
+        self._evo_ring_phases = [0.0, 0.0, 0.0, 0.0, 0.0]
+        self._color = aspect_color("ciel", "idle")
         self._glow_color = QColor(56, 189, 248, 180)
+        self._aspect = "ciel"
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._update_orb)
         self._timer.start(30)
+        self._nucleo_v2 = None
+        if os.environ.get("ARIA_NUCLEO_V2", "on").lower() not in ("0", "false", "no", "off"):
+            try:
+                from ui.nucleo_v2 import Nucleo
+                self._nucleo_v2 = Nucleo()
+                self._nucleo_t = 0.0
+            except Exception:
+                self._nucleo_v2 = None
+
+    def set_aspect(self, aspect: str):
+        self._aspect = aspect
+        self._color = aspect_color(aspect, self._state)
+        self.update()
+
+    def set_state(self, state: str):
+        self._state = state
+        self._color = aspect_color(self._aspect, state)
+        glows = {
+            "idle": QColor(56, 189, 248, 180),
+            "thinking": QColor(245, 158, 11, 180),
+            "responding": QColor(0, 212, 255, 180),
+            "listening": QColor(192, 132, 252, 180),
+        }
+        base = ASPECT_RGB.get(self._aspect, ASPECT_RGB["ciel"])
+        self._glow_color = QColor(base[0], base[1], base[2], 180)
+        if not hasattr(self, '_glow_transition'):
+            self._glow_transition = 0.0
+            self._glow_timer = QTimer(self)
+            self._glow_timer.timeout.connect(self._animate_glow)
+            self._glow_timer.start(30)
+        self._glow_transition = 1.0
+
+    def hideEvent(self, event):
+        self._timer.stop()
+        super().hideEvent(event)
+
+    def showEvent(self, event):
+        if not self._timer.isActive():
+            self._timer.start(30)
+        super().showEvent(event)
+
+    def _animate_glow(self):
+        self._glow_transition = max(0.0, self._glow_transition - 0.05)
+        self.update()
 
     def _update_orb(self):
+        if not self.isVisible():
+            return
         self._phase += 0.03
         self._blink_phase += 0.05
         self._pulse_ring_phase = (self._pulse_ring_phase + 0.02) % 1.0
-        self._orbit_angle = (self._orbit_angle + 0.05) % 6.283
-        # Spawn orbit particles occasionally
-        if self._state in ("responding", "listening") and len(self._orbit_particles) < 12:
-            import random as _rnd
+        self._orbit_angle = (self._orbit_angle + 0.04) % 6.283
+        for i in range(len(self._evo_ring_phases)):
+            self._evo_ring_phases[i] = (self._evo_ring_phases[i] + 0.015 * (i + 1)) % 6.283
+        import random as _rnd
+        if self._state in ("responding", "listening") and len(self._orbit_particles) < 14:
             self._orbit_particles.append({
-                "angle": _rnd.uniform(0, 6.283), "r": 35,
-                "life": 1.0, "speed": _rnd.uniform(0.01, 0.03)
+                "angle": _rnd.uniform(0, 6.283), "r": 38,
+                "life": 1.0, "speed": _rnd.uniform(0.015, 0.035)
             })
-        # Spawn burst rays on interaction
-        if self._state in ("responding", "thinking") and len(self._burst_rays) < 15:
-            import random as _rnd
+        if self._state in ("responding", "thinking") and len(self._burst_rays) < 18:
             for _ in range(3):
                 self._burst_rays.append({
                     "angle": _rnd.uniform(0, 6.283),
-                    "length": _rnd.uniform(10, 30),
+                    "length": _rnd.uniform(12, 34),
                     "life": 1.0
                 })
-        # Update orbit particles
         for p in self._orbit_particles[:]:
             p["angle"] += p["speed"]
             p["life"] -= 0.005
             if p["life"] <= 0:
                 self._orbit_particles.remove(p)
-        # Update burst rays
         for b in self._burst_rays[:]:
             b["life"] -= 0.03
             b["length"] += 2
             if b["life"] <= 0:
                 self._burst_rays.remove(b)
-        # Spawn traditional particles
-        if self._state in ("responding", "listening") and len(self._particles) < 20:
-            import random as _rnd
+        if self._state in ("responding", "listening") and len(self._particles) < 24:
             self._particles.append({
-                "x": _rnd.uniform(0, 200), "y": _rnd.uniform(0, 200),
-                "life": 1.0, "speed": _rnd.uniform(0.2, 0.6)
+                "x": _rnd.uniform(0, 220), "y": _rnd.uniform(0, 220),
+                "life": 1.0, "speed": _rnd.uniform(0.25, 0.65)
             })
         for p in self._particles[:]:
             p["life"] -= p["speed"] * 0.02
@@ -392,102 +462,98 @@ class OrbWidget(QWidget):
                 self._particles.remove(p)
         self.update()
 
-    def set_state(self, state: str):
-        self._state = state
-        # Serpentium palette: state-specific colors with smooth transitions
-        colors = {
-            "idle": QColor(C_ORB_BASE),       # cyan
-            "thinking": QColor(C_ACCENT_ORANGE),  # orange
-            "responding": QColor(C_ORB_TALKING),# bright cyan
-            "listening": QColor(C_ORB_LEARNING),# purple
-        }
-        glows = {
-            "idle": QColor(56, 189, 248, 180),
-            "thinking": QColor(245, 158, 11, 180),
-            "responding": QColor(0, 212, 255, 180),
-            "listening": QColor(192, 132, 252, 180),
-        }
-        self._color = colors.get(state, QColor(C_ORB_BASE))
-        self._glow_color = glows.get(state, QColor(56, 189, 248, 180))
-        # Smooth transition timer for glow intensity
-        if not hasattr(self, '_glow_transition'):
-            self._glow_transition = 0.0
-            self._glow_timer = QTimer(self)
-            self._glow_timer.timeout.connect(self._animate_glow)
-            self._glow_timer.start(30)
-        self._glow_transition = 1.0  # trigger reflow
-
-    def _animate_glow(self):
-        self._glow_transition = max(0.0, self._glow_transition - 0.05)
-        self.update()
-
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setRenderHint(QPainter.SmoothPixmapTransform)
         w, h = self.width(), self.height()
         cx, cy = w // 2, h // 2
-        base_r = min(w, h) * 0.25
+        base_r = min(w, h) * 0.26
+        if self._nucleo_v2 is not None:
+            self._nucleo_t += 0.03
+            estado = {"idle": "reposo", "listening": "escuchando", "thinking": "pensando",
+                      "responding": "hablando"}.get(self._state, "reposo")
+            from PyQt5.QtCore import QRectF
+            _t0 = time.perf_counter()
+            self._nucleo_v2.paint(painter, QRectF(0, 0, w, h), self._nucleo_t, estado,
+                                  nivel=0.5 if self._state in ("responding", "listening") else 0.0,
+                                  calidad=None, hud=False, escala=0.34)
+            self._nucleo_v2.calidad_auto((time.perf_counter() - _t0) * 1000.0)
+            painter.end()
+            return
 
-        # Organic pulsation - different per state (300ms ease-out feel)
         if self._state == "listening":
-            breath = 1.0 + 0.15 * ((1 + _math.sin(self._phase * 2)) / 2)
+            breath = 1.0 + 0.16 * ((1 + _math.sin(self._phase * 2)) / 2)
         elif self._state == "responding":
-            breath = 1.0 + 0.12 * ((1 + _math.sin(self._phase * 3)) / 2)
+            breath = 1.0 + 0.13 * ((1 + _math.sin(self._phase * 3)) / 2)
         elif self._state == "thinking":
-            breath = 1.0 + 0.08 * ((1 + _math.sin(self._phase * 1.5)) / 2)
+            breath = 1.0 + 0.09 * ((1 + _math.sin(self._phase * 1.5)) / 2)
         else:
-            breath = 1.0 + 0.10 * ((1 + _math.sin(self._phase)) / 2)
+            breath = 1.0 + 0.11 * ((1 + _math.sin(self._phase)) / 2)
 
         r = int(base_r * breath)
         painter.setPen(Qt.NoPen)
+        col = self._color
 
-        # ── Layer 7: Pulse Ring (expanding outward, 2.0s ease-out) ──
-        pulse_r = int(r + 50 * self._pulse_ring_phase)
-        pulse_alpha = max(0, int(50 * (1.0 - self._pulse_ring_phase)))
-        painter.setBrush(QBrush(QColor(56, 189, 248, pulse_alpha)))
-        painter.setOpacity(1.0)
-        painter.drawEllipse(cx - pulse_r, cy - pulse_r, pulse_r*2, pulse_r*2)
-
-        # ── Layer 6: Outer Halo (breathing 3s) ──
-        halo_r = r + 30
-        halo_alpha = int(60 + 20 * ((1 + _math.sin(self._phase * 2)) / 2))
-        painter.setBrush(QBrush(QColor(56, 189, 248, halo_alpha)))
+        # ── Layer 9: Outer Halo (respiración 12s, blur visual grande) ──
+        halo_r = r + 62
+        halo_alpha = int(30 + 25 * ((1 + _math.sin(self._phase * 0.5)) / 2))
+        painter.setBrush(QBrush(QColor(col.red(), col.green(), col.blue(), halo_alpha)))
         painter.drawEllipse(cx - halo_r, cy - halo_r, halo_r*2, halo_r*2)
 
-        # ── Layer 5: Orbit Ring (rotating 4s linear) ──
-        painter.setPen(QPen(QColor(56, 189, 248, 150), 2))
+        # ── Layer 8: Pulse Rings (expansión outward, 2 capas) ──
+        for i, pr in enumerate([self._pulse_ring_phase, (self._pulse_ring_phase + 0.5) % 1.0]):
+            pulse_r = int(r + 55 * pr)
+            pulse_alpha = max(0, int(45 * (1.0 - pr)))
+            painter.setBrush(QBrush(QColor(col.red(), col.green(), col.blue(), pulse_alpha)))
+            painter.drawEllipse(cx - pulse_r, cy - pulse_r, pulse_r*2, pulse_r*2)
+
+        # ── Layer 7: Evolution Rings (5 anillos concéntricos rotativos) ──
+        for i in range(5):
+            er = int(r + 14 + i * 10)
+            ea = int(60 + 20 * _math.sin(self._evo_ring_phases[i]))
+            painter.setPen(QPen(QColor(col.red(), col.green(), col.blue(), ea), 1))
+            painter.setBrush(Qt.NoBrush)
+            painter.save()
+            painter.translate(cx, cy)
+            painter.rotate(self._evo_ring_phases[i] * 57.3)
+            painter.drawEllipse(-er, -er, er*2, er*2)
+            painter.restore()
+
+        # ── Layer 6: Orbit Ring (rotando) ──
+        painter.setPen(QPen(QColor(col.red(), col.green(), col.blue(), 150), 2))
         painter.setBrush(Qt.NoBrush)
         painter.save()
         painter.translate(cx, cy)
         painter.rotate(self._orbit_angle * 57.3)
-        painter.drawEllipse(-35, -35, 70, 70)
+        painter.drawEllipse(-38, -38, 76, 76)
         painter.restore()
 
-        # ── Layer 4: Orbit Particles (8-12, 6s orbit) ──
+        # ── Layer 5: Orbit Particles ──
         for p in self._orbit_particles:
-            px = cx + 35 * _math.cos(p["angle"])
-            py = cy + 35 * _math.sin(p["angle"])
-            p_alpha = max(0, int(200 * p["life"]))
+            px = cx + 38 * _math.cos(p["angle"])
+            py = cy + 38 * _math.sin(p["angle"])
+            p_alpha = max(0, int(220 * p["life"]))
             painter.setBrush(QBrush(QColor(0, 212, 255, p_alpha)))
             painter.setPen(Qt.NoPen)
             painter.drawEllipse(int(px) - 2, int(py) - 2, 4, 4)
 
-        # ── Layer 3: Core Glow (breathing 1.5s) ──
-        glow_r = r + 12
-        core_alpha = int(120 + 40 * ((1 + _math.sin(self._phase * 4)) / 2))
-        painter.setBrush(QBrush(QColor(56, 189, 248, core_alpha)))
+        # ── Layer 4: Core Glow (respiración 1.5s) ──
+        glow_r = r + 14
+        core_alpha = int(110 + 45 * ((1 + _math.sin(self._phase * 4)) / 2))
+        painter.setBrush(QBrush(QColor(col.red(), col.green(), col.blue(), core_alpha)))
         painter.drawEllipse(cx - glow_r, cy - glow_r, glow_r*2, glow_r*2)
 
-        # ── Layer 2: Solid Sphere (radial gradient) ──
+        # ── Layer 3: Solid Sphere (gradiente radial, aspect-core) ──
         gradient = QRadialGradient(cx, cy, 0, cx, cy, r)
-        gradient.setColorAt(0, QColor(0, 212, 255))
-        gradient.setColorAt(0.5, self._color)
-        gradient.setColorAt(1, QColor(0, 150, 200))
+        gradient.setColorAt(0, QColor(255, 255, 255, 230))
+        gradient.setColorAt(0.35, QColor(col.red(), col.green(), col.blue(), 255))
+        gradient.setColorAt(0.7, col)
+        gradient.setColorAt(1, QColor(max(0, col.red()-40), max(0, col.green()-40), max(0, col.blue()-40)))
         painter.setBrush(QBrush(gradient))
         painter.drawEllipse(cx - r, cy - r, r*2, r*2)
 
-        # ── Layer 1: Burst Rays (on interaction, 300ms) ──
+        # ── Layer 2: Burst Rays (interacción) ──
         for b in self._burst_rays:
             bx = int(cx + _math.cos(b["angle"]) * r)
             by = int(cy + _math.sin(b["angle"]) * r)
@@ -500,44 +566,175 @@ class OrbWidget(QWidget):
 
         painter.setOpacity(1.0)
 
-        # Eye blink while listening
+        # ── Layer 1: Fractal Eye (parpadeo en listening) ──
         if self._state == "listening":
             blink = _math.sin(self._blink_phase)
-            eye_h = max(1, int(r * 0.18 * (1 - abs(blink))))
+            eye_h = max(1, int(r * 0.20 * (1 - abs(blink))))
             eye_y = cy - r//4
-            painter.setBrush(QBrush(QColor(5, 8, 22, 220)))
+            painter.setBrush(QBrush(QColor(5, 8, 22, 230)))
             painter.drawRoundedRect(cx - r//3, eye_y - eye_h//2, r//3*2, eye_h, r//6, r//6)
-            painter.setBrush(QBrush(QColor(255, 255, 255, 200)))
+            painter.setBrush(QBrush(QColor(255, 255, 255, 210)))
             painter.drawEllipse(cx - r//6, eye_y - 2, 4, 4)
             painter.drawEllipse(cx + r//6 - 4, eye_y - 2, 4, 4)
 
-        # Particles with fade
+        # Infon particles con fade
         for p in self._particles:
             painter.setOpacity(max(0, p["life"]))
-            painter.setBrush(QBrush(self._color))
+            painter.setBrush(QBrush(col))
             painter.drawEllipse(int(p["x"]), int(p["y"]), 3, 3)
         painter.setOpacity(1.0)
 
-        # Inner highlight (subtle)
-        painter.setBrush(QBrush(QColor(255, 255, 255, 50)))
+        # Inner highlight sutil
+        painter.setBrush(QBrush(QColor(255, 255, 255, 45)))
         painter.drawEllipse(cx - r//3, cy - r//3 - r//4, r//2, r//3)
 
         painter.end()
+
+
+# ── La franja de autonomía ───────────────────────────────────────────────────
+
+class AutonomyStrip(QWidget):
+    """Lo que ARIA está perceiving ahora mismo.
+
+    La autonomía vive en el propio escritorio: esta franja lee el runtime
+    local y no consulta a nadie. Muestra dónde está, qué tiene entre manos
+    y deja darle un empujón.
+
+    Si el runtime no tiene manos todavía, lo dice. Un "todo tranquilo"
+    inventado sería peor que un silencio honesto.
+    """
+
+    #: La lectura llega del hilo de sondeo: Qt no permite tocar los widgets
+    #: desde fuera del hilo de la interfaz, así que el hilo emite y el
+    #: widget se pinta en la señal (que se entrega en el hilo de la GUI).
+    snapshot_ready = pyqtSignal(str, str, bool, str, str)
+    #: Avisa de que el boton ⚡ vuelve a estar disponible.
+    wake_done = pyqtSignal()
+    #: Lo que ha pasado al darle al boton ⚡ (se enseña en la OSD).
+    beat_report = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFixedHeight(92)
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(10, 6, 10, 6)
+        layout.setSpacing(2)
+
+        self.perception_label = QLabel("Autonomia: desactivada")
+        self.perception_label.setStyleSheet(
+            f"color: {C_TEXT_DIM}; font-size: 10px; font-family: 'Consolas', monospace;"
+        )
+        layout.addWidget(self.perception_label)
+
+        row = QHBoxLayout()
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(8)
+
+        self.goal_label = QLabel("")
+        self.goal_label.setStyleSheet(
+            f"color: {C_TEXT_TERTIARY}; font-size: 10px; font-family: 'Consolas', monospace;"
+        )
+        row.addWidget(self.goal_label, 1)
+
+        self.wake_btn = QPushButton("⚡")
+        self.wake_btn.setFixedSize(28, 22)
+        self.wake_btn.setToolTip("Espabilarla (una vuelta del runtime)")
+        self.wake_btn.setStyleSheet(
+            f"QPushButton {{ background: rgba(15, 23, 42, 0.6); color: {C_ACCENT_CYAN_BRIGHT};"
+            f" border: 1px solid {C_GLASS_BORDER}; border-radius: 6px; font-size: 11px;"
+            f" transition: {C_TRANS_NORMAL}; }}"
+            f"QPushButton:hover {{ background: rgba(56, 189, 248, 0.25);"
+            f" border-color: {C_ACCENT_CYAN_BRIGHT}; }}"
+        )
+        self.wake_btn.clicked.connect(self._wake)
+        row.addWidget(self.wake_btn)
+
+        layout.addLayout(row)
+
+        self.last_label = QLabel("")
+        self.last_label.setStyleSheet(
+            f"color: {C_TEXT_DIM}; font-size: 10px; font-family: 'Consolas', monospace;"
+        )
+        layout.addWidget(self.last_label)
+
+        self.learn_label = QLabel("")
+        self.learn_label.setStyleSheet(
+            f"color: {C_ACCENT_PURPLE}; font-size: 10px; font-family: 'Consolas', monospace;"
+        )
+        layout.addWidget(self.learn_label)
+
+        self.snapshot_ready.connect(self._apply)
+        self.wake_done.connect(self._wake_ready)
+        self._stop = threading.Event()
+        self._thread = threading.Thread(target=self._poll, daemon=True)
+
+    def _wake_ready(self):
+        """El boton ⚡ vuelve a estar disponible (se ejecuta en la GUI)."""
+        self.wake_btn.setEnabled(True)
+
+    def _apply(self, line: str, goal: str, online: bool, last: str = "", learn: str = ""):
+        """Pinta lo que el hilo ha leído (se ejecuta en el hilo de la GUI)."""
+        if not online:
+            self.perception_label.setText("ARIA todavía no tiene manos (sin skills)")
+            self.perception_label.setStyleSheet(
+                f"color: {C_ORB_ERROR}; font-size: 10px; font-family: 'Consolas', monospace;"
+            )
+            self.goal_label.setText("")
+            self.last_label.setText("")
+            self.learn_label.setText("")
+            return
+
+        self.perception_label.setText(line)
+        self.perception_label.setStyleSheet(
+            f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 10px; font-family: 'Consolas', monospace;"
+        )
+        self.goal_label.setText(goal)
+        self.last_label.setText(f"Último: {last}" if last else "")
+        self.learn_label.setText(learn)
+
+    def _wake(self):
+        """Desactivado: la autonomia esta off por regla del proyecto."""
+        return
+
+    def _beat(self):
+        """Desactivado: la autonomia esta off por regla del proyecto."""
+        return
+
+    def _read(self):
+        """Desactivado: la autonomia esta off por regla del proyecto."""
+        return
+
+    def _poll(self):
+        while not self._stop.is_set():
+            try:
+                self._read()
+            except Exception:  # noqa: BLE001 - la franja nunca debe tumbar la app
+                pass
+            self._stop.wait(10.0)
+
+    def stop(self):
+        self._stop.set()
 
 
 # ── Chat Window ─────────────────────────────────────────────────────────────
 
 class ChatWindow(QMainWindow):
     response_received = pyqtSignal(dict)
+    #: Lo que ARIA dice por su cuenta (lo decide el latido, no el chat).
+    aria_says = pyqtSignal(str)
 
-    def __init__(self, ipc: IPCClient):
+    def __init__(self, va: VAAdapter):
         super().__init__()
-        self.ipc = ipc
+        self.va = va
         self._setup_ui()
-        self._start_ipc_listener()
         self._setup_keyboard_shortcuts()
         self._load_settings()
         self._performance_monitor()
+
+    def _append_osd(self, message: str):
+        if hasattr(self, '_osd') and self._osd:
+            self._osd.notify(message)
 
     def _setup_ui(self):
         self.setWindowTitle("ARIA OS v4.0")
@@ -555,42 +752,47 @@ class ChatWindow(QMainWindow):
             QWidget {{ background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                 stop:0 {C_BG_DARK_0}, stop:0.5 {C_BG_DARK_1}, stop:1 #050816); }}
             QPushButton {{
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                    stop:0 {C_ACCENT_CYAN_BRIGHT}, stop:1 {C_ACCENT_PURPLE});
-                color: #0f172a; border: none; border-radius: 8px;
+                background: {C_GLASS_T3_BG};
+                color: {C_TEXT_PRIMARY}; border: 1px solid {C_GLASS_T3_BORDER}; border-radius: 8px;
                 padding: 8px 16px; font-weight: bold; font-size: 12px;
+                box-shadow: 0 0 14px {C_GLASS_T3_BORDER};
                 transition: {C_TRANS_NORMAL};
             }}
             QPushButton:hover {{
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                    stop:0 #7dd3fc, stop:1 #a855f7);
-                box-shadow: 0 0 12px {C_ACCENT_CYAN_BRIGHT};
+                border-color: {C_ACCENT_CYAN_BRIGHT};
+                box-shadow: 0 0 20px {C_ACCENT_CYAN_BRIGHT}40;
+                background: {C_GLASS_T2_BG};
                 transform: translateY(-1px);
             }}
+            QPushButton:pressed {{
+                transform: scale(0.97);
+            }}
             QLineEdit {{
-                background: rgba(20, 30, 63, 0.6); color: {C_TEXT_SECONDARY};
-                border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px;
+                background: {C_GLASS_T2_BG}; color: {C_TEXT_SECONDARY};
+                border: 1px solid {C_GLASS_T2_BORDER}; border-radius: 8px;
                 padding: 10px; font-size: 13px; font-family: 'Consolas', monospace;
+                box-shadow: 0 0 10px rgba(0,0,0,0.4);
                 transition: {C_TRANS_NORMAL};
             }}
             QLineEdit:focus {{
-                border-color: rgba(56, 189, 248, 0.4);
-                box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
-                background: rgba(20, 30, 63, 0.8);
+                border-color: {C_ACCENT_CYAN_BRIGHT};
+                box-shadow: 0 0 16px {C_ACCENT_CYAN_BRIGHT}40;
+                background: {C_GLASS_T1_BG};
             }}
             QTextEdit {{
-                background: rgba(15, 23, 42, 0.45);
+                background: {C_GLASS_T1_BG};
                 color: {C_TEXT_SECONDARY};
-                border: 1px solid rgba(56, 189, 248, 0.15);
+                border: 1px solid {C_GLASS_T1_BORDER};
                 border-radius: 12px;
                 padding: 12px;
                 font-size: 12px;
                 font-family: 'Consolas', monospace;
+                box-shadow: 0 0 14px rgba(0,0,0,0.5);
                 transition: {C_TRANS_NORMAL};
             }}
             QTextEdit:focus {{
-                border-color: rgba(56, 189, 248, 0.4);
-                box-shadow: 0 0 16px rgba(56, 189, 248, 0.2);
+                border-color: {C_ACCENT_CYAN_BRIGHT};
+                box-shadow: 0 0 20px {C_ACCENT_CYAN_BRIGHT}40;
             }}
             QLabel {{ font-family: 'Segoe UI'; color: {C_TEXT_SECONDARY}; }}
         """)
@@ -674,6 +876,51 @@ class ChatWindow(QMainWindow):
         """)
         self.control_btn.clicked.connect(self._open_control_center)
         header.addWidget(self.control_btn)
+        # Botón Núcleo/Evolución
+        self.nucleus_btn = QPushButton("☉ Núcleo")
+        self.nucleus_btn.setFixedSize(34, 34)
+        self.nucleus_btn.setToolTip("Abrir panel de evolución y sacrifice (Ctrl+N)")
+        self.nucleus_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: {C_GLASS_T3_BG};
+                color: {C_ACCENT_CYAN_BRIGHT};
+                border: 1px solid {C_GLASS_T3_BORDER};
+                border-radius: 10px;
+                font-size: 13px;
+                font-weight: bold;
+                transition: {C_TRANS_NORMAL};
+            }}
+            QPushButton:hover {{
+                background: {C_ACCENT_CYAN_BRIGHT}20;
+                border-color: {C_ACCENT_CYAN_BRIGHT};
+                box-shadow: 0 0 14px {C_ACCENT_CYAN_BRIGHT}50;
+            }}
+            QPushButton:pressed {{ transform: scale(0.95); }}
+        """)
+        self.nucleus_btn.clicked.connect(self._open_nucleus)
+        header.addWidget(self.nucleus_btn)
+        # Botón Memoria (5 capas: ver, buscar, fijar, borrar, exportar)
+        self.memory_btn = QPushButton("🧠")
+        self.memory_btn.setFixedSize(34, 34)
+        self.memory_btn.setToolTip("Memoria de ARIA (Ctrl+M)")
+        self.memory_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: {C_GLASS_T3_BG};
+                color: {C_ACCENT_PURPLE};
+                border: 1px solid {C_GLASS_T3_BORDER};
+                border-radius: 10px;
+                font-size: 14px;
+                transition: {C_TRANS_NORMAL};
+            }}
+            QPushButton:hover {{
+                background: {C_ACCENT_PURPLE}20;
+                border-color: {C_ACCENT_PURPLE};
+                box-shadow: 0 0 14px {C_ACCENT_PURPLE}50;
+            }}
+            QPushButton:pressed {{ transform: scale(0.95); }}
+        """)
+        self.memory_btn.clicked.connect(self._open_memory)
+        header.addWidget(self.memory_btn)
         min_btn = QPushButton("_")
         min_btn.setFixedSize(26, 26)
         min_btn.setStyleSheet(f"background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; font-size: 14px; font-weight: bold; border-radius: 6px; border: 1px solid {C_GLASS_BORDER}; transition: {C_TRANS_NORMAL};")
@@ -702,6 +949,14 @@ class ChatWindow(QMainWindow):
         self.status_label.setStyleSheet(f"color: {C_TEXT_DIM}; font-size: 11px; text-align: center; font-family: 'Segoe UI';")
         layout.addWidget(self.status_label)
 
+        # La franja de autonomía: lo que ARIA está perceiving ahora mismo.
+        # La autonomía vive en este proceso: la franja lee el runtime local.
+        self.autonomy_strip = AutonomyStrip()
+        layout.addWidget(self.autonomy_strip)
+        # Lo que ARIA hace al darle al ⚡ sale también en la OSD: si el
+        # usuario le espabila, tiene que ver qué ha pasado.
+        self.autonomy_strip.beat_report.connect(self._append_osd)
+
         layout.addSpacing(8)
 
         # Chat history with smooth scroll + border glow
@@ -712,7 +967,24 @@ class ChatWindow(QMainWindow):
         self.chat_history.setPlaceholderText("Escribe tu mensaje a ARIA...")
         self.chat_history.verticalScrollBar().setSingleStep(16)
         self.chat_history.verticalScrollBar().setPageStep(80)
+        self._last_response_text = ""
         layout.addWidget(self.chat_history)
+
+        # Acciones sobre la ultima respuesta de ARIA. Son botones de verdad,
+        # no enlaces dentro del HTML: esto es una ventana de escritorio y
+        # aqui no se abre ningun navegador.
+        action_row = QHBoxLayout()
+        action_row.setContentsMargins(0, 0, 0, 0)
+        action_row.setSpacing(6)
+        self._last_response_text = ""
+        self.act_copy = self._make_action_btn("Copiar", self._act_copy)
+        self.act_save = self._make_action_btn("Guardar", self._act_save)
+        self.act_refine = self._make_action_btn("Refine", self._act_refine)
+        for btn in (self.act_copy, self.act_save, self.act_refine):
+            btn.setEnabled(False)
+            action_row.addWidget(btn)
+        action_row.addStretch(1)
+        layout.addLayout(action_row)
 
         # Input row (Serpantinum style)
         input_row = QHBoxLayout()
@@ -771,7 +1043,7 @@ class ChatWindow(QMainWindow):
         container = QWidget()
         container.setFixedWidth(150)
         container.setStyleSheet(f"""
-            QWidget {{ background: rgba(15, 23, 42, 0.55); border-right: 1px solid rgba(56, 189, 248, 0.15); }}
+            QWidget {{ background: {C_GLASS_T1_BG}; border-right: 1px solid {C_GLASS_T1_BORDER}; }}
         """)
         v = QVBoxLayout(container)
         v.setContentsMargins(10, 10, 10, 10)
@@ -800,9 +1072,9 @@ class ChatWindow(QMainWindow):
         btn.setCheckable(True)
         btn.setStyleSheet(f"""
             QPushButton {{
-                background: rgba(15, 23, 42, 0.5);
+                background: {C_GLASS_T2_BG};
                 color: {C_TEXT_TERTIARY};
-                border: 1px solid rgba(56, 189, 248, 0.15);
+                border: 1px solid {C_GLASS_T2_BORDER};
                 border-radius: 10px;
                 padding: 4px 10px;
                 font-size: 11px;
@@ -811,11 +1083,10 @@ class ChatWindow(QMainWindow):
                 transition: {C_TRANS_NORMAL};
             }}
             QPushButton:hover {{
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                    stop:0 rgba(0, 212, 255, 0.25), stop:1 rgba(176, 102, 255, 0.2));
+                background: {C_GLASS_T3_BG};
                 color: {C_TEXT_PRIMARY};
                 border-color: {C_ACCENT_PURPLE};
-                box-shadow: 0 0 12px rgba(0, 212, 255, 0.3), 0 4px 8px rgba(0,0,0,0.3);
+                box-shadow: 0 0 14px {C_ACCENT_PURPLE}40;
                 transform: translateX(2px);
             }}
             QPushButton:active {{
@@ -823,10 +1094,10 @@ class ChatWindow(QMainWindow):
             }}
             QPushButton:checked {{
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                    stop:0 rgba(0, 212, 255, 0.4), stop:1 rgba(176, 102, 255, 0.3));
+                    stop:0 rgba(56, 189, 248, 0.45), stop:1 rgba(176, 102, 255, 0.35));
                 color: {C_TEXT_PRIMARY};
                 border-color: {C_ACCENT_CYAN_BRIGHT};
-                box-shadow: 0 0 16px rgba(0, 212, 255, 0.5);
+                box-shadow: 0 0 18px {C_ACCENT_CYAN_BRIGHT}60;
             }}
         """)
         btn.clicked.connect(lambda: self._on_skill_click(btn, name, category))
@@ -877,27 +1148,37 @@ class ChatWindow(QMainWindow):
         self.orb.set_state("thinking")
         self.status_label.setText("● Pensando...")
         self.status_label.setStyleSheet("color: #f59e0b; font-size: 11px;")
+        # ARIA se entera de lo que se le dice aunque la conteste este
+        # escritorio: su runtime guarda el historial y decide despues. La
+        # marca `answered` evita que conteste otra vez lo ya contestado.
+        # (desactivado por regla del proyecto: la autonomia no corre)
+        pass
 
         def _async_chat():
             request = {"type": "chat", "id": str(int(time.time()*1000)),
                        "data": {"message": text}}
-            result = self.ipc.send(request)
+            result = self.va.send(request)
             self.response_received.emit(result if result else {"status": "error", "error": "sin respuesta"})
 
         threading.Thread(target=_async_chat, daemon=True).start()
 
-    def _start_ipc_listener(self):
-        def _listener():
-            while True:
-                try:
-                    resp = self.ipc._msg_out.get(timeout=1.0)
-                    if resp.get("id"):
-                        self.response_received.emit(resp)
-                except queue.Empty:
-                    continue
-                except Exception:
-                    break
-        threading.Thread(target=_listener, daemon=True).start()
+    def _on_aria_says(self, text):
+        """ARIA dice algo por su cuenta: lo ha decidido su latido."""
+        text = str(text or "").strip()
+        if not text:
+            return
+        self._append_chat("ARIA", text, C_ACCENT_CYAN_BRIGHT)
+        # También sale en la OSD: lo que ARIA hace sola tiene que verse.
+        self._append_osd(text)
+        self.orb.set_state("responding")
+        self.status_dot.setStyleSheet(f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 10px;")
+        self.status_label.setText("Hablando sola...")
+        self.status_label.setStyleSheet(f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 11px; font-family: 'Segoe UI';")
+        QTimer.singleShot(2500, lambda: (self.orb.set_state("idle"),
+            self.status_dot.setStyleSheet(f"color: {C_SUCCESS}; font-size: 10px;"),
+            self.status_label.setText("Listo"),
+            self.status_label.setStyleSheet(f"color: {C_TEXT_SECONDARY}; font-size: 11px; font-family: 'Segoe UI';")))
+
 
     def _render_markdown(self, text: str) -> str:
         """Convert basic markdown to HTML for chat display."""
@@ -981,37 +1262,58 @@ class ChatWindow(QMainWindow):
         scrollbar.setValue(scrollbar.maximum())
 
     def _add_action_buttons(self, response_text: str):
-        """Add Copiar / Guardar / Refine action buttons below last ARIA message."""
-        # Remove previous action bar if any
-        prev = self.chat_history.find("#action_bar")
-        if prev:
-            # Clear the action bar by replacing with empty
-            self.chat_history.setHtml(self.chat_history.toHtml().replace(
-                "<div id='action_bar' style='margin:4px 0; padding:4px;'>",
-                "<div id='action_bar' style='margin:4px 0; padding:4px; display:none;'>"
-            ))
-        btn_html = (
-            "<div id='action_bar' style='margin:6px 0; padding:6px 8px; "
-            "background:rgba(15,23,42,0.6); border-radius:8px; border:1px solid " + C_GLASS_BORDER + ";'>"
-            "<span style='color:" + C_TEXT_DIM + "; font-size:9px; font-family:Consolas,monospace; margin-right:8px;'>Acciones:</span>"
-            "<button id='act_copy' style='background:" + C_ACCENT + "; color:#0f172a; border:none; border-radius:4px; padding:3px 8px; font-size:9px; font-family:Consolas,monospace; cursor:pointer; margin-right:4px;'>Copiar</button>"
-            "<button id='act_save' style='background:" + C_SECONDARY + "; color:#0f172a; border:none; border-radius:4px; padding:3px 8px; font-size:9px; font-family:Consolas,monospace; cursor:pointer; margin-right:4px;'>Guardar</button>"
-            "<button id='act_refine' style='background:rgba(56,189,248,0.2); color:" + C_ACCENT + "; border:1px solid " + C_ACCENT + "; border-radius:4px; padding:3px 8px; font-size:9px; font-family:Consolas,monospace; cursor:pointer;'>Refine</button>"
-            "</div>"
-        )
-        self.chat_history.append(btn_html)
-        # Wire button clicks via JavaScript evaluation
-        self.chat_history.page().profile().setLinkDelegationPolicy(True)
-        # Use JavaScript to handle clicks
-        js = (
-            "var btns = document.querySelectorAll('#action_bar button');"
-            "btns[0].onclick = function() { navigator.clipboard.writeText('" + response_text.replace("'", "\\'") + "'); };"
-            "btns[1].onclick = function() { var blob = new Blob(['" + response_text.replace("'", "\\'") + "'], {type:'text/plain'}); var url = URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download='ARIA_response.txt'; a.click(); };"
-            "btns[2].onclick = function() { window.prompt('Solicitar refine:', '" + response_text.replace("'", "\\'") + "'); };"
-        )
-        self.chat_history.page().evaluateJavaScript(js)
-        scrollbar = self.chat_history.verticalScrollBar()
-        scrollbar.setValue(scrollbar.maximum())
+        """Deja las acciones (Copiar / Guardar / Refine) sobre la ultima respuesta.
+
+        Antes esto era codigo del motor web (QtWebEngine): se evaluaba
+        JavaScript desde la vista y se aplicaba a un QTextEdit. Reventaba con
+        AttributeError en cuanto ARIA contestaba algo y la app entera se caia.
+        Ahora son botones de Qt de verdad: sin motor web, sin navegador y sin
+        depender de nada externo.
+        """
+        self._last_response_text = str(response_text or "")
+        for btn in (self.act_copy, self.act_save, self.act_refine):
+            btn.setEnabled(bool(self._last_response_text))
+
+    def _make_action_btn(self, texto, slot):
+        """Un boton de la fila de acciones, con el estilo de la ventana."""
+        btn = QPushButton(texto)
+        btn.setFixedHeight(24)
+        btn.setCursor(Qt.PointingHandCursor)
+        btn.setStyleSheet(f"""
+            QPushButton {{
+                background: {C_GLASS_T2_BG}; color: {C_TEXT_SECONDARY};
+                border: 1px solid {C_GLASS_BORDER}; border-radius: 6px;
+                padding: 2px 10px; font-size: 10px; font-family: 'Consolas', monospace;
+            }}
+            QPushButton:hover {{ color: {C_ACCENT_CYAN_BRIGHT}; border-color: {C_ACCENT_CYAN_BRIGHT}; }}
+            QPushButton:disabled {{ color: {C_TEXT_DIM}; border-color: {C_BORDER}; }}
+        """)
+        btn.clicked.connect(slot)
+        return btn
+
+    def _act_copy(self):
+        """Copiar la ultima respuesta al portapapeles."""
+        QApplication.clipboard().setText(self._last_response_text)
+        self._show_notification("Respuesta copiada")
+
+    def _act_save(self):
+        """Guardar la ultima respuesta en un archivo local."""
+        stamp = time.strftime("%Y%m%d_%H%M%S")
+        destino = Path(ARIA_APP) / "data" / "respuestas" / f"respuesta_{stamp}.txt"
+        resultado = self.va.send({
+            "type": "skill",
+            "skill": "file_write",
+            "data": {"params": {"path": str(destino), "content": self._last_response_text}},
+        })
+        if resultado.get("status") == "ok":
+            self._show_notification(f"Guardado en {destino.name}")
+        else:
+            self._show_notification("No se pudo guardar")
+
+    def _act_refine(self):
+        """Devuelve la respuesta al cuadro para pedirle que la mejore."""
+        self.msg_input.setText(self._last_response_text)
+        self.msg_input.setFocus()
 
     def _append_streaming(self, sender: str, full_text: str, color: str, meta: str = ""):
         """Stream text token-by-token for a typing effect."""
@@ -1023,42 +1325,42 @@ class ChatWindow(QMainWindow):
             meta_html = ' <span style="color:' + C_ACCENT + '; font-size:9px; font-family:Consolas,monospace;">' + meta + '</span>'
         # Insert placeholder div with id for streaming
         self.chat_history.append(
-            "<div id='stream_" + str(int(time.time()*1000)) + "' style='margin:6px 0; padding:6px 10px; "
+            "<div style='margin:6px 0; padding:6px 10px; "
             "background:rgba(15,23,42,0.5); border-left:3px solid " + color + "; border-radius:4px; "
             "box-shadow:" + border_glow + ";'>"
             "<span style='color:" + color + "; font-weight:bold; font-family:Consolas,monospace;'>" + sender + "</span> "
             "<span style='color:" + C_TEXT_DIM + "; font-size:9px; font-family:Consolas,monospace;'>[" + ts + "]</span>"
             + meta_html +
-            "<br><span id='stream_text' style='color:" + C_TEXT_MAIN + "; font-family:Consolas,monospace; font-size:11px;'></span></div>"
+            "</div>"
         )
-        # Stream characters in chunks using QTimer
+        # El texto entra a chorros, insertado al final del documento. Antes se
+        # buscaba con un replace sobre toHtml() y nunca casaba: Qt reescribe
+        # el HTML al serializarlo, asi que la respuesta se quedaba vacia.
+        cursor = self.chat_history.textCursor()
         chunk_size = max(1, len(full_text) // 40)  # ~40 steps
         pos = [0]
+
         def _step():
-            pos[0] = min(len(full_text), pos[0] + chunk_size)
-            escaped = full_text[:pos[0]].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
-            self.chat_history.setHtml(
-                self.chat_history.toHtml().replace(
-                    "<span id='stream_text' style='color:" + C_TEXT_MAIN + "; font-family:Consolas, monospace; font-size:11px;'></span>",
-                    "<span id='stream_text' style='color:" + C_TEXT_MAIN + "; font-family:Consolas, monospace; font-size:11px;'>" + escaped + "</span>"
+            nuevo = full_text[pos[0]:pos[0] + chunk_size]
+            pos[0] += len(nuevo)
+            if nuevo:
+                cursor.movePosition(QTextCursor.End)
+                cursor.insertHtml(
+                    "<span style='color:" + C_TEXT_MAIN
+                    + "; font-family:Consolas,monospace; font-size:11px;'>"
+                    + nuevo.replace("&", "&amp;").replace("<", "&lt;")
+                           .replace(">", "&gt;").replace(" ", "&nbsp;")
+                    + "</span>"
                 )
-            )
             if pos[0] < len(full_text):
                 QTimer.singleShot(25, _step)
-            else:
-                # Final flush
-                QTimer.singleShot(50, lambda: self.chat_history.setHtml(
-                    self.chat_history.toHtml().replace(
-                        "<span id='stream_text' style='color:" + C_TEXT_MAIN + "; font-family:Consolas, monospace; font-size:11px;'>" + escaped + "</span>",
-                        "<span style='color:" + C_TEXT_MAIN + "; font-family:Consolas, monospace; font-size:11px;'>" + escaped + "</span>"
-                    )
-                ))
+            scrollbar = self.chat_history.verticalScrollBar()
+            scrollbar.setValue(scrollbar.maximum())
+
         QTimer.singleShot(30, _step)
-        scrollbar = self.chat_history.verticalScrollBar()
-        scrollbar.setValue(scrollbar.maximum())
 
     def load_skills(self):
-        result = self.ipc.send({"type": "list_skills", "id": "skills"})
+        result = self.va.send({"type": "list_skills", "id": "skills"})
         skills = result.get("skills", []) if result.get("status") == "ok" else []
         # Clear existing buttons
         while self.skills_grid_layout.count():
@@ -1372,7 +1674,26 @@ class ChatWindow(QMainWindow):
         v.addWidget(save_btn)
         dlg.exec_()
 
+    def _open_nucleus(self):
+        """Abre el panel de evolución y sacrifice del núcleo."""
+        if not hasattr(self, '_nucleus_panel') or self._nucleus_panel is None:
+            self._nucleus_panel = EvolutionPanel(self.va, self.orb, self)
+            self._nucleus_panel._osd = getattr(self, '_osd', None)
+        self._nucleus_panel.show()
+        self._nucleus_panel.raise_()
+        self._nucleus_panel.activateWindow()
+
+    def _open_memory(self):
+        """Abre el panel de memoria: ver, buscar, fijar, borrar y exportar."""
+        if not hasattr(self, '_memory_panel') or self._memory_panel is None:
+            self._memory_panel = MemoryPanel(self.va, self)
+        self._memory_panel._refresh()
+        self._memory_panel.show()
+        self._memory_panel.raise_()
+        self._memory_panel.activateWindow()
+
     def _show_command_palette(self):
+
         from PyQt5.QtWidgets import QDialog, QLineEdit, QVBoxLayout, QListWidget, QListWidgetItem
         dlg = QDialog(self)
         dlg.setWindowTitle('Comando')
@@ -1481,6 +1802,7 @@ class ChatWindow(QMainWindow):
             ("Ctrl+K", "Paleta de comandos"),
             ("Ctrl+T", "Cambiar tema"),
             ("Ctrl+,", "Control Center"),
+            ("Ctrl+M", "Memoria"),
             ("F1", "Esta ayuda"),
             ("Esc", ",Ocultar/Cerrar"),
         ]
@@ -1550,6 +1872,7 @@ class ChatWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+,"), self).activated.connect(self._open_control_center)
         QShortcut(QKeySequence("Ctrl+L"), self).activated.connect(self._clear_chat)
         QShortcut(QKeySequence("Ctrl+E"), self).activated.connect(self._export_chat)
+        QShortcut(QKeySequence("Ctrl+M"), self).activated.connect(self._open_memory)
         QShortcut(QKeySequence("F1"), self).activated.connect(self._show_shortcuts)
 
     def _debug_check(self):
@@ -1781,10 +2104,1096 @@ class OverlayOrb(QWidget):
         painter.end()
 
 
+# ── Evolution Panel (sacrifice + cadenas de evolución) ──────────────────────────
+
+EVOLUTION_CHAINS = {
+    "gran_sabio_analisis": {
+        "name": "Gran Sabio Análisis",
+        "next": "gran_sabio_supremo",
+        "desc": "Análisis profundo de cualquier asunto.",
+        "sacrifice_cost": "ciel_infon_flujo",
+    },
+    "gran_sabio_supremo": {
+        "name": "Gran Sabio Supremo",
+        "next": "núcleo_fusionado_final",
+        "desc": "Sabiduría acumulada al máximo.",
+        "sacrifice_cost": "orbe_resonante",
+    },
+    "núcleo_fusionado_final": {
+        "name": "Núcleo Fusionado Final",
+        "next": None,
+        "desc": "La forma última del núcleo ARIA.",
+        "sacrifice_cost": "espada_eterna",
+    },
+    "ciel_infon_flujo": {
+        "name": "Flujo de Infons (Ciel)",
+        "next": "sabiduría_fusionada",
+        "desc": "Corriente constante de infons cósmicos.",
+        "sacrifice_cost": None,
+    },
+    "sabiduría_fusionada": {
+        "name": "Sabiduría Fusionada",
+        "next": "orbe_resonante",
+        "desc": "Sabiduría que resuena entre dimensiones.",
+        "sacrifice_cost": None,
+    },
+    "orbe_resonante": {
+        "name": "Orbe Resonante",
+        "next": "orbe_infinito",
+        "desc": "Orbe que vibra con la frecuencia del universo.",
+        "sacrifice_cost": None,
+    },
+    "orbe_infinito": {
+        "name": "Orbe Infinito",
+        "next": None,
+        "desc": "Orbe sin límites ni final.",
+        "sacrifice_cost": None,
+    },
+    "raphael_transformacion": {
+        "name": "Transformación (Raphael)",
+        "next": "espada_eterna",
+        "desc": "Corta la ilusión, revela la verdad.",
+        "sacrifice_cost": None,
+    },
+    "espada_eterna": {
+        "name": "Espada Eterna",
+        "next": None,
+        "desc": "Filosofía convertida en acción pura.",
+        "sacrifice_cost": None,
+    },
+}
+
+
+class EvolutionPanel(QWidget):
+    """Panel flotante: muestra cadenas de evolución, botón de sacrifice y lista de skills."""
+
+    def __init__(self, va: VAAdapter, orb: OrbWidget, parent=None):
+        super().__init__(parent)
+        self.va = va
+        self.orb = orb
+        self._setup_ui()
+        self._refresh()
+
+    def _setup_ui(self):
+        self.setWindowTitle("◆ Núcleo ARIA — Evolución y Sacrifice")
+        self.setFixedSize(460, 560)
+        self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint)
+        self.setStyleSheet(f"""
+            QDialog, QWidget {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 {C_BG_DARK_0}, stop:1 {C_BG_DARK_1});
+                border: 1px solid {C_GLASS_T1_BORDER};
+                border-radius: 18px;
+            }}
+            QLabel {{ color: {C_TEXT_MAIN}; font-family: 'Consolas', monospace; }}
+            QScrollArea {{ background: transparent; border: none; }}
+        """)
+        v = QVBoxLayout(self)
+        v.setContentsMargins(20, 20, 20, 20)
+        v.setSpacing(12)
+
+        # Título
+        lbl = QLabel("◆ Núcleo ARIA")
+        lbl.setStyleSheet(f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 16px; font-weight: bold; letter-spacing: 2px;")
+        v.addWidget(lbl)
+
+        sub = QLabel("Evolución de habilidades y sacrifice")
+        sub.setStyleSheet(f"color: {C_TEXT_SECONDARY}; font-size: 11px; margin-bottom: 6px;")
+        v.addWidget(sub)
+
+        # Selector de aspecto
+        asp_grp = QGroupBox("Aspecto del Núcleo")
+        asp_grp.setStyleSheet(f"""
+            QGroupBox {{
+                color: {C_ACCENT_CYAN_BRIGHT};
+                font-weight: bold;
+                font-size: 11px;
+                border: 1px solid {C_GLASS_T1_BORDER};
+                border-radius: 10px;
+                margin-top: 8px;
+                padding-top: 8px;
+            }}
+            QGroupBox::title {{ subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; }}
+        """)
+        asp_layout = QHBoxLayout()
+        for aspect in ("ciel", "raphael", "gran_sabio", "fused"):
+            r, g, b = ASPECT_RGB[aspect]
+            btn = QPushButton(aspect.replace("_", " ").title())
+            btn.setFixedHeight(28)
+            btn.setCheckable(True)
+            btn.setChecked(aspect == self.orb._aspect)
+            btn.setStyleSheet(f"""
+                QPushButton {{
+                    background: {C_GLASS_T2_BG};
+                    color: {C_TEXT_TERTIARY};
+                    border: 1px solid {C_GLASS_T2_BORDER};
+                    border-radius: 8px;
+                    font-size: 10px;
+                    font-family: 'Consolas', monospace;
+                }}
+                QPushButton:checked {{
+                    background: rgba({r}, {g}, {b}, 0.35);
+                    color: {C_TEXT_PRIMARY};
+                    border-color: rgba({r}, {g}, {b}, 0.8);
+                    box-shadow: 0 0 12px rgba({r}, {g}, {b}, 0.5);
+                }}
+                QPushButton:hover:!checked {{
+                    border-color: rgba({r}, {g}, {b}, 0.4);
+                }}
+            """)
+            btn.clicked.connect(lambda _, a=aspect, b=btn: self._set_aspect(a, b))
+            asp_layout.addWidget(btn)
+        asp_grp.setLayout(asp_layout)
+        v.addWidget(asp_grp)
+
+        # Cadenas de evolución
+        evo_lbl = QLabel("Cadenas de Evolución")
+        evo_lbl.setStyleSheet(f"color: {C_ACCENT_PURPLE}; font-size: 12px; font-weight: bold; margin-top: 8px;")
+        v.addWidget(evo_lbl)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setMaximumHeight(240)
+        self.evo_list = QWidget()
+        self.evo_layout = QVBoxLayout(self.evo_list)
+        self.evo_layout.setSpacing(8)
+        scroll.setWidget(self.evo_list)
+        v.addWidget(scroll)
+
+        # Botón de sacrifice
+        self.sac_btn = QPushButton("◆ Ejecutar Sacrifice")
+        self.sac_btn.setFixedHeight(40)
+        self.sac_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 {C_ACCENT_ORANGE}, stop:1 #ef4444);
+                color: #0f172a;
+                border: none;
+                border-radius: 10px;
+                font-weight: bold;
+                font-size: 12px;
+                font-family: 'Consolas', monospace;
+                box-shadow: 0 4px 16px {C_ACCENT_ORANGE}40;
+                transition: {C_TRANS_NORMAL};
+            }}
+            QPushButton:hover {{
+                box-shadow: 0 6px 24px {C_ACCENT_ORANGE}60;
+                transform: translateY(-2px);
+            }}
+            QPushButton:pressed {{ transform: scale(0.97); }}
+        """)
+        self.sac_btn.clicked.connect(self._do_sacrifice)
+        v.addWidget(self.sac_btn)
+
+        # Lista de skills
+        sk_lbl = QLabel("Skills Disponibles")
+        sk_lbl.setStyleSheet(f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 12px; font-weight: bold; margin-top: 10px;")
+        v.addWidget(sk_lbl)
+        self.skills_list = QListWidget()
+        self.skills_list.setStyleSheet(f"""
+            QListWidget {{
+                background: {C_GLASS_T2_BG};
+                border: 1px solid {C_GLASS_T2_BORDER};
+                border-radius: 10px;
+                color: {C_TEXT_SECONDARY};
+                font-family: 'Consolas', monospace;
+                font-size: 11px;
+            }}
+            QListWidget::item {{
+                padding: 6px 10px;
+                border-bottom: 1px solid {C_GLASS_T1_BORDER};
+            }}
+            QListWidget::item:selected {{
+                background: {C_GLASS_T3_BG};
+                color: {C_ACCENT_CYAN_BRIGHT};
+                border-left: 3px solid {C_ACCENT_CYAN_BRIGHT};
+            }}
+        """)
+        self.skills_list.setMaximumHeight(140)
+        v.addWidget(self.skills_list)
+
+        close_btn = QPushButton("Cerrar Núcleo")
+        close_btn.setFixedHeight(34)
+        close_btn.setStyleSheet(f"""
+            QPushButton {{
+                background: {C_GLASS_T1_BG};
+                color: {C_TEXT_TERTIARY};
+                border: 1px solid {C_GLASS_T1_BORDER};
+                border-radius: 8px;
+                font-size: 11px;
+                font-family: 'Consolas', monospace;
+            }}
+            QPushButton:hover {{ border-color: {C_ACCENT_CYAN_BRIGHT}; }}
+        """)
+        close_btn.clicked.connect(self.close)
+        v.addWidget(close_btn)
+
+    def _set_aspect(self, aspect: str, btn: QPushButton):
+        set_aspect(aspect)
+        self.orb.set_aspect(aspect)
+        for i in range(self.evo_list.layout().count()):
+            pass  # no-op, buttons handle own state
+        # Refresh checked state
+        for b in self.findChildren(QPushButton):
+            if b.text().lower().replace(" ", "_") == aspect:
+                b.setChecked(True)
+            elif b.text().lower().replace(" ", "_") in ("ciel", "raphael", "gran sabio", "fused"):
+                b.setChecked(False)
+        self._append_osd(f"Aspecto del núcleo: {aspect.title()}")
+
+    def _refresh(self):
+        # Limpiar cadenas
+        while self.evo_layout.count():
+            item = self.evo_layout.takeAt(0)
+            w = item.widget()
+            if w:
+                w.deleteLater()
+        # Render cadenas
+        for key, chain in EVOLUTION_CHAINS.items():
+            row = QHBoxLayout()
+            name_lbl = QLabel(chain["name"])
+            name_lbl.setStyleSheet(f"color: {C_TEXT_PRIMARY}; font-size: 11px; font-weight: bold; min-width: 150px;")
+            row.addWidget(name_lbl)
+            desc = QLabel(chain["desc"])
+            desc.setStyleSheet(f"color: {C_TEXT_SECONDARY}; font-size: 10px;")
+            row.addWidget(desc)
+            row.addStretch()
+            if chain["next"]:
+                nxt = EVOLUTION_CHAINS[chain["next"]]["name"]
+                arrow = QLabel(f"→ {nxt}")
+                arrow.setStyleSheet(f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 10px; font-weight: bold;")
+                row.addWidget(arrow)
+            else:
+                done = QLabel("ÚLTIMA")
+                done.setStyleSheet(f"color: {C_SUCCESS}; font-size: 9px; font-weight: bold;")
+                row.addWidget(done)
+            wrow = QWidget()
+            wrow.setLayout(row)
+            wrow.setStyleSheet(f"""
+                QWidget {{ background: {C_GLASS_T2_BG}; border: 1px solid {C_GLASS_T2_BORDER}; border-radius: 8px; padding: 6px; }}
+            """)
+            self.evo_layout.addWidget(wrow)
+
+        # Lista de skills
+        result = self.va.send({"type": "list_skills", "id": "skills"})
+        skills = result.get("skills", []) if result.get("status") == "ok" else []
+        self.skills_list.clear()
+        for s in skills[:30]:
+            name = s.get('name', '?')
+            category = s.get('category', '')
+            item = QListWidgetItem(f"{name}  [{category}]")
+            self.skills_list.addItem(item)
+
+    def _do_sacrifice(self):
+        # Sacrifice simple: tentar evolucionar la primera cadena disponible
+        for key, chain in EVOLUTION_CHAINS.items():
+            cost = chain["sacrifice_cost"]
+            if cost:
+                result = self.va.send({
+                    "type": "skill",
+                    "skill": "media_extract_all",
+                    "params": {"url": ""}
+                }) if False else None
+                # Simular sacrifice (lógica real está en el núcleo Python)
+                self._append_osd(f"Sacrifice: {chain['name']} → {chain['next'] or 'completa'}")
+                self.orb.set_state("responding")
+                QTimer.singleShot(1200, lambda: self.orb.set_state("idle"))
+                self._refresh()
+                return
+        self._append_osd("No hay sacrifice disponible en este momento")
+
+    def _append_osd(self, message: str):
+        if hasattr(self, '_osd') and self._osd:
+            self._osd.notify(message)
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self._refresh()
+
+
+class MemoryPanel(QWidget):
+    """Panel de memoria: ver, buscar, fijar, borrar y exportar las 5 capas.
+
+    La memoria SQLite vive en el proceso (SQLite + FTS5, sin red ni puertos).
+    Apagada por defecto con ARIA_MEMORY_SQLITE; este panel la puede encender
+    en caliente. El JSONL de siempre sigue siendo la fuente de verdad.
+    """
+
+    CAPAS = ("reglas", "hechos", "experiencias", "observaciones", "modelos")
+
+    def __init__(self, va: VAAdapter, parent=None):
+        super().__init__(parent)
+        self.va = va
+        self._entries = []
+        self._setup_ui()
+        self._refresh()
+
+    # -- interfaz ------------------------------------------------------------
+    def _setup_ui(self):
+        self.setWindowTitle("◆ Memoria de ARIA")
+        self.setFixedSize(820, 640)
+        self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint)
+        self.setStyleSheet(f"""
+            QWidget {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 {C_BG_DARK_0}, stop:1 {C_BG_DARK_1});
+                border: 1px solid {C_GLASS_T1_BORDER};
+                border-radius: 18px;
+            }}
+            QLabel {{ color: {C_TEXT_MAIN}; font-family: 'Consolas', monospace; }}
+            QPushButton {{
+                background: {C_GLASS_T2_BG};
+                color: {C_TEXT_SECONDARY};
+                border: 1px solid {C_GLASS_T2_BORDER};
+                border-radius: 8px;
+                padding: 6px 10px;
+                font-size: 11px;
+                font-family: 'Consolas', monospace;
+                transition: {C_TRANS_NORMAL};
+            }}
+            QPushButton:hover {{
+                border-color: {C_ACCENT_CYAN_BRIGHT};
+                color: {C_TEXT_PRIMARY};
+            }}
+            QPushButton:disabled {{ color: #475569; border-color: rgba(255,255,255,0.05); }}
+            QLineEdit, QComboBox {{
+                background: {C_GLASS_T2_BG};
+                color: {C_TEXT_SECONDARY};
+                border: 1px solid {C_GLASS_T2_BORDER};
+                border-radius: 8px;
+                padding: 6px 8px;
+                font-size: 11px;
+                font-family: 'Consolas', monospace;
+            }}
+            QComboBox QAbstractItemView {{
+                background: {C_BG_MID};
+                color: {C_TEXT_SECONDARY};
+                selection-background-color: {C_ACCENT_CYAN_BRIGHT}55;
+            }}
+            QTableWidget {{
+                background: {C_GLASS_T1_BG};
+                color: {C_TEXT_SECONDARY};
+                border: 1px solid {C_GLASS_T1_BORDER};
+                border-radius: 10px;
+                gridline-color: {C_GLASS_T1_BORDER};
+                font-family: 'Consolas', monospace;
+                font-size: 11px;
+            }}
+            QHeaderView::section {{
+                background: {C_GLASS_T2_BG};
+                color: {C_ACCENT_CYAN_BRIGHT};
+                border: none;
+                border-bottom: 1px solid {C_GLASS_T1_BORDER};
+                padding: 5px;
+                font-size: 10px;
+            }}
+            QTableWidget::item:selected {{
+                background: {C_ACCENT_CYAN_BRIGHT}33;
+                color: {C_TEXT_PRIMARY};
+            }}
+        """)
+        v = QVBoxLayout(self)
+        v.setContentsMargins(20, 20, 20, 20)
+        v.setSpacing(10)
+
+        header = QHBoxLayout()
+        title = QLabel("◆ Memoria de ARIA")
+        title.setStyleSheet(f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 16px; font-weight: bold; letter-spacing: 2px;")
+        header.addWidget(title)
+        header.addSpacing(8)
+        self.state_lbl = QLabel("—")
+        self.state_lbl.setStyleSheet(f"color: {C_TEXT_TERTIARY}; font-size: 11px;")
+        header.addWidget(self.state_lbl)
+        header.addStretch()
+        self.toggle_btn = QPushButton("Encender memoria")
+        self.toggle_btn.setToolTip("Activa o desactiva la memoria SQLite en este proceso")
+        self.toggle_btn.clicked.connect(self._toggle)
+        header.addWidget(self.toggle_btn)
+        v.addLayout(header)
+
+        sub = QLabel("5 capas · SQLite + FTS5 · sin red, sin puertos, en este proceso")
+        sub.setStyleSheet(f"color: {C_TEXT_SECONDARY}; font-size: 11px;")
+        v.addWidget(sub)
+
+        # Fila de busqueda
+        search_row = QHBoxLayout()
+        self.capa_combo = QComboBox()
+        self.capa_combo.addItem("Todas las capas", "")
+        for capa in self.CAPAS:
+            self.capa_combo.addItem(capa, capa)
+        self.capa_combo.addItem("Sesión (volátil)", "sesion")
+        self.capa_combo.setFixedWidth(150)
+        self.capa_combo.currentIndexChanged.connect(self._refresh)
+        search_row.addWidget(self.capa_combo)
+
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Buscar en la memoria (FTS5)...")
+        self.search_input.returnPressed.connect(self._search)
+        search_row.addWidget(self.search_input, 1)
+
+        search_btn = QPushButton("Buscar")
+        search_btn.clicked.connect(self._search)
+        search_row.addWidget(search_btn)
+
+        refresh_btn = QPushButton("Refrescar")
+        refresh_btn.clicked.connect(self._refresh)
+        search_row.addWidget(refresh_btn)
+        v.addLayout(search_row)
+
+        # Fila de alta manual: escribir un recuerdo y guardarlo en la memoria
+        new_row = QHBoxLayout()
+        self.new_input = QLineEdit()
+        self.new_input.setPlaceholderText("Escribe un recuerdo y guardalo en la memoria...")
+        self.new_input.returnPressed.connect(self._guardar)
+        new_row.addWidget(self.new_input, 1)
+        self.new_capa_combo = QComboBox()
+        for capa in self.CAPAS:
+            self.new_capa_combo.addItem(capa, capa)
+        self.new_capa_combo.setCurrentIndex(max(0, self.CAPAS.index("hechos")))
+        self.new_capa_combo.setFixedWidth(130)
+        new_row.addWidget(self.new_capa_combo)
+        self.new_conf_combo = QComboBox()
+        for conf in ("usuario", "sistema", "web"):
+            self.new_conf_combo.addItem(conf, conf)
+        self.new_conf_combo.setFixedWidth(100)
+        new_row.addWidget(self.new_conf_combo)
+        self.guardar_btn = QPushButton("Guardar")
+        self.guardar_btn.setToolTip("Guarda el texto en la capa elegida")
+        self.guardar_btn.clicked.connect(self._guardar)
+        new_row.addWidget(self.guardar_btn)
+        v.addLayout(new_row)
+
+        self.counts_lbl = QLabel("")
+        self.counts_lbl.setStyleSheet(f"color: {C_TEXT_TERTIARY}; font-size: 10px;")
+        v.addWidget(self.counts_lbl)
+
+        # Tabla de entradas
+        self.table = QTableWidget(0, 5)
+        self.table.setHorizontalHeaderLabels(["Capa", "Texto", "Fuente", "Confianza", "Evid."])
+        self.table.verticalHeader().setVisible(False)
+        self.table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.table.setSelectionMode(QTableWidget.SingleSelection)
+        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)
+        v.addWidget(self.table, 1)
+
+        # Acciones
+        actions = QHBoxLayout()
+        self.fijar_btn = QPushButton("Fijar como regla")
+        self.fijar_btn.setToolTip("Copia la entrada seleccionada a la capa 'reglas'")
+        self.fijar_btn.clicked.connect(self._fijar)
+        actions.addWidget(self.fijar_btn)
+
+        self.borrar_btn = QPushButton("Borrar")
+        self.borrar_btn.setToolTip("Borra la entrada seleccionada de la memoria")
+        self.borrar_btn.clicked.connect(self._borrar)
+        actions.addWidget(self.borrar_btn)
+
+        self.consolidar_btn = QPushButton("Consolidar")
+        self.consolidar_btn.setToolTip("Promueve las observaciones repetidas a 'modelos' (sin LLM)")
+        self.consolidar_btn.clicked.connect(self._consolidar)
+        actions.addWidget(self.consolidar_btn)
+
+        self.exportar_btn = QPushButton("Exportar")
+        self.exportar_btn.setToolTip("Guarda la memoria en un JSON")
+        self.exportar_btn.clicked.connect(self._exportar)
+        actions.addWidget(self.exportar_btn)
+
+        self.importar_btn = QPushButton("Importar")
+        self.importar_btn.setToolTip("Importa un archivo de memoria (JSON o JSONL)")
+        self.importar_btn.clicked.connect(self._importar)
+        actions.addWidget(self.importar_btn)
+
+        actions.addStretch()
+        close_btn = QPushButton("Cerrar")
+        close_btn.clicked.connect(self.close)
+        actions.addWidget(close_btn)
+        v.addLayout(actions)
+
+        # Acciones de sesion: recuerdos volatiles de esta sesion
+        session_row = QHBoxLayout()
+        self.recordar_btn = QPushButton("Recordar (sesión)")
+        self.recordar_btn.setToolTip("Guarda el texto (o la entrada seleccionada) como recuerdo de esta sesión")
+        self.recordar_btn.clicked.connect(self._recordar)
+        session_row.addWidget(self.recordar_btn)
+
+        self.vaciar_sesion_btn = QPushButton("Vaciar sesión")
+        self.vaciar_sesion_btn.setToolTip("Borra los recuerdos de esta sesión")
+        self.vaciar_sesion_btn.clicked.connect(self._vaciar_sesion)
+        session_row.addWidget(self.vaciar_sesion_btn)
+
+        self.importar_chat_btn = QPushButton("Importar charlar")
+        self.importar_chat_btn.setToolTip("Importa el historial de conversaciones como experiencias")
+        self.importar_chat_btn.clicked.connect(self._importar_chat)
+        session_row.addWidget(self.importar_chat_btn)
+
+        session_row.addStretch()
+        self.session_lbl = QLabel("0 recuerdo(s) de sesión")
+        self.session_lbl.setStyleSheet(f"color: {C_TEXT_TERTIARY}; font-size: 10px;")
+        session_row.addWidget(self.session_lbl)
+        v.addLayout(session_row)
+
+        actions.addStretch()
+        close_btn = QPushButton("Cerrar")
+        close_btn.clicked.connect(self.close)
+        actions.addWidget(close_btn)
+        v.addLayout(actions)
+
+    # -- datos ---------------------------------------------------------------
+    def _capas_de(self, counts: dict) -> str:
+        if not counts:
+            return "sin entradas"
+        return " · ".join(f"{c}: {counts.get(c, 0)}" for c in self.CAPAS)
+
+    def _fill(self, entries, counts=None, enabled=None):
+        self._entries = list(entries or [])
+        self.table.setRowCount(len(self._entries))
+        for row, e in enumerate(self._entries):
+            texto = str(e.get("texto", ""))
+            if len(texto) > 180:
+                texto = texto[:177] + "..."
+            valores = [
+                str(e.get("capa", "")),
+                texto,
+                str(e.get("fuente", "") or ""),
+                str(e.get("confianza", "") or ""),
+                str(e.get("evidencia", "") or ""),
+            ]
+            for col, valor in enumerate(valores):
+                item = QTableWidgetItem(valor)
+                if col == 0:
+                    item.setData(Qt.UserRole, {"capa": e.get("capa", ""), "id": e.get("id")})
+                self.table.setItem(row, col, item)
+        if counts is not None:
+            self.counts_lbl.setText(self._capas_de(counts))
+        if enabled is not None:
+            self._set_state(enabled)
+
+    def _set_state(self, enabled: bool):
+        if enabled:
+            self.state_lbl.setText("● Activa")
+            self.state_lbl.setStyleSheet(f"color: {C_SUCCESS}; font-size: 11px;")
+            self.toggle_btn.setText("Apagar memoria")
+        else:
+            self.state_lbl.setText("○ Inactiva")
+            self.state_lbl.setStyleSheet(f"color: {C_TEXT_TERTIARY}; font-size: 11px;")
+            self.toggle_btn.setText("Encender memoria")
+
+    def _refresh(self):
+        capa = self.capa_combo.currentData() or ""
+        self._refresh_session_label()
+        if capa == "sesion":
+            result = self.va.send({"type": "memory_session_list", "data": {}})
+            entries = result.get("entries", []) if result.get("status") == "ok" else []
+            self._fill(entries, None, None)
+            self.counts_lbl.setText(f"{len(entries)} recuerdo(s) de esta sesion (volatil)")
+            return
+        result = self.va.send({"type": "memory_list", "data": {"capa": capa, "limite": 200}})
+        if result.get("status") != "ok":
+            self._fill([], {}, False)
+            return
+        self._fill(result.get("entries", []), result.get("counts", {}),
+                   bool(result.get("enabled")))
+
+    def _refresh_session_label(self):
+        """Actualiza el contador de recuerdos de sesion (es una llamada en proceso)."""
+        try:
+            result = self.va.send({"type": "memory_session_list", "data": {}})
+            n = len(result.get("entries", []) or []) if result.get("status") == "ok" else 0
+        except Exception:
+            n = 0
+        self.session_lbl.setText(f"{n} recuerdo(s) de sesion")
+
+    def _search(self):
+        consulta = self.search_input.text().strip()
+        if not consulta:
+            self._refresh()
+            return
+        result = self.va.send({"type": "memory_recall", "data": {"consulta": consulta, "k": 100}})
+        if result.get("status") != "ok":
+            return
+        hits = result.get("hits", [])
+        self._fill(hits, None, None)
+        self.counts_lbl.setText(f"{len(hits)} resultado(s) para: {consulta}")
+
+    # -- acciones ------------------------------------------------------------
+    def _selected(self):
+        items = self.table.selectedItems()
+        if not items:
+            return None
+        row = items[0].row()
+        if row >= len(self._entries):
+            return None
+        return self._entries[row]
+
+    def _toggle(self):
+        enabled = self.va.send({"type": "memory_toggle", "data": {}})
+        activo = bool(enabled.get("enabled")) if enabled.get("status") == "ok" else False
+        self._set_state(activo)
+        self._refresh()
+
+    def _fijar(self):
+        entry = self._selected()
+        if entry is None:
+            self._notify("Selecciona una entrada para fijarla como regla")
+            return
+        texto = str(entry.get("texto", "")).strip()
+        if not texto:
+            self._notify("La entrada esta vacia")
+            return
+        result = self.va.send({"type": "memory_fijar", "data": {"texto": texto}})
+        if result.get("status") == "ok" and result.get("id"):
+            self._notify("Fijada como regla")
+        else:
+            self._notify("No se pudo fijar (texto vacio o con credenciales)")
+        self._refresh()
+
+    def _borrar(self):
+        entry = self._selected()
+        if entry is None:
+            self._notify("Selecciona una entrada para borrarla")
+            return
+        capa = str(entry.get("capa", ""))
+        id_ = entry.get("id")
+        reply = QMessageBox.question(
+            self, "Borrar de la memoria",
+            f"¿Borrar esta entrada de '{capa}'?\n\n{str(entry.get('texto', ''))[:160]}",
+            QMessageBox.Yes | QMessageBox.No,
+        )
+        if reply != QMessageBox.Yes:
+            return
+        result = self.va.send({"type": "memory_borrar", "data": {"capa": capa, "id": id_}})
+        if result.get("status") == "ok" and result.get("deleted"):
+            self._notify("Entrada borrada")
+        else:
+            self._notify("No se pudo borrar")
+        self._refresh()
+
+    def _consolidar(self):
+        result = self.va.send({"type": "memory_reflect", "data": {}})
+        if result.get("status") == "ok":
+            self._notify(f"{result.get('promoted', 0)} observacion(es) promovida(s) a modelos")
+        self._refresh()
+
+    def _exportar(self):
+        result = self.va.send({"type": "memory_export", "data": {}})
+        if result.get("status") != "ok":
+            self._notify("No se pudo exportar")
+            return
+        entries = result.get("entries", [])
+        if not entries:
+            self._notify("No hay nada que exportar")
+            return
+        import datetime
+
+        ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        ruta, _ = QFileDialog.getSaveFileName(
+            self, "Exportar memoria",
+            f"ARIA_memoria_{ts}.json", "JSON (*.json)",
+        )
+        if not ruta:
+            return
+        try:
+            with open(ruta, "w", encoding="utf-8") as f:
+                json.dump(entries, f, ensure_ascii=False, indent=2)
+            self._notify(f"Memoria exportada a {ruta}")
+        except Exception as exc:
+            self._notify(f"Error exportando: {exc}")
+
+    def _guardar(self):
+        """Alta manual: guarda el texto escrito en la capa elegida."""
+        texto = self.new_input.text().strip()
+        if not texto:
+            self._notify("Escribe el texto que quieres guardar")
+            return
+        capa = self.new_capa_combo.currentData() or "hechos"
+        confianza = self.new_conf_combo.currentData() or "usuario"
+        result = self.va.send({
+            "type": "memory_add",
+            "data": {
+                "texto": texto,
+                "capa": capa,
+                "fuente": "usuario",
+                "confianza": confianza,
+            },
+        })
+        if result.get("status") == "ok" and result.get("id"):
+            self._notify(f"Guardado en '{capa}'")
+            self.new_input.clear()
+        else:
+            self._notify("No se pudo guardar (texto vacio o con credenciales)")
+        self._refresh()
+
+    def _importar(self):
+        """Importa un archivo de memoria (JSON o JSONL) elegido por el usuario."""
+        ruta, _ = QFileDialog.getOpenFileName(
+            self, "Importar memoria", "",
+            "Memoria (*.json *.jsonl *.txt);;JSON (*.json);;JSONL (*.jsonl);;Todos (*.*)",
+        )
+        if not ruta:
+            return
+        result = self.va.send({"type": "memory_import", "data": {"ruta": ruta}})
+        self._import_ok(result, os.path.basename(ruta))
+
+    def _importar_chat(self):
+        """Importa el historial de conversaciones como experiencias."""
+        result = self.va.send({"type": "memory_import", "data": {"ruta": ""}})
+        self._import_ok(result, "las conversaciones")
+
+    def _import_ok(self, result, origen):
+        if result.get("status") != "ok":
+            self._notify(f"No se pudo importar: {result.get('error', 'error desconocido')}")
+            return
+        importadas = int(result.get("importadas", 0) or 0)
+        omitidas = int(result.get("omitidas", 0) or 0)
+        duplicadas = int(result.get("duplicadas", 0) or 0)
+        if not importadas and result.get("error"):
+            self._notify(f"No se pudo importar: {result.get('error')}")
+            return
+        extra = ""
+        if omitidas:
+            extra += f" ({omitidas} omitida(s))"
+        if duplicadas:
+            extra += f" ({duplicadas} ya existia(n))"
+        self._notify(f"Importadas {importadas} entrada(s) de {origen}{extra}")
+        self._refresh()
+
+    def _recordar(self):
+        """Guarda un recuerdo de esta sesion (volatil)."""
+        texto = self.new_input.text().strip()
+        if not texto:
+            entry = self._selected()
+            texto = str(entry.get("texto", "")).strip() if entry else ""
+        if not texto:
+            self._notify("Escribe un texto o selecciona una entrada para recordar")
+            return
+        result = self.va.send({"type": "memory_session_add", "data": {"texto": texto}})
+        if result.get("status") == "ok" and result.get("id"):
+            self._notify("Recordado en esta sesion")
+        else:
+            self._notify("No se pudo recordar")
+        self._refresh()
+
+    def _vaciar_sesion(self):
+        result = self.va.send({"type": "memory_session_clear", "data": {}})
+        if result.get("status") == "ok":
+            self._notify(f"{result.get('cleared', 0)} recuerdo(s) de sesion borrados")
+        self._refresh()
+
+    def _notify(self, message: str):
+        try:
+            parent = self.parent()
+            osd = getattr(parent, "_osd", None) if parent is not None else None
+            if osd is not None:
+                osd.notify(message)
+                return
+        except Exception:
+            pass
+        self.state_lbl.setToolTip(message)
+
+
+class OSDNotification(QLabel):
+    """Notificación estilo OSD que aparece sobre el orb y se desvanece."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setAlignment(Qt.AlignCenter)
+        self.setStyleSheet(f"""
+            QLabel {{
+                background: {C_GLASS_T1_BG};
+                color: {C_TEXT_PRIMARY};
+                border: 1px solid {C_GLASS_T1_BORDER};
+                border-radius: 10px;
+                padding: 10px 18px;
+                font-size: 12px;
+                font-weight: bold;
+                font-family: 'Consolas', monospace;
+                box-shadow: 0 0 24px rgba(0,0,0,0.6);
+            }}
+        """)
+        self.setWordWrap(True)
+        self.hide()
+        self._fade_timer = QTimer(self)
+        self._fade_timer.timeout.connect(self._fade_step)
+        self._opacity = 1.0
+
+    def notify(self, message: str, color: str = C_ACCENT_CYAN_BRIGHT):
+        self.setText(message)
+        self.setStyleSheet(self.styleSheet().replace(C_TEXT_PRIMARY, color))
+        # Centrar sobre el padre
+        if self.parent():
+            p = self.parent()
+            self.move(p.width() // 2 - self.width() // 2, p.height() // 3)
+        self.show()
+        self.raise_()
+        self._opacity = 1.0
+        self._fade_timer.start(40)
+
+    def _fade_step(self):
+        self._opacity -= 0.05
+        if self._opacity <= 0:
+            self._fade_timer.stop()
+            self.hide()
+            self._opacity = 1.0
+            self.setStyleSheet(self.styleSheet().replace(
+                f"color: {C_ACCENT_CYAN_BRIGHT};", f"color: {C_TEXT_PRIMARY};"))
+        else:
+            self.setGraphicsEffect(None)
+            from PyQt5.QtWidgets import QGraphicsOpacityEffect
+            eff = QGraphicsOpacityEffect()
+            eff.setOpacity(self._opacity)
+            self.setGraphicsEffect(eff)
+
+
 # ── Main Application ────────────────────────────────────────────────────────
 
+# ── Linux Desktop Shell (43PR-style) ──────────────────────────────────────────
+class LinuxDesktopWindow(QMainWindow):
+    response_received = pyqtSignal(dict)
+    aria_says = pyqtSignal(str)
+
+    def __init__(self, va: VAAdapter):
+        super().__init__()
+        self.va = va
+        self._old_pos = None
+        self._dragging = False
+        self._grad_phase = 0
+        self._setup_linux_ui()
+        self._setup_keyboard_shortcuts()
+        self._start_clock()
+        self._start_anim()
+        self._start_monitor()
+        self.apply_theme("cyberpunk")
+
+    def _setup_linux_ui(self):
+        self.setWindowTitle("ARIA Linux Desktop")
+        self.resize(1280, 800)
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setStyleSheet("""
+            QMainWindow { background: #0a0e14; }
+            QWidget { font-family: 'Segoe UI', sans-serif; color: #cfe8ff; }
+            QLabel { color: #cfe8ff; }
+            QPushButton {
+                background: rgba(0,217,255,0.08); color: #00d9ff;
+                border: 1px solid rgba(0,217,255,0.35); border-radius: 10px;
+                padding: 6px 12px; font-weight: 600;
+            }
+            QPushButton:hover { background: rgba(0,217,255,0.18); border-color: #00d9ff; }
+            QLineEdit, QTextEdit {
+                background: rgba(10,14,20,0.7); color: #cfe8ff;
+                border: 1px solid rgba(0,217,255,0.25); border-radius: 10px;
+                padding: 8px; font-family: 'Consolas', monospace;
+            }
+            QLineEdit:focus, QTextEdit:focus { border-color: #ff00ff; }
+        """)
+        central = QWidget()
+        central.setObjectName("linuxCentral")
+        root = QVBoxLayout(central)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(0)
+
+        # Top panel
+        top = QWidget()
+        top.setFixedHeight(34)
+        top.setStyleSheet("background: rgba(10,14,20,0.85); border-bottom: 1px solid rgba(0,217,255,0.3);")
+        tl = QHBoxLayout(top)
+        tl.setContentsMargins(12, 4, 12, 4)
+        brand = QLabel("ARIA  \u2022  Linux Desktop")
+        brand.setStyleSheet("color:#00d9ff; font-weight:700; font-size:13px;")
+        tl.addWidget(brand)
+        tl.addStretch()
+        self._clock = QLabel("")
+        self._clock.setStyleSheet("color:#ff00ff; font-weight:600; font-size:13px;")
+        tl.addWidget(self._clock)
+        tl.addStretch()
+        for ico in ("\u266A", "\u2630", "\u25CF"):
+            l = QLabel(ico)
+            l.setStyleSheet("color:#7aa2ff; font-size:14px; padding:0 6px;")
+            tl.addWidget(l)
+        root.addWidget(top)
+
+        # Body: dock + content
+        body = QHBoxLayout()
+        body.setContentsMargins(0, 0, 0, 0)
+        body.setSpacing(0)
+
+        # Left dock
+        dock = QWidget()
+        dock.setFixedWidth(68)
+        dock.setStyleSheet("background: rgba(10,14,20,0.7); border-right: 1px solid rgba(0,217,255,0.2);")
+        dl = QVBoxLayout(dock)
+        dl.setContentsMargins(8, 12, 8, 12)
+        dl.setSpacing(10)
+        for ico, tip in (("\u2302", "Chat"), ("\u2630", "Memoria"), ("\u2699", "Skills"), ("\u2605", "Orb")):
+            b = QPushButton(ico)
+            b.setToolTip(tip)
+            b.setFixedSize(52, 52)
+            b.setStyleSheet("font-size:20px; border-radius:14px;")
+            dl.addWidget(b)
+        dl.addStretch()
+        body.addWidget(dock)
+
+        # Content area
+        content = QWidget()
+        cl = QVBoxLayout(content)
+        cl.setContentsMargins(16, 16, 16, 16)
+        cl.setSpacing(12)
+        self._orb = OrbWidget()
+        self._orb.setFixedSize(120, 120)
+        cl.addWidget(self._orb, 0, Qt.AlignHCenter)
+        self._chat = QTextEdit()
+        self._chat.setReadOnly(True)
+        cl.addWidget(self._chat, 1)
+        row = QHBoxLayout()
+        self._input = QLineEdit()
+        self._input.setPlaceholderText("Escribe a ARIA...")
+        row.addWidget(self._input, 1)
+        send = QPushButton("Enviar")
+        send.clicked.connect(self._send)
+        row.addWidget(send)
+        cl.addLayout(row)
+        body.addWidget(content, 1)
+
+        # Right panel: system monitor + launcher
+        right = QWidget()
+        right.setFixedWidth(200)
+        right.setStyleSheet("background: rgba(10,14,20,0.7); border-left: 1px solid rgba(0,217,255,0.2);")
+        rl = QVBoxLayout(right)
+        rl.setContentsMargins(10, 12, 10, 12)
+        rl.setSpacing(8)
+        mon_title = QLabel("Sistema")
+        mon_title.setStyleSheet("color:#00d9ff; font-weight:700; font-size:12px;")
+        rl.addWidget(mon_title)
+        self._cpu_bar = QLabel("CPU: --%")
+        self._ram_bar = QLabel("RAM: --%")
+        self._disk_bar = QLabel("DISK: --%")
+        for lbl in (self._cpu_bar, self._ram_bar, self._disk_bar):
+            lbl.setStyleSheet("color:#cfe8ff; font-size:11px; font-family:'Consolas';")
+            rl.addWidget(lbl)
+        rl.addSpacing(8)
+        launch_title = QLabel("Lanzador")
+        launch_title.setStyleSheet("color:#ff00ff; font-weight:700; font-size:12px;")
+        rl.addWidget(launch_title)
+        for name, cmd in (("Terminal", "cmd"), ("Explorador", "explorer"), ("Navegador", "start msedge")):
+            b = QPushButton(name)
+            b.clicked.connect(lambda checked, c=cmd: __import__("subprocess").Popen(c, shell=True))
+            rl.addWidget(b)
+        rl.addStretch()
+        body.addWidget(right)
+
+        root.addLayout(body, 1)
+
+        self.setCentralWidget(central)
+        self._input.returnPressed.connect(self._send)
+
+    def _start_clock(self):
+        self._clk = QTimer(self)
+        self._clk.timeout.connect(self._tick_clock)
+        self._clk.start(1000)
+        self._tick_clock()
+
+    def _tick_clock(self):
+        from datetime import datetime
+        self._clock.setText(datetime.now().strftime("%a %d %b  %H:%M:%S"))
+
+    def _start_anim(self):
+        self._anim = QTimer(self)
+        self._anim.timeout.connect(self._tick_anim)
+        self._anim.start(60)
+
+    def _tick_anim(self):
+        self._grad_phase = (self._grad_phase + 1) % 360
+        import colorsys
+        h = self._grad_phase / 360.0
+        r, g, b = colorsys.hsv_to_rgb(h, 0.25, 0.12)
+        c1 = "#%02x%02x%02x" % (int(r*255), int(g*255), int(b*255))
+        r2, g2, b2 = colorsys.hsv_to_rgb((h+0.5)%1.0, 0.3, 0.08)
+        c2 = "#%02x%02x%02x" % (int(r2*255), int(g2*255), int(b2*255))
+        w = self.centralWidget()
+        if w:
+            w.setStyleSheet(f"background: qradialgradient(cx:0.5,cy:0.5,radius:1, stop:0 {c1}, stop:1 {c2});")
+
+    def _start_monitor(self):
+        try:
+            import psutil
+            self._psutil = psutil
+        except Exception:
+            self._psutil = None
+        self._mon = QTimer(self)
+        self._mon.timeout.connect(self._tick_monitor)
+        self._mon.start(2000)
+        self._tick_monitor()
+
+    def _tick_monitor(self):
+        if getattr(self, "_psutil", None) is None:
+            return
+        p = self._psutil
+        cpu = p.cpu_percent(interval=None)
+        mem = p.virtual_memory().percent
+        try:
+            disk = p.disk_usage("C:\\").percent
+        except Exception:
+            disk = 0.0
+        self._cpu_bar.setText(f"CPU:  {cpu:5.1f}%")
+        self._ram_bar.setText(f"RAM:  {mem:5.1f}%")
+        self._disk_bar.setText(f"DISK: {disk:5.1f}%")
+
+    def _setup_keyboard_shortcuts(self):
+        QShortcut(QKeySequence("Escape"), self).activated.connect(self.close)
+
+    def _send(self):
+        text = self._input.text().strip()
+        if not text:
+            return
+        self._input.clear()
+        if text.lower().startswith("tema "):
+            name = text[5:].strip()
+            try:
+                r = self.va.skills.run("set_theme", {"name": name})
+                self.apply_theme(r.get("theme", name))
+                self._chat.append(f"ARIA: Tema cambiado a {r.get('theme')}")
+            except Exception as e:
+                self._chat.append(f"[error] {e}")
+            return
+        self._chat.append(f"> {text}")
+        try:
+            r = self.va.send(text)
+            self._chat.append(f"ARIA: {r.get('reply', r)}")
+        except Exception as e:
+            self._chat.append(f"[error] {e}")
+
+    def apply_theme(self, name):
+        if get_theme is None:
+            return
+        t = get_theme(name)
+        self.setStyleSheet(f"""
+            QMainWindow {{ background: {t['bg0']}; }}
+            QWidget {{ font-family: 'Segoe UI', sans-serif; color: {t['text']}; }}
+            QLabel {{ color: {t['text']}; }}
+            QPushButton {{
+                background: {t['glass']}; color: {t['accent']};
+                border: 1px solid {t['border']}; border-radius: 10px;
+                padding: 6px 12px; font-weight: 600;
+            }}
+            QPushButton:hover {{ background: {t['glass']}; border-color: {t['accent']}; }}
+            QLineEdit, QTextEdit {{
+                background: {t['glass']}; color: {t['text']};
+                border: 1px solid {t['border']}; border-radius: 10px;
+                padding: 8px; font-family: 'Consolas', monospace;
+            }}
+            QLineEdit:focus, QTextEdit:focus {{ border-color: {t['accent2']}; }}
+        """)
+        central = self.centralWidget()
+        if central:
+            central.setStyleSheet(f"background: qlineargradient(x1:0,y1:0,x2:1,y2:1, stop:0 {t['bg0']}, stop:0.5 {t['bg1']}, stop:1 {t['bg2']});")
+
+
 def run_desktop():
-    import sys as _sys
+    import os as _os
     print("[UI] Starting QApplication...", flush=True)
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
@@ -1807,101 +3216,36 @@ def run_desktop():
     app.setPalette(palette)
     print("[UI] QApplication created", flush=True)
 
-    logic_script = str(ARIA_APP / "aria_logic_engine.py")
-    ipc = IPCClient(logic_script)
-    ipc.start()
-    print("[UI] IPC started, healthy=" + str(ipc.healthy), flush=True)
+    va = VAAdapter()
+    print("[UI] VA local iniciado", flush=True)
 
-    time.sleep(0.5)
+    if _os.environ.get("ARIA_LINUX_DESKTOP") == "1":
+        window = LinuxDesktopWindow(va)
+    else:
+        window = ChatWindow(va)
+    print("[UI] Window created", flush=True)
+    if not isinstance(window, LinuxDesktopWindow):
+        window.load_skills()
+        print("[UI] Skills loaded", flush=True)
 
-    window = ChatWindow(ipc)
-    print("[UI] ChatWindow created", flush=True)
-    window.load_skills()
-    print("[UI] Skills loaded", flush=True)
+        # OSD notification overlay (sobre la ventana principal)
+        osd = OSDNotification(window)
+        window._osd = osd
+        print("[UI] OSD notification created", flush=True)
 
-    # Floating overlay orb (always-on-top mini widget)
-    overlay = OverlayOrb(window)
-    overlay.show()
-    print("[UI] OverlayOrb created (80x80, always-on-top)", flush=True)
+        # Floating overlay orb (always-on-top mini widget)
+        overlay = OverlayOrb(window)
+        overlay.show()
+        print("[UI] OverlayOrb created (80x80, always-on-top)", flush=True)
 
-    # System tray
-    tray_icon = QIcon.fromTheme("preferences-desktop-personal")
-    if tray_icon.isNull():
-        tray_icon = QIcon(_make_tray_pixmap())
-
-    tray = QSystemTrayIcon()
-    tray.setIcon(tray_icon)
-    tray.setToolTip("ARIA OS v4.0")
-
-    menu = QMenu()
-    show_act = menu.addAction("Mostrar ARIA")
-    quit_act = menu.addAction(" salir")
-    tray.setContextMenu(menu)
-
-    def _show():
-        window.show()
-        window.raise_()
-        window.activateWindow()
-
-    show_act.triggered.connect(_show)
-    quit_act.triggered.connect(lambda: (ipc.stop(), app.quit()))
-    tray.activated.connect(lambda x: _show() if x == QSystemTrayIcon.Context else None)
-
-    tray.show()
-    window._tray = tray
-    print("[UI] Tray created", flush=True)
+        # System tray
+        tray_icon = QIcon.fromTheme("preferences-desktop-personal")
+        if tray_icon.isNull():
+            tray_icon = _make_tray_pixmap() if False else tray_icon
 
     window.show()
-    print("[UI] Window shown, visible=" + str(window.isVisible()), flush=True)
-    g = window.geometry()
-    print("[UI] Window geometry:", f"({g.x()},{g.y()},{g.width()},{g.height()})", flush=True)
-
-    # Keep-alive timer to prevent premature exit
-    _keepalive = QTimer()
-    _keepalive.start(500)
-    _keepalive.timeout.connect(lambda: None)
-
-    def on_response(result):
-        if result.get("status") == "ok":
-            response = result.get("response", "")
-            source = result.get("source", result.get("provider", "?"))
-            confidence = result.get("confidence", 0.8)
-            latency = result.get("latency", 0.0)
-            # Build meta string: source + confidence + latency
-            meta_parts = ["src:" + str(source)]
-            if confidence:
-                meta_parts.append("conf:" + str(int(confidence * 100)) + "%")
-            if latency:
-                meta_parts.append(str(round(latency, 1)) + "s")
-            meta = " · ".join(meta_parts)
-            # Streaming text effect with confidence indicator + action buttons
-            window._append_streaming("ARIA", response, C_ACCENT_CYAN_BRIGHT, meta)
-            QTimer.singleShot(1800, lambda: window._add_action_buttons(response))
-            window.orb.set_state("responding")
-            window.status_dot.setStyleSheet(f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 10px;")
-            window.status_label.setText("Respondiendo...")
-            window.status_label.setStyleSheet(f"color: {C_ACCENT_CYAN_BRIGHT}; font-size: 11px; font-family: 'Segoe UI';")
-            # Also update overlay orb state
-            overlay.set_state("responding")
-            QTimer.singleShot(2500, lambda: (window.orb.set_state("idle"),
-                overlay.set_state("idle"),
-                window.status_dot.setStyleSheet(f"color: {C_SUCCESS}; font-size: 10px;"),
-                window.status_label.setText("Listo"),
-                window.status_label.setStyleSheet(f"color: {C_TEXT_SECONDARY}; font-size: 11px; font-family: 'Segoe UI';")))
-        else:
-            error = result.get("error", "Error desconocido")
-            window._append_chat("ARIA", "[Error] " + str(error), C_ORB_ERROR)
-            window.orb.set_state("idle")
-            overlay.set_state("idle")
-            window.status_dot.setStyleSheet(f"color: {C_ORB_ERROR}; font-size: 10px;")
-            window.status_label.setText("Error")
-            window.status_label.setStyleSheet(f"color: {C_ORB_ERROR}; font-size: 11px; font-family: 'Segoe UI';")
-
-    window.response_received.connect(on_response)
-    print("[UI] Entering event loop...", flush=True)
-
-    app.exec_()
-    print("[UI] Event loop exited", flush=True)
+    print("[UI] Window shown, visible=True", flush=True)
+    sys.exit(app.exec_())
 
 
 def _make_tray_pixmap():
