@@ -73,7 +73,7 @@ class LlamaEngine:
                 temperature=0.4,
                 top_p=0.9,
                 repeat_penalty=1.15,
-                stop=["<|im_end|>", "\nUsuario:", "\nRaiden:"],
+                stop=["<|im_end|>", "\nUsuario:", "\nDaniel:"],
             )
             txt = (out.get("choices") or [{}])[0].get("text", "")
             return txt.strip()

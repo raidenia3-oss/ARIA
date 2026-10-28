@@ -4,7 +4,7 @@
 Base (todo local, en proceso):
   - Captura de la camara propia (webcam index, o una URL de stream que TU indiques).
   - Ver el ambiente: brillo, movimiento y cuantas caras hay.
-  - Reconocer a Raiden: enrolas tu cara una vez (LBPH) y luego ARIA sabe si eres tu,
+  - Reconocer a Daniel: enrolas tu cara una vez (LBPH) y luego ARIA sabe si eres tu,
     si hay alguien DESCONOCIDO, o si no hay nadie. (No identifica a extraños: solo
     distingue 'tu' de 'desconocido' — util para seguridad/anti-secuestro.)
   - Vigilar: ante movimiento o rostro desconocido guarda una captura con fecha.
@@ -163,7 +163,7 @@ def enrolar(nombre="raiden", source=0, muestras=25):
     ymlp, jsonp = _modelo_path()
     rec.write(ymlp)
     json.dump({"0": nombre}, open(jsonp, "w", encoding="utf-8"))
-    return {"ok": True, "muestras": len(caras), "resumen": "Listo, Raiden: aprendi tu cara (%d muestras)." % len(caras)}
+    return {"ok": True, "muestras": len(caras), "resumen": "Listo, Daniel: aprendi tu cara (%d muestras)." % len(caras)}
 
 
 def reconocer(source=0, umbral=70.0):
@@ -194,7 +194,7 @@ def reconocer(source=0, umbral=70.0):
     dueno = any(o not in ("desconocido",) for o in out)
     hay_desc = any(o == "desconocido" for o in out)
     if dueno and not hay_desc:
-        res = "Eres tu, Raiden."
+        res = "Eres tu, Daniel."
     elif dueno and hay_desc:
         res = "Estas tu y alguien mas (desconocido)."
     else:
