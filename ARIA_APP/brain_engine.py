@@ -51,7 +51,7 @@ class LlamaEngine:
             out = self._llm.create_completion(
                 prompt=prompt,
                 max_tokens=max_tokens,
-                temperature=0.6,
+                temperature=0.4,
                 top_p=0.9,
                 top_k=40,
                 repeat_penalty=1.15,
@@ -70,7 +70,7 @@ class LlamaEngine:
             out = self._llm.create_completion(
                 prompt=prompt,
                 max_tokens=max_tokens,
-                temperature=0.6,
+                temperature=0.4,
                 top_p=0.9,
                 repeat_penalty=1.15,
                 stop=["<|im_end|>", "\nUsuario:", "\nRaiden:"],
