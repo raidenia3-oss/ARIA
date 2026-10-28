@@ -1205,7 +1205,7 @@ class LocalSkills:
             {"id": "code_write", "name": "Escribir codigo", "category": "programacion"},
             {"id": "code_read", "name": "Leer codigo", "category": "programacion"},
             {"id": "eyes_snapshot", "name": "Pulso del Planeta", "category": "sistema"},
-            {"id": "bot_create", "name": "Crear bot", "category": "automatizacion"},
+            {"id": "rollecoin_auto", "name": "Automatizar RolleCoin", "category": "automatizacion"},
             {"id": "bridge_status", "name": "Estado del puente", "category": "red"},
             {"id": "bridge_push", "name": "Enviar al puente", "category": "red"},
             {"id": "bridge_pull", "name": "Leer del puente", "category": "red"},
@@ -1262,8 +1262,8 @@ class LocalSkills:
             return self._code_read(params)
         if skill_id == "eyes_snapshot":
             return self._eyes_snapshot(params)
-        if skill_id == "bot_create":
-            return self._bot_create(params)
+        if skill_id == "rollecoin_auto":
+            return self._rollecoin_auto(params)
         if skill_id == "usb_init":
             return self._usb_init(params)
         if skill_id == "bridge_status":
@@ -1561,6 +1561,13 @@ class LocalSkills:
                     "note": "Requiere ejecutar ARIA como Administrador para formatear."}
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
+
+    def _rollecoin_auto(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from rollecoin_bot import run
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        return run(params.get("action", "fetch"), params.get("path", "/"), params.get("data"))
 
     def _bot_create(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
