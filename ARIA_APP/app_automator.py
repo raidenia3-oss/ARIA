@@ -79,7 +79,45 @@ def list_windows() -> list:
     return out
 
 
-def run(action: str, **kw) -> dict:
+def screenshot(path: str = "screenshot.png") -> dict:
+    import ctypes
+    hwnd = user32.GetDesktopWindow()
+    hdc = user32.GetWindowDC(hwnd)
+    w = user32.GetSystemMetrics(0)
+    h = user32.GetSystemMetrics(1)
+    memdc = ctypes.windll.gdi32.CreateCompatibleDC(hdc)
+    bmp = ctypes.windll.gdi32.CreateCompatibleBitmap(hdc, w, h)
+    ctypes.windll.gdi32.SelectObject(memdc, bmp)
+    ctypes.windll.gdi32.BitBlt(memdc, 0, 0, w, h, hdc, 0, 0, 0x00CC0020)
+    # save via PIL if available, else skip
+    try:
+        from PIL import Image
+        img = Image.frombuffer("RGB", (w, h), ctypes.string_at(ctypes.windll.gdi32.GetBitmapBits(bmp, w*h*4, None) or b"", w*h*4), "raw", "BGRX", 0, 1)
+        img.save(path)
+    except Exception:
+        pass
+    ctypes.windll.gdi32.DeleteObject(bmp)
+    ctypes.windll.gdi32.DeleteDC(memdc)
+    user32.ReleaseDC(hwnd, hdc)
+    return {"status": "ok", "path": path, "w": w, "h": h}
+
+
+def wait_window(title_contains: str, timeout: float = 10.0) -> dict:
+    import time
+    t0 = time.time()
+    while time.time() - t0 < timeout:
+        h = find_window(title_contains)
+        if h:
+            return {"status": "ok", "hwnd": h}
+        time.sleep(0.5)
+    return {"status": "timeout"}
+
+
+def key_press(vk: int) -> dict:
+    user32.keybd_event(vk, 0, 0, 0)
+    time.sleep(0.05)
+    user32.keybd_event(vk, 0, KEYEVENTF_KEYUP, 0)
+    return {"status": "ok", "vk": vk}
     if action == "launch":
         return launch_app(kw.get("path", ""), kw.get("args", ""))
     if action == "find":
@@ -90,4 +128,10 @@ def run(action: str, **kw) -> dict:
         return click(kw.get("x", 0), kw.get("y", 0))
     if action == "list":
         return {"windows": list_windows()}
+    if action == "screenshot":
+        return screenshot(kw.get("path", "screenshot.png"))
+    if action == "wait":
+        return wait_window(kw.get("title", ""), kw.get("timeout", 10.0))
+    if action == "key":
+        return key_press(kw.get("vk", 0x0D))
     return {"status": "error", "error": "accion desconocida"}
