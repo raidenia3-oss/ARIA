@@ -1205,7 +1205,7 @@ class LocalSkills:
             {"id": "code_write", "name": "Escribir codigo", "category": "programacion"},
             {"id": "code_read", "name": "Leer codigo", "category": "programacion"},
             {"id": "eyes_snapshot", "name": "Pulso del Planeta", "category": "sistema"},
-            {"id": "omni_sense", "name": "ARIA OMNISENSE", "category": "sistema"},
+            {"id": "usb_init", "name": "Inicializar/formatear USB", "category": "sistema"},
             {"id": "bridge_status", "name": "Estado del puente", "category": "red"},
             {"id": "bridge_push", "name": "Enviar al puente", "category": "red"},
             {"id": "bridge_pull", "name": "Leer del puente", "category": "red"},
@@ -1262,8 +1262,8 @@ class LocalSkills:
             return self._code_read(params)
         if skill_id == "eyes_snapshot":
             return self._eyes_snapshot(params)
-        if skill_id == "omni_sense":
-            return self._omni_sense(params)
+        if skill_id == "usb_init":
+            return self._usb_init(params)
         if skill_id == "bridge_status":
             return self._bridge_status()
         if skill_id == "bridge_push":
@@ -1537,6 +1537,28 @@ class LocalSkills:
             return {"status": "error", "error": str(exc)}
         bbox = params.get("bbox")
         return {"status": "ok", **omni_sense(bbox=bbox)}
+
+    def _usb_init(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        import subprocess
+        label = params.get("label", "ARIA-USB")
+        fs = params.get("fs", "exFAT")
+        ps = (
+            "Get-Disk | Where-Object {$_.BusType -eq 'USB'} | ForEach-Object { "
+            "Initialize-Disk -Number $_.Number -PartitionStyle MBR -Confirm:$false -ErrorAction SilentlyContinue; "
+            "$p = New-Partition -DiskNumber $_.Number -UseMaximumSize -AssignDriveLetter -ErrorAction SilentlyContinue; "
+            "if ($p) { Format-Volume -DriveLetter $p.DriveLetter -FileSystem %s -NewFileSystemLabel '%s' -Confirm:$false } "
+            "}; Write-Output 'done'" % (fs, label)
+        )
+        try:
+            r = subprocess.run(
+                ["powershell", "-NoProfile", "-Command", ps],
+                capture_output=True, text=True, timeout=60,
+            )
+            return {"status": "ok" if r.returncode == 0 else "error",
+                    "stdout": r.stdout.strip(), "stderr": r.stderr.strip(),
+                    "note": "Requiere ejecutar ARIA como Administrador para formatear."}
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
 
     def _bridge_status(self) -> Dict[str, Any]:
         import os
