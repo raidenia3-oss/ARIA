@@ -1,0 +1,41 @@
+{
+  "frame_w": 256,
+  "frame_h": 256,
+  "states": {
+    "idle": {
+      "fila": 0,
+      "frames": 1,
+      "fps": 6
+    },
+    "walk": {
+      "fila": 1,
+      "frames": 1,
+      "fps": 6
+    },
+    "talk": {
+      "fila": 2,
+      "frames": 1,
+      "fps": 6
+    },
+    "think": {
+      "fila": 3,
+      "frames": 1,
+      "fps": 6
+    },
+    "listen": {
+      "fila": 4,
+      "frames": 1,
+      "fps": 6
+    },
+    "sleep": {
+      "fila": 5,
+      "frames": 1,
+      "fps": 6
+    },
+    "react": {
+      "fila": 6,
+      "frames": 1,
+      "fps": 6
+    }
+  }
+}
