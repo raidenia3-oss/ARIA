@@ -170,4 +170,3 @@ def leer_canal(channel_id, limite=20, token=None):
         return {"error": "falta token"}
     r = RemotoDiscord(token, lambda t: t, [])
     return r.leer_canal(channel_id, limite)
-EOF
