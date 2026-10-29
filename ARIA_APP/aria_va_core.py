@@ -1212,7 +1212,7 @@ class LocalSkills:
             {"id": "bridge_pair", "name": "Emparejar dispositivo", "category": "red"},
             {"id": "bridge_pair_confirm", "name": "Confirmar emparejamiento", "category": "red"},
             {"id": "bridge_audit", "name": "Auditoria del puente", "category": "red"},
-            {"id": "bridge_queue", "name": "Cola offline", "category": "red"},
+            {"id": "discord_memory", "name": "Memoria Discord", "category": "red"},
         ]
 
     def run(self, skill_id: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -1280,6 +1280,8 @@ class LocalSkills:
             return self._bridge_audit(params)
         if skill_id == "bridge_queue":
             return self._bridge_queue()
+        if skill_id == "discord_memory":
+            return self._discord_memory(params)
         return {"status": "error", "error": f"skill desconocida: {skill_id}"}
 
     # -- implementaciones -----------------------------------------------------
@@ -1634,6 +1636,18 @@ class LocalSkills:
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
         return {"status": "ok", "entries": audit_tail(int(params.get("n", 20)))}
+
+    def _discord_memory(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from remote_discord import crear_canal, enviar_canal, leer_canal
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        action = params.get("action", "read")
+        if action == "create":
+            return crear_canal(params.get("guild", ""), params.get("channel", "aria-memoria"))
+        if action == "send":
+            return enviar_canal(params.get("channel_id"), params.get("text", ""))
+        return leer_canal(params.get("channel_id"), params.get("limit", 20))
 
     def _bridge_queue(self) -> Dict[str, Any]:
         try:
