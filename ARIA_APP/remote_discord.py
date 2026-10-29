@@ -28,8 +28,12 @@ class RemotoDiscord:
         este = self
 
         @client.event
-        async def on_ready():
-            print("[Discord] ARIA conectada como %s" % client.user, flush=True)
+        async def on_guild_join(guild):
+            try:
+                await guild.create_text_channel("aria-memoria")
+                print("[Discord] canal aria-memoria creado en %s" % guild.name, flush=True)
+            except Exception as exc:
+                print("[Discord] no se pudo crear canal: %s" % exc, flush=True)
 
         @client.event
         async def on_message(m):
@@ -86,12 +90,16 @@ class RemotoDiscord:
         async def _run():
             client = self._build()
             await client.login(self.token)
+            guilds = []
+            async for g in client.fetch_guilds(limit=200):
+                guilds.append(g)
             guild = None
-            for g in client.guilds:
+            for g in guilds:
                 if guild_name.lower() in g.name.lower():
                     guild = g
                     break
-            if guild is None:
+            if guild is None and guilds:
+                guild = guilds[0]
                 return {"error": "guild no encontrado"}
             try:
                 ch = await guild.create_text_channel(channel_name)
@@ -110,7 +118,7 @@ class RemotoDiscord:
         async def _run():
             client = self._build()
             await client.login(self.token)
-            ch = client.get_channel(int(channel_id))
+            ch = await client.fetch_channel(int(channel_id))
             if ch is None:
                 return {"error": "canal no encontrado"}
             await ch.send(str(texto)[:1900])
@@ -127,7 +135,7 @@ class RemotoDiscord:
         async def _run():
             client = self._build()
             await client.login(self.token)
-            ch = client.get_channel(int(channel_id))
+            ch = await client.fetch_channel(int(channel_id))
             if ch is None:
                 return {"error": "canal no encontrado"}
             msgs = []
