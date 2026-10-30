@@ -1213,6 +1213,7 @@ class LocalSkills:
             {"id": "bridge_pair_confirm", "name": "Confirmar emparejamiento", "category": "red"},
             {"id": "bridge_audit", "name": "Auditoria del puente", "category": "red"},
             {"id": "discord_memory", "name": "Memoria Discord", "category": "red"},
+            {"id": "rollercoin_play", "name": "Jugar RollerCoin", "category": "automatizacion"},
         ]
 
     def run(self, skill_id: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -1282,6 +1283,8 @@ class LocalSkills:
             return self._bridge_queue()
         if skill_id == "discord_memory":
             return self._discord_memory(params)
+        if skill_id == "rollercoin_play":
+            return self._rollercoin_play(params)
         return {"status": "error", "error": f"skill desconocida: {skill_id}"}
 
     # -- implementaciones -----------------------------------------------------
@@ -1636,6 +1639,16 @@ class LocalSkills:
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
         return {"status": "ok", "entries": audit_tail(int(params.get("n", 20)))}
+
+    def _rollercoin_play(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from rollercoin_play import explore, play_game
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        action = params.get("action", "explore")
+        if action == "play":
+            return play_game(params.get("url", "https://rollercoin.com"), params.get("headless", True), params.get("duration", 10))
+        return explore(params.get("url", "https://rollercoin.com"), params.get("headless", True))
 
     def _discord_memory(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
