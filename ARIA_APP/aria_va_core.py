@@ -1722,7 +1722,9 @@ class LocalSkills:
                     await c.login(token)
                     found = None
                     async for g in c.fetch_guilds(limit=50):
-                        for ch in g.text_channels:
+                        full = await c.fetch_guild(g.id)
+                        channels = await full.fetch_channels()
+                        for ch in channels:
                             if "memoria" in ch.name.lower() or "aria" in ch.name.lower():
                                 found = ch.id
                                 break
