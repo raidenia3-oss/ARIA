@@ -1215,6 +1215,7 @@ class LocalSkills:
             {"id": "discord_memory", "name": "Memoria Discord", "category": "red"},
             {"id": "rollercoin_play", "name": "Jugar RollerCoin", "category": "automatizacion"},
             {"id": "rollercoin_daily", "name": "RollerCoin diario", "category": "automatizacion"},
+            {"id": "rollercoin_sched", "name": "Programar RollerCoin", "category": "automatizacion"},
             {"id": "aria_browser", "name": "Navegador ARIA", "category": "navegador"},
             {"id": "aria_activities", "name": "Actividades (reels/minijuegos)", "category": "automatizacion"},
         ]
@@ -1290,6 +1291,8 @@ class LocalSkills:
             return self._rollercoin_play(params)
         if skill_id == "rollercoin_daily":
             return self._rollercoin_daily(params)
+        if skill_id == "rollercoin_sched":
+            return self._rollercoin_sched(params)
         if skill_id == "aria_browser":
             return self._aria_browser(params)
         if skill_id == "aria_activities":
@@ -1684,6 +1687,18 @@ class LocalSkills:
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
         return act_run(params.get("action", "explore"), **{k: v for k, v in params.items() if k != "action"})
+
+    def _rollercoin_sched(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from rollercoin_scheduler import iniciar, detener, estado
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        action = params.get("action", "iniciar")
+        if action == "detener":
+            return detener()
+        if action == "estado":
+            return estado()
+        return iniciar(params.get("hora", 15))
 
     def _discord_memory(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
