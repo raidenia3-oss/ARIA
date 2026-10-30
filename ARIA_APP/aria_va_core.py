@@ -1645,9 +1645,36 @@ class LocalSkills:
         action = params.get("action", "read")
         if action == "create":
             return crear_canal(params.get("guild", ""), params.get("channel", "aria-memoria"))
+        channel_id = params.get("channel_id")
+        if not channel_id:
+            # auto-descubrir canal aria-memoria en el primer guild
+            try:
+                import os
+                from remote_discord import RemotoDiscord
+                token = os.environ.get("ARIA_DISCORD_TOKEN", "").strip()
+                r = RemotoDiscord(token, lambda t: t, [])
+                import asyncio
+                async def _find():
+                    c = r._build()
+                    await c.login(token)
+                    found = None
+                    async for g in c.fetch_guilds(limit=50):
+                        for ch in g.text_channels:
+                            if "memoria" in ch.name.lower() or "aria" in ch.name.lower():
+                                found = ch.id
+                                break
+                        if found:
+                            break
+                    await c.close()
+                    return found
+                channel_id = asyncio.run(_find())
+            except Exception:
+                channel_id = None
+        if not channel_id:
+            return {"status": "error", "error": "channel_id requerido (o no se encontro canal aria-memoria)"}
         if action == "send":
-            return enviar_canal(params.get("channel_id"), params.get("text", ""))
-        return leer_canal(params.get("channel_id"), params.get("limit", 20))
+            return enviar_canal(channel_id, params.get("text", ""))
+        return leer_canal(channel_id, params.get("limit", 20))
 
     def _bridge_queue(self) -> Dict[str, Any]:
         try:
