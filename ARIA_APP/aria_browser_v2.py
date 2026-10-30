@@ -7,7 +7,7 @@ boveda (vault) para auto-rellenar credenciales. Todo en proceso, salida.
 import os
 import json
 
-PROFILE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "aria_browser_profile")
+PROFILE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "aria_browser_profile_pw")
 os.makedirs(PROFILE_DIR, exist_ok=True)
 
 
