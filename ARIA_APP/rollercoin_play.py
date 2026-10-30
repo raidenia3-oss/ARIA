@@ -92,4 +92,39 @@ def run(action="explore", **kw):
         return explore(kw.get("url", "https://rollercoin.com"), kw.get("headless", True))
     if action == "play":
         return play_game(kw.get("url", "https://rollercoin.com/game/choose_game"), kw.get("headless", True), kw.get("duration", 10))
+    if action == "list_games":
+        return list_games(kw.get("headless", True))
     return {"status": "error", "error": "accion desconocida: %s" % action}
+def list_games(headless=True):
+    p, ctx = _launch(headless)
+    try:
+        page = ctx.new_page()
+        page.goto('https://rollercoin.com/game/choose_game', timeout=30000)
+        page.wait_for_load_state('domcontentloaded', timeout=15000)
+        time.sleep(random.uniform(4, 6))
+        text = page.inner_text('body')
+        ctx.close()
+        p.stop()
+        import re
+        games = []
+        pattern = re.compile(r'^(.+?)\n\ndifficulty:\n\n(\d+)\n\nlevel:\n\n(\d+)\n\nSTART\n\n(.+?)\n\ntime:\n\n(\d+)\s*sec\n\nreward:\n\n(\d+)\s*pts', re.MULTILINE | re.DOTALL)
+        for m in pattern.finditer(text):
+            name = m.group(1).strip().split(chr(10))[-1].strip()
+            if name in ('NEW', 'HOT', 'COMMUNITY', 'Coming soon...'):
+                continue
+            games.append({
+                'name': name,
+                'difficulty': int(m.group(2)),
+                'level': int(m.group(3)),
+                'description': m.group(4).strip()[:80],
+                'time': int(m.group(5)),
+                'reward': int(m.group(6))
+            })
+        return {'status': 'ok', 'count': len(games), 'games': games}
+    except Exception as exc:
+        try:
+            ctx.close()
+            p.stop()
+        except Exception:
+            pass
+        return {'status': 'error', 'error': str(exc)}

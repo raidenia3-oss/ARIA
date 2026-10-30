@@ -1654,12 +1654,15 @@ class LocalSkills:
 
     def _rollercoin_play(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
-            from rollercoin_play import explore, play_game
+            from rollercoin_play import explore, play_game, list_games
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
         action = params.get("action", "explore")
         if action == "play":
-            return play_game(params.get("url", "https://rollercoin.com"), params.get("headless", True), params.get("duration", 10))
+            return play_game(params.get("url", "https://rollercoin.com/game/choose_game"), params.get("headless", True), params.get("duration", 10))
+        if action == "list_games":
+            from rollercoin_play import list_games
+            return list_games(params.get("headless", True))
         return explore(params.get("url", "https://rollercoin.com"), params.get("headless", True))
 
     def _rollercoin_daily(self, params: Dict[str, Any]) -> Dict[str, Any]:
