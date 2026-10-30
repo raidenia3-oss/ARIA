@@ -1215,6 +1215,7 @@ class LocalSkills:
             {"id": "discord_memory", "name": "Memoria Discord", "category": "red"},
             {"id": "rollercoin_play", "name": "Jugar RollerCoin", "category": "automatizacion"},
             {"id": "rollercoin_daily", "name": "RollerCoin diario", "category": "automatizacion"},
+            {"id": "aria_browser", "name": "Navegador ARIA", "category": "navegador"},
         ]
 
     def run(self, skill_id: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -1288,6 +1289,8 @@ class LocalSkills:
             return self._rollercoin_play(params)
         if skill_id == "rollercoin_daily":
             return self._rollercoin_daily(params)
+        if skill_id == "aria_browser":
+            return self._aria_browser(params)
         return {"status": "error", "error": f"skill desconocida: {skill_id}"}
 
     # -- implementaciones -----------------------------------------------------
@@ -1664,6 +1667,13 @@ class LocalSkills:
         if action == "login":
             return login(params.get("headless", True))
         return daily_run(params.get("headless", True))
+
+    def _aria_browser(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from aria_browser_v2 import run as browser_run
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        return browser_run(params.get("action", "open"), **{k: v for k, v in params.items() if k != "action"})
 
     def _discord_memory(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
