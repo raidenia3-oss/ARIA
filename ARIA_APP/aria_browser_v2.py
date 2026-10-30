@@ -65,7 +65,11 @@ def abrir(url="https://www.google.com", headless=False, dominio=None):
             ctx = p.chromium.launch_persistent_context(
                 PROFILE_DIR, headless=headless,
                 viewport={"width": 1280, "height": 800},
+                user_agent=("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                            "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"),
+                args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
             )
+            ctx.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
             page = ctx.new_page()
             page.goto(url, timeout=30000)
             page.wait_for_load_state("domcontentloaded", timeout=15000)
