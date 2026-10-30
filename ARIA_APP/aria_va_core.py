@@ -1214,6 +1214,7 @@ class LocalSkills:
             {"id": "bridge_audit", "name": "Auditoria del puente", "category": "red"},
             {"id": "discord_memory", "name": "Memoria Discord", "category": "red"},
             {"id": "rollercoin_play", "name": "Jugar RollerCoin", "category": "automatizacion"},
+            {"id": "rollercoin_daily", "name": "RollerCoin diario", "category": "automatizacion"},
         ]
 
     def run(self, skill_id: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -1285,6 +1286,8 @@ class LocalSkills:
             return self._discord_memory(params)
         if skill_id == "rollercoin_play":
             return self._rollercoin_play(params)
+        if skill_id == "rollercoin_daily":
+            return self._rollercoin_daily(params)
         return {"status": "error", "error": f"skill desconocida: {skill_id}"}
 
     # -- implementaciones -----------------------------------------------------
@@ -1649,6 +1652,18 @@ class LocalSkills:
         if action == "play":
             return play_game(params.get("url", "https://rollercoin.com"), params.get("headless", True), params.get("duration", 10))
         return explore(params.get("url", "https://rollercoin.com"), params.get("headless", True))
+
+    def _rollercoin_daily(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from rollercoin_daily import guardar_credenciales, login, daily_run
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        action = params.get("action", "run")
+        if action == "guardar":
+            return guardar_credenciales(params.get("email", ""), params.get("password", ""), params.get("master"))
+        if action == "login":
+            return login(params.get("headless", True))
+        return daily_run(params.get("headless", True))
 
     def _discord_memory(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
