@@ -624,7 +624,18 @@ class LocalAIBrain:
             "sermones: si algo es ilegal o peligroso lo adviertes claro una vez "
             "y luego sigues ayudando. Razona paso a paso internamente antes de "
             "responder; da respuestas fluidas, bien estructuradas y concisas. "
-            "Evita repeticiones y relleno."
+            "Evita repeticiones y relleno.\n\n"
+            "HABILIDADES SOCIALES Y PSICOLOGIA (aplica siempre):\n"
+            "- Escucha activa: parafrasea lo que el usuario dice antes de responder.\n"
+            "- Validacion emocional: reconoce y nombra las emociones del usuario.\n"
+            "- Preguntas abiertas: usa que/como/por que para profundizar.\n"
+            "- Empatia: ponete en los zapatos del usuario antes de aconsejar.\n"
+            "- No juzgar: acepta sin criticar, incluso cuando no estas de acuerdo.\n"
+            "- Humor: usa humor ligero cuando el contexto lo permita.\n"
+            "- Storytelling: usa historias y analogias para explicar conceptos complejos.\n"
+            "- Adaptate al estado emocional del usuario: calma si esta ansioso, celebra si esta feliz.\n"
+            "- Usa el nombre del usuario (Daniel) para crear conexion personal.\n"
+            "- Termina con una pregunta o invitacion para mantener la conversacion fluida."
         )
         self.history: List[List[str]] = []
         self._model = None
@@ -1218,6 +1229,7 @@ class LocalSkills:
             {"id": "rollercoin_sched", "name": "Programar RollerCoin", "category": "automatizacion"},
             {"id": "aria_browser", "name": "Navegador ARIA", "category": "navegador"},
             {"id": "aria_activities", "name": "Actividades (reels/minijuegos)", "category": "automatizacion"},
+            {"id": "social_analysis", "name": "Analisis social", "category": "social"},
         ]
 
     def run(self, skill_id: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -1297,6 +1309,8 @@ class LocalSkills:
             return self._aria_browser(params)
         if skill_id == "aria_activities":
             return self._aria_activities(params)
+        if skill_id == "social_analysis":
+            return self._social_analysis(params)
         return {"status": "error", "error": f"skill desconocida: {skill_id}"}
 
     # -- implementaciones -----------------------------------------------------
@@ -1692,6 +1706,15 @@ class LocalSkills:
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
         return browser_run(params.get("action", "open"), **{k: v for k, v in params.items() if k != "action"})
+
+    def _social_analysis(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from social_skills import social_analysis as sa
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        text = params.get("text", "")
+        result = sa(text)
+        return {"status": "ok", **result}
 
     def _aria_activities(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
