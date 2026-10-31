@@ -1400,7 +1400,13 @@ class LocalSkills:
         return {"ok": False, "autonomous": False, "error": "desactivada por regla del proyecto"}
 
     def _voice_test(self, params: Dict[str, Any]) -> Dict[str, Any]:
-        return {"status": "ok", "message": "Prueba de voz local"}
+        try:
+            from backend.voice.pipeline import TTSPipeline
+            tts = TTSPipeline()
+            r = tts.speak("ARIA en linea. Cerebro operativo.", engine="pyttsx3")
+            return {"status": "ok", "tts": r}
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
 
     def _set_theme(self, params: Dict[str, Any]) -> Dict[str, Any]:
         name = params.get("name", params.get("theme", "cyberpunk"))
