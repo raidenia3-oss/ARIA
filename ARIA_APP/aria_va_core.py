@@ -695,7 +695,20 @@ class LocalAIBrain:
         if eng is None or not self._model_loaded:
             return ""
         reglas = _reglas_para_el_modelo()
-        sistema = self.system_prompt + (("\n\nReglas del usuario:\n" + reglas) if reglas else "")
+        sistema = self.system_prompt + (("Reglas del usuario:\n" + reglas) if reglas else "")
+        # (a) Guia social: consejo del sandbox para la emocion detectada
+        try:
+            from social_skills import detect_emotion as _de
+            from social_sandbox import consejo_para as _cp
+            _emo = _de(msg)
+            _consejo = _cp(_emo)
+            _guia = ""
+            if isinstance(_consejo, dict):
+                _guia = "Tecnica: %s" % _consejo.get("id", "")
+        except Exception:
+            _guia = ""
+        if _guia.strip():
+            sistema += "\n\nGuia social: " + _guia.strip()
         messages = [{"role": "system", "content": sistema}]
         if history:
             for h in history[-6:]:
@@ -1230,6 +1243,7 @@ class LocalSkills:
             {"id": "aria_browser", "name": "Navegador ARIA", "category": "navegador"},
             {"id": "aria_activities", "name": "Actividades (reels/minijuegos)", "category": "automatizacion"},
             {"id": "social_analysis", "name": "Analisis social", "category": "social"},
+            {"id": "practica_social", "name": "Practica social", "category": "social"},
         ]
 
     def run(self, skill_id: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -1310,6 +1324,10 @@ class LocalSkills:
         if skill_id == "aria_activities":
             return self._aria_activities(params)
         if skill_id == "social_analysis":
+            return self._social_analysis(params)
+        if skill_id == "practica_social":
+            return self._practica_social(params)
+            return self._practica_social(params)
             return self._social_analysis(params)
         return {"status": "error", "error": f"skill desconocida: {skill_id}"}
 
@@ -1706,6 +1724,18 @@ class LocalSkills:
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
         return browser_run(params.get("action", "open"), **{k: v for k, v in params.items() if k != "action"})
+
+    def _practica_social(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            import social_sandbox as _sb
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
+        n = int(params.get("n", 6))
+        try:
+            rep = _sb.practicar(lambda t: self.brain.chat(t).get("response", ""), n=n)
+            return {"status": "ok", "resumen": rep.get("resumen"), "promedio": rep.get("promedio"), "puntos_flojos": rep.get("puntos_flojos"), "n": rep.get("n")}
+        except Exception as exc:
+            return {"status": "error", "error": str(exc)}
 
     def _social_analysis(self, params: Dict[str, Any]) -> Dict[str, Any]:
         try:
