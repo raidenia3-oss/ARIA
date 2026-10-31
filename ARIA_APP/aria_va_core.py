@@ -2366,6 +2366,19 @@ class VirtualAssistant:
         self.training = TrainingSystem(self)
         self.autonomous = False
         self._awake = False
+        try:
+            import conocimiento, experiencia, mejora, aprendizaje, planificador, nucleo, forma
+            self.grafo = conocimiento.grafo()
+            self.arnes = aprendizaje.Arnes(responder=lambda t: self.brain.chat(t).get('response',''), grafo=self.grafo)
+            try:
+                self._forma = forma.crear_forma(nucleo_factory=nucleo.crear_nucleo, avatar_factory=lambda: __import__('chibi').crear_chibi())
+                self._forma.mostrar('nucleo')
+            except Exception:
+                self._forma = None
+        except Exception:
+            self.grafo = None
+            self.arnes = None
+            self._forma = None
         self._callbacks: Dict[str, List[Callable]] = {
             "on_response": [],
             "on_wake": [],
