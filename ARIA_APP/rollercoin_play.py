@@ -94,6 +94,8 @@ def run(action="explore", **kw):
         return play_game(kw.get("url", "https://rollercoin.com/game/choose_game"), kw.get("headless", True), kw.get("duration", 10))
     if action == "list_games":
         return list_games(kw.get("headless", True))
+    if action == "play_all":
+        return play_all(kw.get("headless", False), kw.get("duration_per_game"))
     return {"status": "error", "error": "accion desconocida: %s" % action}
 def list_games(headless=True):
     p, ctx = _launch(headless)
@@ -128,3 +130,56 @@ def list_games(headless=True):
         except Exception:
             pass
         return {'status': 'error', 'error': str(exc)}
+
+def play_all(headless=False, duration_per_game=None):
+    lg = list_games(headless=True)
+    if lg.get('status') != 'ok':
+        return lg
+    results = []
+    total_clicks = 0
+    p, ctx = _launch(headless)
+    try:
+        for game in lg['games']:
+            page = ctx.new_page()
+            try:
+                page.goto('https://rollercoin.com/game/choose_game', timeout=30000)
+                page.wait_for_load_state('domcontentloaded', timeout=15000)
+                time.sleep(random.uniform(2, 3))
+                dur = duration_per_game or game['time']
+                dur = min(dur, game['time'])
+                try:
+                    page.click('text=START', timeout=5000, force=True)
+                    time.sleep(random.uniform(2, 3))
+                except Exception:
+                    pass
+                clicks = 0
+                t0 = time.time()
+                while time.time() - t0 < dur:
+                    x = random.randint(400, 900)
+                    y = random.randint(250, 600)
+                    page.mouse.move(x + random.randint(-8, 8), y + random.randint(-8, 8))
+                    time.sleep(random.uniform(0.03, 0.12))
+                    page.mouse.click(x, y)
+                    clicks += 1
+                    time.sleep(random.uniform(0.15, 0.5))
+                    if random.random() < 0.1:
+                        time.sleep(random.uniform(0.5, 1.5))
+                total_clicks += clicks
+                results.append({'game': game['name'], 'clicks': clicks, 'duration': dur, 'reward': game['reward']})
+                page.close()
+            except Exception as exc:
+                results.append({'game': game['name'], 'error': str(exc)})
+                try:
+                    page.close()
+                except Exception:
+                    pass
+        ctx.close()
+        p.stop()
+        return {'status': 'ok', 'games_played': len(results), 'total_clicks': total_clicks, 'results': results}
+    except Exception as exc:
+        try:
+            ctx.close()
+            p.stop()
+        except Exception:
+            pass
+        return {'status': 'error', 'error': str(exc), 'partial': results}

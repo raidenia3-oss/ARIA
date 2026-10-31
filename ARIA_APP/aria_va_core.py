@@ -1663,6 +1663,9 @@ class LocalSkills:
         if action == "list_games":
             from rollercoin_play import list_games
             return list_games(params.get("headless", True))
+        if action == "play_all":
+            from rollercoin_play import play_all
+            return play_all(params.get("headless", False), params.get("duration_per_game"))
         return explore(params.get("url", "https://rollercoin.com"), params.get("headless", True))
 
     def _rollercoin_daily(self, params: Dict[str, Any]) -> Dict[str, Any]:
