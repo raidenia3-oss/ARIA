@@ -1,0 +1,5 @@
+C:\Users\User\Downloads\AURA\aria-backend-axum\target\debug\deps\scopeguard-e3c2f0343f8fcce9.d: C:\Users\User\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\scopeguard-1.2.0\src\lib.rs
+
+C:\Users\User\Downloads\AURA\aria-backend-axum\target\debug\deps\libscopeguard-e3c2f0343f8fcce9.rmeta: C:\Users\User\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\scopeguard-1.2.0\src\lib.rs
+
+C:\Users\User\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\scopeguard-1.2.0\src\lib.rs:

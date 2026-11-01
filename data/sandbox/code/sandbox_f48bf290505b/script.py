@@ -1,0 +1,1 @@
+print(7*6); x=[1,2,3]; print(sum(x))

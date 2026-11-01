@@ -1,0 +1,12 @@
+{
+  "trace_id": "trace-manual-1792636778739",
+  "task_id": "manual-1792636778739",
+  "objective": "resolver error de timeout",
+  "outcome": "corrected",
+  "steps": [],
+  "error": "timeout",
+  "correction": "Reducir timeout",
+  "duration_ms": 0.0,
+  "created_at": 1792636778.7396526,
+  "metadata": {}
+}

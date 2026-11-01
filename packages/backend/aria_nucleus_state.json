@@ -1,0 +1,121 @@
+{
+  "mode": "hybrid",
+  "state": "idle",
+  "aspect": "fused",
+  "metrics": {
+    "thoughts": 0,
+    "actions": 0,
+    "observations": 0,
+    "errors": 0,
+    "sacrifices": 0,
+    "evolutions": 0,
+    "analyses": 0,
+    "transformations": 0
+  },
+  "skills": [
+    {
+      "id": "gran_sabio_analisis",
+      "level": 1,
+      "unlocked": true,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": null,
+      "evolves_to": null
+    },
+    {
+      "id": "raphael_transformacion",
+      "level": 1,
+      "unlocked": true,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": null,
+      "evolves_to": null
+    },
+    {
+      "id": "ciel_infon_flujo",
+      "level": 1,
+      "unlocked": true,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": null,
+      "evolves_to": null
+    },
+    {
+      "id": "sabiduría_fusionada",
+      "level": 1,
+      "unlocked": false,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": null,
+      "evolves_to": "orbe_resonante"
+    },
+    {
+      "id": "orbe_resonante",
+      "level": 1,
+      "unlocked": false,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": null,
+      "evolves_to": null
+    },
+    {
+      "id": "orbe_infinito",
+      "level": 1,
+      "unlocked": false,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": "sabiduría_fusionada",
+      "evolves_to": null
+    },
+    {
+      "id": "espada_eterna",
+      "level": 1,
+      "unlocked": false,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": "orbe_resonante",
+      "evolves_to": null
+    },
+    {
+      "id": "infons_cosmicos",
+      "level": 1,
+      "unlocked": false,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": "gran_sabio_analisis",
+      "evolves_to": null
+    },
+    {
+      "id": "gran_sabio_supremo",
+      "level": 1,
+      "unlocked": false,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": null,
+      "evolves_to": null
+    },
+    {
+      "id": "nucleo_fusionado_final",
+      "level": 1,
+      "unlocked": false,
+      "active": false,
+      "xp": 0,
+      "uses": 0,
+      "evolved_from": null,
+      "evolves_to": null
+    }
+  ],
+  "sacrifice_log": [],
+  "evolution_log": [],
+  "session_id": "7e100a885be2",
+  "ts": "2026-10-30T23:28:45.597161Z"
+}

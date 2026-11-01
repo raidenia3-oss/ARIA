@@ -1,0 +1,10 @@
+ERROR: Cannot get class 'AuraClient'.
+   at: _instantiate_internal (core/object/class_db.cpp:565)
+WARNING: Node AuraClient of type AuraClient cannot be created. A placeholder will be created instead.
+   at: instantiate (scene/resources/packed_scene.cpp:333)
+SCRIPT ERROR: Cannot call method 'clear' on a null value.
+   at: _add_log (res://scripts/dashboard/panels/console_log_panel.gd:53)
+   GDScript backtrace (most recent call first):
+       [0] _add_log (res://scripts/dashboard/panels/console_log_panel.gd:53)
+       [1] _log (res://scripts/dashboard/dashboard_manager.gd:196)
+       [2] _ready (res://scripts/dashboard/dashboard_manager.gd:25)

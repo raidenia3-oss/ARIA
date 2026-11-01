@@ -1,0 +1,12 @@
+{
+  "trace_id": "trace-manual-1791139619318",
+  "task_id": "manual-1791139619318",
+  "objective": "tarea correcta",
+  "outcome": "success",
+  "steps": [],
+  "error": "",
+  "correction": "",
+  "duration_ms": 0.0,
+  "created_at": 1791139619.318672,
+  "metadata": {}
+}

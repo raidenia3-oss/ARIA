@@ -1,0 +1,163 @@
+﻿:root[data-theme="thrine"], :root:not([data-theme]) {
+  color-scheme: dark;
+  --thrine-bg: #191a1b;
+  --thrine-panel: #27292b;
+  --thrine-panel-2: #2a2b2c;
+  --thrine-border: #3d3f3f;
+  --thrine-border-subtle: #373839;
+  --thrine-text: #e5e5e5;
+  --thrine-text-sub: #a1a1a1;
+  --thrine-text-muted: #6f6f6f;
+  --thrine-hover: rgba(255,255,255,0.02);
+  --thrine-active: rgba(255,255,255,0.04);
+  --thrine-radius: 14px;
+  --thrine-radius-lg: 16px;
+}
+
+html, body {
+  background: var(--thrine-bg) !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.04) 1.6px, transparent 1.6px);
+  background-size: 34px 34px;
+  opacity: 0.8;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(1400px 900px at 50% 0%, rgba(255,255,255,0.01), transparent 70%);
+}
+
+.app-container,
+.hud-root,
+.aria-container {
+  background: transparent !important;
+}
+
+.glass-panel,
+.panel,
+.sidebar,
+.chat-panel,
+.controls-panel,
+.nucleus-panel,
+.theme-panel,
+.command-palette,
+.modal,
+.card,
+.list-item,
+.dropdown-menu {
+  background: var(--thrine-panel) !important;
+  border-radius: var(--thrine-radius) !important;
+  box-shadow: inset 0 0 0 1px var(--thrine-border) !important;
+  border: none !important;
+}
+
+.glass-panel-lg,
+.card-lg {
+  border-radius: var(--thrine-radius-lg) !important;
+}
+
+.header,
+.topbar,
+.nav-bar {
+  background: var(--thrine-panel) !important;
+  box-shadow: inset 0 0 0 1px var(--thrine-border) !important;
+  border-radius: 12px !important;
+}
+
+.btn,
+button,
+.pill,
+.chip,
+.tab {
+  background: transparent !important;
+  color: var(--thrine-text-sub) !important;
+  border-radius: 10px !important;
+  transition: all 120ms ease-in-out;
+}
+
+.btn:hover,
+button:hover,
+.pill:hover,
+.chip:hover,
+.tab:hover {
+  background: var(--thrine-hover) !important;
+  color: var(--thrine-text) !important;
+}
+
+.btn.active,
+button.active,
+.tab.active {
+  background: var(--thrine-active) !important;
+  color: var(--thrine-text) !important;
+  box-shadow: inset 0 0 0 1px var(--thrine-border-subtle) !important;
+}
+
+input,
+textarea,
+select,
+.search-input {
+  background: var(--thrine-bg) !important;
+  color: var(--thrine-text) !important;
+  box-shadow: inset 0 0 0 1px var(--thrine-border) !important;
+  border: none !important;
+  border-radius: 10px !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--thrine-text-muted) !important;
+}
+
+.msg-bubble.user {
+  background: var(--thrine-panel-2) !important;
+  box-shadow: inset 0 0 0 1px var(--thrine-border) !important;
+}
+
+.msg-bubble.assistant {
+  background: transparent !important;
+}
+
+.orb-container,
+.aria-orb,
+.orb {
+  filter: drop-shadow(0 12px 40px rgba(0,0,0,0.5));
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.divider,
+.separator {
+  background: var(--thrine-border) !important;
+  opacity: 0.6;
+}
+
+/* Thrine subtle shimmer */
+.btn.accent, .btn-primary { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent); background-size: 200% 100%; }
+.btn.accent:hover { animation: thrine-shimmer 1.2s ease; }
+@keyframes thrine-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }

@@ -1,0 +1,173 @@
+{
+  "bot_1791749665_1": {
+    "id": "bot_1791749665_1",
+    "name": "grook_demo",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791749665.674745,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791750967_2": {
+    "id": "bot_1791750967_2",
+    "name": "grook_propio",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791750967.3531122,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791751079_3": {
+    "id": "bot_1791751079_3",
+    "name": "grook_e2e",
+    "type": "grook",
+    "status": "running",
+    "created_at": 1791751079.7313921,
+    "last_seen": 1791751079.7333946,
+    "config": {}
+  },
+  "bot_1791751899_4": {
+    "id": "bot_1791751899_4",
+    "name": "grook_t1",
+    "type": "grook",
+    "status": "running",
+    "created_at": 1791751899.7690444,
+    "last_seen": 1791751899.7720466,
+    "config": {}
+  },
+  "bot_1791752123_5": {
+    "id": "bot_1791752123_5",
+    "name": "grook_autotest",
+    "type": "grook",
+    "status": "stopped",
+    "created_at": 1791752123.2998052,
+    "last_seen": 1791752123.3068502,
+    "config": {}
+  },
+  "bot_1791752420_6": {
+    "id": "bot_1791752420_6",
+    "name": "grook_test_direct",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791752420.4242275,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791752791_7": {
+    "id": "bot_1791752791_7",
+    "name": "grook_brain_fix",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791752791.0240088,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791753311_8": {
+    "id": "bot_1791753311_8",
+    "name": "grook_via_brain",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791753311.920983,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791756512_9": {
+    "id": "bot_1791756512_9",
+    "name": "grook_e2e2",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791756512.7898018,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791758009_10": {
+    "id": "bot_1791758009_10",
+    "name": "testbot",
+    "type": "grook",
+    "status": "stopped",
+    "created_at": 1791758009.4607182,
+    "last_seen": 1791758009.4652433,
+    "config": {}
+  },
+  "bot_1791758384_11": {
+    "id": "bot_1791758384_11",
+    "name": "grook_check",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791758384.8756828,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791758657_12": {
+    "id": "bot_1791758657_12",
+    "name": "grook_harden",
+    "type": "grook",
+    "status": "stopped",
+    "created_at": 1791758657.0471582,
+    "last_seen": 1791758657.051162,
+    "config": {}
+  },
+  "bot_1791758677_13": {
+    "id": "bot_1791758677_13",
+    "name": "x",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791758677.0064948,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791759417_14": {
+    "id": "bot_1791759417_14",
+    "name": "deltest",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791759417.133491,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791759806_15": {
+    "id": "bot_1791759806_15",
+    "name": "g1",
+    "type": "grook",
+    "status": "stopped",
+    "created_at": 1791759806.1649244,
+    "last_seen": 1791759806.1679256,
+    "config": {}
+  },
+  "bot_1791770081_16": {
+    "id": "bot_1791770081_16",
+    "name": "test",
+    "type": "grook",
+    "status": "stopped",
+    "created_at": 1791770081.4615588,
+    "last_seen": 1791770081.465562,
+    "config": {}
+  },
+  "bot_1791770102_17": {
+    "id": "bot_1791770102_17",
+    "name": "x",
+    "type": "grook",
+    "status": "idle",
+    "created_at": 1791770102.3201103,
+    "last_seen": 0.0,
+    "config": {}
+  },
+  "bot_1791770361_18": {
+    "id": "bot_1791770361_18",
+    "name": "g2",
+    "type": "grook",
+    "status": "stopped",
+    "created_at": 1791770361.7523592,
+    "last_seen": 1791770361.7572339,
+    "config": {}
+  },
+  "bot_1791770387_19": {
+    "id": "bot_1791770387_19",
+    "name": "m",
+    "type": "grook",
+    "status": "stopped",
+    "created_at": 1791770387.131876,
+    "last_seen": 1791770387.135882,
+    "config": {}
+  }
+}

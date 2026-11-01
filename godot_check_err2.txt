@@ -1,0 +1,59 @@
+ERROR: Cannot get class 'AuraClient'.
+   at: _instantiate_internal (core/object/class_db.cpp:565)
+WARNING: Node AuraClient of type AuraClient cannot be created. A placeholder will be created instead.
+   at: instantiate (scene/resources/packed_scene.cpp:333)
+SCRIPT ERROR: Invalid call. Nonexistent function 'set_border_enabled_all' in base 'StyleBoxFlat'.
+   at: DashboardManager._style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+   GDScript backtrace (most recent call first):
+       [0] _style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+       [1] _create_brain_panel (res://scripts/dashboard/dashboard_manager.gd:54)
+       [2] _setup_ui (res://scripts/dashboard/dashboard_manager.gd:28)
+       [3] _ready (res://scripts/dashboard/dashboard_manager.gd:23)
+SCRIPT ERROR: Invalid call. Nonexistent function 'set_border_enabled_all' in base 'StyleBoxFlat'.
+   at: DashboardManager._style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+   GDScript backtrace (most recent call first):
+       [0] _style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+       [1] _create_routing_panel (res://scripts/dashboard/dashboard_manager.gd:69)
+       [2] _setup_ui (res://scripts/dashboard/dashboard_manager.gd:29)
+       [3] _ready (res://scripts/dashboard/dashboard_manager.gd:23)
+SCRIPT ERROR: Invalid call. Nonexistent function 'set_border_enabled_all' in base 'StyleBoxFlat'.
+   at: DashboardManager._style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+   GDScript backtrace (most recent call first):
+       [0] _style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+       [1] _create_treasury_panel (res://scripts/dashboard/dashboard_manager.gd:83)
+       [2] _setup_ui (res://scripts/dashboard/dashboard_manager.gd:30)
+       [3] _ready (res://scripts/dashboard/dashboard_manager.gd:23)
+SCRIPT ERROR: Invalid call. Nonexistent function 'set_border_enabled_all' in base 'StyleBoxFlat'.
+   at: DashboardManager._style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+   GDScript backtrace (most recent call first):
+       [0] _style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+       [1] _create_training_panel (res://scripts/dashboard/dashboard_manager.gd:112)
+       [2] _setup_ui (res://scripts/dashboard/dashboard_manager.gd:32)
+       [3] _ready (res://scripts/dashboard/dashboard_manager.gd:23)
+SCRIPT ERROR: Invalid call. Nonexistent function 'set_border_enabled_all' in base 'StyleBoxFlat'.
+   at: DashboardManager._style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+   GDScript backtrace (most recent call first):
+       [0] _style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+       [1] _create_rollercoin_panel (res://scripts/dashboard/dashboard_manager.gd:127)
+       [2] _setup_ui (res://scripts/dashboard/dashboard_manager.gd:33)
+       [3] _ready (res://scripts/dashboard/dashboard_manager.gd:23)
+SCRIPT ERROR: Invalid call. Nonexistent function 'set_border_enabled_all' in base 'StyleBoxFlat'.
+   at: DashboardManager._style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+   GDScript backtrace (most recent call first):
+       [0] _style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+       [1] _create_infrastructure_panel (res://scripts/dashboard/dashboard_manager.gd:141)
+       [2] _setup_ui (res://scripts/dashboard/dashboard_manager.gd:34)
+       [3] _ready (res://scripts/dashboard/dashboard_manager.gd:23)
+SCRIPT ERROR: Invalid call. Nonexistent function 'set_border_enabled_all' in base 'StyleBoxFlat'.
+   at: DashboardManager._style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+   GDScript backtrace (most recent call first):
+       [0] _style_panel_border (res://scripts/dashboard/dashboard_manager.gd:163)
+       [1] _create_console_panel (res://scripts/dashboard/dashboard_manager.gd:156)
+       [2] _setup_ui (res://scripts/dashboard/dashboard_manager.gd:35)
+       [3] _ready (res://scripts/dashboard/dashboard_manager.gd:23)
+SCRIPT ERROR: Cannot call method 'clear' on a null value.
+   at: _add_log (res://scripts/dashboard/panels/console_log_panel.gd:53)
+   GDScript backtrace (most recent call first):
+       [0] _add_log (res://scripts/dashboard/panels/console_log_panel.gd:53)
+       [1] _log (res://scripts/dashboard/dashboard_manager.gd:197)
+       [2] _ready (res://scripts/dashboard/dashboard_manager.gd:25)

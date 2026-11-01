@@ -128,11 +128,6 @@ from backend.self_learning_routes import router as selflearn_router, init_self_l
 from backend.agents.kilo_bridge import kilo_bridge, KiloTask
 from backend.plugins import plugin_manager
 from backend.automation import automation_engine
-from backend.autonomy.supervisor import get_supervisor
-from backend.reverse_engineer.routes import router as rea_router
-from backend.drive_routes import router as drive_router
-from backend.integrations_routes import router as integrations_router
-from backend.autonomous_routes import router as autonomous_router
 from backend.automation.memory_routes import router as automation_memory_router
 from backend.automation.models import AutomationRuleModel
 from backend.fanfic_routes import router as fanfic_router
@@ -478,10 +473,7 @@ app.include_router(p2p_reconcile_router)
 app.include_router(p2p_sync_router)
 app.include_router(mesh_router)
 app.include_router(backup_router)
-app.include_router(rea_router)
-app.include_router(drive_router)
-app.include_router(integrations_router)
-app.include_router(autonomous_router)
+
 
 DASHBOARD_BUILD_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "web_dashboard", "dist")
 if not os.path.isdir(DASHBOARD_BUILD_DIR) and hasattr(sys, "_MEIPASS"):
@@ -529,8 +521,6 @@ REQUEST_COUNT = Counter("http_requests_total", "Total HTTP requests", ["method",
 REQUEST_LATENCY = Histogram("http_request_duration_seconds", "HTTP request latency", ["endpoint"])
 TRAINING_JOBS = Gauge("training_jobs_active", "Active training jobs")
 TRAINING_STATUS = Gauge("training_jobs_status", "Training jobs by status", ["status"])
-AUTONOMY_SERVICES = Gauge("aura_autonomy_services_running", "Autonomous background services currently running")
-AUTONOMY_CRASHES = Gauge("aura_autonomy_crashes_total", "Total crashes recovered by the autonomy supervisor")
 
 SECRET_KEY = os.getenv("AURA_JWT_SECRET", "change-me")
 ALGORITHM = "HS256"
@@ -738,15 +728,6 @@ async def status(auth: AuthContext = Depends(require_api_key), db: SessionLocal 
     for svc in services:
         result[svc.service] = {"status": svc.status, "service": svc.service, "updated_at": svc.updated_at}
     return result
-
-
-@app.get("/api/system/autonomy", tags=["Autonomy"])
-async def autonomy_status() -> Dict[str, Any]:
-    """Estado observable (sin navegador, sin API key) de los servicios autónomos."""
-    st = get_supervisor().status()
-    AUTONOMY_SERVICES.set(sum(1 for v in st.values() if v.get("running")))
-    AUTONOMY_CRASHES.set(sum(v.get("crashes", 0) for v in st.values()))
-    return st
 
 
 @app.get("/api/logs")
@@ -984,12 +965,11 @@ class AgentCommandRequest(BaseModel):
     device: str = "local"
 
 
-@app.get("/health/detailed", response_model=HealthResponse)
+@app.get("/health", response_model=HealthResponse)
 async def detailed_health(db: SessionLocal = Depends(get_db)) -> HealthResponse:
     checks = {}
     try:
-        from sqlalchemy import text
-        db.execute(text("SELECT 1"))
+        db.execute("SELECT 1")
         checks["database"] = "ok"
     except Exception as exc:
         checks["database"] = f"error: {exc}"
@@ -1470,30 +1450,10 @@ async def _on_startup() -> None:
     # AURA Daemon (OPCION B + A) - autonomous background tasks
     try:
         daemon = get_daemon()
-        get_supervisor().run("aura-daemon", daemon.start_daemon)
-        logger.info("[STARTUP] AURA Daemon iniciado en background (5 tareas paralelas, supervisado)")
+        asyncio.create_task(daemon.start_daemon())
+        logger.info("[STARTUP] AURA Daemon iniciado en background (5 tareas paralelas)")
     except Exception as exc:
         logger.error("[STARTUP] AURA Daemon fallo: %s", exc)
-
-    # Autonomous agent: sleep prevention + Drive vision processing + health monitoring
-    try:
-        from backend.integrations.autonomous_drive_vision import start_autonomous_agent
-        start_autonomous_agent()
-        logger.info("[STARTUP] Autonomous agent iniciado (sleep prevention + Drive vision)")
-    except Exception as exc:
-        logger.error("[STARTUP] Autonomous agent fallo: %s", exc)
-
-    # Reverse Engineer (REA) — servicio autónomo opcional
-    try:
-        from backend.reverse_engineer import start_reverse_engineer, get_service_status, _SERVICE_NAME
-        rea_status = get_service_status()
-        if rea_status["enabled"] and rea_status["found"]:
-            get_supervisor().run(_SERVICE_NAME, start_reverse_engineer)
-            logger.info("[STARTUP] Reverse Engineer (REA) iniciado en background (supervisado)")
-        else:
-            logger.info("[STARTUP] Reverse Engineer (REA) omitido (AURA_REA_PATH no encontrado o deshabilitado)")
-    except Exception as exc:
-        logger.error("[STARTUP] Reverse Engineer (REA) fallo: %s", exc)
 
     logger.info("✅ AURA OS lista en modo AUTÓNOMO")
 
@@ -2825,22 +2785,17 @@ async def mobile_health_check(request: Request):
     """Health-check de conectividad local entre AME y AURA PC."""
     import socket as _socket
     hostname = _socket.gethostname()
-    start = time.perf_counter()
     try:
-        _socket.getaddrinfo(hostname, None)
-        _socket.gethostbyname(hostname)
-        elapsed = (time.perf_counter() - start) * 1000
-        measured_latency = round(elapsed, 2)
+        local_ip = _socket.gethostbyname(hostname)
     except Exception:
-        measured_latency = round((time.perf_counter() - start) * 1000, 2)
+        local_ip = "127.0.0.1"
     return {
         "status": "healthy",
         "hostname": hostname,
         "local_ip": local_ip,
         "port": 8000,
         "timestamp": time.time(),
-        "latency_ms": measured_latency,
-        "data_source": "measured",
+        "latency_ms": 0,
     }
 
 

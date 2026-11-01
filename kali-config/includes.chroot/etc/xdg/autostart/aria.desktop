@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=ARIA OS
+GenericName=Autonomous AI Agent
+Comment=ARIA OS — Agente autónomo nativo, sin servidor, sin puertos
+Exec=/usr/local/bin/aria-start.sh
+Icon=utilities-terminal
+Terminal=false
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+X-XFCE-Autostart-enabled=true
+X-KDE-autostart-after=panel
+StartupNotify=false
+Categories=AI;Agent;System;

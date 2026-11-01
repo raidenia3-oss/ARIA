@@ -1,0 +1,475 @@
+0.0000004077
+
+EN
+
+Boyer Norton
+
+92618 th / 5705372
+Play games to rise your power
+
+PC Bliss Machine/ Level 1
+
+Power holding: 1 days
+
+PC Level Reset: Never
+
+Next PC level: After 10 win games
+
+By winning games, you have a chance to receive one of the following items:
+
+Power
+
+Battery
+
+Game Currencies
+
+Crypto Currencies
+
+Parts
+
+NEW
+
+Crypto Hex
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Welcome to the underground club, Roller. Connect the hexes, clear the board, and claim your prize!
+
+time:
+
+30 sec
+
+reward:
+
+12750 pts
+
+START
+
+HOT
+
+Coinclick
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Bring down all the falling coins by clicking on them before they reach the ground. You can hit as many as you can see on the screen. More downed coins means more reward. Be strong!
+
+time:
+
+40 sec
+
+reward:
+
+6000 pts
+
+START
+
+HOT
+
+Dr.Hamster
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Test your speed and reaction in the latest 3D-Tetris machine. Rotate the blocks faster and be aware of these colorful monsters - they can help you to complete the stack or block your way out!
+
+time:
+
+60 sec
+
+reward:
+
+15060 pts
+
+START
+
+Coin-match
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Use your skills, logic, and imagination to eliminate more coins in this match-three puzzle game. Click and drag the coin to move it and make matches of up to five coins in a row – vertical or horizontal, but not diagonal. Good luck!
+
+time:
+
+70 sec
+
+reward:
+
+10800 pts
+
+START
+
+Token Surfer: Snow Ride
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Skate through the snowy streets of RollerCoin City! Just you, your board, and a trail of shiny coins to collect. Jump over and dodge holiday obstacles, and don't wipe out. Try a double jump for an awesome flip. Now GO and grab those festive coins!
+
+time:
+
+60 sec
+
+reward:
+
+17640 pts
+
+START
+
+Token Blaster
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+While test-driving a new Lambo Huracan Performante Spyder, you were robbed by an alien armada. They stole all your coins and now you must take back what is yours. ATTACK - the enemy can’t stand against you!
+
+time:
+
+40 sec
+
+reward:
+
+32760 pts
+
+START
+
+Coin Fisher
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Catch the coins from the water before time runs out!
+
+time:
+
+40 sec
+
+reward:
+
+12750 pts
+
+START
+
+Hamster Climber
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Guide your adventurous hamsters through a vertical maze of branches and platforms. Use your reaction skills to land on platforms and cling to them. Can you reach the top before time runs out?
+
+time:
+
+60 sec
+
+reward:
+
+12750 pts
+
+START
+
+Flappy Rocket
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Hamster is making his way through the Crypto Galaxy in search for new planets to build more mining facilities. Make sure he gets to the destination in one piece. Help him avoid candlesticks and market fluctuations!
+
+time:
+
+30 sec
+
+reward:
+
+11880 pts
+
+START
+
+COMMUNITY
+
+Mission Hamspossible
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Your mission is to navigate through a complex maze filled with deadly red laser traps. As a brave hamster, you’ll need to collect cubes while avoiding these perilous obstacles. Precision, timing, and strategy are key to gather all the cubes and escape the labyrinth unscathed. The game created by Ravell.
+
+time:
+
+45 sec
+
+reward:
+
+35000 pts
+
+START
+
+Crypto Hamster
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Crypto Hamster moves to the moon! The hero jumps automatically. You should use the left and right arrow key to move it from side to side. Be aware of aliens, press the Up-arrow button to kill them. Best of luck!
+
+time:
+
+40 sec
+
+reward:
+
+30450 pts
+
+START
+
+2048 Coins
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Slide the deck to stack two matching coins, every merge creates the coin of higher rank. You are playing against the clock, so better think fast! All ranks are listed on the right side. Caution: highly addictive.
+
+time:
+
+40 sec
+
+reward:
+
+5040 pts
+
+START
+
+Cryptonoid
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+This game is more like a traditional “arcanoid” game. Hit the hashes with a bitcoin block to get them in and earn mining power. Eventually, it will get to a point when it will be incredibly difficult to bring them all down, but there is no limit to perfection.
+
+time:
+
+60 sec
+
+reward:
+
+33840 pts
+
+START
+
+Coin-Flip
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Click on the miner to check which coin it has been working for. Try matching the coins to clear them all out and earn the remaining hashrate.
+
+time:
+
+60 sec
+
+reward:
+
+5760 pts
+
+START
+
+Lambo Rider
+
+difficulty:
+
+1
+
+level:
+
+1
+
+START
+
+Ride your brand new Lambo across the streets of RollerCoin City! Your goal is to avoid other cars, construction sites, and other obstacles while collecting those shiny coins. 1 Lambo, 3 lives, plenty of cryptos. Enjoy!
+
+time:
+
+60 sec
+
+reward:
+
+32640 pts
+
+START
+
+Coming soon...
+
+difficulty:
+
+0
+
+START
+
+Coming soon...
+
+difficulty:
+
+0
+
+START
+
+Coming soon...
+
+difficulty:
+
+0
+
+START
+
+ABOUT US
+
+Blog
+FAQ
+How it works
+Cryptopedia
+Leaderboard
+Referral program
+Privacy policy
+Term of service
+Disclaimer & User Warranties
+RC Merch Shop
+
+INFORMATION
+
+Play2Earn
+Bitcoin Games
+Bitcoin Faucet
+Free Bitcoin
+Solana Faucet
+Free Solana
+Ethereum Faucet
+Free Ethereum
+Free Pepe Coins
+Free Shiba Inu
+Dogecoin Faucet
+Free Dogecoin
+Free Floki
+Free BNB
+Free Matic
+Free Tron
+Free Litecoin
+
+JOIN THE TEAM
+
+Complete the form to join us!
+
+SUPPORT@ROLLERCOIN.COM
+
+English
+
+© rollercoin.com 2018-2026. All rights reserved
+
+2d : 15h : 24m
+
+🔥Burn It. Strike Gold. Get Rich - Harvest Pyre Is Here!🌾
+
+Reap the Rewards of the Harvest Pyre! Burn old items, fuel the flames, and claim valuable rewards.
+
+🛠️ New Final Miner: “Boogeyminer” in Unreal rarity - 25000Ph/s Built to last.
+🎁 Lootboxes Are Back! Find valuable surprises in every box - RST, RLT and more!
+🔥 Burning Shop & Burning Progression: Exchange your old items, race through burning challenges, and multiply your rewards!
+
+IGNITE THE HARVEST

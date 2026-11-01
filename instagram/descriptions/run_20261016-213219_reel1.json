@@ -1,0 +1,22 @@
+{
+  "status": "ok",
+  "skill": "instagram_video",
+  "url": "https://www.instagram.com/reel/DeLj4LzFJb8/?psln=MWRzbWEzdjkxdGptdA==",
+  "timestamp": 1792204267.6476276,
+  "method": "no-download",
+  "ytdlp_meta": {},
+  "oembed": {
+    "error": "Expecting value: line 1 column 1 (char 0)"
+  },
+  "metadata": {},
+  "video_accessible": null,
+  "video_note": "No se encontró URL directa del video (og:video)",
+  "jev": {
+    "status": "ok",
+    "provider": "ollama_fallback",
+    "choice": "Recibido: 'Clasifica este contenido de Instagram en UNA de estas categorías: educativo, tutorial, entretenimiento, referencia, inspiracion, otro. Además dale una puntuación de valor 0-100. Responde SOLO en este formato: CATEGORIA",
+    "score": "PUNTUACION\nTítulo: \nDescripción: \nVisual: \nTipo OG: \n'. Modo local activo. Configura Ollama para respuestas con IA."
+  },
+  "report_file": "C:\\Users\\User\\Downloads\\AURA\\ARIA_APP\\instagram\\descriptions\\instagram_instagram-20261016.json",
+  "summary": "📹 Instagram Reel: Sin título\n🔗 URL: https://www.instagram.com/reel/DeLj4LzFJb8/?psln=MWRzbWEzdjkxdGptdA==\n👤 Autor: Desconocido\n📝 Descripción: No disponible\n🎯 Uso sugerido (JEV): Recibido: 'Clasifica este contenido de Instagram en UNA de estas categorías: educativo, tutorial, entretenimiento, referencia, inspiracion, otro. Además dale una puntuación de valor 0-100. Responde SOLO en este formato: CATEGORIA (confianza: PUNTUACION\nTítulo: \nDescripción: \nVisual: \nTipo OG: \n'. Modo local activo. Configura Ollama para respuestas con IA.)\nℹ️ Sin URL directa del video (sin og:video)\n💾 Informe: instagram_instagram-20261016.json"
+}

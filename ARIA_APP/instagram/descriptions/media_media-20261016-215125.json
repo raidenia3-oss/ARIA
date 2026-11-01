@@ -1,0 +1,27 @@
+{
+  "status": "ok",
+  "skill": "media_view",
+  "url": "https://www.instagram.com/reel/DeLj4LzFJb8/?psln=MWRzbWEzdjkxdGptdA==",
+  "host": "www.instagram.com",
+  "timestamp": 1792205430.2753398,
+  "method": "no-download",
+  "ytdlp_meta_error": "yt-dlp exit 1",
+  "ytdlp_meta": {
+    "error": "yt-dlp exit 1",
+    "stderr": "ERROR: [Instagram] DeLj4LzFJb8: Instagram sent an empty media response. Check if this post is accessible in your browser without being logged-in. If it is not, then use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Otherwise, if the post is accessible in browser without being logged-in, please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling ou"
+  },
+  "oembed": {},
+  "metadata": {
+    "html_length": 587052
+  },
+  "visual_description": "Sin miniatura disponible para visión.",
+  "video_accessible": null,
+  "video_note": "No se encontró URL directa del video",
+  "jev": {
+    "status": "ok",
+    "provider": "ollama_fallback",
+    "choice": "Educativo",
+    "score": "90",
+    "raw": "Educativo|90\n\nTítulo: \"Cómo crear un plan de estudio efectivo para el éxito académico\"\n\nDescripción: En este artículo, aprenderás cómo crear un plan de estudio efectivo para el éxito académico. Descubrirás los pasos básicos para planificar tus horas de estudio, establecer tus objetivos y establecer un horario realista. Además, aprenderás técnicas para mejorar tu concentración y productividad.\n\nVisual: Una imagen de una persona estudiando en una mesa con un horario y un plano de estudio.\n\nTipo OG: Instagram Educativo"
+  }
+}

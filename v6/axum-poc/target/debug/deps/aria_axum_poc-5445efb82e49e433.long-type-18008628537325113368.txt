@@ -1,0 +1,1 @@
+for<'a> fn(&'a str) -> impl futures::Future<Output = Vec<PendingAction>> {take_pending}: Handler<_, _>

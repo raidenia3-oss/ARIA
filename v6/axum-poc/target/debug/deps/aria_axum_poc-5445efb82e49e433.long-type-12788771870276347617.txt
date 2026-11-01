@@ -1,0 +1,2 @@
+fn(axum::extract::Path<std::string::String>, axum::Json<social_live::ToggleRequest>, Extension<Arc<tokio::sync::Mutex<SharedState>>>) -> impl futures::Future<Output = axum::Json<JsonValue>> {toggle_channel}
+fn(axum::extract::Path<std::string::String>, axum::Json<social_live::ToggleRequest>, Extension<Arc<tokio::sync::Mutex<SharedState>>>) -> impl futures::Future<Output = axum::Json<JsonValue>> {toggle_channel}: Handler<_, _>

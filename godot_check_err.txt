@@ -1,0 +1,10 @@
+SCRIPT ERROR: Parse Error: Cannot find member "PRESET_TOP_CENTER" in base "Control".
+   at: GDScript::reload (res://scripts/dashboard/dashboard_manager.gd:59)
+SCRIPT ERROR: Parse Error: Cannot find member "PRESET_BOTTOM_CENTER" in base "Control".
+   at: GDScript::reload (res://scripts/dashboard/dashboard_manager.gd:117)
+ERROR: Failed to load script "res://scripts/dashboard/dashboard_manager.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+ERROR: Cannot get class 'AuraClient'.
+   at: _instantiate_internal (core/object/class_db.cpp:565)
+WARNING: Node AuraClient of type AuraClient cannot be created. A placeholder will be created instead.
+   at: instantiate (scene/resources/packed_scene.cpp:333)

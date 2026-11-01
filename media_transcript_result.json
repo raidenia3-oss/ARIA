@@ -1,0 +1,6 @@
+{
+  "status": "error",
+  "skill": "media_extract_transcript",
+  "url": "https://youtu.be/R1TNGOZAOZs?si=7_DWVeE3YMuXFGhn",
+  "error": "ERROR: [youtube] R1TNGOZAOZs: Sign in to confirm you’re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies"
+}

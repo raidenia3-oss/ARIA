@@ -18,16 +18,24 @@ SOCIAL_PRINCIPLES = [
 EMOTION_KEYWORDS = {
     "triste": "sadness", "feliz": "happiness", "enojado": "anger",
     "ansioso": "anxiety", "miedo": "fear", "solo": "loneliness",
-    "confundido": "confusion", "aburrido": "boredom", "agradecido": "gratitude",
+    "confundido": "confusion", "aburrido": "boredom", "agradecido": "gratitude", "gracias": "gratitude",
     "estresado": "stress",
 }
 
-def detect_emotion(text: str) -> str:
-    text_lower = text.lower()
+import re as _re
+
+def detect_emotions(text: str) -> list:
+    text_lower = " " + (text or "").lower() + " "
+    out = []
     for keyword, emotion in EMOTION_KEYWORDS.items():
-        if keyword in text_lower:
-            return emotion
-    return "neutral"
+        if _re.search(r"(?<![a-záéíóúñ])" + _re.escape(keyword) + r"(?![a-záéíóúñ])", text_lower):
+            if emotion not in out:
+                out.append(emotion)
+    return out
+
+def detect_emotion(text: str) -> str:
+    emos = detect_emotions(text)
+    return emos[0] if emos else "neutral"
 
 def get_conversation_hint(emotion: str) -> str:
     hints = {
@@ -47,6 +55,7 @@ def social_analysis(text: str) -> Dict[str, Any]:
     hint = get_conversation_hint(emotion)
     return {
         "emotion": emotion,
+        "emotions": detect_emotions(text),
         "hint": hint,
         "principle": random.choice(SOCIAL_PRINCIPLES),
     }

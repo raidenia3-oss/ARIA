@@ -1,0 +1,114 @@
+{
+  "analysis_date": "2026-09-30",
+  "source": "instagram",
+  "videos": [
+    {
+      "video_id": "brunobracaioli-unified-memory-20260930",
+      "source_url": "https://instagram.com/dm/p/brunobracaioli-unified-memory",
+      "title": "Todas as IAs. Uma única memória.",
+      "creator": "@BRUNOBRACAIOLI",
+      "duration_approx": "0:27",
+      "summary": "Video exploring a centralized unified memory database that all LLMs (Claude, ChatGPT, Gemini, Grok, Ollama) can read from and write to, eliminating context fragmentation across multi-LLM systems.",
+      "tags": [
+        "unified-memory",
+        "multi-llm",
+        "knowledge-graph",
+        "architecture",
+        "embeddings",
+        "shared-context"
+      ],
+      "RESUMEN": {
+        "one_liner": "Centralized memory database connecting all LLMs so knowledge is shared, not duplicated.",
+        "key_insight": "Current multi-LLM systems fragment knowledge; a single source of truth eliminates redundant learning and contradictions.",
+        "main_topic": "Unified Memory Architecture for Multi-LLM Systems",
+        "subtopics": [
+          "Memory schema with facts/patterns/insights/operational layers",
+          "LLM adapter abstraction (ClaudeAdapter, ChatGPTAdapter, OllamaAdapter)",
+          "Semantic retrieval via embeddings with confidence scoring",
+          "Memory-aware agent execution flow",
+          "Knowledge graph extension (Document → Memory → Recommendation)"
+        ]
+      },
+      "RELEVANCIA": {
+        "score": 0.95,
+        "reasons": [
+          "ARIA currently uses a single LLM backend and would benefit from multi-LLM shared memory",
+          "The 4-layer memory model (facts/patterns/insights/state) maps directly onto aura.db",
+          "LLM adapter pattern matches ARIA's existing ai_providers abstraction",
+          "Priority 1 schema work unblocks all future memory features"
+        ]
+      },
+      "APLICABLE PARA ARIA AGENTS": {
+        "agent_type": "architect | developer",
+        "specific_use_case": "Design and implement ARIA's unified memory layer so all agents (Kilo, Cline, Claude Code) share learned insights across sessions and LLM backends.",
+        "action_items": [
+          "Extend aura.db with memories table (id, type, content, embedding, confidence, source_llm, source_agent, expiry_at, tags)",
+          "Create aria_memory/unified_store.py with store/retrieve/update/delete",
+          "Build aria_llm/adapter.py with LLMAdapter ABC and concrete adapters for Claude, ChatGPT, Ollama",
+          "Refactor aria_agents/agent_base.py to query memory before execution and store results after",
+          "Add /api/memory endpoints to control.rs (Rust Axum backend)",
+          "Implement soft-delete and access logging for retention policies"
+        ]
+      },
+      "REFERENCIAS EXTERNAS": [
+        "https://github.com/brunobracaioli/unified-memory",
+        "Video: @BRUNOBRACAIOLI Instagram DM 2026-09-30"
+      ]
+    },
+    {
+      "video_id": "massive-manas-multiverse-20260930",
+      "source_url": "https://instagram.com/dm/p/massive-manas-multiverse",
+      "title": "I built my own multiverse. Seven universes. One system.",
+      "creator": "@MASSIVE.MANAS.EXE",
+      "duration_approx": "0:16",
+      "summary": "Video showing a 7-universe multiverse architecture with a central NEXUS hub coordinating independent logical domains (ADMIN, CODING, MEDIA, KNOWLEDGE, INTEGRATION, UI/UX, NEXUSVERSE). Each universe has its own agents, color, and resource profile, communicating only through the central hub.",
+      "tags": [
+        "multiverse",
+        "universes",
+        "nexus",
+        "agent-routing",
+        "isolation",
+        "resource-management",
+        "workspace"
+      ],
+      "RESUMEN": {
+        "one_liner": "Seven independent universes coordinated by a central NEXUS — logical domains, not separate systems.",
+        "key_insight": "Grouping agents by domain (admin/coding/media/knowledge) with hub-routed communication gives isolation without fragmentation.",
+        "main_topic": "Multiverse Architecture: Seven Specialized Workspaces Under One NEXUS",
+        "subtopics": [
+          "Universe registry with color-coded domains and agent assignment",
+          "NEXUS router for cross-universe communication (A → NEXUS → B, never direct)",
+          "Per-universe resource limits (concurrency, memory, timeout)",
+          "Universe Navigator UI with orbit visualization",
+          "Alt+[1-7] keyboard shortcuts for instant universe switching"
+        ]
+      },
+      "RELEVANCIA": {
+        "score": 0.9,
+        "reasons": [
+          "ARIA already has the concept of universes in snapshots and memory — this video makes it visual and navigable",
+          "NEXUS routing pattern matches ARIA's existing control.rs dispatch logic",
+          "Per-universe resource limits solve the 'agents fight for resources' problem",
+          "Backward compatible: default universe = DEFAULT for existing tasks"
+        ]
+      },
+      "APLICABLE PARA ARIA AGENTS": {
+        "agent_type": "architect | developer | designer",
+        "specific_use_case": "Implement ARIA's multiverse architecture so agents are grouped into 7 domain universes (ADMIN, CODING, MEDIA, KNOWLEDGE, INTEGRATION, UI/UX, NEXUS) with hub-routed communication, per-universe resource limits, and a visual navigator.",
+        "action_items": [
+          "Create aria_multiverse/universe_registry.py with Universe dataclass (id, name, color, agents, resources)",
+          "Create aria_multiverse/router.py with UniverseRouter for NEXUS-based cross-universe communication",
+          "Add universes table to aura.db (id, name, color, icon, parent_universe, isolated, max_tasks, max_memory_mb, cpu_share, timeout_seconds)",
+          "Modify task.py to add universe_id field and queue.py to filter agents by universe",
+          "Add /api/universes and /api/universes/{id}/stats endpoints to v6/axum-poc/src/universe_routes.rs",
+          "Create v5/src/components/UniverseNavigator.tsx with orbit visualization and Alt+[1-7] shortcuts",
+          "Implement UniverseResources dataclass with per-universe limits (concurrency, memory, timeout, cpu_share)"
+        ]
+      },
+      "REFERENCIAS EXTERNAS": [
+        "https://github.com/massive-manas/multiverse",
+        "Video: @MASSIVE.MANAS.EXE Instagram DM 2026-09-30"
+      ]
+    }
+  ]
+}

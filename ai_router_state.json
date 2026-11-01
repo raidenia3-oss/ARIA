@@ -1,0 +1,32 @@
+{
+  "scores": {
+    "groq": -3,
+    "mistral": -3,
+    "deepseek": -3,
+    "openrouter": -3,
+    "gemini": -3,
+    "nvidia": -3,
+    "local-ollama": -3,
+    "jan": -3
+  },
+  "last_failures": {
+    "groq": "Client error '404 Not Found' for url 'https://api.groq.com/openai/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404",
+    "mistral": "Client error '429 Too Many Requests' for url 'https://api.mistral.ai/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+    "deepseek": "Client error '402 Payment Required' for url 'https://api.deepseek.com/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402",
+    "openrouter": "Client error '404 Not Found' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404",
+    "gemini": "Client error '400 Bad Request' for url 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyCBh5XG4r4KRVFY-7B2mbBHzUVDIbE2T-A'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
+    "nvidia": "Client error '410 Gone' for url 'https://integrate.api.nvidia.com/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/410",
+    "local-ollama": "Client error '404 Not Found' for url 'http://localhost:11434/api/generate'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404",
+    "jan": "All connection attempts failed"
+  },
+  "circuit_until": {
+    "groq": 1791168663.4275227,
+    "mistral": 1791168665.6476386,
+    "deepseek": 1791168668.7804432,
+    "openrouter": 1791168670.2327988,
+    "gemini": 1791168673.1439943,
+    "nvidia": 1791168675.096529,
+    "local-ollama": 1791168676.7866397,
+    "jan": 1791168681.080655
+  }
+}

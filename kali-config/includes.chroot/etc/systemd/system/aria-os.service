@@ -1,0 +1,30 @@
+[Unit]
+Description=ARIA OS Native Desktop Agent
+Documentation=file:///opt/aria/ARIA_APP/docs/ARIA_OS_NATIVE.md
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aria
+Group=aria
+WorkingDirectory=/opt/aria/ARIA_APP
+Environment=PYTHONUNBUFFERED=1
+Environment=OLLAMA_HOST=127.0.0.1:11434
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/aria/.Xauthority
+ExecStart=/opt/aria/venv/bin/python /opt/aria/ARIA_APP/aria_native.py
+Restart=on-failure
+RestartSec=5s
+StartLimitBurst=10
+StartLimitIntervalSec=60
+StandardOutput=journal
+StandardError=journal
+ReadWritePaths=/opt/aria /var/log/aria /home/aria
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=false
+PrivateTmp=true
+
+[Install]
+WantedBy=graphical-session.target

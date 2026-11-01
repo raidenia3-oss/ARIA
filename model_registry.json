@@ -1,0 +1,25 @@
+{
+  "models": {
+    "local-qwen": {
+      "path": "./models/qwen-0.5b",
+      "role": "light",
+      "device": "pc",
+      "version": "1.0.0",
+      "last_updated": 1791737814.5127366
+    },
+    "cloud-small": {
+      "path": "/app/models/qwen-0.5b",
+      "role": "small",
+      "device": "server",
+      "version": "1.0.0",
+      "last_updated": 1791737814.5127366
+    },
+    "m1": {
+      "path": "/tmp/m1",
+      "role": "user",
+      "device": "test_device",
+      "version": "1.0",
+      "last_updated": 1791778196.5449212
+    }
+  }
+}

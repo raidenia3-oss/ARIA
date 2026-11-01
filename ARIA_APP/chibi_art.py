@@ -75,7 +75,13 @@ def quitar_fondo(ruta_in, ruta_out):
     try:
         with Image.open(ruta_in) as im:
             im = _recortar_marca(im.convert("RGBA"))   # fuera el watermark
-            out = remove(im)                            # segmenta al personaje
+            try:
+                out = remove(im)
+            except TypeError:
+                import io
+                buf = io.BytesIO()
+                im.save(buf, format="PNG")
+                out = remove(buf.getvalue())                            # segmenta al personaje
         out.save(ruta_out)
         return {"ok": True, "ruta": ruta_out}
     except Exception as exc:
@@ -100,9 +106,18 @@ def generar_sheet(tema="cyberpunk", size=256, estilo_extra="", pausa=16):
     for i, (estado, pose) in enumerate(POSES):
         prompt = PROMPT_BASE + ", " + pose + ((", " + estilo_extra) if estilo_extra else "")
         jpg = os.path.join(tmp, "%s.jpg" % estado)
-        r = gen_imagen.generar(prompt, w=size, h=size, archivo=jpg, seed=1000 + i)
-        if not r.get("ok"):
-            return {"error": "pose '%s': %s" % (estado, r.get("error"))}
+        r = None
+        for intento in range(6):
+            r = gen_imagen.generar(prompt, w=size, h=size, archivo=jpg, seed=1000 + i + intento*17)
+            if r.get("ok"):
+                break
+            err = str(r.get("error", ""))
+            if "503" in err or "429" in err or "402" in err:
+                time.sleep(pausa + 30*intento)
+                continue
+            break
+        if not r or not r.get("ok"):
+            return {"error": "pose '%s': %s" % (estado, r.get("error") if r else "?")}
         png = os.path.join(tmp, "%s.png" % estado)
         qf = quitar_fondo(jpg, png)
         if not qf.get("ok"):
@@ -114,7 +129,7 @@ def generar_sheet(tema="cyberpunk", size=256, estilo_extra="", pausa=16):
             cell = cv2.resize(cell, (size, size))
         filas.append((estado, cell))
         if i < len(POSES) - 1 and pausa:
-            time.sleep(pausa)   # respetar el limite del tier gratis
+            time.sleep(pausa + 20)   # respetar el limite del tier gratis
 
     # armar sheet vertical: 1 columna x N filas
     canvas = np.zeros((size * len(filas), size, 4), dtype=np.uint8)

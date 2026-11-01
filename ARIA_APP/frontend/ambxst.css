@@ -1,0 +1,153 @@
+﻿:root {
+  --ambxst-bg-1: radial-gradient(1200px 800px at 20% 10%, rgba(120, 90, 160, 0.18), transparent 60%),
+                  radial-gradient(1000px 700px at 80% 90%, rgba(90, 140, 200, 0.14), transparent 65%),
+                  radial-gradient(900px 600px at 50% 50%, rgba(160, 110, 140, 0.10), transparent 70%);
+  --ambxst-glass-bg: rgba(20, 18, 26, 0.55);
+  --ambxst-glass-bg-light: rgba(255, 255, 255, 0.55);
+  --ambxst-border: rgba(255, 255, 255, 0.10);
+  --ambxst-border-light: rgba(20, 18, 26, 0.10);
+  --ambxst-blur: 16px;
+  --ambxst-radius: 12px;
+  --ambxst-radius-lg: 16px;
+  --ambxst-shadow: 0 10px 40px -10px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02) inset;
+}
+
+[data-theme="ambxst-dark"], :root:not([data-theme]) {
+  color-scheme: dark;
+}
+
+[data-theme="ambxst-light"] {
+  color-scheme: light;
+  --ambxst-glass-bg: var(--ambxst-glass-bg-light);
+  --ambxst-border: var(--ambxst-border-light);
+  --ambxst-shadow: 0 10px 40px -12px rgba(40,30,60,0.25), 0 0 0 1px rgba(20,18,26,0.04) inset;
+}
+
+html, body {
+  background: #0f0d14;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: var(--ambxst-bg-1), radial-gradient(1400px 900px at 50% 0%, rgba(150,120,200,0.12), transparent 70%);
+  background-color: #0f0d14;
+  filter: saturate(1.08);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  mix-blend-mode: overlay;
+}
+
+.ambxst-bg-custom {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.9) saturate(1.05);
+}
+
+.app-container,
+.hud-root,
+.aria-container {
+  background: transparent !important;
+}
+
+.glass-panel,
+.panel,
+.sidebar,
+.chat-panel,
+.controls-panel,
+.nucleus-panel,
+.theme-panel,
+.command-palette,
+.modal,
+.card {
+  background: var(--ambxst-glass-bg) !important;
+  backdrop-filter: blur(var(--ambxst-blur)) saturate(1.12);
+  -webkit-backdrop-filter: blur(var(--ambxst-blur)) saturate(1.12);
+  border: 1px solid var(--ambxst-border) !important;
+  border-radius: var(--ambxst-radius) !important;
+  box-shadow: var(--ambxst-shadow) !important;
+}
+
+.glass-panel-lg {
+  border-radius: var(--ambxst-radius-lg) !important;
+}
+
+.btn,
+button,
+.pill,
+.chip {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--ambxst-border);
+  border-radius: 10px;
+}
+
+.btn:hover,
+button:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+input,
+textarea,
+select {
+  background: rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--ambxst-border) !important;
+  border-radius: 10px !important;
+}
+
+.orb-container,
+.aria-orb,
+.orb {
+  filter: drop-shadow(0 20px 60px rgba(140,110,200,0.25));
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+
+.ambxst-bg-custom { position: fixed; inset: 0; z-index: -3; background-repeat: no-repeat; transition: opacity .8s ease; will-change: transform; }
+
+.ambxst-bg-overlay { position: fixed; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(1200px 800px at 50% 0%, rgba(10,8,16,0.10), rgba(10,8,16,0.40) 70%); }
+
+@keyframes ambxst-fade { 0%{opacity:.85} 50%{opacity:1} 100%{opacity:.85} }
+
+@keyframes ambxst-kenburns { 0%{transform:scale(1);} 50%{transform:scale(1.04);} 100%{transform:scale(1);} }
+
+@keyframes ambxst-zoom { 0%{transform:scale(1);} 100%{transform:scale(1.06);} }
+
+.ambxst-anim-fade { animation: ambxst-fade 18s ease-in-out infinite; }
+
+.ambxst-anim-kenburns { animation: ambxst-kenburns 24s ease-in-out infinite; }
+
+.ambxst-anim-zoom { animation: ambxst-zoom 20s ease-in-out forwards; }
+

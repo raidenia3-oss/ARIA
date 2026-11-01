@@ -1,0 +1,19 @@
+{
+  "name": "aria-minecraft",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Adaptador de Minecraft para el runtime autónomo de ARIA",
+  "main": "src/index.mjs",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "check": "node --check src/index.mjs && node --check src/runtime.mjs",
+    "test": "node --test src/runtime.test.mjs"
+  },
+  "dependencies": {
+    "mineflayer": "^4.25.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

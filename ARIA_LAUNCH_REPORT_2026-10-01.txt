@@ -1,0 +1,108 @@
+═══════════════════════════════════════════════════════════════════
+ARIA v6 LAUNCH REPORT — 2026-10-01 (datos reales, sin inventar)
+═══════════════════════════════════════════════════════════════════
+
+1. STATIC CHECKS
+   cargo check --lib: PASSED (0 errores; 18 warnings preexistentes: orb.rs,
+     daemon.rs `mut` innecesario, chat.rs dead_code — ninguno de child_env)
+   pytest (focused, test_agent_roles + test_agent_completion_tracking):
+     27 passed in 71.80s (15 roles + 12 completion, 0 failed)
+     [log: /tmp/py_focused.log — "27 passed in 71.80s (0:01:11)"]
+   Rust refactor aplicado: YES (rebuild_env + sanitize vía as_std_mut +
+     test rebuild_env_drops_secrets_from_the_real_builder)
+
+2. REFACTOR RESULTS (child_env.rs)
+   cargo test child_env --lib: 4 passed, 0 failed
+     - secrets_are_never_forwarded ... ok
+     - allowlist_has_no_duplicates ... ok
+     - sanitized_child_still_runs ... ok
+     - rebuild_env_drops_secrets_from_the_real_builder ... ok
+   Fix intermedio necesario (reportado, no oculto):
+     - sanitize() con cmd.as_std() → E0308 (mutability); fix: as_std_mut()
+     - asserts del test nuevo con k == "str" → E0277 (&OsStr); fix: *k ==
+   Nota: el brief pedía "Expect 2 tests pass" — hay 4 porque el
+     sanitized_child_still_runs previo se conservó.
+
+3. SERVER STARTUP
+   Axum (cargo run --release, puerto 8002): NOT RUN a foreground estable.
+     El build --release quedó compilando (log /tmp/axum_startup.log sólo
+     muestra warnings de compilación, nunca "listening on"). No hay listener
+     en 8002 (curl vacío). Causa probable: toolchain MSVC/link lento en
+     --release + wgpu/winit. cargo check/test (debug) sí compilan bien.
+   FastAPI (backend/main.py, puerto 8000 — NO 8001): FAILED al arrancar.
+     Sin PYTHONPATH: ModuleNotFoundError: No module named 'backend'.
+     Con PYTHONPATH=C:/Users/User/Downloads/AURA: levanta imports (Vosk
+     warning, sentence-transformers, HF Hub, offline queue OK) pero muere en:
+     pydantic.errors.PydanticUndefinedAnnotation:
+       name 'GesturePredictRequest' is not defined
+     (log: /tmp/fastapi2.log, traceback completo al final del archivo).
+     El brief asumía FastAPI en 8001 — el código dice PORT default 8000
+     (backend/main.py:3194) y PROMETHEUS_PORT 8001. Puerto 8001 del brief
+     es el exporter de métricas, no la API.
+
+4. ENDPOINT TESTS
+   GET /health (Axum 8002): NOT TESTED (sin servidor Axum en pie)
+   GET /api/agents/status (Axum 8002): NOT TESTED (sin servidor)
+   GET /api/agents/status (FastAPI): NOT TESTED (FastAPI no arrancó;
+     además la ruta existe sólo en Axum agents.rs:63, no verificada en
+     backend/main.py para ese path exacto)
+   GET /health (FastAPI 8000): FAILED (conexión rechazada — sin servidor)
+   Rutas verificadas EN CÓDIGO (no por curl):
+     - Axum: /health y /api/system/health (core.rs:27-29),
+       /api/agents/status (agents.rs:63). /api/swarm/roles NO existe.
+     - FastAPI: /health y /api/health (main.py:618-619, 896).
+
+5. DATABASE
+   Accessible: YES (sqlite3 directo sobre aura.db)
+   Tables (30): chat_history, neural_state, semantic_memory, users,
+     service_status, log_entries, training_jobs, conversations,
+     system_prompts, messages, stories, story_scenes, fanfic_drafts,
+     analytics_events, analytics_anomalies, analytics_metric_snapshots,
+     api_keys, security_events, devices, distributed_tasks, generated_apps,
+     model_metadata, ab_tests, datasets, sessions, memories,
+     sqlite_sequence, tasks, events, setup_runs
+
+6. INTEGRATION TESTS
+   test_agent_roles.py: 15/15 passed (dentro de los 27)
+   test_agent_completion_tracking.py: 12/12 passed (dentro de los 27;
+     incluye el fix del docstring con literales 9.5/0.92)
+   tests/ completo: NOT RUN verde — 12 errores de colección PREEXISTENTES
+     (11× prometheus DuplicateTimeseries, 1× pydantic GesturePredictRequest,
+     FileNotFoundError test_comprehensive). Misma causa raíz que §3.
+
+7. CRITICAL ISSUES
+   a) `GesturePredictRequest` no definido rompe backend/main.py entero
+      (import-time, mismo error que tumba tests/integration/test_backend_api
+      en colección). Es EL bloqueante: sin esto no hay FastAPI ni suite
+      completa. Preexistente, no de este lote.
+   b) Axum --release no terminó de compilar en la ventana de observación.
+      Reintentar con `cargo run` (debug) o esperar más.
+   c) Puertos del brief (FastAPI 8001) no coinciden con el código
+      (API 8000, Prometheus 8001, Axum 8002).
+
+8. WORKING
+   ✓ child_env refactor compila y 4/4 tests Rust pasan
+   ✓ 27/27 tests Python focused pasan (roles + completion tracking)
+   ✓ v5 typecheck limpio (tsc --noEmit, sesión previa)
+   ✓ DB accesible con 30 tablas
+   ✓ Rutas Axum verificadas en código
+
+9. NOT WORKING
+   ✗ FastAPI no arranca (PydanticUndefinedAnnotation: GesturePredictRequest)
+   ✗ Axum sin listener 8002 en ventana observada (build release lento)
+   ✗ Endpoints por curl: ninguno verificado vivo
+   ✗ tests/ completo: 12 errores de colección preexistentes
+
+10. NEXT STEPS
+    1. Arreglar GesturePredictRequest (grep en backend/, definir o quitar
+       la referencia) — desbloquea FastAPI + suite completa.
+    2. Lanzar Axum en debug (`cargo run`, no --release) y reintentar curl
+       8002/health + /api/agents/status.
+    3. Reintentar FastAPI con PYTHONPATH=. y curl 8000/health.
+    4. Dedup prometheus registry en tests (fixture que resetee CollectorRegistry).
+
+OBLIGATORIO DEL BRIEF:
+- tests/test_env_clear_runtime.py: BORRADO (rm confirmado: "cannot access"
+  al listar). El brief lo pedía antes del pytest focused — orden real:
+  se borró DESPUÉS de haberlo creado y verificado 3/3 en sesión previa.
+- Commits: NINGUNO en esta sesión.

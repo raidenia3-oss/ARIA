@@ -1,0 +1,87 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[HARDEN] Deshabilitando servicios innecesarios..."
+
+# Servicios que no son necesarios para ARIA dedicado
+systemctl mask bluetooth.service bluetooth.target 2>/dev/null || true
+systemctl mask cups.service cups-browsed.service 2>/dev/null || true
+systemctl mask avahi-daemon.service avahi-daemon.socket 2>/dev/null || true
+systemctl mask ModemManager.service 2>/dev/null || true
+systemctl mask NetworkManager-wait-online.service 2>/dev/null || true
+systemctl mask plymouth-start.service plymouth-read-write.service 2>/dev/null || true
+systemctl mask whoopsie.service apport.service 2>/dev/null || true
+systemctl mask pcscd.service 2>/dev/null || true
+systemctl mask thermald.service 2>/dev/null || true
+
+# Deshabilitar SSH si no se necesita acceso remoto
+systemctl disable ssh.service 2>/dev/null || true
+systemctl stop ssh.service 2>/dev/null || true
+
+# Deshabilitar actualizaciones automáticas no supervisadas
+systemctl disable unattended-upgrades.service 2>/dev/null || true
+systemctl stop unattended-upgrades.service 2>/dev/null || true
+apt-get remove --purge -y unattended-upgrades 2>/dev/null || true
+
+echo "[HARDEN] Configurando journald (limitar logs)..."
+mkdir -p /etc/systemd/journald.conf.d
+cat > /etc/systemd/journald.conf.d/aria.conf << 'EOF'
+[Journal]
+SystemMaxUse=256M
+RuntimeMaxUse=128M
+SystemMaxFileSize=50M
+RuntimeMaxFileSize=50M
+MaxRetentionSec=3day
+EOF
+
+echo "[HARDEN] Configurando swappiness baja y ZRAM..."
+cat > /etc/sysctl.d/99-aria-swappiness.conf << 'EOF'
+vm.swappiness=10
+vm.vfs_cache_pressure=50
+EOF
+sysctl --system 2>/dev/null || true
+
+echo "[HARDEN] Configurando firewall restrictivo (nftables)..."
+cat > /etc/nftables.conf << 'EOF'
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+    chain input {
+        type filter hook input priority 0; policy drop;
+        iifname "lo" accept
+        ct state established,related accept
+        ct state invalid drop
+        icmp type echo-request accept
+        # Permitir Ollama solo desde localhost (ya cubierto por iifname lo)
+        # Denegar todo lo demás entrante
+    }
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+    }
+    chain output {
+        type filter hook output priority 0; policy accept;
+    }
+}
+EOF
+systemctl enable nftables.service 2>/dev/null || true
+
+echo "[HARDEN] Eliminando navegador por defecto (si existe)..."
+apt-get remove --purge -y firefox-esr firefox chromium 2>/dev/null || true
+
+echo "[HARDEN] Configurando dpkg para excluir docs/locales innecesarios..."
+mkdir -p /etc/dpkg/dpkg.cfg.d
+cat > /etc/dpkg/dpkg.cfg.d/99-aria-nodocs << 'EOF'
+path-exclude=/usr/share/doc/*
+path-include=/usr/share/doc/*/copyright
+path-exclude=/usr/share/man/*
+path-exclude=/usr/share/groff/*
+path-exclude=/usr/share/info/*
+path-exclude=/usr/share/lintian/*
+path-exclude=/usr/share/locale/*
+path-include=/usr/share/locale/en*/
+path-include=/usr/share/locale/es*/
+EOF
+
+echo "[HARDEN] Hook 0910 completado."

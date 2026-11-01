@@ -1,0 +1,52 @@
+#!/bin/bash
+set -euo pipefail
+
+echo "[ARIA] Instalando Ollama..."
+if ! command -v ollama >/dev/null 2>&1; then
+    curl -fsSL https://ollama.com/install.sh | sh
+fi
+
+echo "[ARIA] Creando usuario aria..."
+if ! id aria >/dev/null 2>&1; then
+    useradd -m -s /bin/bash aria
+    usermod -aG audio,video,render,plugdev,dialout aria
+fi
+
+echo "[ARIA] Creando estructura /opt/aria..."
+mkdir -p /opt/aria /var/log/aria /home/aria/.config/autostart
+chown -R aria:aria /opt/aria /var/log/aria /home/aria
+
+echo "[ARIA] Copiando proyecto AURA a /opt/aria (si existe en includes.chroot)..."
+if [ -d /opt/aria-build/AURA ]; then
+    rsync -aHAX /opt/aria-build/AURA/ /opt/aria/
+    chown -R aria:aria /opt/aria
+elif [ -d /opt/aria/ARIA_APP ]; then
+    chown -R aria:aria /opt/aria
+fi
+
+echo "[ARIA] Creando venv Python e instalando dependencias..."
+if [ -d /opt/aria/ARIA_APP ]; then
+    cd /opt/aria/ARIA_APP
+    python3 -m venv /opt/aria/venv
+    /opt/aria/venv/bin/pip install --upgrade pip
+    /opt/aria/venv/bin/pip install python-dotenv
+    if [ -f requirements.txt ]; then
+        /opt/aria/venv/bin/pip install -r requirements.txt || true
+    fi
+fi
+
+echo "[ARIA] Iniciando Ollama para precargar modelo (si está disponible)..."
+if command -v ollama >/dev/null 2>&1; then
+    ollama serve &
+    OLLAMA_PID=$!
+    sleep 8
+    ollama pull granite3.2-vision:2b 2>/dev/null || true
+    kill $OLLAMA_PID 2>/dev/null || true
+    pkill ollama 2>/dev/null || true
+fi
+
+echo "[ARIA] Limpieza de caché APT..."
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+
+echo "[ARIA] Hook 0900 completado."

@@ -1,0 +1,77 @@
+# === ARIA OS Kali — Paquetes mínimos ===
+# Entorno ligero (XFCE, sin metapaquetes pesados de Kali)
+xfce4
+xfce4-terminal
+lightdm
+lightdm-gtk-greeter
+network-manager
+dbus
+systemd
+systemd-resolved
+util-linux
+e2fsprogs
+polkitd
+policykit-1
+ca-certificates
+gnupg
+curl
+wget
+git
+rsync
+unzip
+tar
+xz-utils
+zip
+vim-nox
+htop
+iotop
+ncdu
+screen
+tmux
+
+# Python + PyQt5 + ARIA dependencias
+python3
+python3-venv
+python3-pip
+python3-pyqt5
+python3-pyqt5.qtsvg
+python3-dotenv
+
+# Herramientas de red / seguridad (Kali, selectivo)
+nmap
+tcpdump
+macchanger
+tor
+proxychains
+iw
+iwlist
+wireless-tools
+whois
+dnsutils
+iproute2
+netcat-openbsd
+socat
+curl
+wget
+jq
+
+# Acceso a hardware (raw sockets, audio, video para PyQt5/Ollama)
+alsa-utils
+pulseaudio
+pipewire
+pipewire-alsa
+xserver-xorg
+xinit
+xdotool
+wmctrl
+x11-xserver-utils
+mesa-utils
+
+# Utilidades del sistema
+ufw
+nftables
+zram-tools
+cryptsetup
+lvm2
+
+# Limpieza (no instalar docs/man innecesarios)

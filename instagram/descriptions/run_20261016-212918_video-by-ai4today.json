@@ -1,0 +1,535 @@
+{
+  "status": "ok",
+  "skill": "instagram_video",
+  "url": "https://www.instagram.com/reel/DeZkPWuBPCR/?xtok=Z2FkZnppNHprOTlt",
+  "timestamp": 1792204072.8667035,
+  "method": "no-download",
+  "ytdlp_meta": {
+    "id": "DeZkPWuBPCR",
+    "title": "Video by ai4today",
+    "description": "What if multiple internet connections could work together to download one file?\n\nMeet Plexo, an open-source download manager that splits files into chunks and downloads them in parallel across independent connections.\n\nFor example, it can use your Wi-Fi and a USB-tethered phone connection at the same time to potentially boost download speeds.\n\nFollow @ai4today for more tech, breakthroughs, and innovation driving the AI revolution.\n\n🔗 GitHub: \nhttps://github.com/anmolkapil/plexo\n\n#AI #OpenSource #Internet #DownloadManager #Innovation",
+    "channel": "ai4today",
+    "uploader_id": "14351729857",
+    "uploader": "AI for Today",
+    "timestamp": 1791819273,
+    "like_count": 3937,
+    "comment_count": 169,
+    "http_headers": {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language": "en-us,en;q=0.5",
+      "Sec-Fetch-Mode": "navigate",
+      "Referer": "https://www.instagram.com/"
+    },
+    "formats": [
+      {
+        "format_id": "dash-1766253437920509a",
+        "manifest_url": null,
+        "ext": "m4a",
+        "width": null,
+        "height": null,
+        "tbr": 64.757,
+        "asr": 44100,
+        "fps": null,
+        "language": null,
+        "format_note": "DASH audio",
+        "filesize": null,
+        "container": "m4a_dash",
+        "vcodec": "none",
+        "acodec": "mp4a.40.5",
+        "dynamic_range": null,
+        "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m78/AQP3hNrCp2Ciebjvxx1jcoYF6BbWh6cUjAXD1TqKR3aeGT6qKiuEfQedhuZ4gdvHhiSp8pwZiyWVHUBfeElgg9lr9gpQuw4FdUBdm5s.mp4?_nc_cat=100&_nc_sid=9ca052&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=S_4u9t2GE3AQ7kNvwHFWgIU&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmlnd3d3LUMzLmRhc2hfbG5faGVhYWNfdmJyM19hdWRpbyIsInZpZGVvX2lkIjpudWxsLCJvaWxfdXJsZ2VuX2FwcF9pZCI6OTM2NjE5NzQzMzkyNDU5LCJjbGllbnRfbmFtZSI6ImlnIiwieHB2X2Fzc2V0X2lkIjoxNzY2MjUzMjkxMjUzODU3LCJhc3NldF9hZ2VfZGF5cyI6NCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjIzLCJiaXRyYXRlIjo2NTA5OCwidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQMBLmrnCOaiXHhPvqr3GmgQPNS41oDCCiz_sBzafa87hg&oe=6AD4B079",
+        "manifest_stream_number": 0,
+        "is_dash_periods": true,
+        "protocol": "https",
+        "audio_ext": "m4a",
+        "video_ext": "none",
+        "vbr": 0,
+        "abr": 64.757,
+        "resolution": "audio only",
+        "aspect_ratio": null,
+        "filesize_approx": null,
+        "http_headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-us,en;q=0.5",
+          "Sec-Fetch-Mode": "navigate",
+          "Referer": "https://www.instagram.com/"
+        },
+        "format": "dash-1766253437920509a - audio only (DASH audio)"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m86/AQNO9ra_W-x-FpuunKzV1AqiLm_ZEubPdQWiub0TgNFQfJP08oE9X4XEWCh8ejF2EXubfAs27guBZ3gX8QgeqmL0cv1nJOHC6HEYp_g.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=xbjGrU48s1oQ7kNvwFsullt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc2NjI1MzI5MTI1Mzg1NywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=ef8ea17f1ab8d543&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84REUxQTVFOEExRjg0RkYxQUQ4QjA3MEU1OEFDRkFBRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNjgxNjQ3RTM0QTQ4MEY5RTk5NjMxNEMyREJBMjBBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCwZHAvJmjBhUCKAJDMywXQDdEGJN0vGoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPWFyK1yeqaMCO-hMOrsju3TXpBtBf8ou0bH1MBOas_vw&oe=6AD4D16A",
+        "protocol": "https",
+        "ext": "mp4",
+        "video_ext": "mp4",
+        "audio_ext": "none",
+        "vbr": null,
+        "abr": null,
+        "tbr": null,
+        "resolution": null,
+        "dynamic_range": "SDR",
+        "aspect_ratio": null,
+        "filesize_approx": null,
+        "http_headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-us,en;q=0.5",
+          "Sec-Fetch-Mode": "navigate",
+          "Referer": "https://www.instagram.com/"
+        },
+        "format_id": "1",
+        "format": "1 - unknown"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m86/AQNO9ra_W-x-FpuunKzV1AqiLm_ZEubPdQWiub0TgNFQfJP08oE9X4XEWCh8ejF2EXubfAs27guBZ3gX8QgeqmL0cv1nJOHC6HEYp_g.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=xbjGrU48s1oQ7kNvwFsullt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc2NjI1MzI5MTI1Mzg1NywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=ef8ea17f1ab8d543&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84REUxQTVFOEExRjg0RkYxQUQ4QjA3MEU1OEFDRkFBRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNjgxNjQ3RTM0QTQ4MEY5RTk5NjMxNEMyREJBMjBBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCwZHAvJmjBhUCKAJDMywXQDdEGJN0vGoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPWFyK1yeqaMCO-hMOrsju3TXpBtBf8ou0bH1MBOas_vw&oe=6AD4D16A",
+        "protocol": "https",
+        "ext": "mp4",
+        "video_ext": "mp4",
+        "audio_ext": "none",
+        "vbr": null,
+        "abr": null,
+        "tbr": null,
+        "resolution": null,
+        "dynamic_range": "SDR",
+        "aspect_ratio": null,
+        "filesize_approx": null,
+        "http_headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-us,en;q=0.5",
+          "Sec-Fetch-Mode": "navigate",
+          "Referer": "https://www.instagram.com/"
+        },
+        "format_id": "2",
+        "format": "2 - unknown"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m86/AQNO9ra_W-x-FpuunKzV1AqiLm_ZEubPdQWiub0TgNFQfJP08oE9X4XEWCh8ejF2EXubfAs27guBZ3gX8QgeqmL0cv1nJOHC6HEYp_g.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=xbjGrU48s1oQ7kNvwFsullt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc2NjI1MzI5MTI1Mzg1NywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=ef8ea17f1ab8d543&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84REUxQTVFOEExRjg0RkYxQUQ4QjA3MEU1OEFDRkFBRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNjgxNjQ3RTM0QTQ4MEY5RTk5NjMxNEMyREJBMjBBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCwZHAvJmjBhUCKAJDMywXQDdEGJN0vGoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPWFyK1yeqaMCO-hMOrsju3TXpBtBf8ou0bH1MBOas_vw&oe=6AD4D16A",
+        "protocol": "https",
+        "ext": "mp4",
+        "video_ext": "mp4",
+        "audio_ext": "none",
+        "vbr": null,
+        "abr": null,
+        "tbr": null,
+        "resolution": null,
+        "dynamic_range": "SDR",
+        "aspect_ratio": null,
+        "filesize_approx": null,
+        "http_headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-us,en;q=0.5",
+          "Sec-Fetch-Mode": "navigate",
+          "Referer": "https://www.instagram.com/"
+        },
+        "format_id": "3",
+        "format": "3 - unknown"
+      },
+      {
+        "format_id": "dash-1766465224565997v",
+        "manifest_url": null,
+        "ext": "mp4",
+        "width": 720,
+        "height": 1280,
+        "tbr": 195.209,
+        "asr": null,
+        "fps": null,
+        "language": null,
+        "format_note": "DASH video",
+        "filesize": null,
+        "container": "mp4_dash",
+        "vcodec": "vp09.00.31.08.00.01.01.01.00",
+        "acodec": "none",
+        "dynamic_range": "SDR",
+        "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m367/AQNrWb8zIAmt1jPTx70Bm_tUS0A5-I9_8kCG5-6DWQU8dzL4KmBnl1YAvjYzfYlGTYwATrg2oXKqiYy9dxzGvQ8JzmiiGrjyNRF5Ugo.mp4?_nc_cat=110&_nc_sid=9ca052&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=zHlTErEm4lUQ7kNvwFl8RAk&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmlnd3d3LUMzLmRhc2hfcjJldmV2cDktcjFnZW4ydnA5X3E4MCIsInZpZGVvX2lkIjpudWxsLCJvaWxfdXJsZ2VuX2FwcF9pZCI6OTM2NjE5NzQzMzkyNDU5LCJjbGllbnRfbmFtZSI6ImlnIiwieHB2X2Fzc2V0X2lkIjoxNzY2MjUzMjkxMjUzODU3LCJhc3NldF9hZ2VfZGF5cyI6NCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjIzLCJiaXRyYXRlIjoxOTUyMDksInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQMg1YNwRkI1ZV5oTEHAvfJFoHs3d-054cQadYJaZqf5WA&oe=6AD8AB8F",
+        "manifest_stream_number": 0,
+        "is_dash_periods": true,
+        "protocol": "https",
+        "video_ext": "mp4",
+        "audio_ext": "none",
+        "abr": 0,
+        "vbr": 195.209,
+        "resolution": "720x1280",
+        "aspect_ratio": 0.56,
+        "filesize_approx": null,
+        "http_headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-us,en;q=0.5",
+          "Sec-Fetch-Mode": "navigate",
+          "Referer": "https://www.instagram.com/"
+        },
+        "format": "dash-1766465224565997v - 720x1280 (DASH video)"
+      },
+      {
+        "format_id": "dash-1766465227899330v",
+        "manifest_url": null,
+        "ext": "mp4",
+        "width": 1080,
+        "height": 1920,
+        "tbr": 270.811,
+        "asr": null,
+        "fps": null,
+        "language": null,
+        "format_note": "DASH video",
+        "filesize": null,
+        "container": "mp4_dash",
+        "vcodec": "vp09.00.40.08.00.01.01.01.00",
+        "acodec": "none",
+        "dynamic_range": "SDR",
+        "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m367/AQMg56ug-_0cQ2kFP2f1VST3ldusDobND_9j239olO28I1eJa8gADKP4n94NBD07D8n78F6mT1wOG0oX9ZmIb5oPEW3DN4CcropnbDI.mp4?_nc_cat=105&_nc_sid=9ca052&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=D752v73eKY0Q7kNvwEVW-Ls&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmlnd3d3LUMzLmRhc2hfcjJldmV2cDktcjFnZW4ydnA5X3E5MCIsInZpZGVvX2lkIjpudWxsLCJvaWxfdXJsZ2VuX2FwcF9pZCI6OTM2NjE5NzQzMzkyNDU5LCJjbGllbnRfbmFtZSI6ImlnIiwieHB2X2Fzc2V0X2lkIjoxNzY2MjUzMjkxMjUzODU3LCJhc3NldF9hZ2VfZGF5cyI6NCwidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjIzLCJiaXRyYXRlIjoyNzA4MTEsInVybGdlbl9zb3VyY2UiOiJ3d3cifQ%3D%3D&ccb=17-1&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPEVqDzACb-Xw4LZKJkHwZQ3J0qUf1qr1IS03Gs_z691A&oe=6AD8BD4A",
+        "manifest_stream_number": 0,
+        "is_dash_periods": true,
+        "protocol": "https",
+        "video_ext": "mp4",
+        "audio_ext": "none",
+        "abr": 0,
+        "vbr": 270.811,
+        "resolution": "1080x1920",
+        "aspect_ratio": 0.56,
+        "filesize_approx": null,
+        "http_headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-us,en;q=0.5",
+          "Sec-Fetch-Mode": "navigate",
+          "Referer": "https://www.instagram.com/"
+        },
+        "format": "dash-1766465227899330v - 1080x1920 (DASH video)"
+      },
+      {
+        "format_id": "dash-1766464477899405v",
+        "manifest_url": null,
+        "ext": "mp4",
+        "width": 1080,
+        "height": 1920,
+        "tbr": 327.043,
+        "asr": null,
+        "fps": null,
+        "language": null,
+        "format_note": "DASH video",
+        "filesize": null,
+        "container": "mp4_dash",
+        "vcodec": "vp09.00.40.08.00.01.01.01.00",
+        "acodec": "none",
+        "dynamic_range": "SDR",
+        "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m367/AQPNnLOmf7Xowb0LmFfDx0L2VVPXzqTcy9s5YJ_1Ts7bJ_MpZMyAik_r6lh8gOu7Mxap90BdUOf0LoaadclKgYlop1osCG-inHMfSDo.mp4?_nc_cat=102&_nc_sid=9ca052&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=yMIhPwVBKRUQ7kNvwEpACmi&efg=eyJ2ZW5jb2RlX3RhZyI6ImlnLXhwdmRzLmNsaXBzLmlnd3d3LUMzLmRhc2hfcjJldmV2cDktcjFnZW4ydnA5LWhmcl9xOTAiLCJ2aWRlb19pZCI6bnVsbCwib2lsX3VybGdlbl9hcHBfaWQiOjkzNjYxOTc0MzM5MjQ1OSwiY2xpZW50X25hbWUiOiJpZyIsInhwdl9hc3NldF9pZCI6MTc2NjI1MzI5MTI1Mzg1NywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMywiYml0cmF0ZSI6MzI3MDQzLCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPO2DKqJe2pTDkV_jow9phlqjSNczd9fooWFfuSn-qH6Q&oe=6AD8B6D3",
+        "manifest_stream_number": 0,
+        "is_dash_periods": true,
+        "protocol": "https",
+        "video_ext": "mp4",
+        "audio_ext": "none",
+        "abr": 0,
+        "vbr": 327.043,
+        "resolution": "1080x1920",
+        "aspect_ratio": 0.56,
+        "filesize_approx": null,
+        "http_headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-us,en;q=0.5",
+          "Sec-Fetch-Mode": "navigate",
+          "Referer": "https://www.instagram.com/"
+        },
+        "format": "dash-1766464477899405v - 1080x1920 (DASH video)"
+      }
+    ],
+    "thumbnails": [
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=c0.248.640.640a_dst-jpg_e15_s150x150_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQOnvvUgP3OVabo2YgTycpz2xIrHuF__yJ5PRroVX_3QJA&oe=6AD89BE7",
+        "width": 150,
+        "height": 150,
+        "id": "0",
+        "resolution": "150x150"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=c0.248.640.640a_dst-jpg_e15_s240x240_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQPfusb8PTif2r9l_G2sk3iuw-pLtjnvxxDjNr1bGeHPmQ&oe=6AD89BE7",
+        "width": 240,
+        "height": 240,
+        "id": "1",
+        "resolution": "240x240"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=dst-jpg_e15_p240x240_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQP4i3zMwT5i3514qbpWdHFnRxnyAsRNoRdQZagA4KvUKw&oe=6AD89BE7",
+        "width": 240,
+        "height": 426,
+        "id": "2",
+        "resolution": "240x426"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=c0.248.640.640a_dst-jpg_e15_s320x320_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQO4V0Akb5V3fWzJaPWmAIr21JheLaz2q6q3oQVrxxb_iQ&oe=6AD89BE7",
+        "width": 320,
+        "height": 320,
+        "id": "3",
+        "resolution": "320x320"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=dst-jpg_e15_p320x320_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQN2zz1cyhFC7dWNLhvNu0qwwWXIMji9uL_fLTbJbVyqpQ&oe=6AD89BE7",
+        "width": 320,
+        "height": 568,
+        "id": "4",
+        "resolution": "320x568"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=c0.248.640.640a_dst-jpg_e15_s480x480_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQPY_qqGBL3OaGmEMKnTr3zz42blxVdhfO1EeIH8du7XaQ&oe=6AD89BE7",
+        "width": 480,
+        "height": 480,
+        "id": "5",
+        "resolution": "480x480"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=dst-jpg_e15_p480x480_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQPfWZAqVHjuGNldvfdlGdJA_xdRucTaqNU1gLDxUCl_tA&oe=6AD89BE7",
+        "width": 480,
+        "height": 852,
+        "id": "6",
+        "resolution": "480x852"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=c0.248.640.640a_dst-jpg_e15_s640x639_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQO5DnRGVmUtXk5ACS3VXEjjJGspX4rP57cUiQ-O89WedQ&oe=6AD89BE7",
+        "width": 640,
+        "height": 640,
+        "id": "7",
+        "resolution": "640x640"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=c0.248.640.640a_dst-jpg_e15_s640x639_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQO5DnRGVmUtXk5ACS3VXEjjJGspX4rP57cUiQ-O89WedQ&oe=6AD89BE7",
+        "width": 640,
+        "height": 640,
+        "id": "8",
+        "resolution": "640x640"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=c0.248.640.640a_dst-jpg_e15_s640x639_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQO5DnRGVmUtXk5ACS3VXEjjJGspX4rP57cUiQ-O89WedQ&oe=6AD89BE7",
+        "width": 640,
+        "height": 640,
+        "id": "9",
+        "resolution": "640x640"
+      },
+      {
+        "url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQP8IEOHwGZuNOq6IWo_g1krqpxDC55rEDcBX8Bx_Psomw&oe=6AD89BE7",
+        "width": 640,
+        "height": 1136,
+        "id": "10",
+        "resolution": "640x1136"
+      }
+    ],
+    "comments": [
+      {
+        "author": "matyfrimmel_1212",
+        "author_id": "66408473882",
+        "id": "18134630626680525",
+        "text": "So Hamachi?",
+        "timestamp": 1792132946,
+        "like_count": 0
+      },
+      {
+        "author": "shaheer_syed016",
+        "author_id": "69623582745",
+        "id": "18074787647739279",
+        "text": "Link",
+        "timestamp": 1792090158,
+        "like_count": 0
+      },
+      {
+        "author": "cat09542",
+        "author_id": "74611264413",
+        "id": "17898768963672451",
+        "text": "🙌",
+        "timestamp": 1792056653,
+        "like_count": 0
+      },
+      {
+        "author": "im_grahp3110",
+        "author_id": "5524303415",
+        "id": "18059932718547944",
+        "text": "🙌",
+        "timestamp": 1791987150,
+        "like_count": 0
+      },
+      {
+        "author": "iuvenis.deus",
+        "author_id": "4692529618",
+        "id": "18012115217966887",
+        "text": "Soooo.... that guy invented multiwan in 2026, good but Cisco did that in 2003",
+        "timestamp": 1791969199,
+        "like_count": 0
+      },
+      {
+        "author": "_i.nayan_",
+        "author_id": "44000405926",
+        "id": "17899977978671837",
+        "text": "Does it works only for download purpose?? Or works for uploading too",
+        "timestamp": 1791953110,
+        "like_count": 0
+      },
+      {
+        "author": "ahmadnurrochimm",
+        "author_id": "5434809282",
+        "id": "17907087447586876",
+        "text": "Mikrotik?",
+        "timestamp": 1791938084,
+        "like_count": 0
+      },
+      {
+        "author": "siribraheem333",
+        "author_id": "75432769764",
+        "id": "18018551198934072",
+        "text": "lol, you are getting 58+mb/s wtf😂, and it was existing more than a years ago.",
+        "timestamp": 1791937269,
+        "like_count": 0
+      },
+      {
+        "author": "_.ashutos_.ashu._",
+        "author_id": "5171923496",
+        "id": "17971091580174587",
+        "text": "🙌",
+        "timestamp": 1791920687,
+        "like_count": 0
+      },
+      {
+        "author": "pengawal_keselamatan",
+        "author_id": "2304188149",
+        "id": "17935778724396413",
+        "text": "old thing",
+        "timestamp": 1791914340,
+        "like_count": 0
+      },
+      {
+        "author": "rakibul84548",
+        "author_id": "53626496685",
+        "id": "17882002071626943",
+        "text": "need app setup video",
+        "timestamp": 1791908393,
+        "like_count": 0
+      },
+      {
+        "author": "_naohoan_",
+        "author_id": "10242188911",
+        "id": "18188813374409001",
+        "text": "8gb/s + 2gb/s 😂😂😂 ça va piquer",
+        "timestamp": 1791907639,
+        "like_count": 0
+      },
+      {
+        "author": "kimi_no_baka____",
+        "author_id": "11886947240",
+        "id": "18029042753887200",
+        "text": "🙌",
+        "timestamp": 1791907333,
+        "like_count": 0
+      },
+      {
+        "author": "dipomsaha",
+        "author_id": "8084333013",
+        "id": "18118932506287374",
+        "text": "Yeah heard of it like a month ago ... Really cool app works like a charm ... JioFiber + 1st Jio5G U... + 2nd Jio5G = 800mbps guaranteed... For my area atleast...",
+        "timestamp": 1791904163,
+        "like_count": 0
+      },
+      {
+        "author": "atlastwegotaditya",
+        "author_id": "37471137916",
+        "id": "18117291670791828",
+        "text": "❤️❤️",
+        "timestamp": 1791903624,
+        "like_count": 0
+      }
+    ],
+    "webpage_url": "https://www.instagram.com/reel/DeZkPWuBPCR/?xtok=Z2FkZnppNHprOTlt",
+    "original_url": "https://www.instagram.com/reel/DeZkPWuBPCR/?xtok=Z2FkZnppNHprOTlt",
+    "webpage_url_basename": "DeZkPWuBPCR",
+    "webpage_url_domain": "instagram.com",
+    "extractor": "Instagram",
+    "extractor_key": "Instagram",
+    "playlist": null,
+    "playlist_index": null,
+    "thumbnail": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQP8IEOHwGZuNOq6IWo_g1krqpxDC55rEDcBX8Bx_Psomw&oe=6AD89BE7",
+    "display_id": "DeZkPWuBPCR",
+    "fulltitle": "Video by ai4today",
+    "upload_date": "20261012",
+    "release_year": null,
+    "requested_subtitles": null,
+    "_has_drm": null,
+    "epoch": 1792204081,
+    "requested_downloads": [
+      {
+        "http_headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-us,en;q=0.5",
+          "Sec-Fetch-Mode": "navigate",
+          "Referer": "https://www.instagram.com/"
+        },
+        "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m86/AQNO9ra_W-x-FpuunKzV1AqiLm_ZEubPdQWiub0TgNFQfJP08oE9X4XEWCh8ejF2EXubfAs27guBZ3gX8QgeqmL0cv1nJOHC6HEYp_g.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=xbjGrU48s1oQ7kNvwFsullt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc2NjI1MzI5MTI1Mzg1NywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=ef8ea17f1ab8d543&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84REUxQTVFOEExRjg0RkYxQUQ4QjA3MEU1OEFDRkFBRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNjgxNjQ3RTM0QTQ4MEY5RTk5NjMxNEMyREJBMjBBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCwZHAvJmjBhUCKAJDMywXQDdEGJN0vGoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPWFyK1yeqaMCO-hMOrsju3TXpBtBf8ou0bH1MBOas_vw&oe=6AD4D16A",
+        "protocol": "https",
+        "ext": "mp4",
+        "video_ext": "mp4",
+        "audio_ext": "none",
+        "dynamic_range": "SDR",
+        "format_id": "3",
+        "format": "3 - unknown",
+        "_filename": "Video by ai4today [DeZkPWuBPCR].mp4",
+        "filename": "Video by ai4today [DeZkPWuBPCR].mp4",
+        "__write_download_archive": false
+      }
+    ],
+    "url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m86/AQNO9ra_W-x-FpuunKzV1AqiLm_ZEubPdQWiub0TgNFQfJP08oE9X4XEWCh8ejF2EXubfAs27guBZ3gX8QgeqmL0cv1nJOHC6HEYp_g.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=xbjGrU48s1oQ7kNvwFsullt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc2NjI1MzI5MTI1Mzg1NywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=ef8ea17f1ab8d543&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84REUxQTVFOEExRjg0RkYxQUQ4QjA3MEU1OEFDRkFBRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNjgxNjQ3RTM0QTQ4MEY5RTk5NjMxNEMyREJBMjBBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCwZHAvJmjBhUCKAJDMywXQDdEGJN0vGoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPWFyK1yeqaMCO-hMOrsju3TXpBtBf8ou0bH1MBOas_vw&oe=6AD4D16A",
+    "protocol": "https",
+    "ext": "mp4",
+    "video_ext": "mp4",
+    "audio_ext": "none",
+    "vbr": null,
+    "abr": null,
+    "tbr": null,
+    "resolution": null,
+    "dynamic_range": "SDR",
+    "aspect_ratio": null,
+    "filesize_approx": null,
+    "format_id": "3",
+    "format": "3 - unknown",
+    "_type": "video",
+    "_version": {
+      "version": "2026.08.19",
+      "current_git_head": null,
+      "release_git_head": "594bd50c2c78ac432f81600d309fdc4e0a92d82c",
+      "repository": "yt-dlp/yt-dlp"
+    }
+  },
+  "oembed": {
+    "error": "Expecting value: line 1 column 1 (char 0)"
+  },
+  "metadata": {
+    "title": "Video by ai4today",
+    "description": "What if multiple internet connections could work together to download one file?\n\nMeet Plexo, an open-source download manager that splits files into chunks and downloads them in parallel across independent connections.\n\nFor example, it can use your Wi-Fi and a USB-tethered phone connection at the same time to potentially boost download speeds.\n\nFollow @ai4today for more tech, breakthroughs, and innovation driving the AI revolution.\n\n🔗 GitHub: \nhttps://github.com/anmolkapil/plexo\n\n#AI #OpenSource #Internet #DownloadManager #Innovation",
+    "author": "AI for Today",
+    "duration": 0,
+    "view_count": 0,
+    "like_count": 3937,
+    "image": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQP8IEOHwGZuNOq6IWo_g1krqpxDC55rEDcBX8Bx_Psomw&oe=6AD89BE7",
+    "video_url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m86/AQNO9ra_W-x-FpuunKzV1AqiLm_ZEubPdQWiub0TgNFQfJP08oE9X4XEWCh8ejF2EXubfAs27guBZ3gX8QgeqmL0cv1nJOHC6HEYp_g.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=xbjGrU48s1oQ7kNvwFsullt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc2NjI1MzI5MTI1Mzg1NywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=ef8ea17f1ab8d543&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84REUxQTVFOEExRjg0RkYxQUQ4QjA3MEU1OEFDRkFBRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNjgxNjQ3RTM0QTQ4MEY5RTk5NjMxNEMyREJBMjBBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCwZHAvJmjBhUCKAJDMywXQDdEGJN0vGoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPWFyK1yeqaMCO-hMOrsju3TXpBtBf8ou0bH1MBOas_vw&oe=6AD4D16A",
+    "video_width": 0,
+    "video_height": 0,
+    "extractor": "Instagram",
+    "id": "DeZkPWuBPCR"
+  },
+  "thumbnail": "C:\\Users\\User\\Downloads\\AURA\\ARIA_APP\\instagram\\descriptions\\thumb_1792204082.jpg",
+  "thumbnail_url": "https://scontent-lim1-1.cdninstagram.com/v/t51.71878-15/848256025_1800850137621043_8111270527462943855_n.jpg?stp=dst-jpg_e15_tt6&_nc_cat=107&ig_cache_key=NDAwNjM5MjcyODM4MzcxMzQyNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNMSVBTLnhwaWRzLjY0MC5zZHIudmlkZW9fZGVmYXVsdF9jb3Zlcl9mcmFtZS5DMyJ9&_nc_ohc=kc6wMrK4ZVEQ7kNvwH97IrV&_nc_oc=AdocFxYr_cnErVxX_nF7aunZ5iIiXBGV4V1BHOcrIyBslHsEEIlmuPGOEmzeAqco59w&_nc_zt=23&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&oh=00_AQP8IEOHwGZuNOq6IWo_g1krqpxDC55rEDcBX8Bx_Psomw&oe=6AD89BE7",
+  "thumbnail_method": "urllib",
+  "visual_description": "Un open-source app que hace que las conexiones de internet sean compatibles.",
+  "video_url": "https://scontent-lim1-1.cdninstagram.com/o1/v/t2/f2/m86/AQNO9ra_W-x-FpuunKzV1AqiLm_ZEubPdQWiub0TgNFQfJP08oE9X4XEWCh8ejF2EXubfAs27guBZ3gX8QgeqmL0cv1nJOHC6HEYp_g.mp4?_nc_cat=109&_nc_sid=5e9851&_nc_ht=scontent-lim1-1.cdninstagram.com&_nc_ohc=xbjGrU48s1oQ7kNvwFsullt&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5JTlNUQUdSQU0uQ0xJUFMuQzMuNzIwLmRhc2hfYmFzZWxpbmVfMV92MSIsInhwdl9hc3NldF9pZCI6MTc2NjI1MzI5MTI1Mzg1NywiYXNzZXRfYWdlX2RheXMiOjQsInZpX3VzZWNhc2VfaWQiOjEwMDk5LCJkdXJhdGlvbl9zIjoyMywidXJsZ2VuX3NvdXJjZSI6Ind3dyJ9&ccb=17-1&vs=ef8ea17f1ab8d543&_nc_vs=HBksFQIYUmlnX3hwdl9yZWVsc19wZXJtYW5lbnRfc3JfcHJvZC84REUxQTVFOEExRjg0RkYxQUQ4QjA3MEU1OEFDRkFBRl92aWRlb19kYXNoaW5pdC5tcDQVAALIARIAFQIYUWlnX3hwdl9wbGFjZW1lbnRfcGVybWFuZW50X3YyLzdGNjgxNjQ3RTM0QTQ4MEY5RTk5NjMxNEMyREJBMjBBX2F1ZGlvX2Rhc2hpbml0Lm1wNBUCAsgBEgAoABgAGwKIB3VzZV9vaWwBMRJwcm9ncmVzc2l2ZV9yZWNpcGUBMRUAACbCwZHAvJmjBhUCKAJDMywXQDdEGJN0vGoYEmRhc2hfYmFzZWxpbmVfMV92MREAdf4HZeadAQA&_nc_gid=Zta_T-EUFuDnHxLmzZBnNg&_nc_ss=70a8c&_nc_zt=28&oh=00_AQPWFyK1yeqaMCO-hMOrsju3TXpBtBf8ou0bH1MBOas_vw&oe=6AD4D16A",
+  "video_accessible": true,
+  "video_status": 206,
+  "video_content_type": "video/mp4",
+  "video_first_bytes": 65536,
+  "video_note": "Stream accesible (sin descarga completa)",
+  "jev": {
+    "status": "ok",
+    "provider": "ollama_fallback",
+    "choice": "Categoría: Innovación",
+    "score": "80"
+  },
+  "report_file": "C:\\Users\\User\\Downloads\\AURA\\ARIA_APP\\instagram\\descriptions\\instagram_video-by-ai4today-20261016.json",
+  "summary": "📹 Instagram Reel: Video by ai4today\n🔗 URL: https://www.instagram.com/reel/DeZkPWuBPCR/?xtok=Z2FkZnppNHprOTlt\n👤 Autor: AI for Today\n📝 Descripción: What if multiple internet connections could work together to download one file?\n\nMeet Plexo, an open-source download manager that splits files into chunks and downloads them in parallel across indepen\n👁️ Frame (miniatura): Un open-source app que hace que las conexiones de internet sean compatibles.\n🎯 Uso sugerido (JEV): Categoría: Innovación (confianza: 80)\n✅ Video accesible (stream legible, 65536 B leídos)\n💾 Informe: instagram_video-by-ai4today-20261016.json"
+}

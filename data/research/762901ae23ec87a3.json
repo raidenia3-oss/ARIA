@@ -1,0 +1,32 @@
+{
+  "mission_id": "762901ae23ec87a3",
+  "question": "Clonar el software en https://example.com/app generando código funcional equivalente",
+  "status": "completed",
+  "sub_questions": [
+    "Clonar el software en https",
+    "//example.com/app generando código funcional equivalente"
+  ],
+  "sources": [],
+  "findings": [],
+  "knowledge_map": {
+    "concepts": {},
+    "concept_count": 0,
+    "finding_count": 0,
+    "summary": "",
+    "noise_ratio": 0.0,
+    "sources_indexed": 0,
+    "refinement_rounds": 0,
+    "coverage": 0.0,
+    "target_met": false
+  },
+  "refinement_rounds": 0,
+  "memory_ids": [],
+  "error": "",
+  "created_at": 1791950657.491492,
+  "updated_at": 1791950657.491492,
+  "metadata": {
+    "source": "software-clone",
+    "target": "https://example.com/app",
+    "findings_count": 0
+  }
+}

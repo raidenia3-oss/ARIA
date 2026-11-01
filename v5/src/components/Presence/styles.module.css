@@ -1,0 +1,667 @@
+/* Panel de presencia de ARIA — la ventana al runtime autónomo.
+   Tonos: violeta (mente), cian (mundo), ámbar (impulso). */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  color: #e2e8f0;
+  background:
+    radial-gradient(900px 500px at 80% -12%, rgba(34, 211, 238, 0.13), transparent 62%),
+    radial-gradient(900px 520px at 10% 110%, rgba(167, 139, 250, 0.14), transparent 62%),
+    linear-gradient(180deg, rgba(8, 10, 24, 0.94), rgba(4, 6, 16, 0.97));
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* ── Cabecera ─────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 22px 12px;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.16);
+}
+
+.kicker {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  color: #22d3ee;
+  text-shadow: 0 0 18px rgba(34, 211, 238, 0.65);
+}
+
+.title {
+  margin: 4px 0 2px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: #94a3b8;
+  max-width: 56ch;
+}
+
+.stats {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stat {
+  min-width: 62px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.statLabel {
+  display: block;
+  margin-top: 2px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #64748b;
+}
+
+.liveDot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 5px auto 3px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.35);
+}
+
+.liveOn {
+  background: #34d399;
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.85);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.error {
+  margin: 10px 22px 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #fda4af;
+  background: rgba(251, 113, 133, 0.1);
+  border: 1px solid rgba(251, 113, 133, 0.28);
+}
+
+/* ── Columnas ─────────────────────────────────────────────────────── */
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px 18px 18px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.card {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(15, 18, 34, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: 0 12px 34px rgba(2, 4, 12, 0.5);
+}
+
+.cardTitle {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c4b5fd;
+}
+
+.empty {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.hint {
+  margin: 8px 0 0;
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* ── Estado ───────────────────────────────────────────────────────── */
+
+.modeRow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #cbd5e1;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.switch input {
+  width: 15px;
+  height: 15px;
+  accent-color: #22d3ee;
+}
+
+.presenceBox {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(34, 211, 238, 0.06);
+  border: 1px solid rgba(34, 211, 238, 0.18);
+}
+
+.presenceHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.presenceExpression {
+  font-size: 14px;
+  font-weight: 600;
+  color: #a5f3fc;
+}
+
+.presencePlace {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.meterTrack {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.16);
+  overflow: hidden;
+}
+
+.meterFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #22d3ee, #a78bfa);
+  transition: width 0.4s ease;
+}
+
+/* ── Pulsiones ────────────────────────────────────────────────────── */
+
+.drives {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.driveHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.driveName {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.driveValue {
+  font-size: 11px;
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.driveTrack {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.14);
+  overflow: hidden;
+}
+
+.driveFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(167, 139, 250, 0.85), rgba(34, 211, 238, 0.85));
+  transition: width 0.5s ease;
+}
+
+.driveHot {
+  background: linear-gradient(90deg, #fbbf24, #fb7185);
+}
+
+.threshold {
+  position: absolute;
+  top: -2px;
+  width: 1px;
+  height: 10px;
+  background: rgba(248, 250, 252, 0.55);
+}
+
+.driveHint {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+  color: #64748b;
+}
+
+/* ── Personalidad ─────────────────────────────────────────────────── */
+
+.personaLine {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.personaLine strong {
+  color: #f1f5f9;
+}
+
+.field {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #64748b;
+}
+
+.textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #e2e8f0;
+  background: rgba(2, 6, 23, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  resize: vertical;
+  outline: none;
+}
+
+.textarea:focus {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.12);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 10px;
+  border-radius: 9px;
+  font-size: 11px;
+  color: #e2e8f0;
+  background: rgba(2, 6, 23, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  outline: none;
+}
+
+.input::placeholder {
+  color: rgba(148, 163, 184, 0.55);
+}
+
+.input:focus {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.12);
+}
+
+/* ── Botones ──────────────────────────────────────────────────────── */
+
+.buttonRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.button {
+  padding: 7px 12px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.buttonPrimary {
+  color: #04121a;
+  background: linear-gradient(135deg, #22d3ee, #a78bfa);
+  box-shadow: 0 6px 18px rgba(34, 211, 238, 0.24);
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.buttonGhost {
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.buttonGhost:hover:not(:disabled) {
+  background: rgba(148, 163, 184, 0.16);
+}
+
+.note {
+  font-size: 11px;
+  color: #34d399;
+}
+
+/* ── Listas ───────────────────────────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.episode {
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.06);
+  border-left: 2px solid rgba(167, 139, 250, 0.55);
+}
+
+.episodeHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.episodeGoal {
+  font-size: 12px;
+  color: #e2e8f0;
+}
+
+.episodeDrive {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a78bfa;
+}
+
+.episodeSaid {
+  margin: 5px 0 0;
+  font-size: 12px;
+  font-style: italic;
+  color: #a5f3fc;
+}
+
+.episodeResult {
+  margin: 5px 0 0;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.episodeTime {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  color: #475569;
+}
+
+.event {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 7px 9px;
+  border-radius: 9px;
+  background: rgba(148, 163, 184, 0.05);
+}
+
+.eventIcon {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.eventBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.eventLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.eventText {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #cbd5e1;
+  word-break: break-word;
+}
+
+.eventTime {
+  font-size: 10px;
+  color: #475569;
+  white-space: nowrap;
+}
+
+/* ── Percepción: lo que ARIA ve ahora mismo ────────────────────────── */
+
+.perceptionLine {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.worlds {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.world {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 7px 9px;
+  border-radius: 9px;
+  background: rgba(148, 163, 184, 0.05);
+}
+
+.worldIcon {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.worldBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.worldName {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+  color: #e2e8f0;
+}
+
+.worldState {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.worldMeta {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  color: #475569;
+}
+
+/* ── La agenda ─────────────────────────────────────────────────────── */
+
+.goalRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.goal {
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.06);
+  border-left: 2px solid rgba(34, 211, 238, 0.55);
+}
+
+.goalHead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.goalState {
+  font-size: 12px;
+  color: #22d3ee;
+}
+
+.goalText {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: #e2e8f0;
+  word-break: break-word;
+}
+
+.goalDrop {
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+.goalDrop:hover:not(:disabled) {
+  color: #f87171;
+}
+
+.goalDrop:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.goalMeta {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  color: #475569;
+}
+
+.goalReason {
+  margin: 4px 0 0;
+  font-size: 11px;
+  font-style: italic;
+  color: #94a3b8;
+}
+
+/* ── Lecciones ─────────────────────────────────────────────────────── */
+
+.lesson {
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.06);
+  border-left: 2px solid rgba(167, 139, 250, 0.55);
+}
+
+.lessonOff {
+  opacity: 0.45;
+  border-left-color: rgba(100, 116, 139, 0.55);
+}
+
+.lessonHead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.lessonKind {
+  flex: 1;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a78bfa;
+}
+
+.lessonWeight {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.lessonText {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: #cbd5e1;
+  word-break: break-word;
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

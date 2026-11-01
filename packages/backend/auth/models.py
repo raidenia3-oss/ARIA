@@ -16,7 +16,13 @@ class User(Base):
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     username = Column(String, unique=True, index=True, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
+    # `index=True` se omite a proposito: `backend/models.py:10` ya declara
+    # `email` con `unique=True, index=True` sobre la MISMA tabla (esta clase usa
+    # `extend_existing`). Redecirlo aqui creaba un segundo `Index("ix_users_email")`
+    # en la misma Table, y `Base.metadata.create_all` emitia dos veces
+    # `CREATE UNIQUE INDEX ix_users_email`: el segundo fallaba con
+    # `index ix_users_email already exists` al arrancar contra una DB nueva.
+    email = Column(String, unique=True, nullable=False)
     hashed_password = Column(LargeBinary, nullable=False)
     full_name = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)

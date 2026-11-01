@@ -1,0 +1,17 @@
+{
+  "scores": {
+    "mistral": -4,
+    "deepseek": -4,
+    "local-ollama": 0
+  },
+  "last_failures": {
+    "mistral": "Client error '429 Too Many Requests' for url 'https://api.mistral.ai/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+    "deepseek": "Client error '402 Payment Required' for url 'https://api.deepseek.com/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402",
+    "local-ollama": "Client error '404 Not Found' for url 'http://localhost:11434/v1/api/generate'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+  },
+  "circuit_until": {
+    "mistral": 0,
+    "deepseek": 0,
+    "local-ollama": 0
+  }
+}

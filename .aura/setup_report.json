@@ -1,0 +1,198 @@
+{
+  "generated_at": 1791082644.0549643,
+  "mode": "setup",
+  "success": true,
+  "finished_at": "2026-10-03 21:57:22",
+  "duration_s": 15.37,
+  "environment": {
+    "os": "Windows 10",
+    "arch": "AMD64",
+    "python": "3.11.7",
+    "python_executable": "C:\\Users\\User\\Downloads\\AURA\\.venv\\Scripts\\python.exe",
+    "in_venv": true,
+    "git": "git version 2.54.0.windows.1",
+    "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+    "node": "v26.0.0",
+    "ollama_running": true,
+    "ollama_models": [
+      "qwen2.5:3b-instruct",
+      "dolphin-2_6-phi-2:latest"
+    ],
+    "gh_authenticated": false,
+    "services": {
+      "fastapi_8000": false,
+      "fastapi_8001": true,
+      "axum_8002": false,
+      "ollama_11434": true,
+      "jan_1337": false
+    },
+    "missing_tools": [
+      "mcode"
+    ]
+  },
+  "dry_run": true,
+  "steps": [],
+  "validation": [
+    {
+      "name": "python_version",
+      "tier": "optional",
+      "status": "ok",
+      "message": "Python 3.11",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {
+        "venv": true
+      },
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "imports",
+      "tier": "optional",
+      "status": "ok",
+      "message": "8 core modules import cleanly",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "database",
+      "tier": "optional",
+      "status": "ok",
+      "message": "31 tables, integrity ok",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {
+        "database": "C:\\Users\\User\\Downloads\\AURA\\aura.db"
+      },
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "directories",
+      "tier": "optional",
+      "status": "ok",
+      "message": "all 12 directories present",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "env_files",
+      "tier": "optional",
+      "status": "ok",
+      "message": "3 env files readable",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "gitignore",
+      "tier": "optional",
+      "status": "ok",
+      "message": ".gitignore covers .env, *.db and .venv/",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "git_repo",
+      "tier": "optional",
+      "status": "ok",
+      "message": "branch feature/v6.0-axum-migration",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "node",
+      "tier": "optional",
+      "status": "ok",
+      "message": "v26.0.0",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "ollama",
+      "tier": "optional",
+      "status": "ok",
+      "message": "2 model(s): qwen2.5:3b-instruct, dolphin-2_6-phi-2:latest",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "axum_health",
+      "tier": "optional",
+      "status": "skipped",
+      "message": "axum not running on http://127.0.0.1:8002/health",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {
+        "url": "http://127.0.0.1:8002/health"
+      },
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "fastapi_health",
+      "tier": "optional",
+      "status": "skipped",
+      "message": "fastapi not running on port 8000",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {
+        "url": "http://127.0.0.1:8000/health"
+      },
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "discord_token",
+      "tier": "optional",
+      "status": "ok",
+      "message": "Discord token configured",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "github_token",
+      "tier": "optional",
+      "status": "ok",
+      "message": "GitHub token configured",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {},
+      "at": 1791082642.2371435
+    },
+    {
+      "name": "credentials",
+      "tier": "optional",
+      "status": "warn",
+      "message": "1 hygiene issue(s)",
+      "attempts": 1,
+      "duration_s": 0.0,
+      "details": {
+        "issues": [
+          "tracked env file(s) hold development placeholder secrets: .env.cloud:AURA_JWT_SECRET - git-ignore them and set real values before deploying"
+        ],
+        "hint": "tracked env files hold development placeholders; set real values before deploying"
+      },
+      "at": 1791082642.2371435
+    }
+  ],
+  "ports": {
+    "fastapi_8000": false,
+    "fastapi_8001": true,
+    "axum_8002": false,
+    "ollama_11434": true,
+    "jan_1337": false
+  },
+  "blocked_by": []
+}

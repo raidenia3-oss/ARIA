@@ -745,7 +745,7 @@ class ChatWindow(QMainWindow):
     def _setup_ui(self):
         self.setWindowTitle("ARIA OS v4.0")
         self.setFixedSize(620, 720)
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.WindowDoesNotAcceptFocus)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowDoesNotAcceptFocus)
         self._old_pos = None
         self._dragging = False
         # Position centered on primary screen
@@ -1149,6 +1149,126 @@ class ChatWindow(QMainWindow):
         text = self.msg_input.text().strip()
         if not text:
             return
+        self._ultimo_texto_usuario = text
+        low = text.lower().strip()
+        if low in ("mi grafo", "mi grafo."):
+            try:
+                import conocimiento
+                st = conocimiento.grafo().stats()
+                self._append_chat("ARIA", "Grafo: %s" % st, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Grafo no disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+        if low in ("mis lecciones", "mis lecciones."):
+            try:
+                import experiencia
+                r = experiencia.resumen()
+                self._append_chat("ARIA", "Lecciones: %s" % r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Lecciones no disponibles: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low in ("cita simulada", "simulacion de cita", "simulación de cita"):
+            try:
+                import social_rolemodels as sr
+                r = sr.simulacion_citas(text)
+                self._append_chat("ARIA", "%s\n%s" % (r["guia"], r["respuesta"]), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Simulacion no disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low in ("lecciones jane", "lecciones patrick jane"):
+            try:
+                import social_rolemodels as sr
+                self._append_chat("ARIA", "Patrick Jane: %s" % sr.LECCIONES["patrick_jane"], C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low in ("lecciones barney", "lecciones barney stinson"):
+            try:
+                import social_rolemodels as sr
+                self._append_chat("ARIA", "Barney Stinson: %s" % sr.LECCIONES["barney_stinson"], C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low == "practica social":
+            try:
+                import social_sandbox
+                def _resp(t):
+                    r = self.va.send({"type": "chat", "id": str(int(time.time()*1000)),
+                                     "data": {"message": t}})
+                    return (r or {}).get("response", "")
+                r = social_sandbox.practicar(_resp, n=6)
+                self._append_chat("ARIA", "Practica social: %s" % r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Practica social no disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low == "ver grafo":
+            try:
+                import conocimiento
+                dot = conocimiento.grafo().exportar_dot()
+                self._append_chat("ARIA", "DOT:\n%s" % dot[:1500], C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Grafo no disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low == "propón mejora" or low == "propone mejora":
+            try:
+                import mejora
+                r = mejora.proponer("nota", getattr(self, "_ultimo_texto_usuario", text),
+                                    descripcion="propuesta manual")
+                self._append_chat("ARIA", "Propuesta: %s" % r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Mejora no disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low == "mejoras pendientes":
+            try:
+                import mejora
+                r = mejora.listar("pendiente")
+                self._append_chat("ARIA", "Pendientes: %s" % r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Mejoras no disponibles: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        m = low.split()
+        if len(m) >= 3 and m[0] == "prueba" and m[1] == "mejora":
+            try:
+                import mejora
+                r = mejora.probar(m[2])
+                self._append_chat("ARIA", "Prueba %s: %s" % (m[2], r), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Prueba no disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+        if len(m) >= 3 and m[0] == "aprueba" and m[1] == "mejora":
+            try:
+                import mejora
+                r = mejora.aprobar(m[2])
+                self._append_chat("ARIA", "Aprobacion %s: %s" % (m[2], r), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "Aprobacion no disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+        # capa social: analizar emocion y patrones antes de responder
+        try:
+            import social_skills, social_sandbox
+            sa = social_skills.social_analysis(text)
+            self._social_actual = sa
+            self._patrones_sociales = social_sandbox.recordar_patron(text)
+            self._consejo_social = social_sandbox.consejo_para(sa.get("emotion", "neutral"))
+        except Exception:
+            self._social_actual = {}
+            self._patrones_sociales = []
+            self._consejo_social = {}
+
+        # antes de una tarea compleja, recuperar lecciones relevantes
+        try:
+            import experiencia
+            self._lecciones_actuales = experiencia.relevantes(text)
+        except Exception:
+            self._lecciones_actuales = []
         self.msg_input.clear()
         self._append_chat("Tú", text, "#38bdf8")
         self.orb.set_state("thinking")
@@ -1174,6 +1294,18 @@ class ChatWindow(QMainWindow):
         if not text:
             return
         self._append_chat("ARIA", text, C_ACCENT_CYAN_BRIGHT)
+        # cuando ARIA explica algo, lo aprende en el grafo y registra experiencia
+        try:
+            import conocimiento
+            conocimiento.grafo().aprender(text, tema="aria")
+        except Exception:
+            pass
+        try:
+            import experiencia
+            experiencia.registrar(text, contexto=getattr(self, "_ultimo_texto_usuario", ""),
+                                 resultado="exito", tema="aria")
+        except Exception:
+            pass
         # También sale en la OSD: lo que ARIA hace sola tiene que verse.
         self._append_osd(text)
         self.orb.set_state("responding")
@@ -1912,7 +2044,6 @@ class OverlayOrb(QWidget):
     def _setup_window(self):
         self.setWindowFlags(
             Qt.FramelessWindowHint |
-            Qt.WindowStaysOnTopHint |
             Qt.Tool
         )
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -2183,7 +2314,7 @@ class EvolutionPanel(QWidget):
     def _setup_ui(self):
         self.setWindowTitle("◆ Núcleo ARIA — Evolución y Sacrifice")
         self.setFixedSize(460, 560)
-        self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.Window)
         self.setStyleSheet(f"""
             QDialog, QWidget {{
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
@@ -2438,7 +2569,7 @@ class MemoryPanel(QWidget):
     def _setup_ui(self):
         self.setWindowTitle("◆ Memoria de ARIA")
         self.setFixedSize(820, 640)
-        self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.Window)
         self.setStyleSheet(f"""
             QWidget {{
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
@@ -3251,6 +3382,27 @@ def run_desktop():
 
     window.show()
     print("[UI] Window shown, visible=True", flush=True)
+
+    # Presence (idle show/hide) + hand react
+    try:
+        from presence import PresenceWatcher
+        from hand_react import HandReactor
+        def _present():
+            try: window.show(); window.raise_()
+            except Exception: pass
+        def _away():
+            try: window.hide()
+            except Exception: pass
+        pw = PresenceWatcher(_present, _away, threshold=300.0)
+        pw.start()
+        hr = HandReactor(lambda ev: None)
+        hr.start()
+        window._presence = pw
+        window._hand = hr
+        print("[UI] Presence + HandReactor started", flush=True)
+    except Exception as e:
+        print(f"[UI] presence/hand init failed: {e}", flush=True)
+
     sys.exit(app.exec_())
 
 

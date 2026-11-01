@@ -1,0 +1,2 @@
+for<'a> fn(&'a str, JsonValue) -> impl futures::Future<Output = std::result::Result<World, std::string::String>> {world::publish_context}
+for<'a> fn(&'a str, JsonValue) -> impl futures::Future<Output = std::result::Result<World, std::string::String>> {world::publish_context}: Handler<_, _>

@@ -1,0 +1,5 @@
+﻿Repo: AURA (C:\Users\User\Downloads\AURA)
+Rama: feature/v6.0-axum-migration
+Git: limpio a nivel tracked; untracked relevantes: tests/test_hueco1c.py, tools/scripts/aria_eyes.py, v6/axum-poc/src/child_env.rs, v6/axum-poc/target/ (build), varios scripts sueltos
+Areas: backend/, packages/backend, v5/, v6/axum-poc, training/, tests/
+Convenciones: git add SOLO por rutas explicitas; fail-closed; ToolResult normalization; ARIA_FS_ROOTS; .venv\Scripts\python.exe
