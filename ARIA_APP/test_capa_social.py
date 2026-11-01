@@ -21,6 +21,7 @@ import nucleo as N
 import forma as F
 import presencia as PR
 import autonomia_guardia as AG
+import conversacion as CV
 
 
 # ---------------------------------------------------------------- social_skills
@@ -40,6 +41,21 @@ def test_todas_las_emociones_tienen_hint():
 def test_analysis_estructura():
     a = ss.social_analysis("gracias, me ayudaste")
     assert a["emotion"] == "gratitude" and "principle" in a and "emotions" in a
+
+def test_negacion_no_cuenta():
+    assert "sadness" not in ss.detect_emotions("no estoy triste hoy")
+    assert "sadness" in ss.detect_emotions("estoy triste hoy")
+
+def test_intensidad():
+    assert ss.intensidad("estoy triste") < ss.intensidad("estoy MUY triste!!!")
+
+def test_registro_casual_vs_formal():
+    assert ss.registro("jaja causa que tal") == "casual"
+    assert ss.registro("Buenas tardes, quisiera consultar algo") == "formal"
+
+def test_analysis_emocion_fuerte_marca_hint():
+    a = ss.social_analysis("estoy MUY enojado!!!")
+    assert a["intensidad"] >= 0.6 and "FUERTE" in a["hint"]
 
 
 # ---------------------------------------------------------------- social_sandbox
@@ -407,6 +423,27 @@ def _ag_tmp():
     d = tempfile.mkdtemp()
     AG._PEND = os.path.join(d, "pending")
     AG._HECHO = os.path.join(d, "hechas")
+
+
+# ---------------------------------------------------------------- conversacion (continuidad)
+def test_tendencia_empeora_y_mejora():
+    assert CV._tendencia([0.5, 0.4, -0.6, -0.8]) == "empeora"
+    assert CV._tendencia([-0.7, -0.5, 0.4, 0.6]) == "mejora"
+    assert CV._tendencia([0.1, 0.0, 0.1]) == "estable"
+
+def test_conversacion_registra_y_contexto():
+    c = CV.crear_conversacion()
+    c.registrar("estoy triste hoy")
+    c.registrar("todo me sale mal, MUY mal!!!")
+    ctx = c.contexto()
+    assert ctx["emocion_dominante"] == "sadness" and ctx["turnos"] == 2
+    assert "guia" in ctx and ctx["tendencia"] in ("empeora", "estable", "mejora")
+
+def test_conversacion_registro_casual():
+    c = CV.crear_conversacion()
+    c.registrar("jaja causa todo bien")
+    c.registrar("q tal nomas")
+    assert c.registro() == "casual"
 
 
 # ---------------------------------------------------------------- runner manual

@@ -1151,6 +1151,61 @@ class ChatWindow(QMainWindow):
             return
         self._ultimo_texto_usuario = text
         low = text.lower().strip()
+        if low.startswith("compone "):
+            try:
+                import response_composer as rc
+                r = rc.componer(low.split(" ",1)[1], getattr(self, "_social_actual", {}).get("emotion", "neutral"),
+                                getattr(self, "_lecciones_actuales", []), getattr(self, "_tono_actual", "amable"))
+                self._append_chat("ARIA", r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low.startswith("emocion "):
+            try:
+                import emotion_engine as ee
+                e = ee.detectar(low.split(" ",1)[1])
+                self._append_chat("ARIA", "Emocion: %s -> %s" % (e, ee.estrategia(e)), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low.startswith("intencion "):
+            try:
+                import intent_router as ir
+                r = ir.detectar(low.split(" ",1)[1])
+                self._append_chat("ARIA", "Intencion: %s" % r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low.startswith("estilo "):
+            try:
+                import language_style as ls
+                modo = low.split(" ",1)[1].strip()
+                self._append_chat("ARIA", "Estilo %s: %s" % (modo, ls.guia(modo)), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low == "continuar":
+            try:
+                import conversation_continuity as cc
+                d = cc.cargar()
+                self._append_chat("ARIA", "Continuidad: %s" % (d or "sin datos"), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low == "nudge":
+            try:
+                import proactive_nudges as pn
+                r = pn.nudge_si_aplica(getattr(self, "_ultimo_ts", None), getattr(self, "_temas_pendientes", []))
+                self._append_chat("ARIA", r or "Sin nudge por ahora.", C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
         if low.startswith("trigger "):
             try:
                 import memory_triggers as mt
