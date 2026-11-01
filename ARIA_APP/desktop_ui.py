@@ -1151,6 +1151,33 @@ class ChatWindow(QMainWindow):
             return
         self._ultimo_texto_usuario = text
         low = text.lower().strip()
+        if low in ("reflexiona", "memoria reflectiva"):
+            try:
+                import reflective_memory as rm
+                p = rm.prospectiva(getattr(self, "_ultimo_texto_usuario", ""))
+                r = rm.retrospectiva(getattr(self, "_ultimo_texto_usuario", ""), "ok")
+                self._append_chat("ARIA", "Prospectiva: %s | Retrospectiva: %s" % (p, r), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low in ("piensa", "inner thoughts"):
+            try:
+                import inner_thoughts as it
+                ts = it.pensar(getattr(self, "_ultimo_texto_usuario", ""), getattr(self, "_lecciones_actuales", None))
+                self._append_chat("ARIA", "Pensamientos: %s" % " | ".join(ts), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
+        if low in ("inicia conversacion", "inicia conversación"):
+            try:
+                import conversation_starters as cs
+                self._append_chat("ARIA", cs.elegir_starter("Daniel"), C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
         if low in ("mi grafo", "mi grafo."):
             try:
                 import conocimiento
@@ -3361,6 +3388,11 @@ def run_desktop():
     else:
         window = ChatWindow(va)
     print("[UI] Window created", flush=True)
+    try:
+        import conversation_starters as cs
+        window._append_chat("ARIA", cs.elegir_starter("Daniel"), C_ACCENT_CYAN_BRIGHT)
+    except Exception:
+        pass
     if not isinstance(window, LinuxDesktopWindow):
         window.load_skills()
         print("[UI] Skills loaded", flush=True)
