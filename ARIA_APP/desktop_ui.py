@@ -1151,6 +1151,16 @@ class ChatWindow(QMainWindow):
             return
         self._ultimo_texto_usuario = text
         low = text.lower().strip()
+        if low.startswith("tono "):
+            try:
+                import personalization_engine as pe
+                tono = low.split(" ",1)[1].strip()
+                self._tono_actual = tono
+                self._append_chat("ARIA", "Tono activo: %s" % tono, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
         if low in ("reflexiona", "memoria reflectiva"):
             try:
                 import reflective_memory as rm
