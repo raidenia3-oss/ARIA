@@ -20,6 +20,7 @@ import planificador as PL
 import nucleo as N
 import forma as F
 import presencia as PR
+import autonomia_guardia as AG
 
 
 # ---------------------------------------------------------------- social_skills
@@ -372,6 +373,40 @@ def test_vigia_dispara_callbacks_en_transicion():
     finally:
         _pr.inactividad_segundos = orig
     assert eventos == ["ausente"]
+
+
+# ---------------------------------------------------------------- guardia de autonomia
+def test_guardia_clasifica():
+    assert AG._clasificar("file_read", {"path": "x"}) == "auto"       # leer -> solo
+    assert AG._clasificar("system_status", {}) == "auto"
+    assert AG._clasificar("file_write", {"path": "x"}) == "aprobar"   # escribir -> OK
+    assert AG._clasificar("skill_desconocida", {}) == "aprobar"       # fail-safe
+    # palabra destructiva en params aunque la skill parezca safe
+    assert AG._clasificar("note_add", {"texto": "borra todo rm -rf"}) == "aprobar"
+
+def test_guardia_auto_ejecuta():
+    r = AG.guard("file_read", {"path": "x"}, ejecutar=lambda: "leido")
+    assert r.get("ok") and r["resultado"] == "leido"
+
+def test_guardia_irreversible_encola_no_ejecuta():
+    _ag_tmp()
+    corrio = {"v": False}
+    r = AG.guard("file_write", {"path": "y"}, ejecutar=lambda: corrio.__setitem__("v", True))
+    assert "pendiente" in r and corrio["v"] is False     # NO corrio sola
+    assert len(AG.listar()) == 1
+
+def test_guardia_aprobar_ejecuta():
+    _ag_tmp()
+    corrio = {"v": False}
+    r = AG.guard("file_write", {"path": "y"}, ejecutar=lambda: corrio.__setitem__("v", True))
+    pid = r["pendiente"]
+    AG.aprobar(pid, ejecutar=lambda: corrio.__setitem__("v", True))
+    assert corrio["v"] is True and AG.listar() == []
+
+def _ag_tmp():
+    d = tempfile.mkdtemp()
+    AG._PEND = os.path.join(d, "pending")
+    AG._HECHO = os.path.join(d, "hechas")
 
 
 # ---------------------------------------------------------------- runner manual

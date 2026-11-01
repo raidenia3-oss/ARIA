@@ -1151,6 +1151,15 @@ class ChatWindow(QMainWindow):
             return
         self._ultimo_texto_usuario = text
         low = text.lower().strip()
+        if low.startswith("trigger "):
+            try:
+                import memory_triggers as mt
+                r = mt.trigger_para(low.split(" ",1)[1])
+                self._append_chat("ARIA", "Trigger: %s" % r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
         if low.startswith("tono "):
             try:
                 import personalization_engine as pe
