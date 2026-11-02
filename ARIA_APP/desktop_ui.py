@@ -3467,10 +3467,16 @@ def run_desktop():
     va = VAAdapter()
     print("[UI] VA local iniciado", flush=True)
 
-    if _os.environ.get("ARIA_LINUX_DESKTOP") == "1":
-        window = LinuxDesktopWindow(va)
-    else:
-        window = ChatWindow(va)
+    try:
+        from ui_shell import crear_shell
+        window = crear_shell(responder=lambda t: va.brain.chat(t)["response"])
+        print("[UI] ui_shell creado", flush=True)
+    except Exception as e:
+        print(f"[UI] ui_shell fallo, fallback: {e}", flush=True)
+        if _os.environ.get("ARIA_LINUX_DESKTOP") == "1":
+            window = LinuxDesktopWindow(va)
+        else:
+            window = ChatWindow(va)
     print("[UI] Window created", flush=True)
     try:
         import conversation_starters as cs

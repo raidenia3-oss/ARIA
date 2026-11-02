@@ -28,9 +28,16 @@ _PIPE_ID = None
 
 def disponible():
     try:
-        import torch  # noqa
-        import diffusers  # noqa
-        return True
+        import importlib.util
+        if importlib.util.find_spec("torch") is None:
+            return False
+        if importlib.util.find_spec("diffusers") is None:
+            return False
+        import subprocess, sys
+        r = subprocess.run(
+            [sys.executable, "-c", "import torch, diffusers"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
+        return r.returncode == 0
     except Exception:
         return False
 
