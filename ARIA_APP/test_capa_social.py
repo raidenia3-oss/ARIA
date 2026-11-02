@@ -27,6 +27,7 @@ import cita_sim as CS
 import gen_local as GL
 import auditoria as AU
 import certeza as CE
+import brief as BR
 
 
 # ---------------------------------------------------------------- social_skills
@@ -527,6 +528,25 @@ def test_certeza_escala_sin_fuente():
 def test_certeza_frase_no_inventa():
     f = CE.frase_escalada("el precio")
     assert "inventar" in f.lower()
+
+
+# ---------------------------------------------------------------- brief diario
+def test_brief_compone_con_datos():
+    datos = {"fecha": "2026-11-01 08:00", "sistema": {"cpu": 10, "ram": 40},
+             "auditoria": {"total": 5, "autonomas": 3}, "pendientes": 2,
+             "lecciones": ["rembg evita fondos opacos"], "animo": "sadness"}
+    lineas, texto = BR._componer(datos)
+    assert any("esperan tu OK" in l for l in lineas)        # avisa pendientes
+    assert any("3 solas" in l for l in lineas)              # acciones autonomas
+    assert "sadness" in texto                               # reconoce el animo
+
+def test_brief_vacio_da_mensaje_tranquilo():
+    lineas, texto = BR._componer({"fecha": "x"})
+    assert any("tranquilo" in l for l in lineas)
+
+def test_generar_brief_estructura():
+    b = BR.generar_brief()
+    assert "texto" in b and "lineas" in b and isinstance(b["lineas"], list)
 
 
 # ---------------------------------------------------------------- runner manual
