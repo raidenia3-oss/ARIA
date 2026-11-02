@@ -643,7 +643,7 @@ class AutonomyStrip(QWidget):
         self.wake_btn.setStyleSheet(
             f"QPushButton {{ background: rgba(15, 23, 42, 0.6); color: {C_ACCENT_CYAN_BRIGHT};"
             f" border: 1px solid {C_GLASS_BORDER}; border-radius: 6px; font-size: 11px;"
-            f" transition: {C_TRANS_NORMAL}; }}"
+            f"  }}"
             f"QPushButton:hover {{ background: rgba(56, 189, 248, 0.25);"
             f" border-color: {C_ACCENT_CYAN_BRIGHT}; }}"
         )
@@ -761,28 +761,28 @@ class ChatWindow(QMainWindow):
                 background: {C_GLASS_T3_BG};
                 color: {C_TEXT_PRIMARY}; border: 1px solid {C_GLASS_T3_BORDER}; border-radius: 8px;
                 padding: 8px 16px; font-weight: bold; font-size: 12px;
-                box-shadow: 0 0 14px {C_GLASS_T3_BORDER};
-                transition: {C_TRANS_NORMAL};
+                
+                
             }}
             QPushButton:hover {{
                 border-color: {C_ACCENT_CYAN_BRIGHT};
-                box-shadow: 0 0 20px {C_ACCENT_CYAN_BRIGHT}40;
+                
                 background: {C_GLASS_T2_BG};
-                transform: translateY(-1px);
+                
             }}
             QPushButton:pressed {{
-                transform: scale(0.97);
+                
             }}
             QLineEdit {{
                 background: {C_GLASS_T2_BG}; color: {C_TEXT_SECONDARY};
                 border: 1px solid {C_GLASS_T2_BORDER}; border-radius: 8px;
                 padding: 10px; font-size: 13px; font-family: 'Consolas', monospace;
-                box-shadow: 0 0 10px rgba(0,0,0,0.4);
-                transition: {C_TRANS_NORMAL};
+                
+                
             }}
             QLineEdit:focus {{
                 border-color: {C_ACCENT_CYAN_BRIGHT};
-                box-shadow: 0 0 16px {C_ACCENT_CYAN_BRIGHT}40;
+                
                 background: {C_GLASS_T1_BG};
             }}
             QTextEdit {{
@@ -793,12 +793,12 @@ class ChatWindow(QMainWindow):
                 padding: 12px;
                 font-size: 12px;
                 font-family: 'Consolas', monospace;
-                box-shadow: 0 0 14px rgba(0,0,0,0.5);
-                transition: {C_TRANS_NORMAL};
+                
+                
             }}
             QTextEdit:focus {{
                 border-color: {C_ACCENT_CYAN_BRIGHT};
-                box-shadow: 0 0 20px {C_ACCENT_CYAN_BRIGHT}40;
+                
             }}
             QLabel {{ font-family: 'Segoe UI'; color: {C_TEXT_SECONDARY}; }}
         """)
@@ -841,16 +841,16 @@ class ChatWindow(QMainWindow):
                 border: 1px solid rgba(176, 102, 255, 0.3);
                 border-radius: 8px;
                 font-size: 14px;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QPushButton:hover {{
                 background: rgba(176, 102, 255, 0.2);
                 border-color: {C_ACCENT_PURPLE};
-                box-shadow: 0 0 12px rgba(176,102,255,0.4);
-                transform: scale(1.1);
+                
+                
             }}
             QPushButton:active {{
-                transform: scale(0.95);
+                
                 background: rgba(176, 102, 255, 0.3);
             }}
         """)
@@ -867,16 +867,16 @@ class ChatWindow(QMainWindow):
                 border: 1px solid rgba(0, 212, 255, 0.3);
                 border-radius: 8px;
                 font-size: 14px;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QPushButton:hover {{
                 background: rgba(0, 212, 255, 0.2);
                 border-color: {C_ACCENT_CYAN_BRIGHT};
-                box-shadow: 0 0 12px rgba(0,212,255,0.4);
-                transform: scale(1.1);
+                
+                
             }}
             QPushButton:active {{
-                transform: scale(0.95);
+                
                 background: rgba(0, 212, 255, 0.3);
             }}
         """)
@@ -894,14 +894,14 @@ class ChatWindow(QMainWindow):
                 border-radius: 10px;
                 font-size: 13px;
                 font-weight: bold;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QPushButton:hover {{
                 background: {C_ACCENT_CYAN_BRIGHT}20;
                 border-color: {C_ACCENT_CYAN_BRIGHT};
-                box-shadow: 0 0 14px {C_ACCENT_CYAN_BRIGHT}50;
+                
             }}
-            QPushButton:pressed {{ transform: scale(0.95); }}
+            QPushButton:pressed {{  }}
         """)
         self.nucleus_btn.clicked.connect(self._open_nucleus)
         header.addWidget(self.nucleus_btn)
@@ -916,31 +916,31 @@ class ChatWindow(QMainWindow):
                 border: 1px solid {C_GLASS_T3_BORDER};
                 border-radius: 10px;
                 font-size: 14px;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QPushButton:hover {{
                 background: {C_ACCENT_PURPLE}20;
                 border-color: {C_ACCENT_PURPLE};
-                box-shadow: 0 0 14px {C_ACCENT_PURPLE}50;
+                
             }}
-            QPushButton:pressed {{ transform: scale(0.95); }}
+            QPushButton:pressed {{  }}
         """)
         self.memory_btn.clicked.connect(self._open_memory)
         header.addWidget(self.memory_btn)
         min_btn = QPushButton("_")
         min_btn.setFixedSize(26, 26)
-        min_btn.setStyleSheet(f"background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; font-size: 14px; font-weight: bold; border-radius: 6px; border: 1px solid {C_GLASS_BORDER}; transition: {C_TRANS_NORMAL};")
+        min_btn.setStyleSheet(f"background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; font-size: 14px; font-weight: bold; border-radius: 6px; border: 1px solid {C_GLASS_BORDER}; ")
         min_btn.clicked.connect(self.showMinimized)
         header.addWidget(min_btn)
         close_btn = QPushButton("✕")
         close_btn.setFixedSize(26, 26)
-        close_btn.setStyleSheet(f"background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; font-size: 14px; border-radius: 6px; border: 1px solid {C_GLASS_BORDER}; transition: {C_TRANS_NORMAL};")
+        close_btn.setStyleSheet(f"background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; font-size: 14px; border-radius: 6px; border: 1px solid {C_GLASS_BORDER}; ")
         close_btn.clicked.connect(self.close)
         header.addWidget(close_btn)
         help_btn = QPushButton("?")
         help_btn.setFixedSize(26, 26)
         help_btn.setToolTip("Atajos de teclado (F1)")
-        help_btn.setStyleSheet(f"background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; font-size: 14px; border-radius: 6px; border: 1px solid {C_GLASS_BORDER}; transition: {C_TRANS_NORMAL};")
+        help_btn.setStyleSheet(f"background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; font-size: 14px; border-radius: 6px; border: 1px solid {C_GLASS_BORDER}; ")
         help_btn.clicked.connect(self._show_shortcuts)
         header.addWidget(help_btn)
         layout.addLayout(header)
@@ -1009,18 +1009,18 @@ class ChatWindow(QMainWindow):
                     stop:0 {C_ACCENT_CYAN_BRIGHT}, stop:1 {C_ACCENT_PURPLE});
                 color: #0f172a; border: none; border-radius: 8px;
                 font-weight: bold; font-size: 12px; font-family: 'Consolas', monospace;
-                transition: {C_TRANS_NORMAL};
-                box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+                
+                
             }}
             QPushButton:hover {{
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
                     stop:0 #7dd3fc, stop:1 #a855f7);
-                box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
-                transform: translateY(-2px);
+                
+                
             }}
             QPushButton:active {{
-                transform: scale(0.95);
-                box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
+                
+                
             }}
         """)
         send_btn.clicked.connect(self._send_message)
@@ -1029,13 +1029,13 @@ class ChatWindow(QMainWindow):
         clear_btn = QPushButton("✕ Limpiar")
         clear_btn.setFixedWidth(70)
         clear_btn.setFixedHeight(36)
-        clear_btn.setStyleSheet(f"QPushButton {{ background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; border: 1px solid {C_GLASS_BORDER}; border-radius: 6px; font-size: 10px; font-family: Consolas, monospace; transition: {C_TRANS_NORMAL}; }} QPushButton:hover {{ background: rgba(239, 68, 68, 0.3); color: #fca5a5; border-color: #ef4444; }}")
+        clear_btn.setStyleSheet(f"QPushButton {{ background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; border: 1px solid {C_GLASS_BORDER}; border-radius: 6px; font-size: 10px; font-family: Consolas, monospace;  }} QPushButton:hover {{ background: rgba(239, 68, 68, 0.3); color: #fca5a5; border-color: #ef4444; }}")
         clear_btn.clicked.connect(self._clear_chat)
         input_row.addWidget(clear_btn)
         export_btn = QPushButton("↓ Exportar")
         export_btn.setFixedWidth(70)
         export_btn.setFixedHeight(36)
-        export_btn.setStyleSheet(f"QPushButton {{ background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; border: 1px solid {C_GLASS_BORDER}; border-radius: 6px; font-size: 10px; font-family: Consolas, monospace; transition: {C_TRANS_NORMAL}; }} QPushButton:hover {{ background: rgba(56, 189, 248, 0.3); color: {C_ACCENT_CYAN_BRIGHT}; border-color: {C_ACCENT_CYAN_BRIGHT}; }}")
+        export_btn.setStyleSheet(f"QPushButton {{ background: rgba(15, 23, 42, 0.6); color: {C_TEXT_TERTIARY}; border: 1px solid {C_GLASS_BORDER}; border-radius: 6px; font-size: 10px; font-family: Consolas, monospace;  }} QPushButton:hover {{ background: rgba(56, 189, 248, 0.3); color: {C_ACCENT_CYAN_BRIGHT}; border-color: {C_ACCENT_CYAN_BRIGHT}; }}")
         export_btn.clicked.connect(self._export_chat)
         input_row.addWidget(export_btn)
         layout.addLayout(input_row)
@@ -1086,24 +1086,24 @@ class ChatWindow(QMainWindow):
                 font-size: 11px;
                 font-family: 'Consolas', monospace;
                 text-align: left;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QPushButton:hover {{
                 background: {C_GLASS_T3_BG};
                 color: {C_TEXT_PRIMARY};
                 border-color: {C_ACCENT_PURPLE};
-                box-shadow: 0 0 14px {C_ACCENT_PURPLE}40;
-                transform: translateX(2px);
+                
+                
             }}
             QPushButton:active {{
-                transform: scale(0.98);
+                
             }}
             QPushButton:checked {{
                 background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
                     stop:0 rgba(56, 189, 248, 0.45), stop:1 rgba(176, 102, 255, 0.35));
                 color: {C_TEXT_PRIMARY};
                 border-color: {C_ACCENT_CYAN_BRIGHT};
-                box-shadow: 0 0 18px {C_ACCENT_CYAN_BRIGHT}60;
+                
             }}
         """)
         btn.clicked.connect(lambda: self._on_skill_click(btn, name, category))
@@ -1296,18 +1296,10 @@ class ChatWindow(QMainWindow):
                 self._append_chat("ARIA", "Simulacion no disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
             return
 
-        if low in ("lecciones jane", "lecciones patrick jane"):
+        if low in ("lecciones sociales", "principios sociales"):
             try:
                 import social_rolemodels as sr
-                self._append_chat("ARIA", "Patrick Jane: %s" % sr.LECCIONES["patrick_jane"], C_ACCENT_CYAN_BRIGHT)
-            except Exception as exc:
-                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
-            return
-
-        if low in ("lecciones barney", "lecciones barney stinson"):
-            try:
-                import social_rolemodels as sr
-                self._append_chat("ARIA", "Barney Stinson: %s" % sr.LECCIONES["barney_stinson"], C_ACCENT_CYAN_BRIGHT)
+                self._append_chat("ARIA", "Principios: %s" % sr.principios()[:5], C_ACCENT_CYAN_BRIGHT)
             except Exception as exc:
                 self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
             return
@@ -1502,7 +1494,7 @@ class ChatWindow(QMainWindow):
         self.chat_history.append(
             "<div id='skeleton_" + str(int(time.time()*1000)) + "' style='margin:6px 0; padding:8px 10px; "
             "background:rgba(15,23,42,0.5); border-left:3px solid " + C_ACCENT + "; border-radius:4px; "
-            "box-shadow:0 0 8px rgba(56,189,248,0.2);'>"
+            "'>"
             "<span style='color:" + C_ACCENT + "; font-weight:bold; font-family:Consolas,monospace;'>ARIA</span> "
             "<span style='color:" + C_TEXT_DIM + "; font-size:9px; font-family:Consolas,monospace;'>[" + ts + "]</span>"
             + meta_html +
@@ -1703,13 +1695,13 @@ class ChatWindow(QMainWindow):
                 font-weight: bold;
                 font-size: 12px;
                 font-family: 'Consolas', monospace;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QPushButton:hover {{
                 background: rgba(56, 189, 248, 0.15);
                 border-color: {C_ACCENT_CYAN_BRIGHT};
                 color: {C_TEXT_PRIMARY};
-                box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+                
             }}
         """)
         close_btn.clicked.connect(dlg.reject)
@@ -1726,12 +1718,12 @@ class ChatWindow(QMainWindow):
                     stop:0 rgba(15, 23, 42, 0.7), stop:1 rgba(15, 23, 42, 0.4));
                 border: 1px solid {C_GLASS_BORDER};
                 border-radius: 12px;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QWidget:hover {{
                 border-color: {primary};
-                box-shadow: 0 0 20px {primary}60;
-                transform: scale(1.03);
+                
+                
             }}
         """)
         layout = QVBoxLayout(card)
@@ -1767,13 +1759,13 @@ class ChatWindow(QMainWindow):
                 font-weight: bold;
                 font-size: 10px;
                 font-family: 'Consolas', monospace;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QPushButton:hover {{
-                box-shadow: 0 0 12px {primary};
-                transform: translateY(-1px);
+                
+                
             }}
-            QPushButton:active {{ transform: scale(0.95); }}
+            QPushButton:active {{  }}
         """)
         apply_btn.clicked.connect(lambda k=key: (self._apply_theme(k), parent.accept()))
         layout.addWidget(apply_btn)
@@ -1918,14 +1910,14 @@ class ChatWindow(QMainWindow):
                 font-weight: bold;
                 font-size: 12px;
                 font-family: 'Consolas', monospace;
-                transition: {C_TRANS_NORMAL};
-                box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
+                
+                
             }}
             QPushButton:hover {{
-                box-shadow: 0 6px 24px rgba(0, 212, 255, 0.5);
-                transform: translateY(-2px);
+                
+                
             }}
-            QPushButton:active {{ transform: scale(0.97); }}
+            QPushButton:active {{  }}
         """)
         save_btn.clicked.connect(lambda: (self._save_settings(), dlg.accept()))
         v.addWidget(save_btn)
@@ -2491,7 +2483,7 @@ class EvolutionPanel(QWidget):
                     background: rgba({r}, {g}, {b}, 0.35);
                     color: {C_TEXT_PRIMARY};
                     border-color: rgba({r}, {g}, {b}, 0.8);
-                    box-shadow: 0 0 12px rgba({r}, {g}, {b}, 0.5);
+                    
                 }}
                 QPushButton:hover:!checked {{
                     border-color: rgba({r}, {g}, {b}, 0.4);
@@ -2529,14 +2521,14 @@ class EvolutionPanel(QWidget):
                 font-weight: bold;
                 font-size: 12px;
                 font-family: 'Consolas', monospace;
-                box-shadow: 0 4px 16px {C_ACCENT_ORANGE}40;
-                transition: {C_TRANS_NORMAL};
+                
+                
             }}
             QPushButton:hover {{
-                box-shadow: 0 6px 24px {C_ACCENT_ORANGE}60;
-                transform: translateY(-2px);
+                
+                
             }}
-            QPushButton:pressed {{ transform: scale(0.97); }}
+            QPushButton:pressed {{  }}
         """)
         self.sac_btn.clicked.connect(self._do_sacrifice)
         v.addWidget(self.sac_btn)
@@ -2705,7 +2697,7 @@ class MemoryPanel(QWidget):
                 padding: 6px 10px;
                 font-size: 11px;
                 font-family: 'Consolas', monospace;
-                transition: {C_TRANS_NORMAL};
+                
             }}
             QPushButton:hover {{
                 border-color: {C_ACCENT_CYAN_BRIGHT};
@@ -3168,7 +3160,7 @@ class OSDNotification(QLabel):
                 font-size: 12px;
                 font-weight: bold;
                 font-family: 'Consolas', monospace;
-                box-shadow: 0 0 24px rgba(0,0,0,0.6);
+                
             }}
         """)
         self.setWordWrap(True)

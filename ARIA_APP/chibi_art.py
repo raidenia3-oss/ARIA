@@ -19,15 +19,16 @@ import time
 _DIR = os.path.dirname(os.path.abspath(__file__))
 _TEMA_DIR = lambda tema: os.path.join(_DIR, "assets", "chibi", tema)
 
-PROMPT_BASE = ("chibi anime mascot, original character, small compact chibi body with Iroha-like "
-               "petite proportions (2-head-tall), very long flowing straight pure white hair past "
-               "the waist (Echidna style), black-and-white gothic witch dress with white lace frills "
-               "and layered skirt (Echidna style), soft pink and white over-ear headphones resting "
-               "around the neck, large expressive cyan eyes with a calm devoted loyal gaze, pale skin, "
-               "small green butterfly hair clip, soft blush, clean cel-shaded anime style, centered, "
-               "full body, plain solid white background, no watermark, no text, no logo")
+PROMPT_BASE = ("chibi anime mascot, original character, small compact petite chibi body "
+               "(2-head-tall), very long flowing straight pure white hair past the waist, "
+               "black-and-white gothic witch dress with white lace frills and layered skirt, "
+               "bright violet purple over-ear headphones around the neck, big glowing cyan blue "
+               "eyes (saturated cyan, (cyan eyes:1.3)) with a calm devoted loyal gaze, pale skin, "
+               "human girl with no animal ears, small green butterfly hair clip, soft blush, clean "
+               "cel-shaded anime style, centered, full body, plain solid white background, "
+               "no watermark, no text, no logo")
 
-# expresiones: rango picaro/travieso (Iroha) + calma leal (Ciel)
+# expresiones: rango picaro/travieso + calma leal (diseno original)
 POSES = [
     ("idle",   "standing elegant, calm loyal gentle smile"),
     ("walk",   "walking gracefully to the side, mid-step, confident"),

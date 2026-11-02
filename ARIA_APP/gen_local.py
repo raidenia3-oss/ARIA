@@ -19,7 +19,8 @@ import os
 MODELO_DEF = os.environ.get("ARIA_SD_MODEL", "runwayml/stable-diffusion-v1-5")
 # negativo por defecto: mata watermark/texto/deformidades
 NEGATIVO_DEF = ("watermark, signature, text, logo, caption, username, blurry, lowres, "
-                "extra limbs, extra fingers, deformed, bad anatomy, jpeg artifacts")
+                "extra limbs, extra fingers, deformed, bad anatomy, jpeg artifacts, "
+                "red eyes, orange eyes, animal ears, cat ears, fox ears, extra ears")
 
 _PIPE = None
 _PIPE_ID = None
