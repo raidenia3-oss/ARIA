@@ -28,6 +28,7 @@ import gen_local as GL
 import auditoria as AU
 import certeza as CE
 import brief as BR
+import demo as DEMO
 
 
 # ---------------------------------------------------------------- social_skills
@@ -547,6 +548,35 @@ def test_brief_vacio_da_mensaje_tranquilo():
 def test_generar_brief_estructura():
     b = BR.generar_brief()
     assert "texto" in b and "lineas" in b and isinstance(b["lineas"], list)
+
+
+# ---------------------------------------------------------------- demo interactiva (POE)
+def test_demo_estructura_poe():
+    h = DEMO.generar_demo("oscilacion", "Energia", prediccion="sube?",
+                          opciones=["si", "no"], correcta=0, explicacion="porque...")
+    for marca in ("1 · PREDICE", "2 · PRUEBA", "3 · COMPRUEBA", "<canvas"):
+        assert marca in h
+
+def test_demo_sin_dependencias_externas():
+    h = DEMO.generar_demo("grafica", "y=f(x)")
+    assert "http://" not in h and "https://" not in h and "cdn" not in h.lower()
+
+def test_demo_config_json_valido():
+    import json, re
+    h = DEMO.generar_demo("formula", "r", config={"formula": "a*b", "etiqueta": "a*b"})
+    m = re.search(r"const CFG = (\{.*?\});", h)
+    cfg = json.loads(m.group(1))
+    assert cfg["tipo"] == "formula"
+
+def test_demo_tipo_invalido_cae_a_formula():
+    import json, re
+    h = DEMO.generar_demo("inexistente", "x")
+    m = re.search(r"const CFG = (\{.*?\});", h)
+    assert json.loads(m.group(1))["tipo"] == "formula"
+
+def test_para_concepto_atajo():
+    h = DEMO.para_concepto("Pendulo", tipo="oscilacion")
+    assert "Pendulo" in h and "<canvas" in h
 
 
 # ---------------------------------------------------------------- runner manual
