@@ -1151,6 +1151,15 @@ class ChatWindow(QMainWindow):
             return
         self._ultimo_texto_usuario = text
         low = text.lower().strip()
+        if low.startswith("calidad "):
+            try:
+                import conversation_quality as cq
+                r = cq.evaluar(low.split(" ",1)[1])
+                self._append_chat("ARIA", "Calidad: %s" % r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
         if low == "engagement":
             try:
                 import engagement_loop as el

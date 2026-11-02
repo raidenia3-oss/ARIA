@@ -24,6 +24,7 @@ import autonomia_guardia as AG
 import conversacion as CV
 import social_rolemodels as RM
 import cita_sim as CS
+import gen_local as GL
 
 
 # ---------------------------------------------------------------- social_skills
@@ -473,6 +474,22 @@ def test_cita_premia_retirada_con_gracia():
 def test_cita_turno_devuelve_coaching():
     t = CS.turno("hola, que tal tu dia?", mood="receptiva", registrar_leccion=False)
     assert "respuesta_cita" in t and "coaching" in t and "feedback" in t["coaching"]
+
+
+# ---------------------------------------------------------------- gen_local
+def test_dim8_multiplo_y_minimo():
+    assert GL._dim8(256) % 8 == 0 and GL._dim8(256) >= 384
+    assert GL._dim8(513) % 8 == 0
+    assert GL._dim8(1024) == 1024
+
+def test_gen_local_disponible_es_bool():
+    assert isinstance(GL.disponible(), bool)
+
+def test_gen_local_sin_libreria_da_error_claro():
+    # si no esta diffusers, generar() devuelve error legible (no revienta)
+    if not GL.disponible():
+        r = GL.generar("test", archivo=None)
+        assert "error" in r and "diffusers" in r["error"]
 
 
 # ---------------------------------------------------------------- runner manual
