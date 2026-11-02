@@ -1151,6 +1151,15 @@ class ChatWindow(QMainWindow):
             return
         self._ultimo_texto_usuario = text
         low = text.lower().strip()
+        if low == "engagement":
+            try:
+                import engagement_loop as el
+                r = el.ciclo(getattr(self, "_ultimo_ts", None), getattr(self, "_temas_pendientes", []), getattr(self, "_lecciones_actuales", None))
+                self._append_chat("ARIA", r, C_ACCENT_CYAN_BRIGHT)
+            except Exception as exc:
+                self._append_chat("ARIA", "No disponible: %s" % exc, C_ACCENT_CYAN_BRIGHT)
+            return
+
         if low.startswith("compone "):
             try:
                 import response_composer as rc

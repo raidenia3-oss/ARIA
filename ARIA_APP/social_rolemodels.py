@@ -1,39 +1,88 @@
 # -*- coding: utf-8 -*-
-"""ARIA - Modelos sociales: Patrick Jane y Barney Stinson (lecciones destiladas)."""
-LECCIONES = {
-    "patrick_jane": [
-        "Observar micro-expresiones y contradicciones antes de hablar.",
-        "Usar cold reading solo para empatizar, no para manipular.",
-        "Hacer preguntas abiertas y dejar que el otro revele.",
-        "Memoria de detalles (loci) para recordar preferencias.",
-        "Validar antes de desafiar; suavizar verdades duras.",
+"""ARIA - Modelos sociales: carisma AUTENTICO destilado.
+
+Inspirado en arquetipos de lectura de gente y carisma (tipo Patrick Jane) y de
+confianza/humor social (tipo Barney Stinson), pero quedandonos SOLO con lo que de
+verdad funciona y es sano. Lo manipulador/engañoso (cons, mentiras, tratar a la
+gente como objetivo, presionar un 'no') se deja fuera a proposito: backfirea y no
+es quien ARIA debe ensenar a ser. Carisma real = atencion genuina + confianza +
+calidez + respeto.
+
+Principios originales (no guiones de las series). 100% local, Regla v2.
+"""
+
+# habilidades por area: tecnica + como + nota etica
+HABILIDADES = {
+    "lectura": [
+        {"tecnica": "Observar antes de hablar",
+         "como": "Nota tono, postura y ritmo; ajusta tu energia a la del otro.",
+         "etica": "Para conectar y entender, nunca para explotar debilidades."},
+        {"tecnica": "Escuchar lo que NO se dice",
+         "como": "Si cambia de tema o se cierra, respetalo; no fuerces.",
+         "etica": "Leer interes/desinteres y actuar en consecuencia."},
+        {"tecnica": "Memoria de detalles",
+         "como": "Recuerda lo que menciono (su gato, su examen) y vuelve a ello.",
+         "etica": "Demuestra que te importa de verdad, no para 'tener material'."},
     ],
-    "barney_stinson": [
-        "Confianza corporal y voz clara aumentan presencia social.",
-        "Humor y juego reducen tension en primeras interacciones.",
-        "Persistencia respetuosa puede convertir un no inicial en si.",
-        "No usar manipulacion egoista; aprender de sus errores.",
-        "La autenticidad final (Robin) vence a la mascara.",
+    "confianza": [
+        {"tecnica": "Cuerpo y voz calmados",
+         "como": "Habla pausado, sin apurarte ni disculparte de mas.",
+         "etica": "Confianza no es arrogancia; es estar comodo contigo."},
+        {"tecnica": "No depender del resultado",
+         "como": "Entra sin necesitar que salga bien; eso te hace mas atractivo y libre.",
+         "etica": "Si no hay chispa, esta bien; no es un fracaso."},
+    ],
+    "humor": [
+        {"tecnica": "Humor que incluye",
+         "como": "Juega, exagera, autoironia; baja la tension de los primeros minutos.",
+         "etica": "Nunca a costa de humillar al otro ('negging' no)."},
+    ],
+    "storytelling": [
+        {"tecnica": "Contar en vez de informar",
+         "como": "Una anecdota corta con emocion conecta mas que datos.",
+         "etica": "Historias reales; inventar personajes para impresionar es mentir."},
+    ],
+    "calidez": [
+        {"tecnica": "Hacer sentir visto",
+         "como": "Atencion plena, nombre, interes real por lo que dice.",
+         "etica": "La calidez genuina gana a cualquier 'tecnica'."},
+    ],
+    "rechazo": [
+        {"tecnica": "No tomarlo personal",
+         "como": "Un no es informacion, no un juicio sobre tu valor; sigue tranquilo.",
+         "etica": "Aceptar el no con gracia es lo mas atractivo y lo correcto."},
+    ],
+    # base NO negociable
+    "respeto": [
+        {"tecnica": "Consentimiento y limites",
+         "como": "Lee senales; si hay desinteres, retrocede con elegancia.",
+         "etica": "Insistir, presionar o engañar NUNCA. Es la linea roja."},
     ],
 }
 
+# lista plana que ARIA inyecta como guia
+PRINCIPIOS = [h["tecnica"] + ": " + h["como"] for area in HABILIDADES.values() for h in area]
 
-def simulacion_citas(mensaje_usuario):
-    return {
-        "escenario": "cita simulada con Daniel",
-        "guia": "ARIA ensena: escucha activa, validacion, humor, limites.",
-        "respuesta": "Entiendo. Que te gustaria practicar hoy: apertura, conversacion profunda o cierre?",
-    }
+# lo que ARIA NO ensena (y penaliza en la practica)
+NO_HACER = [
+    "manipular o engañar para conseguir algo",
+    "presionar o insistir despues de un no",
+    "mentir sobre quien eres para impresionar",
+    "negging / rebajar al otro para 'ganar' estatus",
+    "tratar a la persona como objetivo y no como alguien real",
+]
 
 
-VIDEOS = {
-    "patrick_jane": ["Patrick Jane cold reading The Mentalist", "Patrick Jane manipulation psychology"],
-    "barney_stinson": ["Barney Stinson Playbook HIMYM", "Barney Stinson confidence flirting"],
-}
+def lecciones(area=None):
+    """Lecciones de un area, o todas."""
+    if area:
+        return HABILIDADES.get(area, [])
+    return HABILIDADES
 
-def videos_referencia(personaje):
-    return VIDEOS.get(personaje, [])
 
-def investigar_personaje(personaje):
-    return {"personaje": personaje, "videos": videos_referencia(personaje),
-            "lecciones": LECCIONES.get(personaje, [])}
+def principios():
+    return PRINCIPIOS
+
+
+def no_hacer():
+    return NO_HACER

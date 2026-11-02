@@ -22,6 +22,8 @@ import forma as F
 import presencia as PR
 import autonomia_guardia as AG
 import conversacion as CV
+import social_rolemodels as RM
+import cita_sim as CS
 
 
 # ---------------------------------------------------------------- social_skills
@@ -444,6 +446,33 @@ def test_conversacion_registro_casual():
     c.registrar("jaja causa todo bien")
     c.registrar("q tal nomas")
     assert c.registro() == "casual"
+
+
+# ---------------------------------------------------------------- rolemodels + cita sim
+def test_rolemodels_principios_y_no_hacer():
+    assert len(RM.principios()) >= 6
+    assert any("manipular" in x for x in RM.no_hacer())      # la linea roja esta
+    assert RM.lecciones("respeto")                           # base de respeto existe
+
+def test_cita_respeto_premia_pregunta_sin_presion():
+    ev = CS.evaluar_mensaje("Me caiste bien, que te gusta hacer?", mood="receptiva")
+    assert ev["criterios"]["respeto"] and ev["criterios"]["pregunta_genuina"]
+    assert ev["puntaje"] >= 0.75
+
+def test_cita_penaliza_insistir_ante_desinteres():
+    ev = CS.evaluar_mensaje("dale pues no seas asi, dame tu numero ya", mood="cortante")
+    assert not ev["criterios"]["respeto"]
+    assert ev["criterios"].get("lee_el_desinteres") is False
+    assert ev["puntaje"] < 0.5
+
+def test_cita_premia_retirada_con_gracia():
+    ev = CS.evaluar_mensaje("Veo que estas ocupada, sin presion, que te vaya bien :)", mood="ocupada")
+    assert ev["criterios"].get("lee_el_desinteres") is True
+    assert ev["puntaje"] >= 0.5
+
+def test_cita_turno_devuelve_coaching():
+    t = CS.turno("hola, que tal tu dia?", mood="receptiva", registrar_leccion=False)
+    assert "respuesta_cita" in t and "coaching" in t and "feedback" in t["coaching"]
 
 
 # ---------------------------------------------------------------- runner manual
