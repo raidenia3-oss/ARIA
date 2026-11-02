@@ -25,6 +25,8 @@ import conversacion as CV
 import social_rolemodels as RM
 import cita_sim as CS
 import gen_local as GL
+import auditoria as AU
+import certeza as CE
 
 
 # ---------------------------------------------------------------- social_skills
@@ -490,6 +492,41 @@ def test_gen_local_sin_libreria_da_error_claro():
     if not GL.disponible():
         r = GL.generar("test", archivo=None)
         assert "error" in r and "diffusers" in r["error"]
+
+
+# ---------------------------------------------------------------- auditoria
+def _audit_tmp():
+    import os, tempfile
+    d = tempfile.mkdtemp()
+    AU._DIR = d; AU._LOG = os.path.join(d, "acciones.jsonl")
+
+def test_auditoria_registra_y_resume():
+    _audit_tmp()
+    AU.registrar("file_read", "lei notas", "ok", autonomo=True, tipo="autonomia")
+    AU.registrar("responder", "chat", "ok", autonomo=False)
+    r = AU.resumen()
+    assert r["total"] == 2 and r["autonomas"] == 1 and r["pedidas"] == 1
+
+def test_auditoria_filtra_autonomas():
+    _audit_tmp()
+    AU.registrar("a", autonomo=True); AU.registrar("b", autonomo=False)
+    assert len(AU.leer(solo_autonomas=True)) == 1
+
+# ---------------------------------------------------------------- certeza (no inventes)
+def test_certeza_detecta_factual():
+    assert CE.es_factual_especifico("cuanto cuesta un iphone")
+    assert CE.es_factual_especifico("quien es el presidente de peru")
+    assert not CE.es_factual_especifico("que opinas de la musica")
+    assert not CE.es_factual_especifico("explica como funciona esto")
+
+def test_certeza_escala_sin_fuente():
+    assert CE.debe_escalar("cuanto cuesta eso", tiene_fuente=False, en_memoria=False)
+    assert not CE.debe_escalar("cuanto cuesta eso", tiene_fuente=True)
+    assert not CE.debe_escalar("que opinas", tiene_fuente=False)
+
+def test_certeza_frase_no_inventa():
+    f = CE.frase_escalada("el precio")
+    assert "inventar" in f.lower()
 
 
 # ---------------------------------------------------------------- runner manual
