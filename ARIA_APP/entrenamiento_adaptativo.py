@@ -102,6 +102,26 @@ def set_dataset(path: str, cfg: Optional[Dict[str, Any]] = None) -> Dict[str, An
     return {"ok": True, "dataset": path}
 
 
-def status() -> Dict[str, Any]:
-    cfg = cargar_config()
-    return {"config": cfg, "train_dir": str(TRAIN_DIR), "dataset_ok": bool(cfg.get("dataset"))}
+def auto_dominio(texto: str) -> str:
+    """Detecta dominio a partir de texto (heuristica simple)."""
+    t = texto.lower()
+    if any(w in t for w in ("def ", "class ", "python", "javascript", "codigo", "function")):
+        return "codigo"
+    if any(w in t for w in ("paciente", "sintoma", "diagnostico", "medicina", "salud")):
+        return "salud"
+    if any(w in t for w in ("inversion", "accion", "mercado", "finanzas", "bolsa")):
+        return "finanzas"
+    if any(w in t for w in ("ley", "contrato", "legal", "juicio")):
+        return "legal"
+    return "general"
+
+
+def curriculum(dominio: str, niveles: int = 3) -> List[Dict[str, Any]]:
+    """Genera un curriculum de entrenamiento progresivo."""
+    return [{"nivel": i + 1, "dificultad": ["basico", "intermedio", "avanzado"][min(i, 2)],
+             "dominio": dominio, "tareas": f"nivel {i+1} de {dominio}"} for i in range(niveles)]
+
+
+def evaluar(modelo_path: str, dataset_path: str) -> Dict[str, Any]:
+    """Placeholder de evaluacion: retorna metricas simuladas."""
+    return {"modelo": modelo_path, "dataset": dataset_path, "loss": 0.5, "perplexity": 12.3, "ok": True}
