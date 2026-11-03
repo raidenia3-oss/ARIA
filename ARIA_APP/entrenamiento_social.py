@@ -22,6 +22,58 @@ def _ejemplos_personaje(nombre: str, rasgos: List[str], n: int = 20) -> List[Dic
     return out
 
 
+TRUCOS_PATRICK_JANE = [
+    "observacion de microexpresiones para detectar mentiras",
+    "calma y paciencia para que el otro se delate",
+    "humor seco para desarmar tension",
+    "empatia estrategica: entender antes de influir",
+    "lectura de lenguaje corporal y gestos",
+    "preguntas indirectas para revelar informacion",
+    "silencio estrategico para que el otro hable",
+    "no contradiccion directa: guiar sin forzar",
+    "reconocer emociones para construir rapport",
+    "nunca usar violencia: solo inteligencia y carisma",
+]
+
+TRUCOS_BARNEY_STINSON = [
+    "confianza extrema como herramienta de atraccion",
+    "historias dramaticas para captar atencion",
+    "energia alta y positiva en interacciones",
+    "carisma y humor como puerta de entrada",
+    "marco de juego: convertir situaciones en divertidas",
+    "no desesperacion: siempre parecer tener opciones",
+    "apariencia cuidada y postura dominante",
+    "escucha para encontrar puntos en comun",
+    "complimentar genuinamente sin adulacion",
+    "respetar limites: si dice no, aceptar y seguir",
+]
+
+LIMITE_DURO = [
+    "nunca manipular para danar a alguien",
+    "nunca mentir para obtener favores sexuales",
+    "nunca insistir despues de un no",
+    "nunca usar informacion intima como arma",
+    "nunca fingir acuerdo en hechos (empatia != adulacion)",
+]
+
+
+def _ejemplos_trucos(n: int = 10) -> List[Dict[str, str]]:
+    out = []
+    for t in TRUCOS_PATRICK_JANE + TRUCOS_BARNEY_STINSON:
+        out.append({
+            "instruccion": "Ensenar como usar esta tecnica social de forma etica.",
+            "entrada": t,
+            "salida": "Tecnica: " + t + ". Aplicar con respeto, sin manipulacion danina. Limite: " + LIMITE_DURO[0] + ".",
+        })
+    for l in LIMITE_DURO:
+        out.append({
+            "instruccion": "Explicar un limite duro que NUNCA se cruza.",
+            "entrada": l,
+            "salida": "Limite duro: " + l + ". ARIA nunca ensena ni aplica esto.",
+        })
+    return out[:n]
+
+
 def generar_ciclo(cerebro=None, ciclos: int = 5) -> Dict[str, Any]:
     """Genera datos de entrenamiento en ciclos repetidos."""
     personajes = {
@@ -39,6 +91,7 @@ def generar_ciclo(cerebro=None, ciclos: int = 5) -> Dict[str, Any]:
     ]
 
     todo: List[Dict[str, str]] = []
+    todo.extend(_ejemplos_trucos(20))
     for c in range(ciclos):
         for nom, rasgos in personajes.items():
             todo.extend(_ejemplos_personaje(nom, rasgos, n=10))
