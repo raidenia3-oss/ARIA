@@ -874,6 +874,19 @@ class LocalAIBrain:
         msg = message.strip()
         if not msg:
             return {"response": "No escribiste nada.", "provider": "local", "source": "rules"}
+        try:
+            import certeza
+            if certeza.debe_escalar(msg, False, False):
+                r = certeza.frase_escalada(msg)
+                self._record(msg, r, "certeza")
+                return {"response": r, "provider": "local", "source": "certeza"}
+        except Exception:
+            pass
+        if getattr(self, "conv", None) is not None:
+            try:
+                self.conv.registrar(msg)
+            except Exception:
+                pass
 
         # 1. Reglas locales (instantáneo, sin dependencias)
         rule = self._rules_reply(msg)
@@ -2375,7 +2388,9 @@ class VirtualAssistant:
         self._awake = False
         try:
             import conocimiento, experiencia, mejora, aprendizaje, planificador, nucleo, forma
+            import conversacion, coherencia, atomizacion, brief, presencia, certeza, cita_sim, gen_local, demo
             self.grafo = conocimiento.grafo()
+            self.conv = conversacion.crear_conversacion()
             self.arnes = aprendizaje.Arnes(responder=lambda t: self.brain.chat(t).get('response',''), grafo=self.grafo)
             try:
                 self._forma = forma.crear_forma(nucleo_factory=nucleo.crear_nucleo, avatar_factory=lambda: __import__('chibi').crear_chibi())
