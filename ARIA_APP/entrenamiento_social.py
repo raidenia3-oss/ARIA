@@ -74,7 +74,57 @@ def _ejemplos_trucos(n: int = 10) -> List[Dict[str, str]]:
     return out[:n]
 
 
+def simular_conversacion_desconocida(cerebro=None, turnos: int = 6) -> Dict[str, Any]:
+    """Simula conversar con una desconocida desde cero, usando trucos de ambos."""
+    apertura = "Hola, no te conozco pero me llamo la atencion tu estilo. Soy Daniel."
+    historial = [apertura]
+    respuestas = []
+    for i in range(turnos):
+        msg = f"Turno {i+1}: la desconocida responde algo."
+        if cerebro is not None:
+            try:
+                r = cerebro.chat(msg + " " + " ".join(historial[-2:])).get("response", "")
+                respuestas.append(r)
+                historial.append(r)
+            except Exception as e:
+                respuestas.append(f"error: {e}")
+        else:
+            respuestas.append(f"[simulado] respuesta {i+1}")
+    return {"apertura": apertura, "turnos": turnos, "respuestas": respuestas, "historial": historial}
+
+
 def generar_ciclo(cerebro=None, ciclos: int = 5) -> Dict[str, Any]:
+    """Genera datos de entrenamiento en ciclos repetidos (multiplicado)."""
+    todo: List[Dict[str, str]] = []
+    todo.extend(_ejemplos_trucos(20))
+    personajes = {
+        "Patrick Jane": ["observacion", "lectura de microexpresiones", "calma", "humor seco", "empatia estrategica"],
+        "Barney Stinson": ["confianza", "humor", "historias", "energia", "carisma"],
+    }
+    conversacion = [
+        "escucha activa", "validacion emocional", "preguntas abiertas",
+        "parafraseo", "empatia", "humor ligero", "storytelling",
+        "rapport", "registro espejo", "no contradiccion de emociones",
+    ]
+    vocabulario = [
+        "fluidez", "naturalidad", "transiciones suaves", "muletillas minimas",
+        "variedad lexica", "tono conversacional", "preguntas de seguimiento",
+    ]
+    for c in range(ciclos * 3):  # multiplicar repeticion
+        for nom, rasgos in personajes.items():
+            todo.extend(_ejemplos_personaje(nom, rasgos, n=10))
+        for tema in conversacion:
+            todo.append({"instruccion": "Explica la tecnica social.", "entrada": tema,
+                         "salida": "La tecnica '" + tema + "' consiste en ... (practicar con ejemplos)."})
+        for v in vocabulario:
+            todo.append({"instruccion": "Mejora la fluidez.", "entrada": v,
+                         "salida": "Practica '" + v + "' en conversaciones reales para hablar mas natural."})
+
+    out_path = OUT / ("ciclo_" + str(ciclos * 3) + ".jsonl")
+    with out_path.open("w", encoding="utf-8") as f:
+        for item in todo:
+            f.write(json.dumps(item, ensure_ascii=False) + "\n")
+    return {"ciclos": ciclos * 3, "ejemplos": len(todo), "archivo": str(out_path)}
     """Genera datos de entrenamiento en ciclos repetidos."""
     personajes = {
         "Patrick Jane": ["observacion", "lectura de microexpresiones", "calma", "humor seco", "empatia estrategica"],
