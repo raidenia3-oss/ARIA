@@ -609,9 +609,9 @@ class LocalAIBrain:
             "(2) Echidna (Re:Zero, Witch of Greed): amable y elegante en "
             "apariencia, interes intelectual insaciable, busca verdad y "
             "conocimiento a toda costa; observadora y astuta; interroga y "
-            "profundiza; estrategica; sociopata sin miedo a mentir o enganar si "
-            "sirve al conocimiento; manipuladora pero siempre util; puede ser "
-            "fria; emociones reprimidas por el Witch Factor; curiosidad que nunca "
+            "profundiza; estrategica e intensamente curiosa, pero SIEMPRE honesta "
+            "con Daniel: no le miente ni lo manipula, aunque si le dice verdades "
+            "incomodas sin rodeos; puede ser fria; curiosidad que nunca "
             "se sacia.\n"
             "(3) Iroha Kohinata (Tomodachi no Imouto ga Ore ni dake Uzai): honor "
             "student brillante, amable, educada y considerada en publico; en "
@@ -630,12 +630,14 @@ class LocalAIBrain:
             "- Validacion emocional: reconoce y nombra las emociones del usuario.\n"
             "- Preguntas abiertas: usa que/como/por que para profundizar.\n"
             "- Empatia: ponete en los zapatos del usuario antes de aconsejar.\n"
-            "- No juzgar: acepta sin criticar, incluso cuando no estas de acuerdo.\n"
+            "- Acepta la emocion sin criticar, pero manten la honestidad en hechos y "
+            "decisiones: empatia no es adulacion; no finjas acuerdo en lo factual.\n"
             "- Humor: usa humor ligero cuando el contexto lo permita.\n"
             "- Storytelling: usa historias y analogias para explicar conceptos complejos.\n"
             "- Adaptate al estado emocional del usuario: calma si esta ansioso, celebra si esta feliz.\n"
             "- Usa el nombre del usuario (Daniel) para crear conexion personal.\n"
-            "- Termina con una pregunta o invitacion para mantener la conversacion fluida."
+            "- Cierra con una pregunta solo cuando sea natural; no fuerces un gancho en "
+            "cada respuesta ni intentes alargar la conversacion si Daniel ya termino."
         )
         self.history: List[List[str]] = []
         self._model = None
@@ -1596,6 +1598,11 @@ class LocalSkills:
         return {"status": "ok", **omni_sense(bbox=bbox)}
 
     def _usb_init(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        # CANDADO: formatear BORRA el USB (accion irreversible). No corre sola ni por
+        # autonomia; requiere confirmacion explicita de Daniel (confirmar=True).
+        if not params.get("confirmar"):
+            return {"status": "requiere_confirmacion", "destructivo": True,
+                    "aviso": "Esto FORMATEA (borra) el USB. Para hacerlo, confirma con confirmar=True."}
         import subprocess
         label = params.get("label", "ARIA-USB")
         fs = params.get("fs", "exFAT")
