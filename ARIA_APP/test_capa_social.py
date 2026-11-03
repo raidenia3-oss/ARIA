@@ -29,6 +29,8 @@ import auditoria as AU
 import certeza as CE
 import brief as BR
 import demo as DEMO
+import coherencia as CO
+import atomizacion as AT
 
 
 # ---------------------------------------------------------------- social_skills
@@ -577,6 +579,69 @@ def test_demo_tipo_invalido_cae_a_formula():
 def test_para_concepto_atajo():
     h = DEMO.para_concepto("Pendulo", tipo="oscilacion")
     assert "Pendulo" in h and "<canvas" in h
+
+
+# ---------------------------------------------------------------- coherencia (contradicciones)
+def test_contradice_negacion():
+    ch, _ = CO.contradice("a Daniel le gusta el cafe", "a Daniel no le gusta el cafe")
+    assert ch
+
+def test_contradice_antonimo():
+    ch, r = CO.contradice("el modo rapido esta activo", "el modo esta lento")
+    assert ch and "antonimo" in r
+
+def test_contradice_valor_distinto():
+    ch, r = CO.contradice("Daniel vive en Lima", "Daniel vive en Cusco")
+    assert ch and "valor distinto" in r
+
+def test_no_contradice_temas_distintos():
+    ch, _ = CO.contradice("a Daniel le gusta el cafe", "el cielo es azul")
+    assert not ch
+
+def test_no_contradice_igual():
+    ch, _ = CO.contradice("ARIA es local", "ARIA es local")
+    assert not ch
+
+def test_revisar_usa_grafo_falso():
+    class G:
+        def buscar(self, p, k=6):
+            return [{"texto": "Daniel vive en Cusco"}]
+    confs = CO.revisar(G(), "Daniel vive en Lima")
+    assert len(confs) == 1 and "valor distinto" in confs[0]["razon"]
+
+
+# ---------------------------------------------------------------- atomizacion
+_DOC = ("ARIA es un asistente local sin servidores. ARIA corre en la PC de Daniel. "
+        "El cerebro usa llama.cpp. La memoria es semantica y un grafo. "
+        "La autonomia tiene una guardia para acciones irreversibles. ARIA es local.")
+
+def test_atomizar_saca_atomos_y_conceptos():
+    d = AT.atomizar(_DOC, fuente="notas.md")
+    assert d["n_atomos"] >= 3
+    assert all(a["fuente"] == "notas.md" for a in d["atomos"])
+    assert "aria" in [c.lower() for c in d["conceptos"]]
+
+def test_es_atomo_filtra_preguntas_y_cortas():
+    assert not AT._es_atomo("hola")
+    assert not AT._es_atomo("Que es esto?")
+    assert AT._es_atomo("ARIA corre localmente en la PC de Daniel")
+
+def test_ingerir_mete_atomos_al_grafo():
+    g = _grafo_tmp()
+    r = AT.ingerir(g, _DOC, fuente="notas.md", revisar_coherencia=False)
+    assert r["agregados"] >= 3 and g.stats()["nodos"] >= 3
+
+def test_ingerir_frena_contradiccion():
+    # grafo falso: buscar() devuelve la nota previa que contradice (evita depender de semantica)
+    class G:
+        def __init__(self): self.guardados = []
+        def buscar(self, p, k=6): return [{"texto": "Daniel vive en Lima"}]
+        def aprender(self, t, tema="", fuente=""): self.guardados.append(t); return 1
+    g = G()
+    r = AT.ingerir(g, "Daniel vive en Cusco segun el registro civil nacional.",
+                   fuente="x.md", revisar_coherencia=True)
+    assert len(r["conflictos"]) >= 1
+    assert "Cusco" not in " ".join(g.guardados)   # NO guardo el atomo que contradice
 
 
 # ---------------------------------------------------------------- runner manual
