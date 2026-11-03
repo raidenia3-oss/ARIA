@@ -1281,7 +1281,16 @@ class Runtime:
         skill_id, params = _match_skill(goal)
         if skill_id and self.skills is not None:
             try:
-                result = self.skills.run(skill_id, params)
+                import autonomia_guardia as guardia
+                import auditoria
+                g = guardia.guard(skill_id, params, ejecutar=lambda: self.skills.run(skill_id, params))
+                auditoria.registrar(skill_id, str(params), str(g)[:120], autonomo=True, tipo="autonomia")
+                if g.get("bloqueado"):
+                    result = {"status": "bloqueado", "error": g["motivo"]}
+                elif g.get("pendiente"):
+                    result = {"status": "espera OK de Daniel", "id": g["pendiente"]}
+                else:
+                    result = g.get("resultado")
             except Exception as exc:  # noqa: BLE001 - el motivo se guarda
                 result = {"status": "error", "error": str(exc)}
             if isinstance(result, dict) and result.get("status") == "ok":
