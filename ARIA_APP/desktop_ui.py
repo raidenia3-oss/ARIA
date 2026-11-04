@@ -3561,6 +3561,20 @@ def run_desktop():
 
     window.show()
     print("[UI] Window shown, visible=True", flush=True)
+    try:
+        import modos
+        def _al_cambiar_modo(m):
+            try:
+                va._forma.mostrar(m.get("forma", "nucleo"))
+            except Exception:
+                pass
+            va._skills_activas = set(m.get("skills", []))
+        sel = modos.crear_selector(on_modo=_al_cambiar_modo, modo_inicial="analista")
+        sel.start()
+        va._modos = sel
+        sel.show()
+    except Exception as e:
+        print(f"[UI] modos fallo: {e}", flush=True)
 
     # Presence (idle show/hide) + hand react
     try:
