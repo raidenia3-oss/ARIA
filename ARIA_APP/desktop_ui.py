@@ -3562,6 +3562,15 @@ def run_desktop():
     window.show()
     print("[UI] Window shown, visible=True", flush=True)
     try:
+        import resurgir, bandeja
+        tar = resurgir.para_bandeja()
+        if tar:
+            b = bandeja.crear_bandeja()
+            b.mostrar({"noticias": [tar], "fecha": "HOY"})
+            window._bandeja = b
+    except Exception as e:
+        print(f"[UI] resurgir fallo: {e}", flush=True)
+    try:
         import modos
         def _al_cambiar_modo(m):
             try:
