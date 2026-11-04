@@ -3562,6 +3562,15 @@ def run_desktop():
     window.show()
     print("[UI] Window shown, visible=True", flush=True)
     try:
+        import actividad
+        act = actividad.crear_actividad()
+        act.start()
+        act.refrescar()
+        window._actividad = act
+        act.show()
+    except Exception as e:
+        print(f"[UI] actividad fallo: {e}", flush=True)
+    try:
         import resurgir, bandeja
         tar = resurgir.para_bandeja()
         if tar:
