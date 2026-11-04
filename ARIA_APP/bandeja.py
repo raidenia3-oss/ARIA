@@ -83,6 +83,16 @@ if _QT:
             pl.addWidget(self._scroll, 1)
             root.addWidget(panel)
 
+        def showEvent(self, e):
+            super().showEvent(e)
+            if not getattr(self, "_blur_ok", False):
+                self._blur_ok = True
+                try:
+                    import pywinstyles           # blur nativo de Windows (opcional, liviano)
+                    pywinstyles.apply_style(self, "acrylic")
+                except Exception:
+                    pass
+
         def set_noticias(self, paquete):
             noticias = paquete.get("noticias", []) if isinstance(paquete, dict) else list(paquete)
             self._sub.setText("%d titulares · %s" % (len(noticias),

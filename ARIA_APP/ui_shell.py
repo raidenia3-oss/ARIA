@@ -175,6 +175,16 @@ if _QT:
             self._fondo = _Fondo(self)
             self._build(); self._reloj()
 
+        def showEvent(self, e):
+            super().showEvent(e)
+            if not getattr(self, "_blur_ok", False):
+                self._blur_ok = True
+                try:
+                    import pywinstyles           # blur nativo de Windows (opcional, liviano)
+                    pywinstyles.apply_style(self, "acrylic")
+                except Exception:
+                    pass
+
         def resizeEvent(self, e):
             self._fondo.setGeometry(0, 0, self.width(), self.height())
 
