@@ -31,6 +31,7 @@ import brief as BR
 import demo as DEMO
 import coherencia as CO
 import atomizacion as AT
+import vault_md as VM
 
 
 # ---------------------------------------------------------------- social_skills
@@ -642,6 +643,52 @@ def test_ingerir_frena_contradiccion():
                    fuente="x.md", revisar_coherencia=True)
     assert len(r["conflictos"]) >= 1
     assert "Cusco" not in " ".join(g.guardados)   # NO guardo el atomo que contradice
+
+
+# ---------------------------------------------------------------- vault_md (markdown + backup)
+def _vault_tmp():
+    import os, tempfile
+    d = tempfile.mkdtemp()
+    VM._DIR = d
+    VM._VAULT = os.path.join(d, "data", "vault")
+    VM._MAQ = os.path.join(VM._VAULT, "maquina")
+    VM._HUM = os.path.join(VM._VAULT, "humano")
+    return d
+
+class _GrafoFake:
+    def _conn(self):
+        import sqlite3
+        db = sqlite3.connect(":memory:")
+        db.execute("CREATE TABLE nodos(texto TEXT, tema TEXT)")
+        db.execute("INSERT INTO nodos VALUES('ARIA es local','general')")
+        db.commit()
+        return db
+
+def test_vault_exporta_md():
+    _vault_tmp()
+    VM.exportar(_GrafoFake())
+    ruta = os.path.join(VM._MAQ, "conocimiento.md")
+    assert os.path.isfile(ruta) and "ARIA es local" in open(ruta, encoding="utf-8").read()
+    assert os.path.isfile(os.path.join(VM._HUM, "perfil.md"))   # lado humano creado
+
+def test_vault_backup_zip():
+    _vault_tmp()
+    VM.exportar(_GrafoFake())
+    r = VM.respaldar()
+    assert r.get("ok") and r["archivo"].endswith(".zip") and os.path.isfile(r["archivo"])
+
+def test_vault_backup_cifrado_roundtrip():
+    import tempfile
+    d = _vault_tmp()
+    VM.exportar(_GrafoFake())
+    r = VM.respaldar(clave="clave_fuerte_123")
+    assert r.get("ok") and r["archivo"].endswith(".zip.enc")
+    dest = tempfile.mkdtemp()
+    rr = VM.restaurar(r["archivo"], dest, clave="clave_fuerte_123")
+    assert rr.get("ok")
+    # clave mala -> no restaura
+    mala = VM.restaurar(r["archivo"], tempfile.mkdtemp(), clave="otra")
+    assert "error" in mala
 
 
 # ---------------------------------------------------------------- runner manual

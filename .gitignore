@@ -143,3 +143,7 @@ packages/backend/security_state/identities/
 
 # Artefactos de las sesiones de navegador (capturas, snapshots, logs)
 .playwright-mcp/
+
+# Vault markdown (human side) + backups (privados)
+ARIA_APP/data/vault/humano/
+ARIA_APP/data/backups/
