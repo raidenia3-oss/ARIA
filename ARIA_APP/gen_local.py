@@ -53,6 +53,17 @@ def _pipeline(modelo):
     global _PIPE, _PIPE_ID
     if _PIPE is not None and _PIPE_ID == modelo:
         return _PIPE
+    # CANDADO DE RAM: SD (~4 GB) + llama + la app no caben en 15 GB. Si hay poca RAM,
+    # NO cargues el modelo (tumbaria el cerebro); avisa para generar con ARIA cerrada.
+    try:
+        import psutil
+        libre = psutil.virtual_memory().available / (1024 ** 3)
+    except Exception:
+        libre = None
+    if libre is not None and libre < 3.5:
+        raise RuntimeError(
+            "RAM insuficiente para Stable Diffusion: %.1f GB libres (~3.5+ necesarios). "
+            "Cierra apps o genera el avatar con ARIA cerrada (y luego gen_local.liberar())." % libre)
     import torch
     from diffusers import StableDiffusionPipeline
     pipe = StableDiffusionPipeline.from_pretrained(
@@ -66,12 +77,24 @@ def _pipeline(modelo):
     return pipe
 
 
+def _ram_libre_mb():
+    try:
+        import psutil
+        return psutil.virtual_memory().available // (1024 * 1024)
+    except Exception:
+        return None
+
+
 def generar(prompt, w=512, h=512, archivo=None, seed=0, steps=24,
             modelo=None, negativo=None):
     """Genera una imagen local y la guarda. Devuelve {'ok': True, ...} o {'error': ...}."""
     if not disponible():
         return {"error": "falta diffusers/torch "
                          "(pip install diffusers transformers accelerate torch)"}
+    libre = _ram_libre_mb()
+    if libre is not None and libre < 2048:
+        return {"error": "RAM insuficiente: %d MB libres (necesita >= 2048 MB). "
+                         "Cierra apps pesadas o libera memoria." % libre}
     import torch
     modelo = modelo or MODELO_DEF
     # genera a >=512 para calidad y luego reescala a lo pedido
