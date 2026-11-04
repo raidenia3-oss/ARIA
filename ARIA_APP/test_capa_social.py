@@ -34,6 +34,7 @@ import atomizacion as AT
 import vault_md as VM
 import autodiagnostico as DIAG
 import investigacion as INV
+import noticias as NOT
 
 
 # ---------------------------------------------------------------- social_skills
@@ -732,6 +733,42 @@ def test_playbook_md_tiene_secciones():
 def test_investigar_estructura():
     an = INV.investigar("tema", _FUENTES, al_grafo=False)
     assert "playbook" in an and an["n_fuentes"] == 2
+
+
+# ---------------------------------------------------------------- noticias
+_RSS = """<?xml version="1.0"?><rss><channel>
+<item><title>Titular uno</title><link>http://a</link><pubDate>Wed, 04 Nov 2026</pubDate></item>
+<item><title>Titular &amp; dos</title><link>http://b</link><pubDate>Wed, 04 Nov 2026</pubDate></item>
+</channel></rss>"""
+_ATOM = """<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom">
+<entry><title>Post reddit</title><link href="http://c"/><updated>2026-11-04</updated></entry>
+</feed>"""
+
+def test_parse_rss():
+    items = NOT._parse_feed(_RSS, "X")
+    assert len(items) == 2 and items[0]["titulo"] == "Titular uno"
+    assert "&" in items[1]["titulo"]           # entidad desescapada
+    assert items[0]["url"] == "http://a"
+
+def test_parse_atom():
+    items = NOT._parse_feed(_ATOM, "Reddit")
+    assert len(items) == 1 and items[0]["url"] == "http://c" and items[0]["fuente"] == "Reddit"
+
+def test_parse_vacio_no_revienta():
+    assert NOT._parse_feed("basura no xml", "X") == []
+
+def test_bandeja_set_noticias():
+    import bandeja
+    try:
+        from PyQt5.QtWidgets import QApplication
+        _ = QApplication.instance() or QApplication([])
+    except Exception:
+        return
+    b = bandeja.crear_bandeja()
+    if isinstance(b, dict):   # sin PyQt5
+        return
+    n = b.set_noticias({"noticias": [{"titulo": "hola", "fuente": "X", "url": "http://x"}], "fecha": "hoy"})
+    assert n == 1
 
 
 # ---------------------------------------------------------------- runner manual
