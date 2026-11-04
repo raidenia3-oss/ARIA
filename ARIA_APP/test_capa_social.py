@@ -32,6 +32,7 @@ import demo as DEMO
 import coherencia as CO
 import atomizacion as AT
 import vault_md as VM
+import autodiagnostico as DIAG
 
 
 # ---------------------------------------------------------------- social_skills
@@ -689,6 +690,22 @@ def test_vault_backup_cifrado_roundtrip():
     # clave mala -> no restaura
     mala = VM.restaurar(r["archivo"], tempfile.mkdtemp(), clave="otra")
     assert "error" in mala
+
+
+# ---------------------------------------------------------------- autodiagnostico
+def test_evaluar_corre_chequeos():
+    rep = DIAG._evaluar([("a", lambda: (True, "bien")), ("b", lambda: (False, "mal"))])
+    assert rep[0]["ok"] and not rep[1]["ok"] and rep[1]["detalle"] == "mal"
+
+def test_evaluar_captura_excepcion():
+    def revienta():
+        raise ValueError("boom")
+    rep = DIAG._evaluar([("x", revienta)])
+    assert not rep[0]["ok"] and "boom" in rep[0]["detalle"]
+
+def test_chequear_estructura():
+    r = DIAG.chequear()
+    assert "reporte" in r and "ok" in r and "texto" in r and "DIAGNOSTICO" in r["texto"]
 
 
 # ---------------------------------------------------------------- runner manual
