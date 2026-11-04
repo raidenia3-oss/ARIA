@@ -223,14 +223,39 @@ class VAAdapter:
     """Adaptador síncrono al núcleo VA local. Reemplaza a IPCClient."""
 
     def __init__(self) -> None:
-        from aria_va_core import LocalAIBrain, LocalSkills
-        self.brain = LocalAIBrain()
-        self.skills = LocalSkills(self.brain)
+        self.brain = None
+        self.skills = None
+        try:
+            from aria_va_core import LocalAIBrain, LocalSkills
+            self.brain = LocalAIBrain()
+            self.skills = LocalSkills(self.brain)
+        except Exception as exc:
+            import traceback
+            print("[VA] ERROR creando cerebro:", exc, flush=True)
+            traceback.print_exc()
         self.va = self  # compat
-        self.healthy = True
+        self.healthy = self.brain is not None
         self.autonomous = False
 
+    def _asegurar_cerebro(self):
+        """Reintenta cargar el cerebro si fallo al arrancar (p.ej. por falta de RAM)."""
+        if self.brain is not None:
+            return True
+        try:
+            from aria_va_core import LocalAIBrain, LocalSkills
+            self.brain = LocalAIBrain()
+            self.skills = LocalSkills(self.brain)
+            self.healthy = True
+            return True
+        except Exception as exc:
+            self._ultimo_error = str(exc)
+            return False
+
     def process_text(self, text: str) -> str:
+        if not self._asegurar_cerebro():
+            return ("No pude cargar mi cerebro local (%s). Suele ser falta de RAM: "
+                    "cierra lo que la ocupe o libera el modelo de imagenes "
+                    "(gen_local.liberar()) y reintento." % getattr(self, "_ultimo_error", "?"))
         result = self.brain.chat(text)
         return result.get("response", "") if isinstance(result, dict) else str(result)
 
