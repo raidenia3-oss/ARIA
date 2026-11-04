@@ -22,17 +22,14 @@ os.environ.setdefault("ARIA_SYSTEM_PROMPT",
 
 def _import_desktop():
     sys.path.insert(0, str(ARIA_APP))
-    # Preload llama_cpp model BEFORE PyQt5 to avoid DLL conflict on Windows.
-    # PyQt5 breaks llama-cpp-python if imported first.
+    # Import llama_cpp BEFORE PyQt5 to avoid DLL conflict on Windows.
+    # PyQt5 breaks llama-cpp-python if imported first, but a plain import
+    # (without instantiating Llama) is enough to register the DLLs.
     try:
-        os.environ.setdefault("ARIA_LLM_MODEL", str(ARIA_APP / "models" / "qwen2.5-1.5b-instruct-q4.gguf"))
-        from llama_cpp import Llama
-        _m = os.environ.get("ARIA_LLM_MODEL")
-        if _m and os.path.isfile(_m):
-            _llm = Llama(model_path=_m, n_ctx=256, n_threads=2, verbose=False)
-            print("[ARIA] Cerebro pre-cargado OK", flush=True)
+        import llama_cpp  # noqa: F401
+        print("[ARIA] llama_cpp pre-importado OK", flush=True)
     except Exception as e:
-        print("[ARIA] Pre-carga cerebro fallo: %s" % e, flush=True)
+        print("[ARIA] pre-import llama_cpp fallo: %s" % e, flush=True)
     # Ensure frozen-mode detection works inside the EXE
     sys.frozen = True
     if not hasattr(sys, "_MEIPASS"):

@@ -681,7 +681,8 @@ class LocalAIBrain:
                 self._model_loaded = False
                 print("[VA] Cerebro local fallo al cargar: %s" % exc, flush=True)
 
-        threading.Thread(target=_bg, name="aria-brain-load", daemon=True).start()
+        # Run synchronously to avoid race with PyQt5 UI thread
+        _bg()
 
     def generate_local(self, prompt: str, max_tokens: int = 160) -> str:
         eng = getattr(self, "_engine", None)
