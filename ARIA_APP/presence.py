@@ -51,4 +51,3 @@ class PresenceWatcher:
                 except Exception:
                     pass
             time.sleep(self.poll)
-PY

@@ -55,4 +55,3 @@ class HandReactor:
                     pass
             time.sleep(0.3)
         cap.release()
-PY

@@ -223,8 +223,40 @@ class VAAdapter:
     """Adaptador síncrono al núcleo VA local. Reemplaza a IPCClient."""
 
     def __init__(self) -> None:
-        self.va = get_va()
+        from aria_va_core import LocalAIBrain, LocalSkills
+        self.brain = LocalAIBrain()
+        self.skills = LocalSkills(self.brain)
+        self.va = self  # compat
         self.healthy = True
+        self.autonomous = False
+
+    def process_text(self, text: str) -> str:
+        result = self.brain.chat(text)
+        return result.get("response", "") if isinstance(result, dict) else str(result)
+
+    def get_status(self) -> dict:
+        return {"status": "ok", "provider": "local"}
+
+    def speak(self, text: str) -> None:
+        pass
+
+    def start_autonomous(self) -> None:
+        self.autonomous = True
+
+    def stop_autonomous(self) -> None:
+        self.autonomous = False
+
+    def run_training_stage(self, stage: str) -> dict:
+        return {"status": "ok", "stage": stage}
+
+    def training_summary(self) -> dict:
+        return {"status": "ok"}
+
+    def start_voice_listening(self) -> None:
+        pass
+
+    def stop_voice_listening(self) -> None:
+        pass
 
     def send(self, request: dict) -> dict:
         req_type = request.get("type", "")
@@ -3469,7 +3501,7 @@ def run_desktop():
 
     try:
         from ui_shell import crear_shell
-        window = crear_shell(responder=lambda t: va.brain.chat(t)["response"])
+        window = crear_shell(responder=lambda t: va.send({"type": "chat", "data": {"message": t}}).get("response", ""))
         print("[UI] ui_shell creado", flush=True)
     except Exception as e:
         print(f"[UI] ui_shell fallo, fallback: {e}", flush=True)
@@ -3483,7 +3515,7 @@ def run_desktop():
         window._append_chat("ARIA", cs.elegir_starter("Daniel"), C_ACCENT_CYAN_BRIGHT)
     except Exception:
         pass
-    if not isinstance(window, LinuxDesktopWindow):
+    if not isinstance(window, LinuxDesktopWindow) and hasattr(window, "load_skills"):
         window.load_skills()
         print("[UI] Skills loaded", flush=True)
 
