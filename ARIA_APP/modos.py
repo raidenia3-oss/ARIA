@@ -25,25 +25,28 @@ sin servidores. pywinstyles (blur nativo) es opcional.
 
 # Modos de operacion de ARIA. Cada modo = una FORMA (Omnitrix) con su set de skills
 # (que ARIA ya tiene) + un color + un lema. Nombres ORIGINALES (nada con dueno).
+# 'req' = etapa de EVOLUCION minima para DESBLOQUEAR el modo (idea Gran Sabio: ganas
+# formas al evolucionar). ARIA nace solo con ANALISTA y libera el resto al crecer.
+# El mas peligroso (ARQUITECTA: se reescribe sola) se desbloquea de ultimo.
 MODOS = [
     {"id": "analista",  "nombre": "ANALISTA",  "color": "#38bdf8", "lema": "Analiza y predice.",
      "skills": ["conocimiento", "investigacion", "certeza", "coherencia", "atomizacion"],
-     "forma": "nucleo"},
+     "forma": "nucleo", "req": 0},
     {"id": "vigia",     "nombre": "VIGIA",     "color": "#2dd4bf", "lema": "Explora el mundo de hoy.",
      "skills": ["noticias", "bandeja", "brief"],
-     "forma": "nucleo"},
+     "forma": "nucleo", "req": 1},
     {"id": "social",    "nombre": "SOCIAL",    "color": "#a78bfa", "lema": "Lee a la gente.",
      "skills": ["social_skills", "conversacion", "social_rolemodels"],
-     "forma": "avatar"},
+     "forma": "avatar", "req": 2},
     {"id": "creadora",  "nombre": "CREADORA",  "color": "#f0abfc", "lema": "Crea imagen y forma.",
      "skills": ["gen_local", "chibi_art"],
-     "forma": "avatar"},
+     "forma": "avatar", "req": 4},
     {"id": "mentora",   "nombre": "MENTORA",   "color": "#fbbf24", "lema": "Te ensena de verdad.",
      "skills": ["aprendizaje", "planificador"],
-     "forma": "avatar"},
+     "forma": "avatar", "req": 3},
     {"id": "arquitecta", "nombre": "ARQUITECTA", "color": "#f87171", "lema": "Se mejora a si misma.",
      "skills": ["mejora", "autodiagnostico", "auditoria", "autonomia_guardia"],
-     "forma": "nucleo"},
+     "forma": "nucleo", "req": 5},
 ]
 
 # Etapas de EVOLUCION (idea Gran Sabio), con nombres originales. Cada una pide un
@@ -75,6 +78,16 @@ def por_id(mid):
         if m["id"] == mid:
             return i, m
     return 0, MODOS[0]
+
+
+def desbloqueado(modo, evo_idx):
+    """True si la etapa de evolucion actual (evo_idx) alcanza el 'req' del modo. Puro."""
+    return int(evo_idx) >= int(modo.get("req", 0))
+
+
+def modos_desbloqueados(evo_idx):
+    """Lista de ids de modos ya disponibles en esta etapa. Puro."""
+    return [m["id"] for m in MODOS if desbloqueado(m, evo_idx)]
 
 
 def puntaje_evolucion(stats):
@@ -166,7 +179,7 @@ def evolucion_actual():
 import math
 
 try:
-    from PyQt5.QtCore import (Qt, QTimer, QPointF, QRectF, QPropertyAnimation,
+    from PyQt5.QtCore import (Qt, QTimer, QPoint, QPointF, QRectF, QPropertyAnimation,
                               QEasingCurve, pyqtProperty)
     from PyQt5.QtGui import QPainter, QColor, QPen, QRadialGradient, QFont
     from PyQt5.QtWidgets import QWidget, QApplication
@@ -190,7 +203,7 @@ if _QT:
         - Arrastrar desde el centro: mueve la ventana.
         on_modo(modo_dict) se llama al cambiar de modo (para que el runtime active skills).
         """
-        def __init__(self, size=300, on_modo=None, modo_inicial="analista"):
+        def __init__(self, size=300, on_modo=None, modo_inicial="analista", nucleo=None):
             super().__init__(None)
             self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnBottomHint | Qt.Tool)
             self.setAttribute(Qt.WA_TranslucentBackground)
@@ -198,6 +211,8 @@ if _QT:
             self.resize(size, size)
             self._s = size
             self._on_modo = on_modo
+            self._nucleo = nucleo                  # orbe a retenir al cambiar de modo (c)
+            self._flash = 0.0                      # destello rojo al tocar un modo bloqueado
             self._idx, _ = por_id(modo_inicial)
             self._n = len(MODOS)
             self._rot_val = self._rot_objetivo()      # grados de rotacion del anillo
@@ -225,6 +240,12 @@ if _QT:
         # -- ciclo de vida --
         def start(self, fps=20):
             self.refrescar_evolucion()
+            # tinte inicial del orbe segun el modo de arranque
+            if self._nucleo is not None and hasattr(self._nucleo, "set_tint"):
+                try:
+                    self._nucleo.set_tint(MODOS[self._idx]["color"])
+                except Exception:
+                    pass
             self._timer.start(int(1000 / fps))
             scr = QApplication.primaryScreen().availableGeometry() if QApplication.instance() else None
             if scr:
@@ -233,7 +254,30 @@ if _QT:
 
         def _tick(self):
             self._t += 0.05
+            if self._flash > 0:
+                self._flash = max(0.0, self._flash - 0.05)
             self.update()
+
+        # -- panel deslizable del shell (a): entra/sale desde el borde derecho --
+        def deslizar_entrada(self, margen=16):
+            scr = QApplication.primaryScreen().availableGeometry()
+            y = scr.center().y() - self._s // 2
+            fuera = QPoint(scr.right(), y)
+            dentro = QPoint(scr.right() - self._s - margen, y)
+            self.move(fuera); self.show()
+            self._slide = QPropertyAnimation(self, b"pos")
+            self._slide.setDuration(300); self._slide.setStartValue(fuera)
+            self._slide.setEndValue(dentro); self._slide.setEasingCurve(QEasingCurve.OutCubic)
+            self._slide.start()
+
+        def deslizar_salida(self):
+            scr = QApplication.primaryScreen().availableGeometry()
+            self._slide = QPropertyAnimation(self, b"pos")
+            self._slide.setDuration(240); self._slide.setStartValue(self.pos())
+            self._slide.setEndValue(QPoint(scr.right(), self.pos().y()))
+            self._slide.setEasingCurve(QEasingCurve.InCubic)
+            self._slide.finished.connect(self.hide)
+            self._slide.start()
 
         def showEvent(self, e):
             super().showEvent(e)
@@ -259,6 +303,10 @@ if _QT:
             idx = idx % self._n
             if idx == self._idx:
                 return
+            # gating por evolucion (b): si el modo no esta desbloqueado, destella y no cambia
+            if not desbloqueado(MODOS[idx], self._evo.get("idx", 0)):
+                self._flash = 1.0
+                return
             self._idx = idx
             destino = self._rot_objetivo(idx)
             # tomar el camino corto (no girar 300 grados por dar la vuelta)
@@ -277,6 +325,12 @@ if _QT:
             else:
                 self._set_rot(destino)
             m = MODOS[self._idx]
+            # (c) retenir el orbe hacia el color del modo activo
+            if self._nucleo is not None and hasattr(self._nucleo, "set_tint"):
+                try:
+                    self._nucleo.set_tint(m["color"])
+                except Exception:
+                    pass
             if callable(self._on_modo):
                 try:
                     self._on_modo(dict(m))
@@ -347,7 +401,9 @@ if _QT:
             p.drawArc(rect, 90 * 16, -int(360 * prog * 16))
 
         def _anillo_modos(self, p, S, c, col):
-            """Puntos de los modos alrededor; el activo, grande y brillante."""
+            """Puntos de los modos alrededor; el activo, grande y brillante; los
+            BLOQUEADOS (evolucion insuficiente) atenuados con un candado."""
+            evo_idx = self._evo.get("idx", 0)
             r = S * 0.37
             paso = 360.0 / self._n
             for i, mm in enumerate(MODOS):
@@ -355,9 +411,18 @@ if _QT:
                 x = c + r * math.cos(ang)
                 y = c + r * math.sin(ang)
                 mc = _rgb(mm["color"])
+                bloq = not desbloqueado(mm, evo_idx)
                 activo = (i == self._idx)
+                if bloq:
+                    # punto apagado + aro de candado
+                    p.setBrush(QColor(120, 140, 160, 55)); p.setPen(Qt.NoPen)
+                    p.drawEllipse(QPointF(x, y), 3.0, 3.0)
+                    p.setBrush(Qt.NoBrush)
+                    p.setPen(QPen(QColor(150, 170, 190, 90), 1.2))
+                    p.drawArc(QRectF(x - 5, y - 4, 10, 9), 0, 180 * 16)
+                    continue
                 rad = 7 if activo else 3.5
-                a = 255 if activo else 110
+                a = 255 if activo else 120
                 if activo:
                     gl = QRadialGradient(x, y, 16)
                     gl.setColorAt(0, QColor(mc[0], mc[1], mc[2], 150))
@@ -366,6 +431,12 @@ if _QT:
                     p.drawEllipse(QPointF(x, y), 16, 16)
                 p.setBrush(QColor(mc[0], mc[1], mc[2], a)); p.setPen(Qt.NoPen)
                 p.drawEllipse(QPointF(x, y), rad, rad)
+            # destello rojo al tocar un modo bloqueado
+            if self._flash > 0:
+                p.setBrush(Qt.NoBrush)
+                p.setPen(QPen(QColor(248, 113, 113, int(200 * self._flash)), 2.5))
+                rr = S * 0.46
+                p.drawEllipse(QRectF(c - rr, c - rr, 2 * rr, 2 * rr))
 
         def _centro(self, p, S, c, col, m):
             # orbe central con el color del modo activo (late suave)
@@ -390,8 +461,8 @@ if _QT:
             p.setFont(fl); p.setPen(QColor(col[0], col[1], col[2], 220))
             p.drawText(QRectF(0, c + S * 0.12, S, 16), Qt.AlignCenter, m["lema"])
 
-    def crear_selector(size=300, on_modo=None, modo_inicial="analista"):
-        return Selector(size=size, on_modo=on_modo, modo_inicial=modo_inicial)
+    def crear_selector(size=300, on_modo=None, modo_inicial="analista", nucleo=None):
+        return Selector(size=size, on_modo=on_modo, modo_inicial=modo_inicial, nucleo=nucleo)
 else:
-    def crear_selector(size=300, on_modo=None, modo_inicial="analista"):
+    def crear_selector(size=300, on_modo=None, modo_inicial="analista", nucleo=None):
         return {"error": "PyQt5 no disponible"}

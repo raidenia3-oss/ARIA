@@ -111,6 +111,25 @@ if _QT:
         def set_estado(self, e):
             self._estado = str(e)
 
+        def set_tint(self, rgb):
+            """Retiñe el orbe hacia el color del MODO activo (lo llama el selector de
+            modos.py). rgb = (r,g,b) o '#rrggbb'. El cuerpo de ARIA cambia de 'animo'
+            de color segun el modo, manteniendo su estructura."""
+            try:
+                if isinstance(rgb, str):
+                    h = rgb.lstrip("#")
+                    rgb = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+                self._tint = (int(rgb[0]), int(rgb[1]), int(rgb[2]))
+            except Exception:
+                self._tint = None
+
+        def _c(self, base):
+            """Mezcla un color base de la paleta con el tinte del modo (si hay)."""
+            t = getattr(self, "_tint", None)
+            if not t:
+                return base
+            return tuple(int(base[i] * 0.45 + t[i] * 0.55) for i in range(3))
+
         def _flags(self, modo):
             base = Qt.FramelessWindowHint | Qt.Tool
             if modo == "frente":
@@ -219,22 +238,24 @@ if _QT:
                 p.drawEllipse(QPointF(sx * S, sy * S), br, br)
 
         def _glow(self, p, cx, cy, S, brillo, t, resp):
+            C, T = self._c(CYAN), self._c(TEAL)
             rad = S * 0.34 * resp * (1 + 0.04 * math.sin(t * 2))
             g = QRadialGradient(cx, cy, rad)
-            g.setColorAt(0, QColor(CYAN[0], CYAN[1], CYAN[2], int(70 * brillo)))
-            g.setColorAt(0.6, QColor(TEAL[0], TEAL[1], TEAL[2], int(22 * brillo)))
+            g.setColorAt(0, QColor(C[0], C[1], C[2], int(70 * brillo)))
+            g.setColorAt(0.6, QColor(T[0], T[1], T[2], int(22 * brillo)))
             g.setColorAt(1, QColor(0, 0, 0, 0))
             p.setBrush(g); p.setPen(Qt.NoPen)
             p.drawEllipse(QPointF(cx, cy), rad, rad)
 
         def _anillos(self, p, cx, cy, S, t):
+            C = self._c(CYAN)
             rad = S * 0.42
             for i in range(3):
                 ang = t * (0.2 + 0.12 * i) + i * 1.1
                 p.save()
                 p.translate(cx, cy)
                 p.rotate(math.degrees(ang))
-                p.setPen(QPen(QColor(CYAN[0], CYAN[1], CYAN[2], 60), 1.0))
+                p.setPen(QPen(QColor(C[0], C[1], C[2], 60), 1.0))
                 p.setBrush(Qt.NoBrush)
                 rx = rad * (0.9 - 0.12 * i)
                 ry = rx * (0.32 + 0.1 * i)
@@ -246,8 +267,8 @@ if _QT:
             p.save()
             p.translate(cx, cy)
             p.rotate(math.degrees(t * 0.25))
-            for curva, col, alpha in ((self._curva_a, CYAN, int(70 * brillo)),
-                                      (self._curva_b, TEAL, int(55 * brillo))):
+            for curva, col, alpha in ((self._curva_a, self._c(CYAN), int(70 * brillo)),
+                                      (self._curva_b, self._c(TEAL), int(55 * brillo))):
                 p.setPen(QPen(QColor(col[0], col[1], col[2], alpha), 1.0))
                 prev = None
                 for (x, y) in curva:

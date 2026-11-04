@@ -3569,7 +3569,12 @@ def run_desktop():
             except Exception:
                 pass
             va._skills_activas = set(m.get("skills", []))
-        sel = modos.crear_selector(on_modo=_al_cambiar_modo, modo_inicial="analista")
+        _nuc = None
+        try:
+            _nuc = va._forma._cuerpo.get("nucleo") if va._forma is not None else None
+        except Exception:
+            _nuc = None
+        sel = modos.crear_selector(on_modo=_al_cambiar_modo, nucleo=_nuc, modo_inicial="analista")
         sel.start()
         va._modos = sel
         sel.show()
