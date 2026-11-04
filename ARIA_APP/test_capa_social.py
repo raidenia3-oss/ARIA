@@ -33,6 +33,7 @@ import coherencia as CO
 import atomizacion as AT
 import vault_md as VM
 import autodiagnostico as DIAG
+import investigacion as INV
 
 
 # ---------------------------------------------------------------- social_skills
@@ -706,6 +707,31 @@ def test_evaluar_captura_excepcion():
 def test_chequear_estructura():
     r = DIAG.chequear()
     assert "reporte" in r and "ok" in r and "texto" in r and "DIAGNOSTICO" in r["texto"]
+
+
+# ---------------------------------------------------------------- investigacion (playbook)
+_FUENTES = [
+    {"titulo": "Canal viral", "url": "http://x",
+     "texto": "Publica videos cortos todos los dias. Usa ganchos en los 3 primeros segundos. "
+              "El riesgo es que el algoritmo penaliza el contenido repetido. Automatiza la edicion."},
+    {"titulo": "Blog growth", "url": "http://y",
+     "texto": "Crea una comunidad leal. Mide cada metrica. Evita comprar seguidores, es un peligro."},
+]
+
+def test_investigacion_separa_tacticas_y_riesgos():
+    an = INV.analizar("crecer un canal", _FUENTES)
+    tacticas = " ".join(a["texto"].lower() for a in an["que_replicar"])
+    riesgos = " ".join(a["texto"].lower() for a in an["riesgos"])
+    assert "publica" in tacticas or "crea" in tacticas or "automatiza" in tacticas
+    assert "riesgo" in riesgos or "penaliza" in riesgos or "peligro" in riesgos
+
+def test_playbook_md_tiene_secciones():
+    md = INV.playbook_md(INV.analizar("tema", _FUENTES))
+    assert "# Playbook: tema" in md and "## Que replicar" in md and "## Fuentes" in md
+
+def test_investigar_estructura():
+    an = INV.investigar("tema", _FUENTES, al_grafo=False)
+    assert "playbook" in an and an["n_fuentes"] == 2
 
 
 # ---------------------------------------------------------------- runner manual
