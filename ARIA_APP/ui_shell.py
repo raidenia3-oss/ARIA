@@ -64,11 +64,18 @@ if _QT:
              "border-radius:16px;")
 
     class _Fondo(QWidget):
-        """Fondo rice ANIMADO: wallpaper (ken-burns) + glow que deriva + montanas."""
+        """Fondo rice ANIMADO: wallpaper (ken-burns) + glow que deriva + montanas.
+        Modo 'matrix': lluvia de katakana ASCII con estela (idea de ascii-magic)."""
+        KATAKANA = list("ｱｶｻﾀﾅﾊﾏﾔﾗｦﾂﾇﾍﾐﾓﾜ0123456789:.=*+-<>¦|ç")
+
         def __init__(self, parent=None):
             super().__init__(parent)
             self._t = 0.0
             self._drag = None
+            self._modo = "rice"
+            self._buf = None
+            self._fs = 0
+            self._cols = []
             cfg = _cfg_fondo()
             self._anim = bool(cfg.get("animaciones", True))
             self._osc = float(cfg.get("oscurecer", 0.5))
@@ -76,6 +83,12 @@ if _QT:
             self.set_wallpaper(cfg.get("wallpaper", ""))
             self._timer = QTimer(self); self._timer.timeout.connect(self._tick)
             self._timer.start(33 if self._anim else 1000)
+
+        def set_modo(self, modo):
+            self._modo = modo if modo in ("rice", "matrix") else "rice"
+            self._buf = None; self._cols = []
+            self.update()
+            return self._modo
 
         def set_wallpaper(self, ruta):
             self._wall = None
@@ -103,6 +116,9 @@ if _QT:
         def paintEvent(self, e):
             p = QPainter(self); p.setRenderHint(QPainter.Antialiasing)
             W, H = self.width(), self.height(); t = self._t
+            if self._modo == "matrix":
+                self._matrix(p, W, H)
+                p.end(); return
             if self._wall is not None:
                 self._wallpaper(p, W, H, t)
             else:
@@ -135,6 +151,40 @@ if _QT:
             p.drawPixmap(int(px), int(py), esc)
             p.fillRect(0, 0, W, H, QColor(6, 8, 20, int(255 * self._osc)))
 
+        def _matrix(self, p, W, H):
+            """Lluvia ASCII: buffer persistente + velo oscuro = estela real."""
+            import random as _r
+            fs = max(12, int(W / 34))
+            if (self._buf is None or self._buf.width() != W or self._buf.height() != H
+                    or self._fs != fs or not self._cols):
+                self._fs = fs
+                self._buf = QPixmap(W, H)
+                self._buf.fill(QColor(0, 6, 2))
+                n = max(1, W // fs)
+                self._cols = [{"y": _r.uniform(-H, 0), "v": _r.uniform(5, 16)} for _ in range(n)]
+            b = QPainter(self._buf)
+            b.fillRect(0, 0, W, H, QColor(0, 8, 2, 24))          # velo -> estela
+            f = QFont("MS Gothic"); f.setPixelSize(fs); f.setBold(True)
+            b.setFont(f)
+            paso = 1.9
+            for i, c in enumerate(self._cols):
+                x = i * fs
+                if c["y"] > 0:
+                    ch = _r.choice(self.KATAKANA)
+                    b.setPen(QColor(205, 255, 215, 240))
+                    b.drawText(int(x), int(c["y"]), ch)
+                    b.setPen(QColor(70, 240, 140, 130))
+                    b.drawText(int(x), int(c["y"] - fs), ch)
+                c["y"] += c["v"] * paso
+                if c["y"] > H + _r.uniform(0, H * 0.7):
+                    c["y"] = -_r.uniform(0, H * 0.4)
+                    c["v"] = _r.uniform(5, 16)
+            b.end()
+            p.drawPixmap(0, 0, self._buf)
+            rg = QRadialGradient(W / 2, H / 2, max(W, H) * 0.7)
+            rg.setColorAt(0.4, QColor(0, 0, 0, 0)); rg.setColorAt(1, QColor(0, 4, 0, 170))
+            p.setPen(Qt.NoPen); p.setBrush(rg); p.drawRect(0, 0, W, H)
+
         def _montanas(self, p, W, H, off):
             base = H * 0.82
             for y0, col, picos, alt in ((base, QColor(56, 189, 248, 22), 7, 70),
@@ -163,6 +213,64 @@ if _QT:
             p.drawRoundedRect(QRectF(x, H / 2 - 4, bw, 8), 4, 4)
             p.setBrush(self._color)
             p.drawRoundedRect(QRectF(x, H / 2 - 4, bw * self._v, 8), 4, 4)
+            p.end()
+
+    class _CRT(QWidget):
+        """Overlay CRT sobre toda la ventana: scanlines, viñeta, glitch y flicker de
+        fosforo. WA_TransparentForMouseEvents: no se come ningun clic."""
+        def __init__(self, parent=None):
+            super().__init__(parent)
+            self.setAttribute(Qt.WA_TransparentForMouseEvents, True)
+            self.setAttribute(Qt.WA_NoSystemBackground, True)
+            self.setAttribute(Qt.WA_TranslucentBackground, True)
+            self._activo = True
+            self._t = 0.0
+            self._timer = QTimer(self); self._timer.timeout.connect(self._tick)
+            self._timer.start(40)
+
+        def set_activo(self, v):
+            self._activo = bool(v)
+            self.update()
+            return self._activo
+
+        def _tick(self):
+            if not self._activo:
+                return
+            self._t += 0.04
+            self.update()
+
+        def paintEvent(self, e):
+            if not self._activo:
+                return
+            import random as _r
+            p = QPainter(self)
+            W, H = self.width(), self.height()
+            if W <= 0 or H <= 0:
+                p.end(); return
+            # 1) scanlines
+            p.setPen(QPen(QColor(0, 0, 0, 58), 1))
+            for y in range(0, H, 3):
+                p.drawLine(0, y, W, y)
+            # 2) flicker de fosforo (muy sutil, no epiléptico)
+            flick = 5 + 4 * math.sin(self._t * 6.0) * math.sin(self._t * 2.3)
+            p.fillRect(0, 0, W, H, QColor(120, 255, 200, int(max(0.0, flick))))
+            # 3) glitch ocasional: bandas de color
+            if _r.random() < 0.06:
+                for _ in range(_r.randint(1, 3)):
+                    y = _r.randint(0, max(0, H - 20)); h = _r.randint(2, 10)
+                    col = (QColor(56, 189, 248, _r.randint(18, 46)) if _r.random() < 0.5
+                           else QColor(255, 80, 160, _r.randint(14, 34)))
+                    p.fillRect(0, y, W, h, col)
+                    p.fillRect(_r.randint(0, 40), y, W, 1, QColor(255, 255, 255, 26))
+            # 4) viñeta: esquinas oscuras (sensacion de tubo)
+            rg = QRadialGradient(W / 2, H / 2, max(W, H) * 0.72)
+            rg.setColorAt(0.55, QColor(0, 0, 0, 0))
+            rg.setColorAt(1.0, QColor(0, 0, 0, 195))
+            p.setPen(Qt.NoPen); p.setBrush(rg); p.drawRect(0, 0, W, H)
+            # 5) aberracion cromatica barata en el filo
+            p.setBrush(Qt.NoBrush)
+            p.setPen(QPen(QColor(0, 255, 220, 14), 1)); p.drawRect(1, 1, W - 2, H - 2)
+            p.setPen(QPen(QColor(255, 0, 160, 10), 1)); p.drawRect(2, 2, W - 4, H - 4)
             p.end()
 
     def _formato_skill(r, limite=1200):
@@ -243,16 +351,21 @@ if _QT:
             self.responder = responder
             self.skills = list(skills or [])
             self.runner_skill = runner_skill
-            self.toggles = {"autonomia": True, "cuerpo": "nucleo", "voz": False}
+            self.toggles = {"autonomia": True, "cuerpo": "nucleo", "voz": False,
+                            "fondo": "rice", "crt": True}
             self._hist = []
             self._worker = None
             self._acc = ""
             self._pend_idx = None
             self._t0 = 0.0
+            self._pre_modo = False
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.resize(w, h); self.setWindowTitle("ARIA")
             self._fondo = _Fondo(self)
             self._build(); self._reloj()
+            self._crt = _CRT(self)
+            self._crt.setGeometry(0, 0, self.width(), self.height())
+            self._crt.raise_()
 
         def showEvent(self, e):
             super().showEvent(e)
@@ -283,6 +396,10 @@ if _QT:
 
         def resizeEvent(self, e):
             self._fondo.setGeometry(0, 0, self.width(), self.height())
+            crt = getattr(self, "_crt", None)
+            if crt is not None:
+                crt.setGeometry(0, 0, self.width(), self.height())
+                crt.raise_()
 
         # --------- construccion ---------
         def _build(self):
@@ -438,7 +555,7 @@ if _QT:
             dock = QFrame(); dock.setStyleSheet("QFrame{%s}" % _CARD)
             inner = QHBoxLayout(dock); inner.setContentsMargins(10, 6, 10, 6); inner.setSpacing(8)
             self._btn = {}
-            for key in ("autonomia", "cuerpo", "voz"):
+            for key in ("autonomia", "cuerpo", "voz", "fondo", "crt"):
                 b = QPushButton(); b.setFixedHeight(34)
                 b.clicked.connect(lambda _, k=key: self._toggle(k))
                 self._btn[key] = b; inner.addWidget(b)
@@ -450,6 +567,13 @@ if _QT:
             if key == "cuerpo":
                 self.toggles["cuerpo"] = "avatar" if self.toggles["cuerpo"] == "nucleo" else "nucleo"
                 self._linea("cuerpo -> %s" % self.toggles["cuerpo"], "sys")
+            elif key == "fondo":
+                self.toggles["fondo"] = self._fondo.set_modo(
+                    "matrix" if self.toggles["fondo"] == "rice" else "rice")
+                self._linea("fondo -> %s" % self.toggles["fondo"], "sys")
+            elif key == "crt":
+                self.toggles["crt"] = self._crt.set_activo(not self.toggles["crt"])
+                self._linea("crt -> %s" % ("ON" if self.toggles["crt"] else "OFF"), "sys")
             else:
                 self.toggles[key] = not self.toggles[key]
                 self._linea("%s -> %s" % (key, "ON" if self.toggles[key] else "OFF"), "sys")
@@ -458,9 +582,16 @@ if _QT:
         def _pintar_toggles(self):
             for key, b in self._btn.items():
                 val = self.toggles[key]
-                on = (val is True) or (key == "cuerpo")
+                if key == "cuerpo":
+                    txt, on = "CUERPO:%s" % val, True
+                elif key == "fondo":
+                    txt, on = "FONDO:%s" % val, True
+                elif key == "crt":
+                    txt, on = "CRT:%s" % ("ON" if val else "OFF"), bool(val)
+                else:
+                    txt, on = "%s:%s" % (key.upper()[:4], "ON" if val else "OFF"), bool(val)
                 col = CYAN if on else "#5b7089"
-                b.setText("CUERPO:%s" % val if key == "cuerpo" else "%s:%s" % (key.upper()[:4], "ON" if val else "OFF"))
+                b.setText(txt)
                 b.setStyleSheet(
                     "QPushButton{background:rgba(56,189,248,%d);color:%s;border:1px solid %s;"
                     "border-radius:9px;font:700 11px '%s';padding:6px 12px;}"
@@ -494,6 +625,23 @@ if _QT:
             if m:
                 self.entrada.clear()
                 self._ejecutar_skill(m.group(1), self._params_de(m.group(1), m.group(2)), t)
+                return
+            m = _re.match(r"^/ascii\s+(.+)$", t)
+            if m:
+                partes = m.group(1).strip().split()
+                ruta = partes[0].strip("\"'")
+                ancho = int(partes[1]) if len(partes) > 1 and partes[1].isdigit() else 90
+                self.entrada.clear()
+                self._lanzar_retro("/ascii %s %d" % (ruta, ancho),
+                                   lambda: self._ascii_txt(ruta, ancho), pre=True)
+                return
+            m = _re.match(r"^/dither\s+(\S+)(?:\s+(\S+))?$", t)
+            if m:
+                ruta = m.group(1).strip("\"'")
+                paleta = m.group(2) or "gameboy"
+                self.entrada.clear()
+                self._lanzar_retro("/dither %s %s" % (ruta, paleta),
+                                   lambda: self._dither_txt(ruta, paleta))
                 return
             self.entrada.clear(); self._linea(t, "user")
             if not callable(self.responder):
@@ -556,6 +704,46 @@ if _QT:
             self._worker.fallo.connect(self._on_fallo)
             self._worker.start()
 
+        def _fmt_pre(self, texto, color=TXT):
+            return ('<pre style="color:%s;font-family:%s;font-size:11px;margin:0;'
+                    'line-height:100%%">%s</pre>' % (color, MONO, html.escape(str(texto))))
+
+        # --- taller retro (imagen -> ASCII / dither) ---
+        @staticmethod
+        def _ascii_txt(ruta, ancho):
+            import retro_ascii
+            txt = retro_ascii.imagen_a_ascii(ruta, ancho=ancho)
+            return txt
+
+        @staticmethod
+        def _dither_txt(ruta, paleta):
+            import retro_ascii, tempfile, os as _os
+            img = retro_ascii.dither(ruta, paleta, escala=0.5)
+            destino = _os.path.join(tempfile.gettempdir(),
+                                    "aria_dither_%s.png" % paleta)
+            ok = img.save(destino)
+            return ("dither %s -> %dx%d | guardado: %s (%s)\n"
+                    "usa /ascii %s para verlo en ASCII"
+                    % (paleta, img.width(), img.height(), destino,
+                       "ok" if ok else "fallo", destino))
+
+        def _lanzar_retro(self, etiqueta, fn, pre=False):
+            if self._worker is not None and self._worker.isRunning():
+                return
+            self._linea(etiqueta, "user")
+            self._acc = ""
+            self._pend_idx = len(self._hist)
+            self._t0 = time.time()
+            self._pre_modo = bool(pre)
+            self._linea("procesando…", "aria")
+            self.entrada.setEnabled(False)
+            self.entrada.setPlaceholderText("taller retro… espera")
+            self._worker = _ChatWorker(lambda _t="", on_token=None: fn(), "", self)
+            self._worker.token.connect(self._on_token)
+            self._worker.listo.connect(self._on_listo)
+            self._worker.fallo.connect(self._on_fallo)
+            self._worker.start()
+
         # --- slots: SIEMPRE en el hilo principal (Qt encola la señal) ---
         def _on_token(self, pieza):
             if self._pend_idx is None:
@@ -569,8 +757,17 @@ if _QT:
                 return
             if not self._acc.strip():
                 self._acc = completa or "(respuesta vacía)"
-                self._hist[self._pend_idx] = self._fmt(self._acc, "aria")
+                if not self._pre_modo:
+                    self._hist[self._pend_idx] = self._fmt(self._acc, "aria")
+                    self._render()
+            if self._pre_modo:
+                self._hist[self._pend_idx] = self._fmt_pre(self._acc)
                 self._render()
+                self._pre_modo = False
+                self._linea("%d lineas · %.1f s" % (len(self._acc.splitlines()),
+                                                   time.time() - self._t0), "sys")
+                self._fin_generacion()
+                return
             pt = getattr(self._worker, "primer_token", None)
             if pt is None:
                 self._linea("%d caracteres · total %.1f s" % (len(self._acc), time.time() - self._t0), "sys")
