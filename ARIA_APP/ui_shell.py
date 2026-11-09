@@ -51,6 +51,24 @@ def _cfg_fondo():
         return {"wallpaper": "", "animaciones": True, "oscurecer": 0.5}
 
 
+_ESTADO = os.path.join(_DIR, "data", "shell_state.json")
+
+
+def _cargar_estado():
+    try:
+        return json.load(open(_ESTADO, encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _guardar_estado(d):
+    try:
+        os.makedirs(os.path.dirname(_ESTADO), exist_ok=True)
+        json.dump(d, open(_ESTADO, "w", encoding="utf-8"))
+    except Exception:
+        pass
+
+
 def _stats():
     try:
         import psutil
@@ -403,8 +421,10 @@ if _QT:
             self.responder = responder
             self.skills = list(skills or [])
             self.runner_skill = runner_skill
-            self.toggles = {"autonomia": False, "cuerpo": "nucleo", "voz": False,
-                            "fondo": "rice", "crt": True}
+            _estado = _cargar_estado()
+            self.toggles = {"autonomia": False, "cuerpo": _estado.get("cuerpo") or "nucleo",
+                            "voz": bool(_estado.get("voz")), "fondo": _estado.get("fondo") or "rice",
+                            "crt": _estado.get("crt") is not False}
             self._hist = []
             self._es_chat = False
             self._worker = None
@@ -415,10 +435,13 @@ if _QT:
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.resize(w, h); self.setWindowTitle("ARIA")
             self._fondo = _Fondo(self)
+            if self.toggles["fondo"] == "matrix":
+                self._fondo.set_modo("matrix")
             self._build(); self._reloj()
             self._crt = _CRT(self)
             self._crt.setGeometry(0, 0, self.width(), self.height())
             self._crt.raise_()
+            self._crt.set_activo(self.toggles["crt"])
 
         def showEvent(self, e):
             super().showEvent(e)
@@ -646,6 +669,10 @@ if _QT:
                 self.toggles["crt"] = self._crt.set_activo(not self.toggles["crt"])
                 self._linea("crt -> %s" % ("ON" if self.toggles["crt"] else "OFF"), "sys")
             self._pintar_toggles()
+            self._guardar_toggles()
+
+        def _guardar_toggles(self):
+            _guardar_estado({k: self.toggles[k] for k in ("cuerpo", "voz", "fondo", "crt")})
 
         def _pintar_toggles(self):
             for key, b in self._btn.items():
