@@ -292,12 +292,17 @@ if _QT:
             p.end()
 
     class _OrbMini(QWidget):
-        """Orb compacto (nucleo_v2) para el 'cuerpo' de ARIA en el shell."""
+        """Orb compacto (nucleo_v2) para el 'cuerpo' de ARIA en el shell.
+        Refleja el estado real del chat: reposo / pensando / hablando."""
+        _NIVEL = {"reposo": 0.3, "pensando": 0.65, "hablando": 1.0,
+                  "escuchando": 0.9, "alerta": 0.8}
+
         def __init__(self, parent=None):
             super().__init__(parent)
             self.setFixedSize(160, 160)
             self._nucleo = None
             self._t = 0.0
+            self._estado = "reposo"
             try:
                 from ui.nucleo_v2 import Nucleo
                 self._nucleo = Nucleo()
@@ -305,6 +310,11 @@ if _QT:
                 self._nucleo = None
             self._timer = QTimer(self); self._timer.timeout.connect(self._tick)
             self._timer.start(30)
+
+        def set_estado(self, estado):
+            if estado in self._NIVEL:
+                self._estado = estado
+                self.update()
 
         def _tick(self):
             if not self.isVisible():
@@ -317,8 +327,9 @@ if _QT:
             p.fillRect(self.rect(), QColor(8, 12, 26))
             if self._nucleo is not None:
                 self._nucleo.paint(p, QRectF(0, 0, self.width(), self.height()),
-                                   self._t, "reposo", nivel=0.4, calidad=None,
-                                   hud=False, escala=0.34)
+                                   self._t, self._estado,
+                                   nivel=self._NIVEL.get(self._estado, 0.3),
+                                   calidad=None, hud=False, escala=0.34)
             p.end()
 
     def _formato_skill(r, limite=1200):
@@ -674,6 +685,11 @@ if _QT:
         def _guardar_toggles(self):
             _guardar_estado({k: self.toggles[k] for k in ("cuerpo", "voz", "fondo", "crt")})
 
+        def _estado_orb(self, estado):
+            orb = getattr(self, "_orb_mini", None)
+            if orb is not None:
+                orb.set_estado(estado)
+
         def _pintar_toggles(self):
             for key, b in self._btn.items():
                 val = self.toggles[key]
@@ -747,6 +763,7 @@ if _QT:
             self._pend_idx = len(self._hist)
             self._t0 = time.time()
             self._linea("está pensando…", "aria")
+            self._estado_orb("pensando")
             # una sola generación a la vez
             self.entrada.setEnabled(False)
             self.entrada.setPlaceholderText("generando… espera a que termine")
@@ -791,6 +808,7 @@ if _QT:
             self._pend_idx = len(self._hist)
             self._t0 = time.time()
             self._linea("ejecutando…", "aria")
+            self._estado_orb("pensando")
             self.entrada.setEnabled(False)
             self.entrada.setPlaceholderText("ejecutando skill… espera")
             runner = self.runner_skill
@@ -834,6 +852,7 @@ if _QT:
             self._t0 = time.time()
             self._pre_modo = bool(pre)
             self._linea("procesando…", "aria")
+            self._estado_orb("pensando")
             self.entrada.setEnabled(False)
             self.entrada.setPlaceholderText("taller retro… espera")
             self._worker = _ChatWorker(lambda _t="", on_token=None: fn(), "", self)
@@ -846,6 +865,7 @@ if _QT:
         def _on_token(self, pieza):
             if self._pend_idx is None:
                 return
+            self._estado_orb("hablando")
             self._acc += pieza
             self._hist[self._pend_idx] = self._fmt(self._acc, "aria")
             self._render()
@@ -881,6 +901,7 @@ if _QT:
             self._fin_generacion()
 
         def _fin_generacion(self):
+            self._estado_orb("reposo")
             if self._es_chat and self.toggles.get("voz") and self._acc.strip():
                 try:
                     import voz_local
