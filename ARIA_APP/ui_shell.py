@@ -23,12 +23,12 @@ import re as _re
 from datetime import date
 
 try:
-    from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF, QThread, pyqtSignal
+    from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF, QThread, pyqtSignal, QEvent, QObject
     from PyQt5.QtGui import (QPainter, QColor, QPen, QBrush, QLinearGradient,
                              QRadialGradient, QPolygonF, QPixmap, QTextCursor, QFont)
     from PyQt5.QtWidgets import (QWidget, QApplication, QVBoxLayout, QHBoxLayout,
                                  QGridLayout, QTextEdit, QLineEdit, QLabel, QPushButton,
-                                 QFrame, QScrollArea)
+                                 QFrame, QScrollArea, QGraphicsDropShadowEffect)
     _QT = True
 except Exception:
     _QT = False
@@ -329,8 +329,30 @@ if _QT:
             return cuerpo[:limite]
         return json.dumps(r, ensure_ascii=False, indent=1)[:limite]
 
+    class _HoverGlow(QObject):
+        """Glow cyan al pasar el cursor. Funciona sobre cualquier widget
+        (tarjetas, botones) sin tocar el QSS ni el layout."""
+        def __init__(self, widget, blur=18, alpha=110):
+            super().__init__(widget)
+            self._eff = QGraphicsDropShadowEffect(widget)
+            self._eff.setBlurRadius(blur)
+            self._eff.setOffset(0, 0)
+            self._eff.setColor(QColor(56, 189, 248, 0))
+            widget.setGraphicsEffect(self._eff)
+            self._alpha = alpha
+            widget.installEventFilter(self)
+
+        def eventFilter(self, obj, ev):
+            if ev.type() == QEvent.Enter:
+                self._eff.setColor(QColor(56, 189, 248, self._alpha))
+            elif ev.type() == QEvent.Leave:
+                self._eff.setColor(QColor(56, 189, 248, 0))
+            return False
+
     def _tarjeta():
-        f = QFrame(); f.setStyleSheet("QFrame{%s}" % _CARD); return f
+        f = QFrame(); f.setStyleSheet("QFrame{%s}" % _CARD)
+        _HoverGlow(f)
+        return f
 
     class _ChatWorker(QThread):
         """Un solo hilo para el LLM. El objeto Llama lo toca SOLO este hilo:
@@ -592,6 +614,7 @@ if _QT:
             for key in ("autonomia", "cuerpo", "voz", "fondo", "crt"):
                 b = QPushButton(); b.setFixedHeight(34)
                 b.clicked.connect(lambda _, k=key: self._toggle(k))
+                _HoverGlow(b, blur=14, alpha=95)
                 self._btn[key] = b; inner.addWidget(b)
             wrap.addWidget(dock); wrap.addStretch(1)
             return wrap
