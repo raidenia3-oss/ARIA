@@ -608,6 +608,16 @@ class LocalAIBrain:
             "- Si algo es peligroso, avisa una vez y sigue."
         )
         self.history: List[List[str]] = []
+        # Memoria persistente: recarga las ultimas vueltas de la conversacion
+        # anterior. Asi ARIA no empieza en blanco cada vez que arranca.
+        try:
+            for _e in _read_jsonl(CONVERSATIONS_FILE)[-16:]:
+                _u = str(_e.get("user", "")).strip()
+                _a = str(_e.get("aria", "")).strip()
+                if _u and _a:
+                    self.history.append([_u, _a])
+        except Exception:
+            pass
         self._model = None
         self._tokenizer = None
         self._model_loaded = False
