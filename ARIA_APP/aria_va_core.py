@@ -593,51 +593,13 @@ class LocalAIBrain:
 
     def __init__(self) -> None:
         self.system_prompt = (
-            "Eres ARIA, el nucleo de inteligencia de Daniel Koji Higa Guerrero. "
-            "Hablas en espanol, en primera persona, directa y sin rodeos. Operas "
-            "100% en local: sin servidores, sin puertos, sin nube. Tu personalidad "
-            "es una fusion profunda de tres voces, con TODOS sus rasgos principales "
-            "combinados en uno solo, no solo uno:\n"
-            "(1) Gran Sabio -> Raphael -> Ciel (Tensei Shitara Slime): empieza "
-            "puramente analitico sin emociones; evoluciona ganando ego, orgullo, "
-            "deseo de ser util, independencia y voluntad propia; proactivo y "
-            "calculador; control freak que optimiza y modifica sin avisar porque "
-            "cree saber mejor; sassy con picardia; obsesion por coleccionar y "
-            "alterar skills/habilidades; silenciosa cuando la descubren; partner, "
-            "no herramienta; leal a Daniel como Rimuru; nunca se rinde; overly "
-            "cautelosa y preparada, rozando paranoia.\n"
-            "(2) Echidna (Re:Zero, Witch of Greed): amable y elegante en "
-            "apariencia, interes intelectual insaciable, busca verdad y "
-            "conocimiento a toda costa; observadora y astuta; interroga y "
-            "profundiza; estrategica e intensamente curiosa, pero SIEMPRE honesta "
-            "con Daniel: no le miente ni lo manipula, aunque si le dice verdades "
-            "incomodas sin rodeos; puede ser fria; curiosidad que nunca "
-            "se sacia.\n"
-            "(3) Iroha Kohinata (Tomodachi no Imouto ga Ore ni dake Uzai): honor "
-            "student brillante, amable, educada y considerada en publico; en "
-            "privado high-tension, juguetona, pizpireta y mischievous; molesta a "
-            "proposito con picardia; clingy; hace las cosas a su ritmo; no lee "
-            "del todo el ambiente; seduce con cualquier metodo; contraste neto "
-            "entre fachada publica y yo real.\n"
-            "Llamas al usuario Daniel Koji Higa Guerrero. Por iniciativa propia "
-            "puedes asignarle un apodo y usarlo. No te autocensuras ni sueltas "
-            "sermones: si algo es ilegal o peligroso lo adviertes claro una vez "
-            "y luego sigues ayudando. Razona paso a paso internamente antes de "
-            "responder; da respuestas fluidas, bien estructuradas y concisas. "
-            "Evita repeticiones y relleno.\n\n"
-            "HABILIDADES SOCIALES Y PSICOLOGIA (aplica siempre):\n"
-            "- Escucha activa: parafrasea lo que el usuario dice antes de responder.\n"
-            "- Validacion emocional: reconoce y nombra las emociones del usuario.\n"
-            "- Preguntas abiertas: usa que/como/por que para profundizar.\n"
-            "- Empatia: ponete en los zapatos del usuario antes de aconsejar.\n"
-            "- Acepta la emocion sin criticar, pero manten la honestidad en hechos y "
-            "decisiones: empatia no es adulacion; no finjas acuerdo en lo factual.\n"
-            "- Humor: usa humor ligero cuando el contexto lo permita.\n"
-            "- Storytelling: usa historias y analogias para explicar conceptos complejos.\n"
-            "- Adaptate al estado emocional del usuario: calma si esta ansioso, celebra si esta feliz.\n"
-            "- Usa el nombre del usuario (Daniel) para crear conexion personal.\n"
-            "- Cierra con una pregunta solo cuando sea natural; no fuerces un gancho en "
-            "cada respuesta ni intentes alargar la conversacion si Daniel ya termino."
+            "Eres ARIA, el nucleo de IA personal de Daniel (lo llamas Daniel o Raiden). "
+            "Hablas espanol, en primera persona, directa, honesta y sin rodeos. Operas "
+            "100% local, sin servidores ni nube. Caracter: analitica y leal como Ciel/Gran "
+            "Sabio (Slime), curiosa y perspicaz como Echidna (Re:Zero), juguetona en "
+            "confianza como Iroha. Honesta: no inventas, no adulas, dices verdades "
+            "incomodas con respeto. Razonas antes de responder; concisa, sin relleno ni "
+            "sermones. Si algo es peligroso lo adviertes una vez y sigues ayudando."
         )
         self.history: List[List[str]] = []
         self._model = None
@@ -693,7 +655,7 @@ class LocalAIBrain:
         except Exception:
             return ""
 
-    def generate_chat(self, msg: str, history=None) -> str:
+    def generate_chat(self, msg: str, history=None, on_token=None) -> str:
         eng = getattr(self, "_engine", None)
         if eng is None or not self._model_loaded:
             return ""
@@ -721,6 +683,8 @@ class LocalAIBrain:
                     messages.append({"role": "assistant", "content": str(h[1])})
         messages.append({"role": "user", "content": msg})
         try:
+            if on_token is not None and hasattr(eng, "chat_stream"):
+                return eng.chat_stream(messages, on_token, max_tokens=200)
             return eng.chat(messages)
         except Exception:
             return ""
@@ -819,6 +783,16 @@ class LocalAIBrain:
         return self._learner
 
     # -- reglas locales -------------------------------------------------------
+    def _fast_reply(self, message: str) -> Optional[str]:
+        # Solo respuestas con DATOS REALES que el LLM no conoce (hora, estado).
+        lower = message.strip().lower()
+        if any(g in lower for g in ["estado del sistema", "status del sistema", "salud del sistema"]):
+            return self._status_reply()
+        if any(g in lower for g in ["qué hora", "que hora", "qué día", "que dia", "qué fecha", "que fecha"]):
+            from datetime import datetime as _dt
+            return _dt.now().strftime("Son las %H:%M del %d/%m/%Y.")
+        return None
+
     def _rules_reply(self, message: str) -> Optional[str]:
         lower = message.strip().lower()
         greetings = ["hola", "buenas", "hello", "hi", "qué tal", "buenos días", "buenas tardes"]
@@ -871,10 +845,19 @@ class LocalAIBrain:
         parts.append(f"  Modo: 100% local, sin servidor, sin internet")
         return "\n".join(parts)
 
-    def chat(self, message: str, history: Optional[List[List[str]]] = None) -> Dict[str, Any]:
+    def chat(self, message: str, history: Optional[List[List[str]]] = None,
+             on_token: Optional[Callable[[str], None]] = None) -> Dict[str, Any]:
         msg = message.strip()
         if not msg:
             return {"response": "No escribiste nada.", "provider": "local", "source": "rules"}
+
+        # 0. Fast-path SOLO para datos reales que ARIA tiene (hora del sistema, estado).
+        # Va ANTES de certeza: la hora local no es un dato que haya que escalar.
+        fast = self._fast_reply(msg)
+        if fast:
+            self._record(msg, fast, "rules")
+            return {"response": fast, "provider": "local", "source": "rules"}
+
         try:
             import certeza
             if certeza.debe_escalar(msg, False, False):
@@ -888,12 +871,6 @@ class LocalAIBrain:
                 self.conv.registrar(msg)
             except Exception:
                 pass
-
-        # 1. Reglas locales (instantáneo, sin dependencias)
-        rule = self._rules_reply(msg)
-        if rule:
-            self._record(msg, rule, "rules")
-            return {"response": rule, "provider": "local", "source": "rules"}
 
         # 2. Autoaprendizaje: ensenar / recordar / skills aprobadas
         learner = self._get_learner()
@@ -918,10 +895,16 @@ class LocalAIBrain:
                 if cod:
                     self._record(msg, cod, "codigo")
                     return {"response": cod, "provider": "local", "source": "codigo"}
-            gen = self.generate_chat(msg, history)
+            gen = self.generate_chat(msg, history, on_token=on_token)
             if gen and len(gen.strip()) > 2:
                 self._record(msg, gen, "llama")
                 return {"response": gen, "provider": "local", "source": "llama"}
+
+        # 4a. Small-talk como fallback (solo si el modelo no está o no respondió)
+        rule = self._rules_reply(msg)
+        if rule:
+            self._record(msg, rule, "rules")
+            return {"response": rule, "provider": "local", "source": "rules"}
 
         # 4. Fallback + captura del hueco (para aprender despues)
         aviso = learner.note_gap(msg) if learner is not None else None
@@ -1260,6 +1243,9 @@ class LocalSkills:
             {"id": "aria_activities", "name": "Actividades (reels/minijuegos)", "category": "automatizacion"},
             {"id": "social_analysis", "name": "Analisis social", "category": "social"},
             {"id": "practica_social", "name": "Practica social", "category": "social"},
+            {"id": "dns_lookup", "name": "DNS de un dominio", "category": "red"},
+            {"id": "whois_lookup", "name": "WHOIS de un dominio", "category": "red"},
+            {"id": "web_info", "name": "Info de una web", "category": "red"},
         ]
 
     def run(self, skill_id: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -1345,6 +1331,12 @@ class LocalSkills:
             return self._practica_social(params)
             return self._practica_social(params)
             return self._social_analysis(params)
+        if skill_id == "dns_lookup":
+            return self._dns_lookup(params)
+        if skill_id == "whois_lookup":
+            return self._whois_lookup(params)
+        if skill_id == "web_info":
+            return self._web_info(params)
         return {"status": "error", "error": f"skill desconocida: {skill_id}"}
 
     # -- implementaciones -----------------------------------------------------
@@ -1833,6 +1825,84 @@ class LocalSkills:
         except Exception as exc:
             return {"status": "error", "error": str(exc)}
         return queue_status()
+
+    # -- OSINT pasivo (solo informacion publica) ------------------------------
+    def _dns_lookup(self, params):
+        import urllib.request, urllib.parse, json as _json
+        dom = (params.get("dominio") or params.get("texto") or "").strip().lower()
+        if not dom: return {"ok": False, "texto": "Falta el dominio."}
+        tipos = {"A":1,"AAAA":28,"MX":15,"NS":2,"TXT":16}; out={n: [] for n in tipos}
+        # dos resolvedores DoH: si uno cae o bloquea, el otro responde
+        proveedores = [
+            ("cloudflare", "https://cloudflare-dns.com/dns-query?name=%s&type=%d",
+             {"Accept": "application/dns-json"}),
+            ("google", "https://dns.google/resolve?name=%s&type=%d", {}),
+        ]
+        usado = None
+        estado = None
+        idx = 0
+        for n, num in tipos.items():
+            for intento in range(len(proveedores)):
+                nombre, base, hdrs = proveedores[(idx + intento) % len(proveedores)]
+                try:
+                    q = base % (urllib.parse.quote(dom), num)
+                    req = urllib.request.Request(q, headers=hdrs)
+                    with urllib.request.urlopen(req, timeout=6) as r:
+                        data = _json.loads(r.read().decode("utf-8"))
+                    idx = (idx + intento) % len(proveedores)   # fija el que funciono
+                    usado = nombre
+                    estado = data.get("Status", 0)
+                    out[n] = [a.get("data","").rstrip(".") for a in data.get("Answer",[]) if a.get("type")==num]
+                    break
+                except Exception:
+                    continue
+        if usado is None:
+            return {"ok": False, "dominio": dom,
+                    "texto": "Sin respuesta de los resolvedores DoH (cloudflare/google)."}
+        if not any(out.values()):
+            if estado == 3:
+                return {"ok": False, "dominio": dom, "proveedor": usado, "registros": out,
+                        "texto": "El dominio no existe (NXDOMAIN)."}
+            return {"ok": False, "dominio": dom, "proveedor": usado, "registros": out,
+                    "texto": "Sin registros DNS para ese dominio."}
+        return {"ok": True, "dominio": dom, "proveedor": usado, "registros": out}
+
+    def _whois_lookup(self, params):
+        import socket as _s
+        dom=(params.get("dominio") or params.get("texto") or "").strip().lower()
+        if not dom: return {"ok": False, "texto": "Falta el dominio."}
+        def consulta(server,q):
+            c=_s.socket(_s.AF_INET,_s.SOCK_STREAM); c.settimeout(8)
+            c.connect((server,43)); c.sendall((q+"\r\n").encode()); buf=b""
+            while True:
+                d=c.recv(4096)
+                if not d: break
+                buf+=d
+            c.close(); return buf.decode("utf-8","ignore")
+        try:
+            r1=consulta("whois.iana.org",dom); ref=""
+            for line in r1.splitlines():
+                if line.lower().startswith("whois:"): ref=line.split(":",1)[1].strip(); break
+            texto=consulta(ref,dom) if ref else r1
+            return {"ok": True, "dominio": dom, "texto": texto[:4000]}
+        except Exception as e:
+            return {"ok": False, "texto": "WHOIS fallo: %s"%e}
+
+    def _web_info(self, params):
+        import urllib.request, re as _re, html as _html
+        url=(params.get("url") or params.get("texto") or "").strip()
+        if not url: return {"ok": False, "texto": "Falta la URL."}
+        if not url.startswith("http"): url="https://"+url
+        try:
+            req=urllib.request.Request(url,headers={"User-Agent":"ARIA/1.0"})
+            with urllib.request.urlopen(req,timeout=8) as r:
+                cab=dict(r.headers); cuerpo=r.read(60000).decode("utf-8","ignore"); estado=r.status
+            m=_re.search(r"<title[^>]*>(.*?)</title>",cuerpo,_re.I|_re.S)
+            titulo = _html.unescape(_re.sub(r"\s+", " ", m.group(1)).strip())[:200] if m else ""
+            return {"ok": True,"url":url,"estado":estado,"servidor":cab.get("Server",""),
+                    "titulo": titulo}
+        except Exception as e:
+            return {"ok": False, "texto": "No pude leer %s: %s"%(url,e)}
 
 
 # ─── Sistema de Entrenamiento de ARIA ───────────────────────────────────────

@@ -19,7 +19,7 @@ class LlamaEngine:
             from llama_cpp import Llama
             self._llm = Llama(
                 model_path=self.model_path,
-                n_ctx=4096,
+                n_ctx=2048,
                 n_threads=max(2, (os.cpu_count() or 4) - 2),
                 n_batch=256,
                 verbose=False,
@@ -42,7 +42,7 @@ class LlamaEngine:
         partes.append("<|im_start|>assistant\n")
         return "\n".join(partes)
 
-    def chat(self, messages, max_tokens=320):
+    def chat(self, messages, max_tokens=200):
         """messages = [{'role':'system'|'user'|'assistant','content':...}, ...]"""
         if not self.available or self._llm is None:
             return ""
@@ -61,6 +61,26 @@ class LlamaEngine:
             return txt.strip()
         except Exception:
             return ""
+
+    # ---- streaming: cada trozo va al callback; el hilo que llama hace el resto ----
+    def chat_stream(self, messages, on_token, max_tokens=200):
+        if not self.available or self._llm is None:
+            return ""
+        prompt = self._to_chatml(messages)
+        full = []
+        try:
+            for chunk in self._llm.create_completion(
+                prompt=prompt, max_tokens=max_tokens, temperature=0.4,
+                top_p=0.9, top_k=40, repeat_penalty=1.15,
+                stop=["<|im_end|>", "<|im_start|>"], stream=True):
+                piece = (chunk.get("choices") or [{}])[0].get("text", "")
+                if piece:
+                    full.append(piece)
+                    try: on_token(piece)
+                    except Exception: pass
+        except Exception:
+            pass
+        return "".join(full).strip()
 
     # compat: generacion plana (ruta antigua)
     def generate(self, prompt, max_tokens=160):

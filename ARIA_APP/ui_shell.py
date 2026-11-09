@@ -16,16 +16,19 @@ import os
 import json
 import math
 import time
+import html
+import inspect
 import calendar
+import re as _re
 from datetime import date
 
 try:
-    from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF
+    from PyQt5.QtCore import Qt, QTimer, QPointF, QRectF, QThread, pyqtSignal
     from PyQt5.QtGui import (QPainter, QColor, QPen, QBrush, QLinearGradient,
                              QRadialGradient, QPolygonF, QPixmap, QTextCursor, QFont)
     from PyQt5.QtWidgets import (QWidget, QApplication, QVBoxLayout, QHBoxLayout,
                                  QGridLayout, QTextEdit, QLineEdit, QLabel, QPushButton,
-                                 QFrame)
+                                 QFrame, QScrollArea)
     _QT = True
 except Exception:
     _QT = False
@@ -162,14 +165,90 @@ if _QT:
             p.drawRoundedRect(QRectF(x, H / 2 - 4, bw * self._v, 8), 4, 4)
             p.end()
 
+    def _formato_skill(r, limite=1200):
+        """Resultado de una skill -> texto legible para el log (sin volcar 4KB de WHOIS)."""
+        if not isinstance(r, dict):
+            return str(r)[:limite]
+        if r.get("ok") is False:
+            return "ERROR: %s" % r.get("texto", "fallo sin detalle")
+        if r.get("registros") is not None:
+            reg = r["registros"] or {}
+            cab = "%s (proveedor %s)" % (r.get("dominio", ""), r.get("proveedor", "?"))
+            lineas = [cab]
+            for tipo, vals in reg.items():
+                vals = list(vals or [])
+                txt = ", ".join(vals[:4]) + (" … +%d" % (len(vals) - 4) if len(vals) > 4 else "")
+                lineas.append("  %-4s %s" % (tipo, txt or "-"))
+            return "\n".join(lineas)[:limite]
+        if "estado" in r and "url" in r:
+            return "%s -> HTTP %s · server %s · %s" % (
+                r.get("url"), r.get("estado"), r.get("servidor") or "?", r.get("titulo") or "(sin titulo)")[:limite]
+        if r.get("texto"):
+            partes = [l for l in str(r["texto"]).splitlines() if l.strip()]
+            cuerpo = "\n".join(partes[:14])
+            if len(partes) > 14:
+                cuerpo += "\n  … +%d lineas" % (len(partes) - 14)
+            return cuerpo[:limite]
+        return json.dumps(r, ensure_ascii=False, indent=1)[:limite]
+
     def _tarjeta():
         f = QFrame(); f.setStyleSheet("QFrame{%s}" % _CARD); return f
 
+    class _ChatWorker(QThread):
+        """Un solo hilo para el LLM. El objeto Llama lo toca SOLO este hilo:
+        los tokens salen de aqui unicamente por señal (QueuedConnection) y el
+        slot del hilo principal es el unico que pinta. Nunca se toca un widget aqui."""
+        token = pyqtSignal(str)
+        listo = pyqtSignal(str)
+        fallo = pyqtSignal(str)
+
+        def __init__(self, responder, texto, parent=None):
+            super().__init__(parent)
+            self._responder = responder
+            self._texto = texto
+            self.t0 = time.time()
+            self.primer_token = None
+
+        @staticmethod
+        def _acepta_on_token(f):
+            try:
+                sig = inspect.signature(f)
+            except (TypeError, ValueError):
+                return False
+            if "on_token" in sig.parameters:
+                return True
+            return any(p.kind == inspect.Parameter.VAR_KEYWORD
+                       for p in sig.parameters.values())
+
+        def _emitir(self, pieza):
+            if self.primer_token is None:
+                self.primer_token = time.time() - self.t0
+            self.token.emit(pieza)
+
+        def run(self):
+            try:
+                if self._acepta_on_token(self._responder):
+                    r = self._responder(self._texto, on_token=self._emitir)
+                else:
+                    r = self._responder(self._texto)
+                if isinstance(r, dict):
+                    r = r.get("response") or r.get("text") or str(r)
+                self.listo.emit(str(r))
+            except Exception as exc:
+                self.fallo.emit("%s: %s" % (type(exc).__name__, exc))
+
     class Shell(QWidget):
-        def __init__(self, responder=None, w=940, h=600):
+        def __init__(self, responder=None, w=940, h=600, skills=None, runner_skill=None):
             super().__init__(None)
             self.responder = responder
+            self.skills = list(skills or [])
+            self.runner_skill = runner_skill
             self.toggles = {"autonomia": True, "cuerpo": "nucleo", "voz": False}
+            self._hist = []
+            self._worker = None
+            self._acc = ""
+            self._pend_idx = None
+            self._t0 = 0.0
             self.setWindowFlags(Qt.FramelessWindowHint)
             self.resize(w, h); self.setWindowTitle("ARIA")
             self._fondo = _Fondo(self)
@@ -184,6 +263,23 @@ if _QT:
                     pywinstyles.apply_style(self, "acrylic")
                 except Exception:
                     pass
+
+        def closeEvent(self, e):
+            """Cerrar la ventana NO cierra ARIA: la manda a la bandeja.
+            Solo 'Salir' del menu (que marca _salir_real) la cierra de verdad."""
+            if getattr(self, "_salir_real", False):
+                e.accept()
+                return
+            if getattr(self, "_bandeja_sistema", None) is not None:
+                e.ignore()
+                self.hide()
+                try:
+                    self._bandeja_sistema._sincronizar()
+                except Exception:
+                    pass
+                return
+            # sin bandeja no hay forma de recuperarla: se acepta el cierre
+            e.accept()
 
         def resizeEvent(self, e):
             self._fondo.setGeometry(0, 0, self.width(), self.height())
@@ -231,9 +327,55 @@ if _QT:
             col = QVBoxLayout(); col.setSpacing(12)
             col.addWidget(self._card_reloj())
             col.addWidget(self._card_sistema())
+            col.addWidget(self._card_skills())
             col.addWidget(self._card_calendario())
             col.addStretch(1)
             return col
+
+        def _card_skills(self):
+            c = _tarjeta(); c.setFixedWidth(240)
+            lay = QVBoxLayout(c); lay.setContentsMargins(12, 10, 12, 10); lay.setSpacing(6)
+            self._btn_skills = QPushButton("SKILLS (%d)" % len(self.skills))
+            self._btn_skills.setStyleSheet(
+                "QPushButton{background:rgba(56,189,248,40);color:%s;border:1px solid %s;"
+                "border-radius:8px;font:700 11px '%s';padding:6px;}"
+                "QPushButton:hover{background:rgba(56,189,248,70);}" % (CYAN, CYAN, MONO))
+            self._btn_skills.clicked.connect(self._alternar_skills)
+            lay.addWidget(self._btn_skills)
+            self._scroll_skills = QScrollArea()
+            self._scroll_skills.setWidgetResizable(True)
+            self._scroll_skills.setFixedHeight(190)
+            self._scroll_skills.setStyleSheet(
+                "QScrollArea{background:transparent;border:0;}"
+                "QScrollBar:vertical{width:6px;background:transparent;}"
+                "QScrollBar::handle:vertical{background:%s;border-radius:3px;}" % TEAL)
+            self._scroll_skills.setVisible(False)
+            dentro = QWidget()
+            vl = QVBoxLayout(dentro); vl.setContentsMargins(0, 0, 0, 0); vl.setSpacing(2)
+            for s in self.skills:
+                sid = s.get("id", "")
+                b = QPushButton("%s  ·  %s" % (s.get("name", sid)[:26], s.get("category", "")))
+                b.setToolTip("%s\n/libro: /skill %s <parametro>" % (sid, sid))
+                b.setStyleSheet(
+                    "QPushButton{background:transparent;color:%s;border:0;text-align:left;"
+                    "font:11px '%s';padding:3px 4px;}"
+                    "QPushButton:hover{background:rgba(125,255,176,40);color:%s;}" % (TXT, MONO, VERDE))
+                b.clicked.connect(lambda _c=False, _s=sid: self._preparar_skill(_s))
+                vl.addWidget(b)
+            vl.addStretch(1)
+            self._scroll_skills.setWidget(dentro)
+            lay.addWidget(self._scroll_skills)
+            return c
+
+        def _alternar_skills(self):
+            vis = not self._scroll_skills.isVisible()
+            self._scroll_skills.setVisible(vis)
+            self._btn_skills.setText(("SKILLS (%d) ▾" if vis else "SKILLS (%d) ▸") % len(self.skills))
+
+        def _preparar_skill(self, sid):
+            self.entrada.setText("/skill %s " % sid)
+            self.entrada.setFocus()
+            self.entrada.setCursorPosition(len(self.entrada.text()))
 
         def _card_reloj(self):
             c = _tarjeta(); c.setFixedWidth(240)
@@ -324,27 +466,130 @@ if _QT:
                     "border-radius:9px;font:700 11px '%s';padding:6px 12px;}"
                     "QPushButton:hover{background:rgba(56,189,248,60);}" % (40 if on else 16, col, col, MONO))
 
-        def _linea(self, texto, quien="aria"):
+        def _fmt(self, texto, quien="aria"):
             col = {"user": CYAN, "aria": TXT, "sys": VERDE}.get(quien, TXT)
             pref = {"user": "> ", "aria": "ARIA: ", "sys": "· "}.get(quien, "")
-            self.log.append('<span style="color:%s">%s%s</span>' % (col, pref, texto))
+            cuerpo = html.escape(str(texto)).replace("\n", "<br>")
+            return '<span style="color:%s">%s%s</span>' % (col, pref, cuerpo)
+
+        def _render(self):
+            self.log.setHtml("<br>".join(self._hist))
             self.log.moveCursor(QTextCursor.End)
+
+        def _linea(self, texto, quien="aria"):
+            self._hist.append(self._fmt(texto, quien))
+            self._render()
 
         def _enviar(self):
             t = self.entrada.text().strip()
             if not t:
                 return
+            if self._worker is not None and self._worker.isRunning():
+                return
+            if t == "/skills" or t == "/skills ":
+                self.entrada.clear(); self._linea(t, "user")
+                self._listar_skills()
+                return
+            m = _re.match(r"^/skill\s+(\S+)\s*(.*)$", t)
+            if m:
+                self.entrada.clear()
+                self._ejecutar_skill(m.group(1), self._params_de(m.group(1), m.group(2)), t)
+                return
             self.entrada.clear(); self._linea(t, "user")
-            if callable(self.responder):
+            if not callable(self.responder):
+                self._linea("(sin cerebro conectado)", "aria")
+                return
+            self._acc = ""
+            self._pend_idx = len(self._hist)
+            self._t0 = time.time()
+            self._linea("está pensando…", "aria")
+            # una sola generación a la vez
+            self.entrada.setEnabled(False)
+            self.entrada.setPlaceholderText("generando… espera a que termine")
+            self._worker = _ChatWorker(self.responder, t, self)
+            self._worker.token.connect(self._on_token)
+            self._worker.listo.connect(self._on_listo)
+            self._worker.fallo.connect(self._on_fallo)
+            self._worker.start()
+
+        def _listar_skills(self):
+            if not self.skills:
+                self._linea("no hay skills cargadas", "sys")
+                return
+            self._linea("%d skills disponibles (usa: /skill <id> <parametro>)" % len(self.skills), "sys")
+            for s in self.skills:
+                self._linea("%-20s %-14s %s" % (s.get("id", ""), s.get("category", ""), s.get("name", "")), "sys")
+
+        def _params_de(self, sid, resto):
+            """Acepta JSON o un valor suelto; lo mapea al parametro que espera la skill."""
+            resto = (resto or "").strip()
+            if not resto:
+                return {}
+            if resto.startswith("{"):
                 try:
-                    r = self.responder(t)
-                    if isinstance(r, dict):
-                        r = r.get("response") or r.get("text") or str(r)
-                except Exception as exc:
-                    r = "(error: %s)" % exc
+                    d = json.loads(resto)
+                    return d if isinstance(d, dict) else {"texto": resto}
+                except Exception:
+                    pass
+            if sid in ("dns_lookup", "whois_lookup"):
+                return {"dominio": resto.split()[0]}
+            if sid == "web_info":
+                return {"url": resto.split()[0]}
+            return {"texto": resto}
+
+        def _ejecutar_skill(self, sid, params, linea=None):
+            self._linea(linea or ("/skill %s" % sid), "user")
+            if not callable(self.runner_skill):
+                self._linea("(sin motor de skills)", "sys")
+                return
+            self._acc = ""
+            self._pend_idx = len(self._hist)
+            self._t0 = time.time()
+            self._linea("ejecutando…", "aria")
+            self.entrada.setEnabled(False)
+            self.entrada.setPlaceholderText("ejecutando skill… espera")
+            runner = self.runner_skill
+            fn = lambda _t="", on_token=None: _formato_skill(runner(sid, params))
+            self._worker = _ChatWorker(fn, "", self)
+            self._worker.token.connect(self._on_token)
+            self._worker.listo.connect(self._on_listo)
+            self._worker.fallo.connect(self._on_fallo)
+            self._worker.start()
+
+        # --- slots: SIEMPRE en el hilo principal (Qt encola la señal) ---
+        def _on_token(self, pieza):
+            if self._pend_idx is None:
+                return
+            self._acc += pieza
+            self._hist[self._pend_idx] = self._fmt(self._acc, "aria")
+            self._render()
+
+        def _on_listo(self, completa):
+            if self._pend_idx is None:
+                return
+            if not self._acc.strip():
+                self._acc = completa or "(respuesta vacía)"
+                self._hist[self._pend_idx] = self._fmt(self._acc, "aria")
+                self._render()
+            pt = getattr(self._worker, "primer_token", None)
+            if pt is None:
+                self._linea("%d caracteres · total %.1f s" % (len(self._acc), time.time() - self._t0), "sys")
             else:
-                r = "(sin cerebro conectado)"
-            self._linea(str(r), "aria")
+                self._linea("%d caracteres · primer token %.2f s · total %.1f s"
+                            % (len(self._acc), pt, time.time() - self._t0), "sys")
+            self._fin_generacion()
+
+        def _on_fallo(self, err):
+            if self._pend_idx is not None:
+                self._hist[self._pend_idx] = self._fmt("ERROR", "aria")
+            self._linea(err, "sys")
+            self._fin_generacion()
+
+        def _fin_generacion(self):
+            self._pend_idx = None
+            self.entrada.setEnabled(True)
+            self.entrada.setPlaceholderText("escribe y Enter...")
+            self.entrada.setFocus()
 
         def _reloj(self):
             def tick():
@@ -358,8 +603,8 @@ if _QT:
                 self._up.setText("uptime %dm · shell: aria · wm: nucleo" % mins)
             self._timer = QTimer(self); self._timer.timeout.connect(tick); self._timer.start(1000); tick()
 
-    def crear_shell(responder=None, w=940, h=600):
-        return Shell(responder, w, h)
+    def crear_shell(responder=None, w=940, h=600, skills=None, runner_skill=None):
+        return Shell(responder, w, h, skills=skills, runner_skill=runner_skill)
 else:
     def crear_shell(responder=None, w=940, h=600):
         return {"error": "PyQt5 no disponible"}

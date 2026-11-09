@@ -251,12 +251,12 @@ class VAAdapter:
             self._ultimo_error = str(exc)
             return False
 
-    def process_text(self, text: str) -> str:
+    def process_text(self, text: str, on_token=None) -> str:
         if not self._asegurar_cerebro():
             return ("No pude cargar mi cerebro local (%s). Suele ser falta de RAM: "
                     "cierra lo que la ocupe o libera el modelo de imagenes "
                     "(gen_local.liberar()) y reintento." % getattr(self, "_ultimo_error", "?"))
-        result = self.brain.chat(text)
+        result = self.brain.chat(text, on_token=on_token)
         return result.get("response", "") if isinstance(result, dict) else str(result)
 
     def get_status(self) -> dict:
@@ -283,11 +283,11 @@ class VAAdapter:
     def stop_voice_listening(self) -> None:
         pass
 
-    def send(self, request: dict) -> dict:
+    def send(self, request: dict, on_token=None) -> dict:
         req_type = request.get("type", "")
         if req_type == "chat":
             text = request.get("data", {}).get("message", "")
-            response = self.va.process_text(text)
+            response = self.va.process_text(text, on_token=on_token)
             return {"status": "ok", "response": response, "provider": "local", "source": "va"}
         if req_type == "list_skills":
             skills = self.va.skills.list()
@@ -3526,7 +3526,11 @@ def run_desktop():
 
     try:
         from ui_shell import crear_shell
-        window = crear_shell(responder=lambda t: va.send({"type": "chat", "data": {"message": t}}).get("response", ""))
+        window = crear_shell(responder=lambda t, on_token=None: va.send(
+            {"type": "chat", "data": {"message": t}}, on_token=on_token).get("response", ""),
+            skills=va.send({"type": "list_skills"}).get("skills", []),
+            runner_skill=lambda sid, params: va.send(
+                {"type": "skill", "skill": sid, "data": {"params": params}}).get("result", {}))
         print("[UI] ui_shell creado", flush=True)
     except Exception as e:
         print(f"[UI] ui_shell fallo, fallback: {e}", flush=True)
@@ -3535,6 +3539,25 @@ def run_desktop():
         else:
             window = ChatWindow(va)
     print("[UI] Window created", flush=True)
+
+    # ---- modo silencioso + bandeja del sistema ----
+    silencioso = _os.environ.get("ARIA_SILENCIOSO", "").strip().lower() in (
+        "1", "on", "true", "si", "sí", "yes")
+    bandeja_sys = None
+    try:
+        from bandeja_sistema import BandejaARIA
+        bandeja_sys = BandejaARIA(window, app)
+        if bandeja_sys.arrancar():
+            window._bandeja_sistema = bandeja_sys
+            print("[UI] Bandeja activa (tray_visible=%s)" % bandeja_sys.activa(), flush=True)
+        else:
+            print("[UI] Bandeja NO disponible en este sistema", flush=True)
+            bandeja_sys = None
+    except Exception as e:
+        print("[UI] Bandeja fallo: %s" % e, flush=True)
+        bandeja_sys = None
+    if silencioso and bandeja_sys is not None:
+        print("[UI] Modo silencioso armado (la ventana no se mostrara al arrancar)", flush=True)
     try:
         import conversation_starters as cs
         window._append_chat("ARIA", cs.elegir_starter("Daniel"), C_ACCENT_CYAN_BRIGHT)
@@ -3559,51 +3582,63 @@ def run_desktop():
         if tray_icon.isNull():
             tray_icon = _make_tray_pixmap() if False else tray_icon
 
-    window.show()
-    print("[UI] Window shown, visible=True", flush=True)
-    try:
-        import actividad
-        act = actividad.crear_actividad()
-        act.start()
-        act.refrescar()
-        window._actividad = act
-        act.show()
-    except Exception as e:
-        print(f"[UI] actividad fallo: {e}", flush=True)
+    if silencioso and bandeja_sys is not None:
+        window.hide()
+        print("[UI] MODO SILENCIOSO: ventana oculta (visible=%s), solo bandeja"
+              % window.isVisible(), flush=True)
+    else:
+        window.show()
+        print("[UI] Window shown, visible=%s" % window.isVisible(), flush=True)
+    # actividad y modos son HUDs que se muestran a si mismos desde dentro
+    # (actividad.refrescar / modos.start llaman .show()): en modo silencioso no se crean.
+    if not silencioso:
+        try:
+            import actividad
+            act = actividad.crear_actividad()
+            act.start()
+            act.refrescar()
+            window._actividad = act
+            act.show()
+        except Exception as e:
+            print(f"[UI] actividad fallo: {e}", flush=True)
     try:
         import resurgir, bandeja
         tar = resurgir.para_bandeja()
-        if tar:
+        if tar and not silencioso:
             b = bandeja.crear_bandeja()
             b.mostrar({"noticias": [tar], "fecha": "HOY"})
             window._bandeja = b
     except Exception as e:
         print(f"[UI] resurgir fallo: {e}", flush=True)
-    try:
-        import modos
-        def _al_cambiar_modo(m):
-            try:
-                va._forma.mostrar(m.get("forma", "nucleo"))
-            except Exception:
-                pass
-            va._skills_activas = set(m.get("skills", []))
-        _nuc = None
+    if not silencioso:
         try:
-            _nuc = va._forma._cuerpo.get("nucleo") if va._forma is not None else None
-        except Exception:
+            import modos
+            def _al_cambiar_modo(m):
+                try:
+                    va._forma.mostrar(m.get("forma", "nucleo"))
+                except Exception:
+                    pass
+                va._skills_activas = set(m.get("skills", []))
             _nuc = None
-        sel = modos.crear_selector(on_modo=_al_cambiar_modo, nucleo=_nuc, modo_inicial="analista")
-        sel.start()
-        va._modos = sel
-        sel.show()
-    except Exception as e:
-        print(f"[UI] modos fallo: {e}", flush=True)
+            try:
+                _nuc = va._forma._cuerpo.get("nucleo") if va._forma is not None else None
+            except Exception:
+                _nuc = None
+            sel = modos.crear_selector(on_modo=_al_cambiar_modo, nucleo=_nuc, modo_inicial="analista")
+            sel.start()
+            va._modos = sel
+            sel.show()
+        except Exception as e:
+            print(f"[UI] modos fallo: {e}", flush=True)
 
     # Presence (idle show/hide) + hand react
     try:
         from presence import PresenceWatcher
         from hand_react import HandReactor
         def _present():
+            # en modo silencioso el watcher NO levanta la ventana: para eso esta la bandeja
+            if silencioso:
+                return
             try: window.show(); window.raise_()
             except Exception: pass
         def _away():
