@@ -273,6 +273,36 @@ if _QT:
             p.setPen(QPen(QColor(255, 0, 160, 10), 1)); p.drawRect(2, 2, W - 4, H - 4)
             p.end()
 
+    class _OrbMini(QWidget):
+        """Orb compacto (nucleo_v2) para el 'cuerpo' de ARIA en el shell."""
+        def __init__(self, parent=None):
+            super().__init__(parent)
+            self.setFixedSize(160, 160)
+            self._nucleo = None
+            self._t = 0.0
+            try:
+                from ui.nucleo_v2 import Nucleo
+                self._nucleo = Nucleo()
+            except Exception:
+                self._nucleo = None
+            self._timer = QTimer(self); self._timer.timeout.connect(self._tick)
+            self._timer.start(30)
+
+        def _tick(self):
+            if not self.isVisible():
+                return
+            self._t += 0.03
+            self.update()
+
+        def paintEvent(self, e):
+            p = QPainter(self); p.setRenderHint(QPainter.Antialiasing)
+            p.fillRect(self.rect(), QColor(8, 12, 26))
+            if self._nucleo is not None:
+                self._nucleo.paint(p, QRectF(0, 0, self.width(), self.height()),
+                                   self._t, "reposo", nivel=0.4, calidad=None,
+                                   hud=False, escala=0.34)
+            p.end()
+
     def _formato_skill(r, limite=1200):
         """Resultado de una skill -> texto legible para el log (sin volcar 4KB de WHOIS)."""
         if not isinstance(r, dict):
@@ -351,9 +381,10 @@ if _QT:
             self.responder = responder
             self.skills = list(skills or [])
             self.runner_skill = runner_skill
-            self.toggles = {"autonomia": True, "cuerpo": "nucleo", "voz": False,
+            self.toggles = {"autonomia": False, "cuerpo": "nucleo", "voz": False,
                             "fondo": "rice", "crt": True}
             self._hist = []
+            self._es_chat = False
             self._worker = None
             self._acc = ""
             self._pend_idx = None
@@ -442,6 +473,9 @@ if _QT:
 
         def _widgets(self):
             col = QVBoxLayout(); col.setSpacing(12)
+            self._orb_mini = _OrbMini()
+            self._orb_mini.setVisible(self.toggles["cuerpo"] == "nucleo")
+            col.addWidget(self._orb_mini)
             col.addWidget(self._card_reloj())
             col.addWidget(self._card_sistema())
             col.addWidget(self._card_skills())
@@ -566,7 +600,21 @@ if _QT:
         def _toggle(self, key):
             if key == "cuerpo":
                 self.toggles["cuerpo"] = "avatar" if self.toggles["cuerpo"] == "nucleo" else "nucleo"
+                if hasattr(self, "_orb_mini"):
+                    self._orb_mini.setVisible(self.toggles["cuerpo"] == "nucleo")
                 self._linea("cuerpo -> %s" % self.toggles["cuerpo"], "sys")
+            elif key == "voz":
+                self.toggles["voz"] = not self.toggles["voz"]
+                self._linea("voz -> %s" % ("ON" if self.toggles["voz"] else "OFF"), "sys")
+                if self.toggles["voz"]:
+                    try:
+                        import voz_local
+                        voz_local.hablar("Voz activada.")
+                    except Exception:
+                        pass
+            elif key == "autonomia":
+                self.toggles["autonomia"] = False
+                self._linea("autonomia desactivada (regla v2)", "sys")
             elif key == "fondo":
                 self.toggles["fondo"] = self._fondo.set_modo(
                     "matrix" if self.toggles["fondo"] == "rice" else "rice")
@@ -574,9 +622,6 @@ if _QT:
             elif key == "crt":
                 self.toggles["crt"] = self._crt.set_activo(not self.toggles["crt"])
                 self._linea("crt -> %s" % ("ON" if self.toggles["crt"] else "OFF"), "sys")
-            else:
-                self.toggles[key] = not self.toggles[key]
-                self._linea("%s -> %s" % (key, "ON" if self.toggles[key] else "OFF"), "sys")
             self._pintar_toggles()
 
         def _pintar_toggles(self):
@@ -647,6 +692,7 @@ if _QT:
             if not callable(self.responder):
                 self._linea("(sin cerebro conectado)", "aria")
                 return
+            self._es_chat = True
             self._acc = ""
             self._pend_idx = len(self._hist)
             self._t0 = time.time()
@@ -690,6 +736,7 @@ if _QT:
             if not callable(self.runner_skill):
                 self._linea("(sin motor de skills)", "sys")
                 return
+            self._es_chat = False
             self._acc = ""
             self._pend_idx = len(self._hist)
             self._t0 = time.time()
@@ -731,6 +778,7 @@ if _QT:
             if self._worker is not None and self._worker.isRunning():
                 return
             self._linea(etiqueta, "user")
+            self._es_chat = False
             self._acc = ""
             self._pend_idx = len(self._hist)
             self._t0 = time.time()
@@ -783,6 +831,13 @@ if _QT:
             self._fin_generacion()
 
         def _fin_generacion(self):
+            if self._es_chat and self.toggles.get("voz") and self._acc.strip():
+                try:
+                    import voz_local
+                    voz_local.hablar(self._acc)
+                except Exception:
+                    pass
+            self._es_chat = False
             self._pend_idx = None
             self.entrada.setEnabled(True)
             self.entrada.setPlaceholderText("escribe y Enter...")
