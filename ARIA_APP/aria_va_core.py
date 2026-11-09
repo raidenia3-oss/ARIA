@@ -836,7 +836,7 @@ class LocalAIBrain:
 
     def _status_reply(self) -> str:
         parts = ["ARIA OS — Estado del sistema:"]
-        parts.append(f"  IA local: {'transformers' if self._model_loaded else 'reglas'}")
+        parts.append(f"  IA local: {'llama.cpp (Qwen2.5-1.5B)' if self._model_loaded else 'reglas'}")
         parts.append(f"  Memoria: {len(_read_jsonl(CONVERSATIONS_FILE))} conversaciones guardadas")
         reglas = _reglas_para_el_modelo(limite=50)
         if reglas:
@@ -850,6 +850,11 @@ class LocalAIBrain:
         msg = message.strip()
         if not msg:
             return {"response": "No escribiste nada.", "provider": "local", "source": "rules"}
+
+        # Memoria de la conversacion: si no pasan historia, usa la interna (ultimas
+        # vueltas). Sin esto el LLM ve cada mensaje como si fuera el primero.
+        if history is None:
+            history = self.history
 
         # 0. Fast-path SOLO para datos reales que ARIA tiene (hora del sistema, estado).
         # Va ANTES de certeza: la hora local no es un dato que haya que escalar.
