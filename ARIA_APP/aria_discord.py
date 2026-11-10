@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 """Puente de control remoto por Discord para ARIA (proceso aparte, sin GUI).
 
-Uso: define ARIA_DISCORD_TOKEN y ARIA_DISCORD_USERS, luego:
+Responde solo a mensajes que empiecen con "aria ", usa el mismo canal que
+ASAGI y aplica el mismo anti-bucle (maximo 1 respuesta por minuto y 6 por
+hora). Discord nunca ejecuta herramientas de ARIA.
+
+Uso: define ARIA_DISCORD_TOKEN y ARIA_DISCORD_USERS (y opcional
+ARIA_DISCORD_CHANNEL_ID), luego:
     python aria_discord.py
-ARIA responde a tus mensajes de Discord usando su cerebro local.
 """
 import os
 import sys
@@ -33,7 +37,9 @@ def main():
         load_dotenv(os.path.join(AQUI, ".env"))
     except Exception:
         pass
-    res, _ = iniciar(_brain_responder())
+    prefijo = os.environ.get("ARIA_DISCORD_PREFIX", "aria").strip()
+    canal_id = os.environ.get("ARIA_DISCORD_CHANNEL_ID", "").strip() or None
+    res, _ = iniciar(_brain_responder(), prefijo=prefijo, canal_id=canal_id)
     print("[ARIA-Discord]", res, flush=True)
     if not res.get("ok"):
         return

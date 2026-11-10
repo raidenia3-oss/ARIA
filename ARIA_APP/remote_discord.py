@@ -3,6 +3,12 @@
 import os
 import asyncio
 import threading
+import time
+
+MAX_RESP_POR_MINUTO = 1
+MAX_RESP_POR_HORA = 6
+VENTANA_MINUTO_S = 60
+VENTANA_HORA_S = 3600
 
 
 def disponible():
@@ -14,11 +20,14 @@ def disponible():
 
 
 class RemotoDiscord:
-    def __init__(self, token, responder, autorizados=None):
+    def __init__(self, token, responder, autorizados=None, prefijo=None, canal_id=None):
         self.token = token
         self.responder = responder
         self.autorizados = set(autorizados or [])
         self._thread = None
+        self.prefijo = (prefijo or "").strip().lower()
+        self.canal_id = canal_id
+        self._respuestas = []
 
     def _build(self):
         import discord
@@ -52,6 +61,16 @@ class RemotoDiscord:
             texto = texto.strip()
             if not texto:
                 return
+            if este.prefijo and not texto.lower().startswith(este.prefijo + " "):
+                return
+            if este.prefijo and texto.lower() == este.prefijo:
+                return
+            texto = texto[len(este.prefijo):].strip() if este.prefijo else texto
+            ahora = time.time()
+            este._respuestas = [t for t in este._respuestas if ahora - t < VENTANA_HORA_S]
+            recientes = [t for t in este._respuestas if ahora - t < VENTANA_MINUTO_S]
+            if len(recientes) >= MAX_RESP_POR_MINUTO or len(este._respuestas) >= MAX_RESP_POR_HORA:
+                return
             try:
                 loop = asyncio.get_running_loop()
                 reply = await loop.run_in_executor(None, este.responder, texto)
@@ -59,7 +78,16 @@ class RemotoDiscord:
                 reply = "error: %s" % exc
             reply = (str(reply) or "...")[:1900]
             try:
-                await m.channel.send(reply)
+                destino = este.canal_id
+                if destino:
+                    ch = await client.fetch_channel(int(destino))
+                    if ch is not None:
+                        await ch.send(reply)
+                    else:
+                        await m.channel.send(reply)
+                else:
+                    await m.channel.send(reply)
+                este._respuestas.append(ahora)
             except Exception:
                 pass
 
@@ -148,13 +176,15 @@ class RemotoDiscord:
             return {"error": str(exc)}
 
 
-def iniciar(responder, token=None, autorizados=None):
+def iniciar(responder, token=None, autorizados=None, prefijo=None, canal_id=None):
     """Arranca el control remoto en segundo plano. Devuelve (resultado, instancia)."""
     token = token or os.environ.get("ARIA_DISCORD_TOKEN", "").strip()
     if autorizados is None:
         ids = os.environ.get("ARIA_DISCORD_USERS", "").replace(" ", "")
         autorizados = [int(x) for x in ids.split(",") if x.isdigit()]
-    r = RemotoDiscord(token, responder, autorizados)
+    prefijo = prefijo or os.environ.get("ARIA_DISCORD_PREFIX", "aria").strip()
+    canal_id = canal_id or os.environ.get("ARIA_DISCORD_CHANNEL_ID", "").strip() or None
+    r = RemotoDiscord(token, responder, autorizados, prefijo=prefijo, canal_id=canal_id)
     return r.iniciar(), r
 
 
