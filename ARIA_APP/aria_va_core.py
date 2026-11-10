@@ -27,6 +27,13 @@ try:
 except Exception:  # noqa: BLE001
     _resolve_allowed = None
 
+try:
+    import enlace as _enlace
+    _ENLACE_OK = True
+except Exception:  # noqa: BLE001
+    _enlace = None
+    _ENLACE_OK = False
+
 ARIA_APP = Path(__file__).resolve().parent
 PROJECT_ROOT = ARIA_APP.parent
 
@@ -662,6 +669,12 @@ class LocalAIBrain:
         # Run synchronously to avoid race with PyQt5 UI thread
         _bg()
 
+        # Vigia del enlace ASAGI (daemon, cada 5 min). Nunca bloquea el arranque.
+        try:
+            self._enlace_iniciar_vigia()
+        except Exception:
+            pass
+
     def generate_local(self, prompt: str, max_tokens: int = 160) -> str:
         eng = getattr(self, "_engine", None)
         if eng is None or not self._model_loaded:
@@ -675,6 +688,13 @@ class LocalAIBrain:
         eng = getattr(self, "_engine", None)
         if eng is None or not self._model_loaded:
             return ""
+        # (0) Enlace ASAGI <-> ARIA (mensajes para el celular / de ASAGI).
+        try:
+            _r = self._enlace_interceptar(msg)
+            if _r is not None:
+                return _r
+        except Exception:
+            pass
         reglas = _reglas_para_el_modelo()
         sistema = self.system_prompt + (("Reglas del usuario:\n" + reglas) if reglas else "")
         # (a) Guia social: consejo del sandbox para la emocion detectada
@@ -690,6 +710,18 @@ class LocalAIBrain:
             _guia = ""
         if _guia.strip():
             sistema += "\n\nGuia social: " + _guia.strip()
+        # (b) Memoria por significado: trae recuerdos relevantes a este mensaje
+        #     (no solo las ultimas vueltas). Usa embeddings si hay, si no TF-IDF.
+        try:
+            _sem = self._get_semantica()
+            if _sem is not None:
+                _hits = _sem.buscar(msg, k=3)
+                if _hits:
+                    _rec = "\n".join("- " + h["texto"].replace("\n", " ") for h in _hits)
+                    sistema += ("\n\nRecuerdos relevantes de conversaciones pasadas "
+                                "(usalos solo si vienen al caso, no los recites):\n" + _rec)
+        except Exception:
+            pass
         messages = [{"role": "system", "content": sistema}]
         if history:
             for h in history[-6:]:
@@ -704,6 +736,76 @@ class LocalAIBrain:
             return eng.chat(messages)
         except Exception:
             return ""
+
+    # ---------------------------- Enlace ASAGI <-> ARIA ----------------------------
+
+    def _enlace_iniciar_vigia(self):
+        """Hilo daemon: consulta enlace.recibir() cada 5 min y avisa si hay nuevos."""
+        if getattr(self, "_enlace_vigia_iniciada", False):
+            return
+        self._enlace_vigia_iniciada = True
+        self._enlace_nuevos = []
+        self._enlace_cb = None
+
+        def _loop():
+            while True:
+                try:
+                    time.sleep(300)
+                    if not self._enlace_disponible():
+                        continue
+                    r = _enlace.recibir()
+                    if r.get("ok") and r.get("nuevos"):
+                        for n in r["nuevos"]:
+                            self._enlace_nuevos.append(n)
+                        if len(self._enlace_nuevos) > 50:
+                            self._enlace_nuevos = self._enlace_nuevos[-50:]
+                        cb = getattr(self, "_enlace_cb", None)
+                        if cb:
+                            try:
+                                cb()
+                            except Exception:
+                                pass
+                except Exception:
+                    pass
+
+        t = threading.Thread(target=_loop, name="aria-enlace-vigia", daemon=True)
+        t.start()
+
+    def _enlace_disponible(self):
+        return _ENLACE_OK and _enlace is not None and _enlace.vinculado()
+
+    def enlace_tiene_nuevos(self):
+        return bool(getattr(self, "_enlace_nuevos", []))
+
+    def enlace_nuevos(self):
+        return list(getattr(self, "_enlace_nuevos", []))
+
+    def _enlace_interceptar(self, msg: str) -> Optional[str]:
+        """Si el mensaje va para ASAGI/celular o pide revisar el celular, responde sin LLM."""
+        if not self._enlace_disponible():
+            return None
+        self._enlace_iniciar_vigia()
+        low = msg.strip().lower()
+        prefijos = ("dile a asagi", "avisa al celular", "manda al celular")
+        for p in prefijos:
+            if low.startswith(p):
+                resto = msg.strip()[len(p):].strip()
+                tiene_hora = ("recuérdame" in low or "recuerdame" in low
+                              or any(c.isdigit() for c in resto))
+                tipo = "pendiente" if tiene_hora else "nota"
+                try:
+                    r = _enlace.enviar(resto, tipo=tipo)
+                except Exception:
+                    r = {"ok": False, "texto": "No pude enviar el mensaje al celular."}
+                return r.get("texto", "") if isinstance(r, dict) else str(r)
+        if ("qué me mandó asagi" in low or "que me mando asagi" in low
+                or "revisa el celular" in low):
+            try:
+                r = _enlace.recibir()
+            except Exception:
+                r = {"ok": False, "texto": "No pude revisar el celular."}
+            return r.get("texto", "") if isinstance(r, dict) else str(r)
+        return None
 
     def _es_pedido_codigo(self, msg: str) -> bool:
         import re as _re, unicodedata as _u
@@ -760,14 +862,31 @@ class LocalAIBrain:
         if sem != "NA":
             return sem
         self._semantica = None
+        here = os.path.dirname(os.path.abspath(__file__))
         try:
             import memory_semantic
             if memory_semantic.disponible():
-                here = os.path.dirname(os.path.abspath(__file__))
                 self._semantica = memory_semantic.MemoriaSemantica(
                     os.path.join(here, "data", "semantica.db"))
         except Exception:
             self._semantica = None
+        if self._semantica is None:
+            # Sin embeddings (fastembed/sqlite_vec): memoria TF-IDF 100% stdlib.
+            try:
+                import memory_tfidf
+                self._semantica = memory_tfidf.MemoriaSemantica(
+                    os.path.join(here, "data", "semantica_tfidf.db"))
+                # Backfill unico: indexa el historial ya existente para poder
+                # recuperar conversaciones viejas desde el primer arranque.
+                if hasattr(self._semantica, "contar") and self._semantica.contar() == 0:
+                    for _e in _read_jsonl(CONVERSATIONS_FILE)[-500:]:
+                        _u = str(_e.get("user", "")).strip()
+                        _a = str(_e.get("aria", "")).strip()
+                        if _u and _a:
+                            self._semantica.recordar(
+                                "Usuario: %s\nARIA: %s" % (_u, _a), meta="historial")
+            except Exception:
+                self._semantica = None
         return self._semantica
 
     def _sem_guardar(self, user_msg, bot_msg, source):
