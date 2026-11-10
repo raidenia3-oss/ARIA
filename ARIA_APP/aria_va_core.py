@@ -34,6 +34,13 @@ except Exception:  # noqa: BLE001
     _enlace = None
     _ENLACE_OK = False
 
+try:
+    import enlace_adb as _enlace_adb
+    _ENLACE_ADB_OK = True
+except Exception:  # noqa: BLE001
+    _enlace_adb = None
+    _ENLACE_ADB_OK = False
+
 ARIA_APP = Path(__file__).resolve().parent
 PROJECT_ROOT = ARIA_APP.parent
 
@@ -753,7 +760,7 @@ class LocalAIBrain:
                     time.sleep(300)
                     if not self._enlace_disponible():
                         continue
-                    r = _enlace.recibir()
+                    r = _enlace_adb.recibir() if (_ENLACE_ADB_OK and _enlace_adb is not None) else _enlace.recibir()
                     if r.get("ok") and r.get("nuevos"):
                         for n in r["nuevos"]:
                             self._enlace_nuevos.append(n)
@@ -772,6 +779,8 @@ class LocalAIBrain:
         t.start()
 
     def _enlace_disponible(self):
+        if _ENLACE_ADB_OK and _enlace_adb is not None and _enlace_adb.disponible():
+            return True
         return _ENLACE_OK and _enlace is not None and _enlace.vinculado()
 
     def enlace_tiene_nuevos(self):
@@ -794,14 +803,24 @@ class LocalAIBrain:
                               or any(c.isdigit() for c in resto))
                 tipo = "pendiente" if tiene_hora else "nota"
                 try:
-                    r = _enlace.enviar(resto, tipo=tipo)
+                    if _ENLACE_ADB_OK and _enlace_adb is not None:
+                        r = _enlace_adb.enviar(resto, tipo=tipo)
+                    elif _ENLACE_OK and _enlace is not None:
+                        r = _enlace.enviar(resto, tipo=tipo)
+                    else:
+                        r = {"ok": False, "texto": "No hay enlace disponible."}
                 except Exception:
                     r = {"ok": False, "texto": "No pude enviar el mensaje al celular."}
                 return r.get("texto", "") if isinstance(r, dict) else str(r)
         if ("qué me mandó asagi" in low or "que me mando asagi" in low
                 or "revisa el celular" in low):
             try:
-                r = _enlace.recibir()
+                if _ENLACE_ADB_OK and _enlace_adb is not None:
+                    r = _enlace_adb.recibir()
+                elif _ENLACE_OK and _enlace is not None:
+                    r = _enlace.recibir()
+                else:
+                    r = {"ok": False, "texto": "No hay enlace disponible."}
             except Exception:
                 r = {"ok": False, "texto": "No pude revisar el celular."}
             return r.get("texto", "") if isinstance(r, dict) else str(r)
