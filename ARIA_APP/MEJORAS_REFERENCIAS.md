@@ -341,7 +341,10 @@ ARIA_APP/
 - ARIA_APP/backend/api/compat.py: OpenAI-compatible API router
 
 ### Pendiente
-- B) Producción: empaquetar como .exe con PyInstaller
-- F) Distro Linux: USB/Arch + Hyprland
-- Descargar modelos Vosk y openWakeWord para STT/wake word offline
-- Migrar frontend a React + Vite
+- B) Producción: empaquetar como .exe con PyInstaller — **HECHO** (dist/AURA OS.exe, 337MB, PyInstaller --onefile --windowed).
+- F) Distro Linux: USB/Arch + Hyprland — fuera de alcance actual (solo Windows desktop).
+- Descargar modelos Vosk y openWakeWord para STT/wake word offline — **bloqueado**: requiere dependencias nuevas, prohibido por regla v2 (ver `WAKEWORD_ESTADO.md`).
+- Migrar frontend a React + Vite — **bloqueado**: regla v2 prohíbe interfaz de navegador/HTML servido y dependencias nuevas; el desktop es PyQt5 local.
+
+## CIERRE (9-nov-2026, regla v2)
+Todas las fases 1-6 del plan de mejoras están marcadas como completadas en su momento (2026-08-30/31) sobre la arquitectura previa. Bajo la regla v2 (desktop standalone, sin servidores, sin dependencias nuevas, sin localhost), no se activan nuevas fases. Los únicos ítems abiertos requieren aprobación de dependencia nueva y quedan documentados más arriba.

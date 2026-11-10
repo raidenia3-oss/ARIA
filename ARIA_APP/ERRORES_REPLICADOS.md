@@ -73,3 +73,15 @@ El backend FastAPI ahora arranca correctamente con **138 routes**.
 | System Tray | ⚠️ Falta pystray |
 
 **Conclusión:** El proyecto tiene un backend completamente funcional ahora. Los errores críticos han sido corregidos.
+
+---
+
+## CIERRE (9-nov-2026, regla v2 — desktop standalone PyQt5, sin servidores)
+
+Los dos ítems del listado original se cierran como **no aplicables** bajo la regla v2:
+
+1. `desktop_tray.py` / `pystray`: el bandeja del desktop actual usa `PyQt5.QSystemTrayIcon` (`ARIA_APP/bandeja_sistema.py`), sin `pystray`. Cerrado.
+2. `frontend/index.html`: HTML del legado web; no afecta al desktop PyQt5. Cerrado.
+
+El backend FastAPI (`ARIA_APP/backend/`) es legado deprecated: no se arranca desde `aria_main.py` ni `desktop_ui.py` y no se extiende (regla v2). Ningún ítem pendiente requiere acción en el camino activo.
+
