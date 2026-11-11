@@ -23,6 +23,7 @@ _SKILL_NAMES = [
     "ping",
     "scan",
     "whois",
+    "math",
     "weather",
     "open",
     "volume",
@@ -100,6 +101,7 @@ class SkillRegistry:
             time,
             volume,
             whois,
+            math,
         )
         from backend.skills.web import search, weather
         try:
@@ -154,6 +156,7 @@ class SkillRegistry:
             ("ping", ping, "system", "Ping a un host"),
             ("scan", scan, "system", "Escanear puertos abiertos"),
             ("whois", whois, "system", "Búsqueda de información de dominio"),
+            ("math", math, "math", "Calculadora y teoría de números (stdlib, honesta)"),
             ("open", open, "system", "Abrir aplicaciones"),
             ("volume", volume, "system", "Control de volumen del sistema"),
             ("screenshot", screenshot, "system", "Capturar pantalla"),
