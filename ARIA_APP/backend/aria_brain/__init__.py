@@ -2,6 +2,7 @@
 
 from .memoria_sistema import ShortTermMemory, LongTermMemory, SemanticMemory, EpisodicMemory
 from .reasoning_engine import ReasoningEngine
+from .math_reasoning import MathReasoning
 from .decision_making import DecisionMaking
 from .learning_system import LearningSystem
 from .creativity_engine import CreativityEngine
@@ -19,6 +20,7 @@ class AriaBrain:
         self.semantic = SemanticMemory()
         self.episodic = EpisodicMemory()
         self.reasoning = ReasoningEngine()
+        self.math = MathReasoning()
         self.decision = DecisionMaking()
         self.learning = LearningSystem()
         self.creativity = CreativityEngine()
@@ -29,7 +31,10 @@ class AriaBrain:
     async def think_and_decide(self, situation):
         """Procesa situación y toma decisión inteligente"""
         # Razona
-        analysis = await self.reasoning.analyze(situation)
+        analysis = await self.reasoning.reason_about(situation)
+        
+        # Razonamiento matemático verificable (si aplica)
+        math_check = self.math.razonar_con_matematicas(situation)
         
         # Considera emoción
         emotion = await self.emotion.get_emotional_response(situation)
@@ -47,7 +52,8 @@ class AriaBrain:
             'decision': decision,
             'confidence': 0.95,
             'explanation': explanation,
-            'emotion': emotion
+            'emotion': emotion,
+            'math': math_check,
         }
 
 
@@ -58,6 +64,7 @@ __all__ = [
     'SemanticMemory',
     'EpisodicMemory',
     'ReasoningEngine',
+    'MathReasoning',
     'DecisionMaking',
     'LearningSystem',
     'CreativityEngine',
