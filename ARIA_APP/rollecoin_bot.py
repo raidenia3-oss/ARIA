@@ -1,13 +1,13 @@
-"""Automatizacion web para RolleCoin usando solo stdlib (urllib)."""
+"""Automatizacion web para RollerCoin usando solo stdlib (urllib)."""
 import urllib.request
 import urllib.parse
 import http.cookiejar
 import ssl
-_CTX = ssl._create_unverified_context()
+_CTX = ssl.create_default_context()
 
 
-class RolleCoinBot:
-    def __init__(self, base_url="https://rollecoin.com"):
+class RollerCoinBot:
+    def __init__(self, base_url="https://rollercoin.com"):
         self.base = base_url.rstrip("/")
         self.cj = http.cookiejar.CookieJar()
         self.opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=_CTX), urllib.request.HTTPCookieProcessor(self.cj))
@@ -34,7 +34,7 @@ class RolleCoinBot:
 
 
 def run(action="fetch", path="/", data=None):
-    bot = RolleCoinBot()
+    bot = RollerCoinBot()
     if action == "post":
         return bot.post(path, data)
     return bot.fetch(path)
