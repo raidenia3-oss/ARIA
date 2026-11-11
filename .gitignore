@@ -147,3 +147,7 @@ packages/backend/security_state/identities/
 # Vault markdown (human side) + backups (privados)
 ARIA_APP/data/vault/humano/
 ARIA_APP/data/backups/
+
+# Claves de identidad LAN ASAGI (no al repo: permiten emparejamiento celular)
+ARIA_APP/.aria_lan_clave
+ARIA_APP/.aria_mi_celular.json

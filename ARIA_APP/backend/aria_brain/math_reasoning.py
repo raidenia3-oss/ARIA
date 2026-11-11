@@ -13,6 +13,70 @@ import re
 from typing import Any, Dict, List, Optional
 
 
+# --- Expresiones aritmeticas completas (precedencia, negativos, parentesis, ^, %) ---
+# Antes, "2 + 3 * 4" daba 5 y "-3 + 5" daba 8 marcados como verificados. Ahora se evalua la
+# expresion ENTERA con el arbol de Python (solo numeros y + - * / ^ %), exacta con Fraction.
+import ast as _ast
+from fractions import Fraction as _Fr
+
+_EXPR = re.compile(r'(?<![\w.])[-+(]*\s*\d[\d\s.,+\-*/^%()x×÷]*\d\s*\)*')
+_OPS = {_ast.Add: lambda a, b: a + b, _ast.Sub: lambda a, b: a - b, _ast.Mult: lambda a, b: a * b,
+        _ast.Div: lambda a, b: a / b, _ast.Mod: lambda a, b: a % b}
+
+
+def _eval_nodo(n):
+    if isinstance(n, _ast.Constant) and isinstance(n.value, (int, float)) and not isinstance(n.value, bool):
+        return _Fr(str(n.value))
+    if isinstance(n, _ast.UnaryOp) and isinstance(n.op, (_ast.USub, _ast.UAdd)):
+        v = _eval_nodo(n.operand)
+        return -v if isinstance(n.op, _ast.USub) else v
+    if isinstance(n, _ast.BinOp):
+        a, b = _eval_nodo(n.left), _eval_nodo(n.right)
+        if isinstance(n.op, _ast.Pow):
+            if b.denominator != 1 or abs(b) > 1000 or abs(a) > 10 ** 12:
+                raise ValueError("potencia demasiado grande o no entera")
+            return a ** int(b)
+        if type(n.op) in _OPS:
+            if isinstance(n.op, (_ast.Div, _ast.Mod)) and b == 0:
+                raise ZeroDivisionError("division entre cero")
+            return _OPS[type(n.op)](a, b)
+    raise ValueError("expresion no soportada")
+
+
+def _formato(v):
+    if v.denominator == 1:
+        return int(v)
+    f = float(v)
+    return round(f, 10)
+
+
+def evaluar_expresion(texto: str):
+    """Devuelve (expresion_normalizada, valor) de la expresion aritmetica mas larga del texto, o None."""
+    t = texto.lower().replace('×', '*').replace('÷', '/')
+    mejor = None
+    for m in _EXPR.finditer(t):
+        cand = m.group(0).strip()
+        if not re.search(r'\d\s*[-+*/^%x]\s*[-+(]*\s*\d', cand):
+            continue                                   # un solo numero: no es una operacion
+        antes = t[:m.start()].rstrip()
+        despues = t[m.end():].lstrip()
+        if re.search(r'(?:^|[^a-záéíóúñ])[a-z]\s*[*]?$', antes) or despues.startswith('='):
+            continue                                   # "x + 2 = 5": ecuacion, no aritmetica pura
+        c = re.sub(r'(\d),(\d{1,2})(?!\d)', r'\1.\2', cand)   # 2,5 -> 2.5
+        c = re.sub(r'(?<=\d)\s*x\s*(?=\d)', '*', c).replace('^', '**')
+        if mejor is None or len(c) > len(mejor):
+            mejor = c
+    if mejor is None:
+        return None
+    # equilibrar parentesis sobrantes de los bordes
+    while mejor.count('(') < mejor.count(')') and mejor.endswith(')'):
+        mejor = mejor[:-1].rstrip()
+    while mejor.count('(') > mejor.count(')') and mejor.startswith('('):
+        mejor = mejor[1:].lstrip()
+    arbol = _ast.parse(mejor, mode='eval').body
+    return mejor.replace('**', '^'), _eval_nodo(arbol)
+
+
 class MathReasoning:
     """Adaptador entre el razonamiento de ARIA y la skill de matemáticas."""
 
@@ -40,6 +104,12 @@ class MathReasoning:
         """
         t = texto.lower()
 
+        m = re.search(r'(\d+(?:[.,]\d+)?)\s*%\s*de\s*(\d+(?:[.,]\d+)?)', t)
+        if m:
+            return {"operacion": "porcentaje", "p": m.group(1).replace(',', '.'), "x": m.group(2).replace(',', '.')}
+        if re.search(r'\d\s*[-+*/^x×÷]\s*[-+(]*\s*\d', t):
+            return {"operacion": "expresion", "texto": texto}
+
         # Patrones simples con números explícitos
         m = re.search(r'(\d+(?:\.\d+)?)\s*\+\s*(\d+(?:\.\d+)?)', t)
         if m:
@@ -61,7 +131,7 @@ class MathReasoning:
         if m:
             return {"operacion": "factorial", "n": int(m.group(1))}
 
-        m = re.search(r'raiz\s+(?:de\s+)?(\d+(?:\.\d+)?)', t)
+        m = re.search(r'raiz\s+(?:cuadrada\s+)?(?:de\s+)?(-?\d+(?:\.\d+)?)', t)
         if m:
             return {"operacion": "raiz", "x": float(m.group(1))}
 
@@ -110,6 +180,29 @@ class MathReasoning:
 
         operacion = detectado["operacion"]
         params = {k: v for k, v in detectado.items() if k != "operacion"}
+
+        if operacion in ("expresion", "porcentaje"):
+            try:
+                if operacion == "porcentaje":
+                    expr = f'{params["p"]}% de {params["x"]}'
+                    val = _Fr(params["p"]) * _Fr(params["x"]) / 100
+                else:
+                    r = evaluar_expresion(params["texto"])
+                    if r is None:
+                        return {"tiene_matematicas": False, "operacion": None, "resultado": None, "verificado": False,
+                                "honesto": "No hay una operacion aritmetica completa que pueda calcular sin adivinar."}
+                    expr, val = r
+                res = {"status": "ok", "skill": "math", "operacion": operacion, "expresion": expr,
+                       "resultado": _formato(val), "exacto": str(val), "nivel": "simple"}
+                return {"tiene_matematicas": True, "operacion": operacion, "resultado": res, "verificado": True,
+                        "honesto": "Calculado con la expresion completa (precedencia y signos respetados), stdlib."}
+            except ZeroDivisionError:
+                res = {"status": "ok", "resultado": None, "error": "division entre cero: no tiene resultado"}
+                return {"tiene_matematicas": True, "operacion": operacion, "resultado": res, "verificado": False,
+                        "honesto": res["error"]}
+            except (ValueError, SyntaxError) as exc:
+                return {"tiene_matematicas": True, "operacion": operacion, "resultado": None, "verificado": False,
+                        "honesto": f"No pude calcular eso sin adivinar ({exc})."}
 
         try:
             resultado = self._run_math(operacion, params)

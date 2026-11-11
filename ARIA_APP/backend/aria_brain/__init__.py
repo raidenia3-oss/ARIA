@@ -34,7 +34,7 @@ class AriaBrain:
         analysis = await self.reasoning.reason_about(situation)
         
         # Razonamiento matemático verificable (si aplica)
-        math_check = self.math.razonar_con_matematicas(situation)
+        math_check = await self.math.razonar_con_matematicas(situation)
         
         # Considera emoción
         emotion = await self.emotion.get_emotional_response(situation)
